@@ -1,0 +1,89 @@
+# Secrets - never commit these
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Local nested Git metadata backups
+.local-git-backups/
+
+# Python / virtualenv / cache
+venv/
+.venv/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node / frontend dependencies, if tooling is added later
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ns-allinone / ns-3 build outputs
+build/
+ns-3.29/build/
+*/build/
+.waf-*/
+.waf3-*/
+.lock-waf*
+**/.lock-waf*
+compile_commands.json
+*.o
+*.lo
+*.la
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.gcno
+*.gcda
+*.gcov
+
+# Generic build / coverage output
+dist/
+out/
+.next/
+coverage/
+
+# ns-3 runtime and experiment artifacts
+/results/
+/models/
+/wandb/
+/logs/
+ns-3.29/scratch/linear-mesh/results/
+ns-3.29/scratch/linear-mesh/models/
+ns-3.29/scratch/linear-mesh/wandb/
+ns-3.29/scratch/linear-mesh/logs/
+ns-3.29/scratch/linear-mesh/CW_data*
+ns-3.29/scratch/linear-mesh/cw.csv
+ns-3.29/scratch/linear-mesh/*.pcap
+ns-3.29/scratch/linear-mesh/*.pcapng
+ns-3.29/scratch/linear-mesh/*.tr
+ns-3.29/scratch/linear-mesh/*.xml
+*.wandb
+
+# Documentation and editor generated output
+docs/_build/
+/doxygen/
+/html/
+/latex/
+
+# OS / editor / WSL metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*:Zone.Identifier

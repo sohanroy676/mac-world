@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+CW_data*
+results/
+models/
+wandb/
+logs/
+venv/
+.vscode/
+.idea/
+*.log
