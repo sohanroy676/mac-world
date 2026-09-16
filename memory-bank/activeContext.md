@@ -40,7 +40,31 @@ support unequal station counts, and validate packet flow before RL changes.
 
 ## Next step
 
-Start v0.3.0: implement the physical/logical two-AP topology only. Keep RL
-plumbing single-purpose until the topology runs cleanly: AP1/AP2 in one ns-3
-process, default unequal STA split `20/40`, explicit BSS association, fixed
-positions, baseline PHY/MAC defaults, and a short non-training validation run.
+Continue v0.3.0 WIP from branch `feature/v0.3.0-two-ap-topology`.
+
+Current WIP changes:
+- `cw.cc` has initial two-AP topology plumbing: `--apStaCounts=20,40`,
+  `--disableGym`, two AP nodes, AP-local STA groups, per-BSS SSIDs
+  (`oscar-ap-1`, `oscar-ap-2`), fixed positions, topology logging, and OpenGym
+  disabled path.
+- `scenario.h` has initial AP-local STA group support for `basic`, routing each
+  STA's UDP uplink to its associated AP; `convergence` is explicitly single-AP
+  for v0.3.0.
+
+Validation status:
+- Not complete. `./waf build` and `./waf build --target=linear-mesh` spent
+  several minutes CPU-bound in Waf before compiling the touched object; both
+  were interrupted to save time.
+- `./waf --run "scratch/linear-mesh/cw ..."` failed because the registered
+  program name is `scratch/linear-mesh/linear-mesh`.
+- Running the existing binary directly showed it was stale from 2026-08-12 and
+  did not include `--disableGym`; do not treat it as validation.
+
+Next resume step:
+1. Inspect the WIP diff and compile errors if any.
+2. Get Waf to rebuild `linear-mesh` or use `build/compile_commands.json` to
+   diagnose direct compilation.
+3. Run:
+   `./waf --run "scratch/linear-mesh/linear-mesh --dryRun=true --disableGym=true --apStaCounts=20,40 --simTime=2"`
+4. Only after it passes, update `ROADMAP.md`/memory bank to close v0.3.0 and
+   commit a final `feat(topology): add two-ap ns-3 layout` if needed.

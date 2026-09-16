@@ -16,4 +16,11 @@
 
 ## In progress
 
+- **v0.3.0 WIP saved** — branch `feature/v0.3.0-two-ap-topology` contains
+  initial two-AP topology edits in `cw.cc`/`scenario.h`: `--apStaCounts`,
+  `--disableGym`, two AP nodes, per-AP STA groups, per-BSS SSIDs, fixed
+  positions, topology logging, and basic traffic routed to each associated AP.
+  Not validated yet: Waf spent several minutes CPU-bound before rebuilding the
+  scratch object and was interrupted; registered run target is
+  `scratch/linear-mesh/linear-mesh`, not `scratch/linear-mesh/cw`.
 - v0.3.0 — Two-AP ns-3 topology (next milestone)
