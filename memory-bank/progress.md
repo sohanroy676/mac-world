@@ -7,6 +7,14 @@
 
 ## Done
 
+- **v0.3.0 CLOSED (tag `v0.3.0`, 2026-10-07)** — two APs in one ns-3 sim, unequal STA counts
+  (20/40, 5/15, 2/3 all PASS): each STA associated with its own AP (Assoc trace
+  check), per-AP UdpServer sink packets sum exactly to the global handler,
+  0 cross-AP flows, clean exit with `--disableGym`. Single-AP (`--nWifi=5`)
+  unchanged. Root-caused a real bug: both APs beaconed at identical times
+  (`EnableBeaconJitter=false`) so nothing ever associated; fixed by enabling
+  jitter only when AP count > 1. Also fixed the `--apStaCounts` default
+  (was `20,40`, silently overriding `--nWifi`; now empty = single AP).
 - **v0.2.0 CLOSED** — multi-AP design specification accepted: 2 APs in one
   ns-3 process, default STA split 20/40, per-AP observation/reward/statistics/
   CW contract, joint ns3-gym shape, sequential stepping, independent per-AP
@@ -16,4 +24,5 @@
 
 ## In progress
 
-- v0.3.0 — Two-AP ns-3 topology (next milestone)
+- Gym-path smoke regression (`baseline_v0_1_0.py --smoke`) still unrun after v0.3.0 changes.
+- v0.4.0 — Per-AP statistics (next).

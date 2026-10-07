@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <deque>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 using namespace ns3;
@@ -18,6 +19,7 @@ class Scenario
     int nWifim;
     NodeContainer wifiStaNode;
     NodeContainer wifiApNode;
+    std::vector<NodeContainer> apStaNodes;
     int port;
     std::string offeredLoad;
     std::vector<double> start_times;
@@ -33,7 +35,13 @@ class Scenario
                                  ns3::Callback<void, Ptr<const Packet>> callback);
 
   public:
-    Scenario(int nWifim, NodeContainer wifiStaNode, NodeContainer wifiApNode, int port, std::string offeredLoad, int history_length);
+    Scenario(int nWifim,
+             NodeContainer wifiStaNode,
+             NodeContainer wifiApNode,
+             std::vector<NodeContainer> apStaNodes,
+             int port,
+             std::string offeredLoad,
+             int history_length);
     virtual void installScenario(double simulationTime, double envStepTime, ns3::Callback<void, Ptr<const Packet>> callback) = 0;
     void PopulateARPcache();
     int getActiveStationCount(double time);
@@ -62,16 +70,24 @@ class ScenarioFactory
     int nWifim;
     NodeContainer wifiStaNode;
     NodeContainer wifiApNode;
+    std::vector<NodeContainer> apStaNodes;
     int port;
     int history_length;
     std::string offeredLoad;
 
   public:
-    ScenarioFactory(int nWifim, NodeContainer wifiStaNode, NodeContainer wifiApNode, int port, std::string offeredLoad, int history_length)
+    ScenarioFactory(int nWifim,
+                    NodeContainer wifiStaNode,
+                    NodeContainer wifiApNode,
+                    std::vector<NodeContainer> apStaNodes,
+                    int port,
+                    std::string offeredLoad,
+                    int history_length)
     {
         this->nWifim = nWifim;
         this->wifiStaNode = wifiStaNode;
         this->wifiApNode = wifiApNode;
+        this->apStaNodes = apStaNodes;
         this->port = port;
         this->offeredLoad = offeredLoad;
         this->history_length = history_length;
@@ -82,11 +98,11 @@ class ScenarioFactory
         Scenario *wifiScenario;
         if (scenario == "basic")
         {
-            wifiScenario = new BasicScenario(this->nWifim, this->wifiStaNode, this->wifiApNode, this->port, this->offeredLoad, this->history_length);
+            wifiScenario = new BasicScenario(this->nWifim, this->wifiStaNode, this->wifiApNode, this->apStaNodes, this->port, this->offeredLoad, this->history_length);
         }
         else if (scenario == "convergence")
         {
-            wifiScenario = new ConvergenceScenario(this->nWifim, this->wifiStaNode, this->wifiApNode, this->port, this->offeredLoad, this->history_length);
+            wifiScenario = new ConvergenceScenario(this->nWifim, this->wifiStaNode, this->wifiApNode, this->apStaNodes, this->port, this->offeredLoad, this->history_length);
         }
         else
         {
@@ -97,11 +113,18 @@ class ScenarioFactory
     }
 };
 
-Scenario::Scenario(int nWifim, NodeContainer wifiStaNode, NodeContainer wifiApNode, int port, std::string offeredLoad, int history_length)
+Scenario::Scenario(int nWifim,
+                   NodeContainer wifiStaNode,
+                   NodeContainer wifiApNode,
+                   std::vector<NodeContainer> apStaNodes,
+                   int port,
+                   std::string offeredLoad,
+                   int history_length)
 {
     this->nWifim = nWifim;
     this->wifiStaNode = wifiStaNode;
     this->wifiApNode = wifiApNode;
+    this->apStaNodes = apStaNodes;
     this->port = port;
     this->offeredLoad = offeredLoad;
     this->history_length = history_length;
@@ -134,7 +157,7 @@ void Scenario::installTrafficGenerator(Ptr<ns3::Node> fromNode, Ptr<ns3::Node> t
     ApplicationContainer sourceApplications, sinkApplications;
 
     uint8_t tosValue = 0x70; //AC_BE
-  
+
     double min = 0.0;
     double max = 1.0;
     Ptr<UniformRandomVariable> fuzz = CreateObject<UniformRandomVariable>();
@@ -218,14 +241,29 @@ void Scenario::PopulateARPcache()
 
 void BasicScenario::installScenario(double simulationTime, double envStepTime, ns3::Callback<void, Ptr<const Packet>> callback)
 {
-    for (int i = 0; i < this->nWifim; ++i)
+    for (uint32_t apIndex = 0; apIndex < this->apStaNodes.size(); ++apIndex)
     {
-        installTrafficGenerator(this->wifiStaNode.Get(i), this->wifiApNode.Get(0), this->port++, this->offeredLoad, 0.0, simulationTime + 2 + envStepTime*history_length, callback);
+        for (uint32_t staIndex = 0; staIndex < this->apStaNodes.at(apIndex).GetN(); ++staIndex)
+        {
+            installTrafficGenerator(this->apStaNodes.at(apIndex).Get(staIndex),
+                                    this->wifiApNode.Get(apIndex),
+                                    this->port++,
+                                    this->offeredLoad,
+                                    0.0,
+                                    simulationTime + 2 + envStepTime*history_length,
+                                    callback);
+        }
     }
 }
 
 void ConvergenceScenario::installScenario(double simulationTime, double envStepTime, ns3::Callback<void, Ptr<const Packet>> callback)
 {
+    if (this->wifiApNode.GetN() != 1)
+    {
+        std::cout << "The convergence scenario is single-AP only in v0.3.0; use --scenario=basic for multi-AP topology validation." << endl;
+        exit(0);
+    }
+
     float delta = simulationTime/(this->nWifim-4);
     float delay = history_length*envStepTime;
     if (this->nWifim > 5)

@@ -4,9 +4,8 @@
 
 ## Current focus
 
-v0.2.0 is CLOSED (design contract accepted 2026-09-16). Next milestone:
-**v0.3.0 — Two AP ns-3 topology**: create AP1 + AP2 in one ns-3 simulation,
-support unequal station counts, and validate packet flow before RL changes.
+v0.3.0 (two-AP ns-3 topology) is CLOSED (2026-10-07): merged to `main`, tagged `v0.3.0`.
+Next milestone: **v0.4.0 per-AP statistics** (branch `feature/v0.4.0-per-ap-stats`).
 
 ## Recent decisions
 
@@ -40,7 +39,19 @@ support unequal station counts, and validate packet flow before RL changes.
 
 ## Next step
 
-Start v0.3.0: implement the physical/logical two-AP topology only. Keep RL
-plumbing single-purpose until the topology runs cleanly: AP1/AP2 in one ns-3
-process, default unequal STA split `20/40`, explicit BSS association, fixed
-positions, baseline PHY/MAC defaults, and a short non-training validation run.
+NOT run before closing v0.3.0 (user approved merge anyway): gym-path regression
+`../../venv/bin/python baseline_v0_1_0.py --smoke` from `ns-3.29/scratch/linear-mesh/`.
+Run it early next session to confirm the Python/gym path still works.
+
+Then **v0.4.0 per-AP statistics** (`cw.cc`): per-AP rx via bound callbacks on each
+AP's UdpServer, per-AP tx, globals = sums. Open question for the user: count STA
+data tx only, or also AP control frames (`g_txPktNum` currently counts PhyTxBegin
+on ALL devices incl. beacons/ACKs).
+
+Validation notes for later milestones:
+- Run binary directly: `LD_LIBRARY_PATH=ns-3.29/build/lib ns-3.29/build/scratch/linear-mesh/linear-mesh <args>`
+  from a scratch dir (writes `cw.csv` to cwd). A 2-AP, 60-STA, simTime=2 run takes ~2.5 min CPU.
+- FlowMonitor rx counts only cover the post-warmup window and disagree with the sink
+  handler (e.g. 0 vs ~9000 pkts) — use UdpServer counts / handler, not FlowMonitor rx.
+- Single /24 subnet fits ~253 nodes; widen before scaling to 10 APs.
+- CW is still a wildcard `Config::Set` over all nodes (v0.5 replaces it).

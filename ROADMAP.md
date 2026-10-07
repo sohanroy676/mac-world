@@ -21,10 +21,12 @@
 ### v0.3.0 — Two APs
 - Create two APs in one ns-3 simulation.
 - Support different station counts per AP.
-- Status: NEXT.
+- Status: ✅ CLOSED 2026-10-07 — tag `v0.3.0` on `main`. 2 APs / unequal
+  STAs in one ns-3 sim, per-STA association and per-AP sink traffic verified, no RL dependency.
 
 ### v0.4.0 — Per-AP Statistics
 - Separate throughput, packet, loss/collision, reward, and other required measurements by AP.
+- Status: NEXT.
 
 ### v0.5.0 — AP-Specific CW
 - Give each AP independent CW control.
