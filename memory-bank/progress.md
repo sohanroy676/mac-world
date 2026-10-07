@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v0.3.0 validated (2026-10-07)** — two APs in one ns-3 sim, unequal STA counts
+- **v0.3.0 CLOSED (tag `v0.3.0`, 2026-10-07)** — two APs in one ns-3 sim, unequal STA counts
   (20/40, 5/15, 2/3 all PASS): each STA associated with its own AP (Assoc trace
   check), per-AP UdpServer sink packets sum exactly to the global handler,
   0 cross-AP flows, clean exit with `--disableGym`. Single-AP (`--nWifi=5`)
@@ -24,5 +24,5 @@
 
 ## In progress
 
-- v0.3.0 close-out: gym-path smoke regression + merge/tag approval.
+- Gym-path smoke regression (`baseline_v0_1_0.py --smoke`) still unrun after v0.3.0 changes.
 - v0.4.0 — Per-AP statistics (next).

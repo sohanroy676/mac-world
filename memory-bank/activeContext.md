@@ -4,8 +4,8 @@
 
 ## Current focus
 
-v0.3.0 (two-AP ns-3 topology) is implemented and validated (2026-10-07), pending
-merge/tag approval. Next milestone: **v0.4.0 per-AP statistics**.
+v0.3.0 (two-AP ns-3 topology) is CLOSED (2026-10-07): merged to `main`, tagged `v0.3.0`.
+Next milestone: **v0.4.0 per-AP statistics** (branch `feature/v0.4.0-per-ap-stats`).
 
 ## Recent decisions
 
@@ -39,10 +39,9 @@ merge/tag approval. Next milestone: **v0.4.0 per-AP statistics**.
 
 ## Next step
 
-v0.3.0 technically validated 2026-10-07 (see progress.md). Remaining before
-closing: optional gym-path regression `../../venv/bin/python baseline_v0_1_0.py --smoke`
-(run from `ns-3.29/scratch/linear-mesh/`), then user-approved merge to `main`
-and tag `v0.3.0` (tags start fresh from here; old v0.1.0 tag references are obsolete).
+NOT run before closing v0.3.0 (user approved merge anyway): gym-path regression
+`../../venv/bin/python baseline_v0_1_0.py --smoke` from `ns-3.29/scratch/linear-mesh/`.
+Run it early next session to confirm the Python/gym path still works.
 
 Then **v0.4.0 per-AP statistics** (`cw.cc`): per-AP rx via bound callbacks on each
 AP's UdpServer, per-AP tx, globals = sums. Open question for the user: count STA

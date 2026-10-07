@@ -21,7 +21,7 @@
 ### v0.3.0 — Two APs
 - Create two APs in one ns-3 simulation.
 - Support different station counts per AP.
-- Status: ✅ VALIDATED 2026-10-07 (merge to `main` + tag pending approval) — 2 APs / unequal
+- Status: ✅ CLOSED 2026-10-07 — tag `v0.3.0` on `main`. 2 APs / unequal
   STAs in one ns-3 sim, per-STA association and per-AP sink traffic verified, no RL dependency.
 
 ### v0.4.0 — Per-AP Statistics
