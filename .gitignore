@@ -68,6 +68,7 @@ ns-3.29/scratch/linear-mesh/models/
 ns-3.29/scratch/linear-mesh/wandb/
 ns-3.29/scratch/linear-mesh/logs/
 ns-3.29/scratch/linear-mesh/CW_data*
+ns-3.29/cw.csv
 ns-3.29/scratch/linear-mesh/cw.csv
 ns-3.29/scratch/linear-mesh/*.pcap
 ns-3.29/scratch/linear-mesh/*.pcapng

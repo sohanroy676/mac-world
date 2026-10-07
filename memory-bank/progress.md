@@ -7,6 +7,14 @@
 
 ## Done
 
+- **v0.3.0 validated (2026-10-07)** — two APs in one ns-3 sim, unequal STA counts
+  (20/40, 5/15, 2/3 all PASS): each STA associated with its own AP (Assoc trace
+  check), per-AP UdpServer sink packets sum exactly to the global handler,
+  0 cross-AP flows, clean exit with `--disableGym`. Single-AP (`--nWifi=5`)
+  unchanged. Root-caused a real bug: both APs beaconed at identical times
+  (`EnableBeaconJitter=false`) so nothing ever associated; fixed by enabling
+  jitter only when AP count > 1. Also fixed the `--apStaCounts` default
+  (was `20,40`, silently overriding `--nWifi`; now empty = single AP).
 - **v0.2.0 CLOSED** — multi-AP design specification accepted: 2 APs in one
   ns-3 process, default STA split 20/40, per-AP observation/reward/statistics/
   CW contract, joint ns3-gym shape, sequential stepping, independent per-AP
@@ -16,11 +24,5 @@
 
 ## In progress
 
-- **v0.3.0 WIP saved** — branch `feature/v0.3.0-two-ap-topology` contains
-  initial two-AP topology edits in `cw.cc`/`scenario.h`: `--apStaCounts`,
-  `--disableGym`, two AP nodes, per-AP STA groups, per-BSS SSIDs, fixed
-  positions, topology logging, and basic traffic routed to each associated AP.
-  Not validated yet: Waf spent several minutes CPU-bound before rebuilding the
-  scratch object and was interrupted; registered run target is
-  `scratch/linear-mesh/linear-mesh`, not `scratch/linear-mesh/cw`.
-- v0.3.0 — Two-AP ns-3 topology (next milestone)
+- v0.3.0 close-out: gym-path smoke regression + merge/tag approval.
+- v0.4.0 — Per-AP statistics (next).

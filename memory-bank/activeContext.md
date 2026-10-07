@@ -4,9 +4,8 @@
 
 ## Current focus
 
-v0.2.0 is CLOSED (design contract accepted 2026-09-16). Next milestone:
-**v0.3.0 — Two AP ns-3 topology**: create AP1 + AP2 in one ns-3 simulation,
-support unequal station counts, and validate packet flow before RL changes.
+v0.3.0 (two-AP ns-3 topology) is implemented and validated (2026-10-07), pending
+merge/tag approval. Next milestone: **v0.4.0 per-AP statistics**.
 
 ## Recent decisions
 
@@ -40,31 +39,20 @@ support unequal station counts, and validate packet flow before RL changes.
 
 ## Next step
 
-Continue v0.3.0 WIP from branch `feature/v0.3.0-two-ap-topology`.
+v0.3.0 technically validated 2026-10-07 (see progress.md). Remaining before
+closing: optional gym-path regression `../../venv/bin/python baseline_v0_1_0.py --smoke`
+(run from `ns-3.29/scratch/linear-mesh/`), then user-approved merge to `main`
+and tag `v0.3.0` (tags start fresh from here; old v0.1.0 tag references are obsolete).
 
-Current WIP changes:
-- `cw.cc` has initial two-AP topology plumbing: `--apStaCounts=20,40`,
-  `--disableGym`, two AP nodes, AP-local STA groups, per-BSS SSIDs
-  (`oscar-ap-1`, `oscar-ap-2`), fixed positions, topology logging, and OpenGym
-  disabled path.
-- `scenario.h` has initial AP-local STA group support for `basic`, routing each
-  STA's UDP uplink to its associated AP; `convergence` is explicitly single-AP
-  for v0.3.0.
+Then **v0.4.0 per-AP statistics** (`cw.cc`): per-AP rx via bound callbacks on each
+AP's UdpServer, per-AP tx, globals = sums. Open question for the user: count STA
+data tx only, or also AP control frames (`g_txPktNum` currently counts PhyTxBegin
+on ALL devices incl. beacons/ACKs).
 
-Validation status:
-- Not complete. `./waf build` and `./waf build --target=linear-mesh` spent
-  several minutes CPU-bound in Waf before compiling the touched object; both
-  were interrupted to save time.
-- `./waf --run "scratch/linear-mesh/cw ..."` failed because the registered
-  program name is `scratch/linear-mesh/linear-mesh`.
-- Running the existing binary directly showed it was stale from 2026-08-12 and
-  did not include `--disableGym`; do not treat it as validation.
-
-Next resume step:
-1. Inspect the WIP diff and compile errors if any.
-2. Get Waf to rebuild `linear-mesh` or use `build/compile_commands.json` to
-   diagnose direct compilation.
-3. Run:
-   `./waf --run "scratch/linear-mesh/linear-mesh --dryRun=true --disableGym=true --apStaCounts=20,40 --simTime=2"`
-4. Only after it passes, update `ROADMAP.md`/memory bank to close v0.3.0 and
-   commit a final `feat(topology): add two-ap ns-3 layout` if needed.
+Validation notes for later milestones:
+- Run binary directly: `LD_LIBRARY_PATH=ns-3.29/build/lib ns-3.29/build/scratch/linear-mesh/linear-mesh <args>`
+  from a scratch dir (writes `cw.csv` to cwd). A 2-AP, 60-STA, simTime=2 run takes ~2.5 min CPU.
+- FlowMonitor rx counts only cover the post-warmup window and disagree with the sink
+  handler (e.g. 0 vs ~9000 pkts) — use UdpServer counts / handler, not FlowMonitor rx.
+- Single /24 subnet fits ~253 nodes; widen before scaling to 10 APs.
+- CW is still a wildcard `Config::Set` over all nodes (v0.5 replaces it).
