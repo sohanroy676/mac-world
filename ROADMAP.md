@@ -30,6 +30,7 @@
 
 ### v0.5.0 — AP-Specific CW
 - Give each AP independent CW control.
+- Status: 🔶 IMPLEMENTED on `feature/v0.5.0-per-ap-cw` (592b603), validated 2026-10-08; awaiting user approval to merge/tag. Per-AP CW via per-node paths + `--apCws` + readback check.
 
 ### v0.6.0 — Multi-AP ns3-gym
 - Support multiple AP observations, actions, and rewards through the Python/ns-3 interface.

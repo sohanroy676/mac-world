@@ -6,7 +6,7 @@
 
 v0.3.0 (two-AP ns-3 topology) is CLOSED (2026-10-07): merged to `main`, tagged `v0.3.0`.
 **v0.4.0 per-AP statistics CLOSED (2026-10-08): merged to `main` (98bbf79), tagged `v0.4.0`, pushed to GitHub.**
-Next: v0.5.0 per-AP CW (new branch).
+v0.5.0 per-AP CW: IMPLEMENTED + validated on `feature/v0.5.0-per-ap-cw` (592b603), awaiting user approval to merge/tag/push.
 
 ## Recent decisions
 
@@ -39,6 +39,15 @@ Next: v0.5.0 per-AP CW (new branch).
   (`python baseline_v0_1_0.py`); episode-1 data is already recorded.
 
 ## Next step
+
+Close v0.5.0 (user approval needed: merge to main, tag `v0.5.0`, push via `! git push`), then start v0.6.0 multi-AP ns3-gym.
+
+**v0.5.0 finding (verified in ns-3.29 source + readback):** STAs overwrite their BE MinCw/MaxCw from their own AP's
+beacon/assoc-resp EDCA set, encoded 2^floor(log2(CW+1))-1 (16->15, 32->31, 1024->1023). Readback confirms STAs read the
+rounded value after warm-up; APs keep the exact value. Pre-existing (v0.1 too); per-AP isolation holds (STAs only take
+beacons of their own BSSID). Decision: accept + document, no upstream patch. Single-AP baseline unchanged.
+
+(Historical, superseded by the above:)
 
 Start **v0.5.0
 per-AP CW** (branch `feature/v0.5.0-per-ap-cw`): replace the wildcard `Config::Set` (cw.cc, set_nodes + MyExecuteActions) with
