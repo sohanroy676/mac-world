@@ -8,7 +8,7 @@ v0.3.0 (two-AP ns-3 topology) is CLOSED (2026-10-07): merged to `main`, tagged `
 **v0.4.0 per-AP statistics CLOSED (2026-10-08): merged to `main` (98bbf79), tagged `v0.4.0`, pushed to GitHub.**
 **v0.5.0 per-AP CW CLOSED (2026-10-08): merged to `main`, tagged `v0.5.0`.**
 **v0.6.0 multi-AP ns3-gym CLOSED (2026-10-08): merged to `main`, tagged `v0.6.0`, pushed.**
-**v0.7.0 independent per-AP DDPG agents CLOSED (2026-10-08): merged to `main`, tagged `v0.7.0`, pushed.** **v0.8.0 W&B per-AP logging IMPLEMENTED on `feature/v0.8.0-wandb` (2026-10-08), awaiting merge/tag approval; next after that: v0.9.0 validation.** Trainer: `OSCAR_multi_ap_train.py --apStaCounts 2,3 --check`; writes CSV trace to results/v0.7.0-<ts>/ (no W&B yet).
+**v0.7.0 independent per-AP DDPG agents CLOSED (2026-10-08): merged to `main`, tagged `v0.7.0`, pushed.** **v0.8.0 W&B per-AP logging CLOSED (2026-10-08): merged to `main`, tagged `v0.8.0`, pushed. Next: v0.9.0 validation.** Run: `OSCAR_multi_ap_train.py --apStaCounts 2,3 --check` (offline W&B; `.wandb` copied to results/multi-ap-<ts>/). Trainer: `OSCAR_multi_ap_train.py --apStaCounts 2,3 --check`; writes CSV trace to results/v0.7.0-<ts>/ (no W&B yet).
 v0.6.0 interface (N>1 APs only; N==1 path untouched): obs Box [N,H] flat, row i = AP i loss history (newest first);
 action Box [N] (exponent domain, CW=2^(a+4) clamped 16..1024, size mismatch -> return false); scalar reward = mean of
 per-AP rewards; per-AP rewards in extraInfo 5th `|` field `cwSet,cwReadbackAp,reward,loss,rxDelta,phyTxDelta;...`.

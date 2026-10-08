@@ -42,7 +42,7 @@
 
 ### v0.8.0 — W&B
 - Add clear per-AP and aggregate experiment logging.
-- Status: 🔶 IMPLEMENTED on `feature/v0.8.0-wandb` (2026-10-08), awaiting merge/tag approval. Metrics: `APi/{CW,Reward,Throughput,LossRatio,Observation,ActorLoss,CriticLoss,CumulativeReward}`, `Global/{Throughput,Fairness,LossRatio,CumulativeReward}`, `Episode`, `Step` (design §7 names; roadmap's `LossRate`/`AggregateThroughput` map to `LossRatio`/`Throughput`). Throughput = rx·1464·8/(stepTime·1e6) Mbps; Fairness = Jain over per-AP throughput computed in Python (ns-3 jain field not used); Global/LossRatio = Σ(tx−rx)/Σtx.
+- Status: ✅ CLOSED 2026-10-08 — tag `v0.8.0` on `main`. Metrics: `APi/{CW,Reward,Throughput,LossRatio,Observation,ActorLoss,CriticLoss,CumulativeReward}`, `Global/{Throughput,Fairness,LossRatio,CumulativeReward}`, `Episode`, `Step` (design §7 names; roadmap's `LossRate`/`AggregateThroughput` map to `LossRatio`/`Throughput`). Throughput = rx·1464·8/(stepTime·1e6) Mbps; Fairness = Jain over per-AP throughput computed in Python (ns-3 jain field not used); Global/LossRatio = Σ(tx−rx)/Σtx.
 
 ### v0.9.0 — Validation
 - Validate the complete two-AP system with different station distributions.

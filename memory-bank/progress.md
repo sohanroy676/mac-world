@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v0.8.0 IMPLEMENTED (branch `feature/v0.8.0-wandb`, not merged/tagged, 2026-10-08)** — `OSCAR_multi_ap_train.py` logs per-AP + Global metrics to W&B (offline default, `--online`, `--wandb_project`); helpers `jain`, `step_metrics` in `multi_ap.py`. `--check` now reads the `.wandb` file back and asserts all keys per step, Global/Throughput == Σ AP, Fairness == Jain(per-AP thr). Validation: `--apStaCounts 2,3 --simTime 3 --stepTime 0.1 --historyLength 20 --start_timesteps 10 --batch_size 8 --check` -> PASS, 30 rows x 19 keys. Regression: smoke 10.59458, `--nWifi=5` dry 10533 pkts. No cw.cc/wrapper/agent changes. Results dir prefix now `results/multi-ap-<ts>`. Online sync untested.
+- **v0.8.0 CLOSED (tag `v0.8.0`, code 4d72bed, merged to main + pushed, 2026-10-08)** — `OSCAR_multi_ap_train.py` logs per-AP + Global metrics to W&B (offline default, `--online`, `--wandb_project`); helpers `jain`, `step_metrics` in `multi_ap.py`. `--check` now reads the `.wandb` file back and asserts all keys per step, Global/Throughput == Σ AP, Fairness == Jain(per-AP thr). Validation: `--apStaCounts 2,3 --simTime 3 --stepTime 0.1 --historyLength 20 --start_timesteps 10 --batch_size 8 --check` -> PASS, 30 rows x 19 keys. Regression: smoke 10.59458, `--nWifi=5` dry 10533 pkts. No cw.cc/wrapper/agent changes. Results dir prefix now `results/multi-ap-<ts>`. Online sync untested.
 
 - **v0.7.0 CLOSED (tag `v0.7.0`, code fc9c432, 2026-10-08)** —
   new `OSCAR_multi_ap_train.py` (one DDPG + replay per AP, state_i = newest loss_i, reward_i from parse_ap_info, per-AP
@@ -50,4 +50,4 @@
 
 ## In progress
 
-- v0.8.0 awaiting user approval to merge + tag.
+- v0.9.0 validation (next, not started): 2-AP runs with different STA distributions (e.g. 5,15 / 20,40), longer training, compare vs baseline.
