@@ -5,7 +5,9 @@
 ## Current focus
 
 v0.3.0 (two-AP ns-3 topology) is CLOSED (2026-10-07): merged to `main`, tagged `v0.3.0`.
-Next milestone: **v0.4.0 per-AP statistics** (branch `feature/v0.4.0-per-ap-stats`).
+**v0.4.0 per-AP statistics: implemented + validated on `feature/v0.4.0-per-ap-stats`
+(commit 97d99eb, 2026-10-08), NOT yet merged/tagged — awaiting user approval.**
+Next: v0.5.0 per-AP CW (new branch).
 
 ## Recent decisions
 
@@ -39,14 +41,23 @@ Next milestone: **v0.4.0 per-AP statistics** (branch `feature/v0.4.0-per-ap-stat
 
 ## Next step
 
-NOT run before closing v0.3.0 (user approved merge anyway): gym-path regression
-`../../venv/bin/python baseline_v0_1_0.py --smoke` from `ns-3.29/scratch/linear-mesh/`.
-Run it early next session to confirm the Python/gym path still works.
+Get user approval to merge `feature/v0.4.0-per-ap-stats` and tag `v0.4.0`, then **v0.5.0
+per-AP CW**: replace the wildcard `Config::Set` (cw.cc, set_nodes + MyExecuteActions) with
+per-node paths for AP_i + its STAs; verify by attribute readback per AP.
 
-Then **v0.4.0 per-AP statistics** (`cw.cc`): per-AP rx via bound callbacks on each
-AP's UdpServer, per-AP tx, globals = sums. Open question for the user: count STA
-data tx only, or also AP control frames (`g_txPktNum` currently counts PhyTxBegin
-on ALL devices incl. beacons/ACKs).
+v0.4.0 facts (cw.cc only, no scenario.h change): per-AP rx via UdpServer "Rx" bound callbacks,
+per-AP PHY tx (PhyTxBegin on AP_i + its STAs, incl. beacons/ACKs) and per-AP app tx (OnOff "Tx"),
+end-of-run `Per-AP statistics check: PASS/FAIL`. Globals/observation/reward untouched (v0.6).
+Reported `throughput` uses elapsed sim time (~3.21 s at simTime=2, incl. warm-up), so it differs from
+the legacy `Throughput:` line (divides by simulationTime). loss_app ~0.95-0.99 because offered load
+saturates (app tx counts packets generated, incl. MAC-queue drops); loss_phy matches OSCAR's definition.
+Observed (not investigated): 20,40 run showed AP2 deassoc=1 (association still PASS).
+
+Venv repair (user-approved 2026-10-08): venv lacked matplotlib/comet_ml/pandas; installed
+matplotlib==3.5.3, comet_ml==3.52.1, pandas==1.3.5 (audit versions). Core pins unchanged.
+Gym smoke regression PASSES (cumulative reward 10.59458 before and after the v0.4.0 change).
+Unconfirmed: smoke progress bar shows MB sent/Speed 0.
+Repo-local git identity set to Sohan Roy Talari <sohanroy676@gmail.com> (user-approved).
 
 Validation notes for later milestones:
 - Run binary directly: `LD_LIBRARY_PATH=ns-3.29/build/lib ns-3.29/build/scratch/linear-mesh/linear-mesh <args>`

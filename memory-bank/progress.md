@@ -7,6 +7,12 @@
 
 ## Done
 
+- **v0.4.0 per-AP stats implemented + validated (2026-10-08, commit 97d99eb, branch
+  `feature/v0.4.0-per-ap-stats`, not yet merged/tagged)** — per-AP sent_phy/sent_app/received/loss/
+  throughput + totals + Jain. Runs (dryRun, disableGym, seed 1, simTime 2): `--nWifi=5` identical to
+  pre-change (10533 pkts); 2,3 / 5,15 / 20,40 all `Per-AP statistics check: PASS` (Σ per-AP == globals
+  exactly, sinkMatch yes, 0 cross-AP flows). Gym smoke passes, reward unchanged.
+
 - **v0.3.0 CLOSED (tag `v0.3.0`, 2026-10-07)** — two APs in one ns-3 sim, unequal STA counts
   (20/40, 5/15, 2/3 all PASS): each STA associated with its own AP (Assoc trace
   check), per-AP UdpServer sink packets sum exactly to the global handler,
@@ -24,5 +30,4 @@
 
 ## In progress
 
-- Gym-path smoke regression (`baseline_v0_1_0.py --smoke`) still unrun after v0.3.0 changes.
-- v0.4.0 — Per-AP statistics (next).
+- v0.4.0 awaiting user approval to merge/tag; then v0.5.0 per-AP CW.
