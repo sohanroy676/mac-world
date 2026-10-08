@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v0.7.0 implemented (branch `feature/v0.7.0-independent-agents`, commit fc9c432; awaiting merge/tag approval, 2026-10-08)** —
+- **v0.7.0 CLOSED (tag `v0.7.0`, code fc9c432, 2026-10-08)** —
   new `OSCAR_multi_ap_train.py` (one DDPG + replay per AP, state_i = newest loss_i, reward_i from parse_ap_info, per-AP
   Preprocessor for logging only, CSV trace in `results/v0.7.0-<ts>/`). No cw.cc/wrapper/agent changes. Validation:
   `--apStaCounts 2,3 --simTime 3 --stepTime 0.1 --historyLength 20 --start_timesteps 10 --batch_size 8 --check` -> RESULT PASS
@@ -48,4 +48,4 @@
 
 ## In progress
 
-- v0.7.0 awaiting user approval to merge/tag; then v0.8.0 W&B.
+- v0.8.0 W&B per-AP logging (next, not started).
