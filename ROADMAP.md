@@ -34,6 +34,7 @@
 
 ### v0.6.0 — Multi-AP ns3-gym
 - Support multiple AP observations, actions, and rewards through the Python/ns-3 interface.
+- Status: 🟡 implemented on `feature/v0.6.0-multi-ap-gym`, validated (2,3 / 5,15 gym test, single-AP + smoke unchanged); awaiting merge/tag approval.
 
 ### v0.7.0 — Independent Agents
 - Add one independent AP-level DDPG Actor-Critic agent per AP.
