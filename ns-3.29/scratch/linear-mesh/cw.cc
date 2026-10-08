@@ -49,6 +49,13 @@ ofstream outfile ("scratch/linear-mesh/CW_data.csv", fstream::out);
 
 uint32_t CW = 0;
 
+// v0.5.0 per-AP CW. Index = AP index. g_apBss[i] = AP i + its STAs; g_apCwMin/Max = last value written to that BSS.
+std::vector<NodeContainer> g_apBss;
+std::vector<uint32_t> g_apCwMin;
+std::vector<uint32_t> g_apCwMax;
+std::vector<uint32_t> g_apCwOverride; // --apCws (empty = every AP uses CW)
+bool g_apCwOk = true;                 // cleared by any failing readback
+
 
 uint32_t history_length = 20;
 deque<float> history;
@@ -159,6 +166,83 @@ std::string MyGetExtraInfo(void)
     return myInfo;
 }
 
+std::string beTxopPath(uint32_t nodeId)
+{
+    return "/NodeList/" + std::to_string(nodeId) + "/DeviceList/*/$ns3::WifiNetDevice/Mac/$ns3::RegularWifiMac/BE_Txop/$ns3::QosTxop";
+}
+
+// Write the BE MinCw/MaxCw of AP `ap` and every STA of its BSS. Other BSSs are not touched.
+void setApCw(uint32_t ap, uint32_t cwMin, uint32_t cwMax)
+{
+    const NodeContainer &bss = g_apBss.at(ap);
+    for (uint32_t n = 0; n < bss.GetN(); ++n)
+    {
+        std::string path = beTxopPath(bss.Get(n)->GetId());
+        Config::Set(path + "/MinCw", UintegerValue(cwMin));
+        Config::Set(path + "/MaxCw", UintegerValue(cwMax));
+    }
+    g_apCwMin.at(ap) = cwMin;
+    g_apCwMax.at(ap) = cwMax;
+}
+
+// STAs overwrite their BE CW from their AP's EDCA parameter set, which carries CW as 2^ECW-1
+// (ECW = floor(log2(CW+1))), so a STA legitimately reads CW or that rounded-down value.
+uint32_t edcaRoundedCw(uint32_t cw)
+{
+    uint32_t p = 1;
+    while (p * 2 <= cw + 1)
+        p *= 2;
+    return p - 1;
+}
+
+// Read MinCw/MaxCw back from the nodes. The AP must match the value written exactly; STAs may
+// match it exactly or after EDCA rounding. Clears g_apCwOk on any mismatch.
+void checkApCw(std::string label)
+{
+    bool ok = true;
+    NS_LOG_UNCOND("CW readback [" << label << "] t=" << Simulator::Now().GetSeconds() << " s:");
+    for (uint32_t ap = 0; ap < g_apBss.size(); ++ap)
+    {
+        const uint32_t wantMin = g_apCwMin.at(ap);
+        const uint32_t wantMax = g_apCwMax.at(ap);
+        uint32_t apMin = 0, apMax = 0, exact = 0, edca = 0, other = 0, missing = 0;
+        for (uint32_t n = 0; n < g_apBss.at(ap).GetN(); ++n)
+        {
+            Config::MatchContainer match = Config::LookupMatches(beTxopPath(g_apBss.at(ap).Get(n)->GetId()));
+            if (match.GetN() != 1)
+            {
+                ++missing;
+                continue;
+            }
+            UintegerValue minV, maxV;
+            match.Get(0)->GetAttribute("MinCw", minV);
+            match.Get(0)->GetAttribute("MaxCw", maxV);
+            const uint32_t gotMin = minV.Get();
+            const uint32_t gotMax = maxV.Get();
+            if (n == 0) // node 0 of the BSS is the AP
+            {
+                apMin = gotMin;
+                apMax = gotMax;
+                if (gotMin != wantMin || gotMax != wantMax)
+                    ++other;
+            }
+            else if (gotMin == wantMin && gotMax == wantMax)
+                ++exact;
+            else if ((gotMin == wantMin || gotMin == edcaRoundedCw(wantMin)) && (gotMax == wantMax || gotMax == edcaRoundedCw(wantMax)))
+                ++edca;
+            else
+                ++other;
+        }
+        NS_LOG_UNCOND("  AP" << ap + 1 << " set=" << wantMin << "/" << wantMax << " ap=" << apMin << "/" << apMax
+                            << " stas: exact=" << exact << " edcaRounded(" << edcaRoundedCw(wantMin) << "/" << edcaRoundedCw(wantMax)
+                            << ")=" << edca << " other=" << other << " missing=" << missing);
+        if (other != 0 || missing != 0)
+            ok = false;
+    }
+    if (!ok)
+        g_apCwOk = false;
+}
+
 /*
 Execute received actions
 */
@@ -199,8 +283,9 @@ bool MyExecuteActions(Ptr<OpenGymDataContainer> action)
     uint32_t cwmax = CW;
 
     if(!dry_run){
-        Config::Set("/$ns3::NodeListPriv/NodeList/*/$ns3::Node/DeviceList/*/$ns3::WifiNetDevice/Mac/$ns3::RegularWifiMac/BE_Txop/$ns3::QosTxop/MinCw", UintegerValue(cwmin));
-        Config::Set("/$ns3::NodeListPriv/NodeList/*/$ns3::Node/DeviceList/*/$ns3::WifiNetDevice/Mac/$ns3::RegularWifiMac/BE_Txop/$ns3::QosTxop/MaxCw", UintegerValue(cwmax));
+        // Gym still sends one global action until v0.6.0: apply it to every AP's BSS.
+        for (uint32_t ap = 0; ap < g_apBss.size(); ++ap)
+            setApCw(ap, cwmin, cwmax);
     }
     return true;
 }
@@ -475,6 +560,37 @@ std::vector<uint32_t> parseApStaCounts(std::string apStaCounts, int nWifi)
     return counts;
 }
 
+// --apCws: exactly one CW per AP, clamped to the same 16..1024 range MyExecuteActions uses.
+std::vector<uint32_t> parseApCws(std::string apCws, size_t apCount)
+{
+    std::vector<uint32_t> cws;
+    std::stringstream ss(apCws);
+    std::string token;
+
+    while (std::getline(ss, token, ','))
+    {
+        if (token.empty())
+        {
+            std::cout << "Invalid --apCws: empty CW value." << endl;
+            exit(1);
+        }
+        int cw = std::stoi(token);
+        if (cw <= 0)
+        {
+            std::cout << "Invalid --apCws: CW values must be positive." << endl;
+            exit(1);
+        }
+        cws.push_back(std::min<uint32_t>(1024, std::max<uint32_t>(16, static_cast<uint32_t>(cw))));
+    }
+
+    if (!cws.empty() && cws.size() != apCount)
+    {
+        std::cout << "Invalid --apCws: got " << cws.size() << " values for " << apCount << " APs." << endl;
+        exit(1);
+    }
+    return cws;
+}
+
 void logTopology(NodeContainer wifiStaNode, NodeContainer wifiApNode, std::vector<NodeContainer> apStaNodes)
 {
     NS_LOG_UNCOND("Multi-AP topology:");
@@ -608,16 +724,27 @@ void set_nodes(int channelWidth,
 
     logTopology(wifiStaNode, wifiApNode, apStaNodes);
 
-    if (!dry_run)
+    // v0.5.0: one BSS (AP + its STAs) per AP index, each with its own CW.
+    g_apBss.clear();
+    for (uint32_t apIndex = 0; apIndex < apStaCounts.size(); ++apIndex)
     {
-        Config::Set("/$ns3::NodeListPriv/NodeList/*/$ns3::Node/DeviceList/*/$ns3::WifiNetDevice/Mac/$ns3::RegularWifiMac/BE_Txop/$ns3::QosTxop/MinCw", UintegerValue(CW));
-        Config::Set("/$ns3::NodeListPriv/NodeList/*/$ns3::Node/DeviceList/*/$ns3::WifiNetDevice/Mac/$ns3::RegularWifiMac/BE_Txop/$ns3::QosTxop/MaxCw", UintegerValue(CW));
+        NodeContainer bss(wifiApNode.Get(apIndex)); // AP first: checkApCw relies on it
+        bss.Add(apStaNodes.at(apIndex));
+        g_apBss.push_back(bss);
     }
-    else
-    {
+    g_apCwMin.assign(g_apBss.size(), 0);
+    g_apCwMax.assign(g_apBss.size(), 0);
+
+    if (dry_run)
         NS_LOG_UNCOND("Default CW");
-        Config::Set("/$ns3::NodeListPriv/NodeList/*/$ns3::Node/DeviceList/*/$ns3::WifiNetDevice/Mac/$ns3::RegularWifiMac/BE_Txop/$ns3::QosTxop/MinCw", UintegerValue(16));
-        Config::Set("/$ns3::NodeListPriv/NodeList/*/$ns3::Node/DeviceList/*/$ns3::WifiNetDevice/Mac/$ns3::RegularWifiMac/BE_Txop/$ns3::QosTxop/MaxCw", UintegerValue(1024));
+    for (uint32_t apIndex = 0; apIndex < g_apBss.size(); ++apIndex)
+    {
+        if (dry_run)
+            setApCw(apIndex, 16, 1024);
+        else if (!g_apCwOverride.empty())
+            setApCw(apIndex, g_apCwOverride.at(apIndex), g_apCwOverride.at(apIndex));
+        else
+            setApCw(apIndex, CW, CW);
     }
 }
 
@@ -741,6 +868,7 @@ int main(int argc, char *argv[])
     string outputCsv = "cw.csv";
     string scenario = "basic";
     string apStaCountsArg = "";
+    string apCwsArg = "";
     dry_run = false;
 
     int rng = 1;
@@ -768,11 +896,13 @@ int main(int argc, char *argv[])
     cmd.AddValue("dryRun", "Execute scenario with BEB and no agent interaction", dry_run);
     cmd.AddValue("disableGym", "Run ns-3 without OpenGym/ZMQ interaction", disable_gym);
     cmd.AddValue("apStaCounts", "Comma-separated station counts per AP, e.g. 20,40. Default: empty = single AP with nWifi stations", apStaCountsArg);
+    cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);
     cmd.AddValue("seed", "Random seed", simSeed);
 
     cmd.Parse(argc, argv);
 
     std::vector<uint32_t> apStaCounts = parseApStaCounts(apStaCountsArg, nWifi);
+    g_apCwOverride = parseApCws(apCwsArg, apStaCounts.size());
     nWifi = 0;
     for (uint32_t count : apStaCounts)
     {
@@ -782,6 +912,7 @@ int main(int argc, char *argv[])
     NS_LOG_UNCOND("Ns3Env parameters:");
     NS_LOG_UNCOND("--nWifi: " << nWifi);
     NS_LOG_UNCOND("--apStaCounts: " << (apStaCountsArg.empty() ? "(single AP, nWifi stations)" : apStaCountsArg));
+    NS_LOG_UNCOND("--apCws: " << (apCwsArg.empty() ? "(none, every AP uses CW)" : apCwsArg) << (dry_run && !apCwsArg.empty() ? " (ignored: dryRun)" : ""));
     NS_LOG_UNCOND("--simulationTime: " << simulationTime);
     NS_LOG_UNCOND("--openGymPort: " << openGymPort);
     NS_LOG_UNCOND("--envStepTime: " << envStepTime);
@@ -843,6 +974,9 @@ int main(int argc, char *argv[])
     wifiScenario->PopulateARPcache();
     Ipv4GlobalRoutingHelper::PopulateRoutingTables();
 
+
+    Simulator::Schedule(Seconds(0), &checkApCw, std::string("start"));
+    Simulator::Schedule(Seconds(warmup), &checkApCw, std::string("warmup"));
 
     set_sim(tracing, dry_run, disable_gym, warmup, openGymPort, phy, apDevice, end_delay, monitor, flowmon);
 
@@ -913,6 +1047,8 @@ int main(int argc, char *argv[])
     bool associationOk = reportAssociation(apStaNodes, apDevice);
     NS_LOG_UNCOND("Association check: " << (associationOk ? "PASS" : "FAIL"));
     reportPerApStats(wifiApNode, apStaCounts, Simulator::Now().GetSeconds());
+    checkApCw("end");
+    NS_LOG_UNCOND("Per-AP CW check: " << (g_apCwOk ? "PASS" : "FAIL"));
 
     Simulator::Destroy();
     NS_LOG_UNCOND("Packets registered by handler: " << g_rxPktNum << " Packets" << endl);
