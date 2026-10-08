@@ -7,7 +7,15 @@
 v0.3.0 (two-AP ns-3 topology) is CLOSED (2026-10-07): merged to `main`, tagged `v0.3.0`.
 **v0.4.0 per-AP statistics CLOSED (2026-10-08): merged to `main` (98bbf79), tagged `v0.4.0`, pushed to GitHub.**
 **v0.5.0 per-AP CW CLOSED (2026-10-08): merged to `main`, tagged `v0.5.0`.**
-Next: v0.6.0 multi-AP ns3-gym (new branch `feature/v0.6.0-multi-ap-gym`).
+**v0.6.0 multi-AP ns3-gym CLOSED (2026-10-08): merged to `main`, tagged `v0.6.0`, pushed.**
+Next: v0.7.0 independent per-AP DDPG agents (branch `feature/v0.7.0-independent-agents`).
+v0.6.0 interface (N>1 APs only; N==1 path untouched): obs Box [N,H] flat, row i = AP i loss history (newest first);
+action Box [N] (exponent domain, CW=2^(a+4) clamped 16..1024, size mismatch -> return false); scalar reward = mean of
+per-AP rewards; per-AP rewards in extraInfo 5th `|` field `cwSet,cwReadbackAp,reward,loss,rxDelta,phyTxDelta;...`.
+loss_i=(txΔ-rxΔ)/txΔ from g_apPhyTxPkt/g_apRxPkt (0 if no tx); reward_i=rxΔ*1464*8/(offeredLoad*1e6*stas_i*envStep) clamped [0,1].
+Helpers: `multi_ap.py` (reshape_obs, parse_ap_info); test: `test_multi_ap_gym.py [--staCounts 5,15 --phases "2,5;6,0"]`.
+Known for v0.7: EnvWrapper.observation_space parses repr and breaks on 2-D shapes; EnvWrapper.step feeds one env, so use
+np.array([[a1,a2]]) with 1 env. Multi-AP gym is `basic` scenario only (stas_i fixed for reward).
 
 ## Recent decisions
 
