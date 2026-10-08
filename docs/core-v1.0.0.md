@@ -57,6 +57,34 @@ Aggregate is ~4% above BEB (within the window caveat, one seed). Per-AP split is
 proportional to its STA count; the trained agents let AP1 (5 STA) take ~80%. Jain here is over per-AP throughput, so it does not
 measure per-STA fairness.
 
+### 20,20 and 20,40 (60 STA; added 2026-10-08, same settings: 15 s, stepTime 0.01, seed 0 -> ns-3 seed 1)
+Run times: BEB ~13.5 min (20,20); trained ~18 min (20,20). Both trained runs: `--check` PASS, 1500 steps, 1500 W&B rows x 19 keys.
+Results dirs (gitignored): `results/multi-ap-20261008-185530` (20,20), `results/multi-ap-20261008-194402` (20,40).
+Same comparability caveat as above; one episode, one seed.
+
+20,20
+| | AP1 | AP2 | Global | Phy loss | Jain |
+|---|---:|---:|---:|---:|---:|
+| BEB Mbps | 15.58 | 16.63 | 32.21 | 0.713 | 0.999 |
+| Trained, policy phase Mbps | 15.67 | 14.38 | 30.05 | 0.700 | 0.998 |
+| Trained, all steps Mbps | 16.00 | 14.75 | 30.75 | | |
+
+20,40
+| | AP1 | AP2 | Global | Phy loss | Jain |
+|---|---:|---:|---:|---:|---:|
+| BEB Mbps | 9.36 | 19.84 | 29.20 | 0.747 | 0.886 |
+| Trained, policy phase Mbps | 13.20 | 19.14 | 32.34 | 0.684 | 0.972 |
+| Trained, all steps Mbps | 13.33 | 18.79 | 32.12 | | |
+
+CW (trained, mean of last 100 steps): 20,20 AP1 44.7 / AP2 82.7; 20,40 AP1 116.9 / AP2 133.5 (warm-up means ~224 / ~267).
+Policy-phase mean reward is ~0.003-0.005 per AP (reward is normalized by offered load; scale not investigated).
+
+- Fact: at 20,20 trained is ~7% below BEB in the policy phase (30.0 vs 32.2) with slightly lower loss; fairness equal. No improvement shown.
+- Fact: at 20,40 trained is ~11% above BEB (32.3 vs 29.2), lower loss (0.684 vs 0.747), more even split (Jain 0.972 vs 0.886); the gain is on AP1 (13.2 vs 9.4), AP2 about equal.
+- Differences of a few percent are within the window caveat; one seed gives no confidence interval.
+- Inference (untested): CW tuning helps more when load is uneven (20,40) than when it is balanced (20,20).
+- Deassociation at 20,40 (trained run log): six STAs (nodeId 25, 33, 35, 37, 38, 39) left AP2's BSSID at t=1.144 s and re-associated to it at 1.274-1.311 s. The earlier note (single STA nodeId=42) was from a different run. BEB stdout was not saved, so BEB was not checked. Cause unproven.
+
 ### Historical single-AP reference (v0.1, 40 STA)
 CW 117 → 315, ~35.5 Mbps (33.9 Mibit/s), loss 0.631. Different topology and reward; reference only.
 
@@ -71,8 +99,8 @@ CW 117 → 315, ~35.5 Mbps (33.9 Mibit/s), loss 0.631. Different topology and re
 Smoke cumulative reward 10.59458; `--nWifi=5` dry seed 1 simTime 2 -> 10533 pkts (cw.cc untouched, no rebuild).
 
 ## 5. Open / deferred
-- 20,20 and 20,40 long runs (60 STAs, hours) — deferred to v1.1 (user decision, session time).
+- 20,20 and 20,40 long runs: DONE 2026-10-08 (§3; ~15-20 min each, not hours). Tag `v1.0.0` awaits user approval.
 - Global-CW OSCAR baseline (Baseline B) and multi-seed statistics — v1.1.
-- AP2 deassociation at 20,40 (STA nodeId=42, t=1.144 s → 1.277 s) — cause unproven.
+- AP2 deassociation at 20,40 (t=1.144 s; STA nodeId=42 in one run, six STAs in the 2026-10-08 trained run, §3) — cause unproven.
 - W&B online sync untested; multi-AP gym supports `basic` scenario only; warm-up actions stored in [-1,1].
 - Baseline reward formula differs from the multi-AP one; throughput unit (Mibit/s vs Mbps) differs from the v0.1 report.
