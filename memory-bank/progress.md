@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v1.0.0 implemented (branch `feature/v1.0.0-core`, awaiting user approval to merge/tag, 2026-10-08)** — trainer passes ns-3 seed (py seed+1; ns-3 rejects 0); new `baseline_beb.py`. Two 2,3 long runs seed 0: trace.csv identical (all 17 cols). BEB vs trained: 2,3 43.5 vs 40.3 Mbps; 5,15 36.8 vs 38.4 (trained split inverted, AP1 ~80%). Regressions unchanged. 20,20/20,40 + global-CW baseline deferred to v1.1. Details `docs/core-v1.0.0.md`.
+- **v1.0.0 implemented (merged to main + pushed 2026-10-08; NOT tagged — tag after 20,20/20,40 long runs)** — trainer passes ns-3 seed (py seed+1; ns-3 rejects 0); new `baseline_beb.py`. Two 2,3 long runs seed 0: trace.csv identical (all 17 cols). BEB vs trained: 2,3 43.5 vs 40.3 Mbps; 5,15 36.8 vs 38.4 (trained split inverted, AP1 ~80%). Regressions unchanged. 20,20/20,40 + global-CW baseline deferred to v1.1. Details `docs/core-v1.0.0.md`.
 
 - **v0.9.0 CLOSED (tag `v0.9.0`, 2026-10-08)** — Tests A–F PASS on short runs (details `docs/validation-v0.9.0.md`).
   Trainer `--check` extended (Test A obs, Test D reward, Test E per-episode); new `summarize_run.py`; `.wandb` copy race fixed; `cw.cc` prints STA deassoc/re-assoc
