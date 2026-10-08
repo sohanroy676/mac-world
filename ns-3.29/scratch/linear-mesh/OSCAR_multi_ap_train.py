@@ -63,7 +63,8 @@ torch.manual_seed(args.seed)
 np.random.seed(args.seed)
 
 sim_args = {"simTime": args.simTime, "envStepTime": args.stepTime, "historyLength": args.historyLength,
-            "agentType": "continuous", "scenario": "basic", "apStaCounts": args.apStaCounts}
+            "agentType": "continuous", "scenario": "basic", "apStaCounts": args.apStaCounts,
+            "seed": args.seed + 1}  # ns-3 rejects seed 0, so ns-3 seed = python seed + 1
 
 out_dir = "results/multi-ap-%s" % time.strftime("%Y%m%d-%H%M%S")
 os.makedirs(out_dir)
@@ -72,7 +73,7 @@ trace = csv.writer(trace_f)
 trace.writerow(["episode", "step", "ap", "state", "action", "real_action", "reward", "next_state", "cw_set",
                 "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"])
 
-run = wandb.init(name="%s multi-AP OurDDPG v0.9.0" % args.apStaCounts, entity=wandb_entity,
+run = wandb.init(name="%s multi-AP OurDDPG v1.0.0" % args.apStaCounts, entity=wandb_entity,
                  project=args.wandb_project, tags=["multi-ap", "v0.9.0"], reinit=True,
                  config=dict(vars(args), AP_Count=n, Stations_Per_AP=counts))
 

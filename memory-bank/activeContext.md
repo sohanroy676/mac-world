@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**v1.0.0 implemented on `feature/v1.0.0-core` (2026-10-08), committed, NOT merged/tagged — needs user approval.** Next: v1.1.0 benchmarks (global-CW OSCAR baseline, 20,20/20,40 long runs, multiple seeds). See `docs/core-v1.0.0.md`.
+
 **v0.9.0 validation CLOSED (2026-10-08): merged to `main`, tagged `v0.9.0`, pushed.** Next: v1.0.0 core milestone (bundle + 2-AP results + baseline comparison); optionally the 20,20 / 20,40 long runs first. Run one ns-3 job at a time (trainer leftover-process check false-positives).
 
 v0.3.0 (two-AP ns-3 topology) is CLOSED (2026-10-07): merged to `main`, tagged `v0.3.0`.

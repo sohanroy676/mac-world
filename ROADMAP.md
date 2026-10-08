@@ -50,6 +50,7 @@
 
 ### v1.0.0 — Core Milestone
 - Working, repeatable two-AP multi-agent OSCAR implementation.
+- Status: ✅ IMPLEMENTED 2026-10-08 on `feature/v1.0.0-core` (not merged/tagged yet). Seed-pinned identical-rerun check + BEB baseline comparison on 2,3 and 5,15. See `docs/core-v1.0.0.md`.
 
 ## Next — Scaling and Benchmarking
 
