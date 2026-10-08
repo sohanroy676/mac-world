@@ -1,25 +1,19 @@
-"""v0.7.0: one independent DDPG agent (actor+critic+replay) per AP in one joint ns-3 simulation.
+"""v0.7.0/v0.8.0: one independent DDPG agent (actor+critic+replay) per AP in one joint ns-3 simulation.
 
 Each agent sees only its own AP's newest loss and its own reward (from parse_ap_info, not the
 scalar gym reward). Local critics only. Differences from OSCAR_train.py (deliberate): warm-up
 actions are sampled in [-1,1] and stored as such (the baseline stores U(0,6) in the replay).
+v0.8.0: per-AP + global W&B metrics (design section 7 names; offline unless --online).
 Run from this directory: ../../venv/bin/python OSCAR_multi_ap_train.py --apStaCounts 2,3 --check
 """
 import argparse
 import csv
+import json
 import os
+import shutil
 import sys
 import time
 
-import numpy as np
-import torch
-
-from agents.our_ddpg.Our_DDPG import DDPG
-from agents.our_ddpg.preprocessor import Preprocessor
-from agents.our_ddpg.utils import ReplayBuffer
-from exceptions import AlreadyRunningException
-from multi_ap import parse_ap_info, reshape_obs
-from wrappers import EnvWrapper
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--apStaCounts", default="20,40")
@@ -34,8 +28,26 @@ parser.add_argument("--discount", type=float, default=0.7)
 parser.add_argument("--tau", type=float, default=1e-3)
 parser.add_argument("--seed", type=int, default=0)
 parser.add_argument("--print_every", type=int, default=10)
+parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
+parser.add_argument("--wandb_project", default="contention_window")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 args = parser.parse_args()
+
+# W&B mode must be decided before wandb is imported.
+if not args.online:
+    os.environ.setdefault("WANDB_MODE", "offline")
+
+import numpy as np  # noqa: E402
+import torch  # noqa: E402
+import wandb  # noqa: E402
+
+from agents.our_ddpg.Our_DDPG import DDPG  # noqa: E402
+from agents.our_ddpg.preprocessor import Preprocessor  # noqa: E402
+from agents.our_ddpg.utils import ReplayBuffer  # noqa: E402
+from config import wandb_entity  # noqa: E402
+from exceptions import AlreadyRunningException  # noqa: E402
+from multi_ap import jain, parse_ap_info, reshape_obs, step_metrics  # noqa: E402
+from wrappers import EnvWrapper  # noqa: E402
 
 counts = [int(c) for c in args.apStaCounts.split(",")]
 n = len(counts)
@@ -51,12 +63,16 @@ np.random.seed(args.seed)
 sim_args = {"simTime": args.simTime, "envStepTime": args.stepTime, "historyLength": args.historyLength,
             "agentType": "continuous", "scenario": "basic", "apStaCounts": args.apStaCounts}
 
-out_dir = "results/v0.7.0-%s" % time.strftime("%Y%m%d-%H%M%S")
+out_dir = "results/multi-ap-%s" % time.strftime("%Y%m%d-%H%M%S")
 os.makedirs(out_dir)
 trace_f = open(os.path.join(out_dir, "trace.csv"), "w", newline="")
 trace = csv.writer(trace_f)
 trace.writerow(["episode", "step", "ap", "state", "action", "real_action", "reward", "next_state", "cw_set",
                 "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"])
+
+run = wandb.init(name="%s multi-AP OurDDPG v0.8.0" % args.apStaCounts, entity=wandb_entity,
+                 project=args.wandb_project, tags=["multi-ap", "v0.8.0"], reinit=True,
+                 config=dict(vars(args), AP_Count=n, Stations_Per_AP=counts))
 
 agents = [DDPG(state_dim, action_dim, max_action, args.discount, args.tau) for _ in range(n)]
 replays = [ReplayBuffer(state_dim, action_dim) for _ in range(n)]
@@ -88,6 +104,7 @@ env = EnvWrapper(1, **sim_args)
 print("APs:", counts, "steps/ep:", steps_per_ep, "out:", out_dir)
 time_step = 0
 reward_cols = [[] for _ in range(n)]
+logged = []
 try:
     for episode in range(args.episodes):
         try:
@@ -133,6 +150,15 @@ try:
                     agents[i].train(replays[i], args.batch_size)
             trace_f.flush()
 
+            m = step_metrics(recs, [S2[i, 0] for i in range(n)], [scalar(a.actor_loss) for a in agents],
+                             [scalar(a.critic_loss) for a in agents], args.stepTime)
+            m.update({"Episode": episode, "Step": step})
+            logged.append(m)
+            if done[0] or step == steps_per_ep:
+                m.update({"AP%d/CumulativeReward" % (i + 1): ep_reward[i] for i in range(n)})
+                m["Global/CumulativeReward"] = float(ep_reward.sum())
+            wandb.log(m, step=time_step)
+
             if step % args.print_every == 0 or step == 1:
                 print("ep%d step %4d | " % (episode, step) + " | ".join(
                     "AP%d cw=%4d r=%.3f loss=%.3f aL=%.3f cL=%.4f" % (
@@ -146,11 +172,50 @@ try:
         env.close()
 finally:
     trace_f.close()
+    wandb.finish()
+    wlog = os.path.join(os.path.dirname(run.dir), "run-%s.wandb" % run.id)
+    if os.path.exists(wlog):
+        shutil.copy2(wlog, out_dir)
 
 if args.check:
     for i in range(n):
         check(replays[i].size == time_step, "replay %d size %d != steps %d" % (i, replays[i].size, time_step))
         check(all(np.isfinite([scalar(agents[i].actor_loss), scalar(agents[i].critic_loss)])), "AP%d non-finite loss" % (i + 1))
+    # v0.8.0: read the logged history back from the run's .wandb file
+    from wandb.proto import wandb_internal_pb2 as pb
+    from wandb.sdk.internal import datastore
+    ds = datastore.DataStore()
+    ds.open_for_scan(os.path.join(out_dir, "run-%s.wandb" % run.id))
+    hist = []
+    while True:
+        data = ds.scan_data()
+        if data is None:
+            break
+        rec = pb.Record()
+        rec.ParseFromString(data)
+        if rec.WhichOneof("record_type") == "history":
+            hist.append({"/".join(it.nested_key) or it.key: json.loads(it.value_json)
+                         for it in rec.history.item})
+    check(len(hist) == time_step, "W&B history rows %d != steps %d" % (len(hist), time_step))
+    keys = ["AP%d/%s" % (i + 1, k) for i in range(n) for k in
+            ("CW", "Reward", "Throughput", "LossRatio", "Observation", "ActorLoss", "CriticLoss")]
+    keys += ["Global/Throughput", "Global/Fairness", "Global/LossRatio", "Episode", "Step"]
+    for h in hist:
+        miss = [k for k in keys if k not in h]
+        check(not miss, "W&B row missing keys %s" % miss)
+        if miss:
+            break
+        thr = [h["AP%d/Throughput" % (i + 1)] for i in range(n)]
+        check(np.isclose(h["Global/Throughput"], sum(thr)), "Global/Throughput != sum of APs")
+        check(np.isclose(h["Global/Fairness"], jain(thr)), "Global/Fairness mismatch")
+    last = hist[-1] if hist else {}
+    check(all(k in last for k in ["Global/CumulativeReward"] + ["AP%d/CumulativeReward" % (i + 1) for i in range(n)]),
+          "cumulative keys missing on last row")
+    for h, m in zip(hist, logged):  # logged values == what the trainer computed this step
+        if not all(np.isclose(h[k], m[k]) for k in keys):
+            check(False, "W&B history differs from logged metrics")
+            break
+    print("W&B check: %d rows, %d keys each" % (len(hist), len(keys)))
     if n == 2:
         check(not np.allclose(reward_cols[0], reward_cols[1]), "reward columns identical across APs")
     print("RESULT:", "FAIL (%d)" % len(fails) if fails else "PASS", "| steps:", time_step)
