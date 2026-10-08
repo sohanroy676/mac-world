@@ -1,6 +1,6 @@
 # v1.0.0 — Core milestone (2026-10-08)
 
-Status: core system working and evidenced on 2,3 and 5,15. Open items are listed in §4.
+Status: core system working and evidenced on 2,3, 5,15, 20,20 and 20,40. Open items are in §5.
 
 ## 1. Requirement → evidence
 
@@ -45,15 +45,25 @@ are close but not identical, so differences of a few percent are not meaningful.
 | BEB Mbps | 18.87 | 24.60 | 43.47 | 0.983 |
 | Trained, policy phase Mbps | 9.46 | 30.88 | 40.34 | 0.800 |
 | Trained, all steps Mbps | 9.58 | 28.74 | 38.32 | |
+| Rerun 2026-10-08 (closeout, this machine, rebuilt binary), policy phase Mbps | 9.40 | 31.00 | 40.40 | 0.798 |
+| Rerun, all steps Mbps | 9.54 | 28.83 | 38.37 | |
+
+The rerun (`results/multi-ap-20261008-211952`, `--check` PASS) is close to the first run but not bit-identical in the summary
+(40.40 vs 40.34 Mbps, within 0.2%); the §2 identical-trace evidence was from two runs in one session. Cause of the small difference not investigated.
 
 ### 5,15
 | | AP1 (5 STA) | AP2 (15 STA) | Global | Jain |
 |---|---:|---:|---:|---:|
 | BEB Mbps | 9.97 | 26.83 | 36.79 | 0.826 |
 | Trained, policy phase Mbps (v0.9 run) | 30.76 | 7.67 | 38.42 | 0.846 |
+| BEB Mbps, rerun on this machine (`--seed 1`) | 9.97 | 26.83 | 36.79 | 0.826 |
+| Trained, policy phase Mbps, seed-pinned rerun 2026-10-08 | 32.67 | 6.89 | 39.56 | 0.818 |
+| Trained, all steps Mbps, seed-pinned rerun | 28.74 | 10.33 | 39.06 | |
 
-The v0.9 5,15 run predates seed pinning (ns-3 default seed), so it is a different realization than the BEB row; not rerun for time.
-Aggregate is ~4% above BEB (within the window caveat, one seed). Per-AP split is inverted: BEB gives each AP throughput roughly
+The v0.9 5,15 row predates seed pinning (ns-3 default seed); the seed-pinned rerun (`results/multi-ap-20261008-214229`, `--check` PASS) is the
+matched comparison against BEB (BEB reproduced exactly on this machine). Rerun: aggregate is ~7.5% above BEB (39.6 vs 36.8), AP1 takes ~83%;
+AP1 CW settles near 17, AP2 stays high (last-100 mean 237). The v0.9 run gave 38.4 Mbps (~4% above BEB).
+Gains of this size are within the window caveat (one seed). Per-AP split is inverted: BEB gives each AP throughput roughly
 proportional to its STA count; the trained agents let AP1 (5 STA) take ~80%. Jain here is over per-AP throughput, so it does not
 measure per-STA fairness.
 
@@ -90,15 +100,18 @@ CW 117 → 315, ~35.5 Mbps (33.9 Mibit/s), loss 0.631. Different topology and re
 
 ### Reading (fact vs inference)
 - Fact: on 2,3 the trained agents did **not** beat plain BEB on aggregate throughput (40.3 vs 43.5) and are less fair (Jain 0.80 vs 0.98);
-  on 5,15 aggregate is about equal (38.4 vs 36.8) with a very different split. On 2,3 both agents drive CW toward 16 (the BEB minimum); on 5,15 AP1 does, AP2 stays high for most of the policy phase.
-- Inference (untested): with few STAs per AP the CW has little room to help; the 40-STA single-AP baseline is where OSCAR's gain
-  was shown, so 20,20 / 20,40 are the informative cases. Not claimed.
+  on 5,15 aggregate is modestly above BEB (38.4 and 39.6 vs 36.8, two runs) with a very different split. On 2,3 both agents drive CW toward 16 (the BEB minimum); on 5,15 AP1 does, AP2 stays high for most of the policy phase.
+- Across all four topologies trained is below BEB on 2,3 (-7%) and 20,20 (-7%), above on 5,15 (+4 to +8%) and 20,40 (+11%). The wins are in the unequal-load cases (5,15; 20,40) and the losses in the balanced-ish ones (2,3; 20,20).
+- Inference (untested): CW tuning helps more when load is uneven; with balanced load BEB is already near-optimal. Not claimed.
 - One episode, one seed. No confidence intervals.
 
 ## 4. Regressions
-Smoke cumulative reward 10.59458; `--nWifi=5` dry seed 1 simTime 2 -> 10533 pkts (cw.cc untouched, no rebuild).
+Smoke cumulative reward 10.59458; `--nWifi=5` dry seed 1 simTime 2 -> 10533 pkts. Re-verified 2026-10-08 on a rebuilt binary
+(the previous binary predated the v0.9 `cw.cc` change): smoke 10.59458, 10533 pkts, `5,15 --apCws=32,256` CW + stats checks PASS (9000 pkts),
+`test_multi_ap_gym.py` PASS on 2,3 and 5,15.
 
 ## 5. Open / deferred
+- Reward scale: policy-phase reward is ~0.003-0.07 per step (0.003-0.005 at 60 STAs). It follows design §3 (goodput / (150 Mbps x STAs x step)); because the offered load saturates the channel, the [0,1] range is barely used. Inference (untested): a weak learning signal may contribute to the modest or uneven gains. Not changed in v1.0.0.
 - 20,20 and 20,40 long runs: DONE 2026-10-08 (§3; ~15-20 min each, not hours). Tag `v1.0.0` awaits user approval.
 - Global-CW OSCAR baseline (Baseline B) and multi-seed statistics — v1.1.
 - AP2 deassociation at 20,40 (t=1.144 s; STA nodeId=42 in one run, six STAs in the 2026-10-08 trained run, §3) — cause unproven.

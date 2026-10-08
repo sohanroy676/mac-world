@@ -16,6 +16,15 @@ Launch ```python CCOD_train.py``` to train the CCOD algorithm.
 
 Launch ```python standard_test_and_ccod_train.py``` to test the 802.11 algorithm and train the CCOD algorithm.
 
+### Multi-AP (project extension, v1.0.0)
+Run from this directory with the project venv (`../../venv/bin/python`); build first with `cd ../.. && ./waf build --target=linear-mesh`. Run one ns-3 job at a time.
+
+- Train one independent DDPG agent per AP: ```python OSCAR_multi_ap_train.py --apStaCounts 20,20 --check``` (`--seed S` seeds torch/numpy and ns-3 seed S+1; W&B is offline unless `--online`).
+- Standard 802.11 BEB baseline on the same topology: ```python baseline_beb.py --apStaCounts 20,20 --seed 1```.
+- Summarize a run: ```python summarize_run.py results/multi-ap-<timestamp>```.
+- Deterministic joint-action gym test: ```python test_multi_ap_gym.py --staCounts 5,15```.
+- Results and design: `docs/core-v1.0.0.md`, `docs/multi-ap-design-v0.2.0.md`.
+
 ### Reference this paper
 ```
 @INPROCEEDINGS{10279663,

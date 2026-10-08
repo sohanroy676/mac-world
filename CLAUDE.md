@@ -34,9 +34,8 @@ PyTorch 1.13.1+cu117 (GTX 1650 Ti 4 GB) · Gym 0.26.2 · NumPy 1.21.6 · protobu
 - Distinguish project changes from upstream ns-3/ns3-gym code. Touch upstream only when necessary, and say so.
 
 ## Roadmap (ROADMAP.md, details in docs/detailed_roadmap.md)
-v0.1 baseline ✅ · v0.2 design ✅ · **v0.3 two-AP topology (IN PROGRESS)** · v0.4 per-AP stats · v0.5 per-AP CW ·
-v0.6 multi-AP ns3-gym · v0.7 independent agents · v0.8 W&B · v0.9 validation · v1.0 core ·
-v1.1 benchmarks · v1.2–1.6 scale 4→10 APs + analysis · v1.7–1.9 central critic · v2.x robustness/results/report/demo/audit.
+v0.1–v1.0 ✅ (baseline, design, two-AP topology, per-AP stats, per-AP CW, multi-AP ns3-gym, independent agents, W&B,
+validation, core) · **v1.1 benchmarks (NEXT)** · v1.2–1.6 scale 4→10 APs + analysis · v1.7–1.9 central critic · v2.x robustness/results/report/demo/audit.
 - Priority: Tier 1 (v0.1–v1.0) → Tier 2 (v1.1–v1.6) → central critic → rest.
 - When v1.0 works: tag it, run baselines, collect 2-AP results, THEN scale, THEN central critic.
 - Each version has completion criteria in docs/detailed_roadmap.md. Meet them before closing.

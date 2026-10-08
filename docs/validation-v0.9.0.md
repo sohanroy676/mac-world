@@ -1,6 +1,6 @@
 # v0.9.0 — Two-AP validation (2026-10-08)
 
-Status: CLOSED with scope note. Tests A–F PASS on short runs. Long training done for **2,3** and **5,15** (see §3); 20,20 / 20,40 long runs are
+Status: CLOSED with scope note (update: the 20,20 / 20,40 long runs were later done, see `docs/core-v1.0.0.md` §3). Tests A–F PASS on short runs. Long training done for **2,3** and **5,15** (see §3); 20,20 / 20,40 long runs are
 deferred to v1.1 / a later session (not required by the v0.9.0 completion criterion). Run dirs are under `ns-3.29/scratch/linear-mesh/results/` (not committed).
 
 ## 1. Tests (roadmap §v0.9.0)
