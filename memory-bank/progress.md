@@ -7,6 +7,13 @@
 
 ## Done
 
+- **v0.7.0 implemented (branch `feature/v0.7.0-independent-agents`, commit fc9c432; awaiting merge/tag approval, 2026-10-08)** —
+  new `OSCAR_multi_ap_train.py` (one DDPG + replay per AP, state_i = newest loss_i, reward_i from parse_ap_info, per-AP
+  Preprocessor for logging only, CSV trace in `results/v0.7.0-<ts>/`). No cw.cc/wrapper/agent changes. Validation:
+  `--apStaCounts 2,3 --simTime 3 --stepTime 0.1 --historyLength 20 --start_timesteps 10 --batch_size 8 --check` -> RESULT PASS
+  (30 steps, per-AP replay rows/CW/reward asserted every step, disjoint params, finite losses, no leftover ns-3 process).
+  Regression: gym smoke 10.59458, `--nWifi=5` dry 10533 pkts. Deliberate difference: warm-up actions stored in [-1,1] (baseline stores U(0,6)).
+
 - **v0.6.0 CLOSED (tag `v0.6.0`, 2026-10-08)** — joint per-AP obs/action/reward in cw.cc,
   `multi_ap.py`, `test_multi_ap_gym.py`. Validation: gym test PASS on 2,3 (64/512 then swapped) and 5,15 (64/512, 1024/16): readback
   CW matches action per AP every step, rewards in [0,1]. Regression: `--nWifi=5` dry 10533 pkts / 117.65 MB, `5,15` dry 9000 pkts,
@@ -41,4 +48,4 @@
 
 ## In progress
 
-- v0.7.0 independent per-AP DDPG agents (next, not started).
+- v0.7.0 awaiting user approval to merge/tag; then v0.8.0 W&B.
