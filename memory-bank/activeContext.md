@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**v1.0.0 implemented, merged to `main` and pushed (2026-10-08) but NOT TAGGED.** User decision: run the 20,20 / 20,40 long trainings in a new session first (ask before starting; one ns-3 job at a time; 2 s dry run alone >10 min), add results to `docs/core-v1.0.0.md`, then tag `v1.0.0` only with user approval. After that: v1.1.0 (global-CW OSCAR baseline, multi-seed). BEB baseline: `baseline_beb.py --apStaCounts 20,20`. Trainer seed: ns-3 seed = python seed + 1.
+
 **v0.9.0 validation CLOSED (2026-10-08): merged to `main`, tagged `v0.9.0`, pushed.** Next: v1.0.0 core milestone (bundle + 2-AP results + baseline comparison); optionally the 20,20 / 20,40 long runs first. Run one ns-3 job at a time (trainer leftover-process check false-positives).
 
 v0.3.0 (two-AP ns-3 topology) is CLOSED (2026-10-07): merged to `main`, tagged `v0.3.0`.
