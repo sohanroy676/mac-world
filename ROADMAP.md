@@ -46,6 +46,7 @@
 
 ### v0.9.0 — Validation
 - Validate the complete two-AP system with different station distributions.
+- Status: ✅ CLOSED 2026-10-08 — tag `v0.9.0` on `main`. Tests A–F PASS (short runs); long training done for 2,3 and 5,15 only; 20,20 / 20,40 long runs deferred. See `docs/validation-v0.9.0.md`.
 
 ### v1.0.0 — Core Milestone
 - Working, repeatable two-AP multi-agent OSCAR implementation.

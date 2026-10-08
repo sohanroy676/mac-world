@@ -1,7 +1,7 @@
 # v0.9.0 — Two-AP validation (2026-10-08)
 
-Status: Tests A–F PASS on short runs. Long training done for **2,3** and **5,15** (see §3); 20,20 / 20,40 long runs are
-deferred to a later session. Run dirs are under `ns-3.29/scratch/linear-mesh/results/` (not committed).
+Status: CLOSED with scope note. Tests A–F PASS on short runs. Long training done for **2,3** and **5,15** (see §3); 20,20 / 20,40 long runs are
+deferred to v1.1 / a later session (not required by the v0.9.0 completion criterion). Run dirs are under `ns-3.29/scratch/linear-mesh/results/` (not committed).
 
 ## 1. Tests (roadmap §v0.9.0)
 
@@ -69,4 +69,4 @@ Command: `../../venv/bin/python OSCAR_multi_ap_train.py --apStaCounts X --simTim
 
 ## 4. Regressions
 `--nWifi=5 --dryRun=true --disableGym=true --simTime=2 --seed=1` → sinkReceivedPackets=10533 on the rebuilt binary
-(rebuilt 14:17, `cw.cc` trace lines only). Gym smoke (`baseline_v0_1_0.py --smoke`): not re-run yet.
+(rebuilt 14:17, `cw.cc` trace lines only). Gym smoke (`baseline_v0_1_0.py --smoke`) → cumulative reward 10.59458, unchanged.
