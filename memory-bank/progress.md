@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v0.6.0 implemented (branch `feature/v0.6.0-multi-ap-gym`, 2026-10-08, not merged/tagged)** — joint per-AP obs/action/reward in cw.cc,
+- **v0.6.0 CLOSED (tag `v0.6.0`, 2026-10-08)** — joint per-AP obs/action/reward in cw.cc,
   `multi_ap.py`, `test_multi_ap_gym.py`. Validation: gym test PASS on 2,3 (64/512 then swapped) and 5,15 (64/512, 1024/16): readback
   CW matches action per AP every step, rewards in [0,1]. Regression: `--nWifi=5` dry 10533 pkts / 117.65 MB, `5,15` dry 9000 pkts,
   stats+CW checks PASS, gym smoke cumulative reward 10.59458 unchanged.
@@ -41,4 +41,4 @@
 
 ## In progress
 
-- v0.6.0 awaiting user approval to merge/tag/push.
+- v0.7.0 independent per-AP DDPG agents (next, not started).
