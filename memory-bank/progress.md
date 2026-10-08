@@ -7,6 +7,8 @@
 
 ## Done
 
+- **v1.0.0 long runs done (2026-10-08, branch `feature/v1.0.0-long-runs`, not merged; tag still pending user approval)** — binary rebuilt (regressions: smoke 10.59458, `--nWifi=5` dry 10533 pkts). BEB vs trained (policy phase, seed 0/ns-3 seed 1): 20,20 32.2 vs 30.0 Mbps (no gain); 20,40 29.2 vs 32.3 Mbps, Jain 0.886 -> 0.972. Both trained `--check` PASS. 20,40 trained log: 6 STAs deassoc from AP2 at t=1.144 s, back by 1.31 s (cause unproven; BEB not checked). Each run took ~13-18 min. Details `docs/core-v1.0.0.md` §3.
+
 - **v1.0.0 implemented (merged to main + pushed 2026-10-08; NOT tagged — tag after 20,20/20,40 long runs)** — trainer passes ns-3 seed (py seed+1; ns-3 rejects 0); new `baseline_beb.py`. Two 2,3 long runs seed 0: trace.csv identical (all 17 cols). BEB vs trained: 2,3 43.5 vs 40.3 Mbps; 5,15 36.8 vs 38.4 (trained split inverted, AP1 ~80%). Regressions unchanged. 20,20/20,40 + global-CW baseline deferred to v1.1. Details `docs/core-v1.0.0.md`.
 
 - **v0.9.0 CLOSED (tag `v0.9.0`, 2026-10-08)** — Tests A–F PASS on short runs (details `docs/validation-v0.9.0.md`).
