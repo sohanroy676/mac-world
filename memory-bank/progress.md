@@ -7,6 +7,13 @@
 
 ## Done
 
+- **v0.5.0 CLOSED (tag `v0.5.0`, code 592b603, 2026-10-08)** — wildcard
+  MinCw/MaxCw `Config::Set` replaced by per-node paths (`setApCw`, AP_i + its STAs). New `--apCws=A,B` (non-dryRun only,
+  clamped 16..1024, count must equal #APs) and end-of-run `Per-AP CW check: PASS/FAIL` (readback at t=0, warm-up, end).
+  Validation (dryRun/disableGym, seed 1, simTime 2): `--nWifi=5` dry and `--CW=64`, and `5,15` dry are byte-identical to
+  pre-change output (10533 / 10263 / 9000 pkts). `5,15 --apCws=32,256`: AP1 32, AP2 256, per-AP received 7580 vs 2805,
+  stats check PASS. `--apCws=1024,256`: AP2 stays 256 while AP1 goes 1024 (received 747 vs 9017). Gym smoke 10.59458 unchanged.
+
 - **v0.4.0 CLOSED (tag `v0.4.0`, merge 98bbf79, 2026-10-08; code 97d99eb)** — per-AP sent_phy/sent_app/received/loss/
   throughput + totals + Jain. Runs (dryRun, disableGym, seed 1, simTime 2): `--nWifi=5` identical to
   pre-change (10533 pkts); 2,3 / 5,15 / 20,40 all `Per-AP statistics check: PASS` (Σ per-AP == globals
@@ -29,4 +36,4 @@
 
 ## In progress
 
-- v0.5.0 per-AP CW (next).
+- v0.6.0 multi-AP ns3-gym (next, not started).
