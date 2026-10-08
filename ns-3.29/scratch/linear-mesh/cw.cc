@@ -922,12 +922,19 @@ uint32_t nodeIdFromContext(std::string context)
 
 void staAssociated(std::string context, Mac48Address bssid)
 {
-    g_staBssid[nodeIdFromContext(context)] = bssid;
+    uint32_t nodeId = nodeIdFromContext(context);
+    g_staBssid[nodeId] = bssid;
+    if (g_staDeAssocCount.count(nodeId))
+    {
+        std::cout << "STA nodeId=" << nodeId << " re-associated with " << bssid << " at t=" << Simulator::Now().GetSeconds() << "s" << endl;
+    }
 }
 
 void staDeAssociated(std::string context, Mac48Address bssid)
 {
-    g_staDeAssocCount[nodeIdFromContext(context)]++;
+    uint32_t nodeId = nodeIdFromContext(context);
+    g_staDeAssocCount[nodeId]++;
+    std::cout << "STA nodeId=" << nodeId << " deassociated from " << bssid << " at t=" << Simulator::Now().GetSeconds() << "s" << endl;
 }
 
 // Log-only v0.3.0 checks: every STA associated with exactly its own AP.
