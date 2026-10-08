@@ -38,6 +38,7 @@
 
 ### v0.7.0 — Independent Agents
 - Add one independent AP-level DDPG Actor-Critic agent per AP.
+- Status: ✅ CLOSED 2026-10-08 — tag `v0.7.0` on `main`. Independent per-AP DDPG agents; `OSCAR_multi_ap_train.py --check` PASS on 2,3; single-AP unchanged.
 
 ### v0.8.0 — W&B
 - Add clear per-AP and aggregate experiment logging.
