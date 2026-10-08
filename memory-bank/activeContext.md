@@ -5,8 +5,8 @@
 ## Current focus
 
 v0.3.0 (two-AP ns-3 topology) is CLOSED (2026-10-07): merged to `main`, tagged `v0.3.0`.
-**v0.4.0 per-AP statistics: implemented + validated on `feature/v0.4.0-per-ap-stats`
-(commit 97d99eb, 2026-10-08), NOT yet merged/tagged — awaiting user approval.**
+**v0.4.0 per-AP statistics CLOSED (2026-10-08): merged to `main` (98bbf79), tagged `v0.4.0`.
+Push to GitHub pending (no credentials in the agent environment — user runs the push).**
 Next: v0.5.0 per-AP CW (new branch).
 
 ## Recent decisions
@@ -41,8 +41,8 @@ Next: v0.5.0 per-AP CW (new branch).
 
 ## Next step
 
-Get user approval to merge `feature/v0.4.0-per-ap-stats` and tag `v0.4.0`, then **v0.5.0
-per-AP CW**: replace the wildcard `Config::Set` (cw.cc, set_nodes + MyExecuteActions) with
+Push `main` + tag `v0.4.0` if not done, then **v0.5.0
+per-AP CW** (branch `feature/v0.5.0-per-ap-cw`): replace the wildcard `Config::Set` (cw.cc, set_nodes + MyExecuteActions) with
 per-node paths for AP_i + its STAs; verify by attribute readback per AP.
 
 v0.4.0 facts (cw.cc only, no scenario.h change): per-AP rx via UdpServer "Rx" bound callbacks,

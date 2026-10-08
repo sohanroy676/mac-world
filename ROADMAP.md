@@ -26,7 +26,7 @@
 
 ### v0.4.0 — Per-AP Statistics
 - Separate throughput, packet, loss/collision, reward, and other required measurements by AP.
-- Status: ✅ IMPLEMENTED + VALIDATED 2026-10-08 on `feature/v0.4.0-per-ap-stats` (97d99eb); merge/tag `v0.4.0` pending user approval.
+- Status: ✅ CLOSED 2026-10-08 — tag `v0.4.0` on `main`. Per-AP rx/PHY-tx/app-tx, loss, throughput, totals and Jain; validated on 2,3 / 5,15 / 20,40 and single-AP.
 
 ### v0.5.0 — AP-Specific CW
 - Give each AP independent CW control.

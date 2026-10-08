@@ -7,8 +7,7 @@
 
 ## Done
 
-- **v0.4.0 per-AP stats implemented + validated (2026-10-08, commit 97d99eb, branch
-  `feature/v0.4.0-per-ap-stats`, not yet merged/tagged)** — per-AP sent_phy/sent_app/received/loss/
+- **v0.4.0 CLOSED (tag `v0.4.0`, merge 98bbf79, 2026-10-08; code 97d99eb)** — per-AP sent_phy/sent_app/received/loss/
   throughput + totals + Jain. Runs (dryRun, disableGym, seed 1, simTime 2): `--nWifi=5` identical to
   pre-change (10533 pkts); 2,3 / 5,15 / 20,40 all `Per-AP statistics check: PASS` (Σ per-AP == globals
   exactly, sinkMatch yes, 0 cross-AP flows). Gym smoke passes, reward unchanged.
@@ -30,4 +29,4 @@
 
 ## In progress
 
-- v0.4.0 awaiting user approval to merge/tag; then v0.5.0 per-AP CW.
+- v0.5.0 per-AP CW (next). Push of main/v0.4.0 to GitHub pending user credentials.
