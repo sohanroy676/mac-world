@@ -1,6 +1,6 @@
 # v0.9.0 — Two-AP validation (2026-10-08)
 
-Status: Tests A–F PASS on short runs. Long training done for **2,3** only (see §3); 5,15 / 20,20 / 20,40 long runs are
+Status: Tests A–F PASS on short runs. Long training done for **2,3** and **5,15** (see §3); 20,20 / 20,40 long runs are
 deferred to a later session. Run dirs are under `ns-3.29/scratch/linear-mesh/results/` (not committed).
 
 ## 1. Tests (roadmap §v0.9.0)
@@ -45,9 +45,27 @@ the comparison needs a 40-STA run (20,20) and matched baselines (v1.1). Not a cl
 Comparison caveats: baseline throughput is Mibit/s (33.9 ≈ 35.5 Mbps); multi-AP is Mbps (1e6). Baseline reward uses a
 different formula (5·150 constant), so rewards are not comparable. One episode, one seed.
 
-### 5,15 / 20,20 / 20,40
-Not yet done (time-boxed session). Command: `../../venv/bin/python OSCAR_multi_ap_train.py --apStaCounts X --simTime 15
---stepTime 0.01 --historyLength 300 --start_timesteps 300 --check`, then `summarize_run.py results/multi-ap-<ts>`.
+### 5,15 (8m33s wall, `--check`: all per-step checks PASS)
+
+| Metric | AP1 (5 STA) | AP2 (15 STA) | Global |
+|---|---:|---:|---:|
+| CW mean warm-up / policy | 224.2 / 23.0 | 266.7 / 361.6 | |
+| CW first-100 → last-100 | 223.8 → 17.3 | 282.7 → 44.9 | |
+| Throughput Mbps (policy) | 30.76 | 7.67 | 38.42 |
+| Loss ratio | 0.589 | 0.612 | 0.596 |
+| Reward mean (policy) | 0.041 | 0.003 | |
+| Jain fairness (mean thr) | | | 0.846 |
+
+Observation: independent local agents diverged: AP1 sits at CW≈16 and takes ~80% of the throughput; AP2 spent most of
+the policy phase at high CW (mean 362) and ended near 45, with a much smaller share. Global throughput (38.4 Mbps) is
+about the same as 2,3 (40.3) and the 40-STA baseline (~35.5). Per-AP isolation holds (checks PASS); the unequal outcome
+is a learning/contention result, not evidence of a leak. Same Python seed 0 gives identical warm-up CW columns as 2,3
+(expected: same random warm-up actions). One episode, one seed.
+
+### 20,20 / 20,40
+Not yet done (time-boxed session). 60 STAs is much slower per step than 5,15 (the 2 s dry run alone takes >10 min).
+Command: `../../venv/bin/python OSCAR_multi_ap_train.py --apStaCounts X --simTime 15 --stepTime 0.01 --historyLength 300
+--start_timesteps 300 --check`, then `summarize_run.py results/multi-ap-<ts>`. Run one ns-3 job at a time.
 
 ## 4. Regressions
 `--nWifi=5 --dryRun=true --disableGym=true --simTime=2 --seed=1` → sinkReceivedPackets=10533 on the rebuilt binary

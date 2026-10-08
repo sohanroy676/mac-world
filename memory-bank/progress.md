@@ -9,8 +9,8 @@
 
 - **v0.9.0 IN PROGRESS (branch `feature/v0.9.0-validation`, 2026-10-08)** — Tests A–F PASS on short runs (details `docs/validation-v0.9.0.md`).
   Trainer `--check` extended (Test A obs, Test D reward, Test E per-episode); new `summarize_run.py`; `.wandb` copy race fixed; `cw.cc` now prints STA deassoc/re-assoc
-  (rebuilt; `--nWifi=5` dry still 10533 pkts). Deassoc at 20,40: STA nodeId=42 off AP2 at t=1.144s, back to the same BSSID at 1.277s. Long run 2,3 done (3m46s, both CWs -> ~16, 40.3 Mbps).
-  TODO: long runs 5,15 / 20,20 / 20,40 (5,15 estimated 20+ min; 60 STAs much slower), gym smoke regression, fill §3 of the doc, commit, ask before merge/tag.
+  (rebuilt; `--nWifi=5` dry still 10533 pkts). Deassoc at 20,40: STA nodeId=42 off AP2 at t=1.144s, back to the same BSSID at 1.277s. Long runs done: 2,3 (3m46s, both CWs -> ~16, 40.3 Mbps) and 5,15 (8m33s, AP1 CW~17 30.8 Mbps vs AP2 7.7 Mbps, Jain 0.846).
+  TODO: long runs 20,20 / 20,40 (60 STAs, much slower), gym smoke regression, fill §3 of the doc, commit, ask before merge/tag.
 
 - **v0.8.0 CLOSED (tag `v0.8.0`, code 4d72bed, merged to main + pushed, 2026-10-08)** — `OSCAR_multi_ap_train.py` logs per-AP + Global metrics to W&B (offline default, `--online`, `--wandb_project`); helpers `jain`, `step_metrics` in `multi_ap.py`. `--check` now reads the `.wandb` file back and asserts all keys per step, Global/Throughput == Σ AP, Fairness == Jain(per-AP thr). Validation: `--apStaCounts 2,3 --simTime 3 --stepTime 0.1 --historyLength 20 --start_timesteps 10 --batch_size 8 --check` -> PASS, 30 rows x 19 keys. Regression: smoke 10.59458, `--nWifi=5` dry 10533 pkts. No cw.cc/wrapper/agent changes. Results dir prefix now `results/multi-ap-<ts>`. Online sync untested.
 
