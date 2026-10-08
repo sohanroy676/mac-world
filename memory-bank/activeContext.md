@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**2026-10-08 closeout:** v1.0.0 closed (merged, tagged `v1.0.0`, pushed). Next: v1.1.0 baseline benchmarking (global-CW OSCAR baseline, multi-seed, per-step BEB window). Open: reward scale ~0.003-0.07 (see core-v1.0.0 §5), 20,40 deassoc cause, W&B online sync, CHANGELOG generator needs node on PATH in WSL.
+
 **2026-10-08 update:** 20,20 and 20,40 long runs DONE on branch `feature/v1.0.0-long-runs` (results in `docs/core-v1.0.0.md` §3; trained ~ BEB at 20,20, +11% at 20,40). Awaiting user approval to merge, push, and tag `v1.0.0`. Local clone only has tag v0.3.0 (origin has v0.4.0-v0.9.0; not fetched). Then v1.1.0.
 
 **v1.0.0 implemented, merged to `main` and pushed (2026-10-08) but NOT TAGGED.** User decision: run the 20,20 / 20,40 long trainings in a new session first (ask before starting; one ns-3 job at a time; 2 s dry run alone >10 min), add results to `docs/core-v1.0.0.md`, then tag `v1.0.0` only with user approval. After that: v1.1.0 (global-CW OSCAR baseline, multi-seed). BEB baseline: `baseline_beb.py --apStaCounts 20,20`. Trainer seed: ns-3 seed = python seed + 1.
