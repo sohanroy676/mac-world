@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v0.5.0 IMPLEMENTED (branch `feature/v0.5.0-per-ap-cw`, commit 592b603, 2026-10-08; NOT merged/tagged)** — wildcard
+- **v0.5.0 CLOSED (tag `v0.5.0`, code 592b603, 2026-10-08)** — wildcard
   MinCw/MaxCw `Config::Set` replaced by per-node paths (`setApCw`, AP_i + its STAs). New `--apCws=A,B` (non-dryRun only,
   clamped 16..1024, count must equal #APs) and end-of-run `Per-AP CW check: PASS/FAIL` (readback at t=0, warm-up, end).
   Validation (dryRun/disableGym, seed 1, simTime 2): `--nWifi=5` dry and `--CW=64`, and `5,15` dry are byte-identical to
@@ -36,4 +36,4 @@
 
 ## In progress
 
-- v0.5.0 per-AP CW: code + validation done on branch, awaiting user review/merge/tag/push.
+- v0.6.0 multi-AP ns3-gym (next, not started).
