@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**v0.9.0 validation CLOSED (2026-10-08): merged to `main`, tagged `v0.9.0`, pushed.** Next: v1.0.0 core milestone (bundle + 2-AP results + baseline comparison); optionally the 20,20 / 20,40 long runs first. Run one ns-3 job at a time (trainer leftover-process check false-positives).
+
 v0.3.0 (two-AP ns-3 topology) is CLOSED (2026-10-07): merged to `main`, tagged `v0.3.0`.
 **v0.4.0 per-AP statistics CLOSED (2026-10-08): merged to `main` (98bbf79), tagged `v0.4.0`, pushed to GitHub.**
 **v0.5.0 per-AP CW CLOSED (2026-10-08): merged to `main`, tagged `v0.5.0`.**

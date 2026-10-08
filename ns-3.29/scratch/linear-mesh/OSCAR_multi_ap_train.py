@@ -1,9 +1,10 @@
-"""v0.7.0/v0.8.0: one independent DDPG agent (actor+critic+replay) per AP in one joint ns-3 simulation.
+"""v0.7.0/v0.8.0/v0.9.0: one independent DDPG agent (actor+critic+replay) per AP in one joint ns-3 simulation.
 
 Each agent sees only its own AP's newest loss and its own reward (from parse_ap_info, not the
 scalar gym reward). Local critics only. Differences from OSCAR_train.py (deliberate): warm-up
 actions are sampled in [-1,1] and stored as such (the baseline stores U(0,6) in the replay).
 v0.8.0: per-AP + global W&B metrics (design section 7 names; offline unless --online).
+v0.9.0: --check also recomputes obs (Test A) and reward (Test D) per AP and checks episode resets (Test E).
 Run from this directory: ../../venv/bin/python OSCAR_multi_ap_train.py --apStaCounts 2,3 --check
 """
 import argparse
@@ -46,7 +47,7 @@ from agents.our_ddpg.preprocessor import Preprocessor  # noqa: E402
 from agents.our_ddpg.utils import ReplayBuffer  # noqa: E402
 from config import wandb_entity  # noqa: E402
 from exceptions import AlreadyRunningException  # noqa: E402
-from multi_ap import jain, parse_ap_info, reshape_obs, step_metrics  # noqa: E402
+from multi_ap import PAYLOAD_BITS, jain, parse_ap_info, reshape_obs, step_metrics  # noqa: E402
 from wrappers import EnvWrapper  # noqa: E402
 
 counts = [int(c) for c in args.apStaCounts.split(",")]
@@ -56,6 +57,7 @@ steps_per_ep = int(args.simTime / args.stepTime)
 state_dim = action_dim = 1
 max_action = 1
 real_max_action = 6
+OFFERED_MBPS = 150.0  # per-STA offered load, cw.cc offeredLoad
 
 torch.manual_seed(args.seed)
 np.random.seed(args.seed)
@@ -70,8 +72,8 @@ trace = csv.writer(trace_f)
 trace.writerow(["episode", "step", "ap", "state", "action", "real_action", "reward", "next_state", "cw_set",
                 "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"])
 
-run = wandb.init(name="%s multi-AP OurDDPG v0.8.0" % args.apStaCounts, entity=wandb_entity,
-                 project=args.wandb_project, tags=["multi-ap", "v0.8.0"], reinit=True,
+run = wandb.init(name="%s multi-AP OurDDPG v0.9.0" % args.apStaCounts, entity=wandb_entity,
+                 project=args.wandb_project, tags=["multi-ap", "v0.9.0"], reinit=True,
                  config=dict(vars(args), AP_Count=n, Stations_Per_AP=counts))
 
 agents = [DDPG(state_dim, action_dim, max_action, args.discount, args.tau) for _ in range(n)]
@@ -140,6 +142,13 @@ try:
                     check(recs[i]["cw_set"] == want_cw and recs[i]["cw_ap"] == want_cw,
                           "AP%d cw %s/%s != %d at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], want_cw, time_step))
                     check(0.0 <= r <= 1.0, "AP%d reward %s out of [0,1]" % (i + 1, r))
+                    # Test A: obs is this AP's own loss, recomputed from its own tx/rx counters
+                    own_loss = (recs[i]["tx"] - recs[i]["rx"]) / recs[i]["tx"] if recs[i]["tx"] else 0.0
+                    check(np.isclose(s2_i[0], own_loss, atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
+                          "AP%d obs %s / loss %s != own (tx-rx)/tx %s at t=%d" % (i + 1, s2_i[0], recs[i]["loss"], own_loss, time_step))
+                    # Test D: reward = own goodput / (offered load * own STAs * step), clamped to [0,1]
+                    want_r = min(1.0, max(0.0, recs[i]["rx"] * PAYLOAD_BITS / 1e6 / (OFFERED_MBPS * counts[i] * args.stepTime)))
+                    check(abs(r - want_r) < 1e-4, "AP%d reward %s != recomputed %s at t=%d" % (i + 1, r, want_r, time_step))
                 reward_cols[i].append(r)
                 ep_reward[i] += r
                 pp = preprocess(S2[i].reshape(-1, 1, 1))[0][0]  # this AP's history only; logging only
@@ -175,6 +184,15 @@ finally:
     wandb.finish()
     wlog = os.path.join(os.path.dirname(run.dir), "run-%s.wandb" % run.id)
     if os.path.exists(wlog):
+        # wandb.finish() can return before the writer has flushed: wait for the size to settle (max ~15 s)
+        prev, stable = -1, 0
+        for _ in range(30):
+            size = os.path.getsize(wlog)
+            stable = stable + 1 if size == prev else 0
+            if stable >= 3:
+                break
+            prev = size
+            time.sleep(0.5)
         shutil.copy2(wlog, out_dir)
 
 if args.check:
@@ -215,6 +233,17 @@ if args.check:
         if not all(np.isclose(h[k], m[k]) for k in keys):
             check(False, "W&B history differs from logged metrics")
             break
+    # Test E: each episode restarts (Step 1 present per episode, cumulative reward = that episode only)
+    for ep in range(args.episodes):
+        rows = [h for h in hist if h["Episode"] == ep]
+        check(bool(rows) and rows[0]["Step"] == 1, "episode %d does not start at Step 1" % ep)
+        if rows and "Global/CumulativeReward" in rows[-1]:
+            check(np.isclose(rows[-1]["Global/CumulativeReward"], sum(sum(h["AP%d/Reward" % (i + 1)] for i in range(n)) for h in rows)),
+                  "episode %d cumulative reward != sum of that episode's rewards" % ep)
+        else:
+            check(False, "episode %d has no cumulative reward row" % ep)
+    left = os.popen("pgrep -x linear-mesh || true").read().split()
+    check(not left, "leftover ns-3 process(es): %s" % left)
     print("W&B check: %d rows, %d keys each" % (len(hist), len(keys)))
     if n == 2:
         check(not np.allclose(reward_cols[0], reward_cols[1]), "reward columns identical across APs")
