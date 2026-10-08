@@ -29,4 +29,4 @@
 
 ## In progress
 
-- v0.5.0 per-AP CW (next). Push of main/v0.4.0 to GitHub pending user credentials.
+- v0.5.0 per-AP CW (next).
