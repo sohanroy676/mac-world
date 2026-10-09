@@ -5,6 +5,9 @@ scalar gym reward). Local critics only. Differences from OSCAR_train.py (deliber
 actions are sampled in [-1,1] and stored as such (the baseline stores U(0,6) in the replay).
 v0.8.0: per-AP + global W&B metrics (design section 7 names; offline unless --online).
 v0.9.0: --check also recomputes obs (Test A) and reward (Test D) per AP and checks episode resets (Test E).
+v1.1.0: --mode independent (default, above) | global (ONE agent, one CW broadcast to every AP; state = network
+loss (sum tx - sum rx)/sum tx, reward = network goodput / (offered load x all STAs x step)) | beb (ns-3 --dryRun
+through the same stepping loop, no agent: standard 802.11 measured in the same per-step window).
 Run from this directory: ../../venv/bin/python OSCAR_multi_ap_train.py --apStaCounts 2,3 --check
 """
 import argparse
@@ -31,6 +34,7 @@ parser.add_argument("--seed", type=int, default=0)
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
+parser.add_argument("--mode", choices=["independent", "global", "beb"], default="independent")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 args = parser.parse_args()
 
@@ -65,25 +69,38 @@ np.random.seed(args.seed)
 sim_args = {"simTime": args.simTime, "envStepTime": args.stepTime, "historyLength": args.historyLength,
             "agentType": "continuous", "scenario": "basic", "apStaCounts": args.apStaCounts,
             "seed": args.seed + 1}  # ns-3 rejects seed 0, so ns-3 seed = python seed + 1
+if args.mode == "beb":
+    sim_args["dryRun"] = "true"  # cw.cc skips setApCw; every AP keeps BEB CW 16..1024
+n_agents = {"independent": n, "global": 1, "beb": 0}[args.mode]
 
 out_dir = "results/multi-ap-%s" % time.strftime("%Y%m%d-%H%M%S")
 os.makedirs(out_dir)
+with open(os.path.join(out_dir, "config.json"), "w") as f:
+    json.dump(dict(vars(args), ns3_seed=args.seed + 1, counts=counts), f)
 trace_f = open(os.path.join(out_dir, "trace.csv"), "w", newline="")
 trace = csv.writer(trace_f)
 trace.writerow(["episode", "step", "ap", "state", "action", "real_action", "reward", "next_state", "cw_set",
                 "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"])
 
-run = wandb.init(name="%s multi-AP OurDDPG v1.0.0" % args.apStaCounts, entity=wandb_entity,
-                 project=args.wandb_project, tags=["multi-ap", "v0.9.0"], reinit=True,
+suffix = "" if args.mode == "independent" else " " + args.mode
+run = wandb.init(name="%s multi-AP OurDDPG v1.0.0%s" % (args.apStaCounts, suffix), entity=wandb_entity,
+                 project=args.wandb_project, tags=["multi-ap", "v0.9.0", "mode-" + args.mode], reinit=True,
                  config=dict(vars(args), AP_Count=n, Stations_Per_AP=counts))
 
-agents = [DDPG(state_dim, action_dim, max_action, args.discount, args.tau) for _ in range(n)]
-replays = [ReplayBuffer(state_dim, action_dim) for _ in range(n)]
+agents = [DDPG(state_dim, action_dim, max_action, args.discount, args.tau) for _ in range(n_agents)]
+replays = [ReplayBuffer(state_dim, action_dim) for _ in range(n_agents)]
 preprocess = Preprocessor(False).preprocess
 
 
 def scalar(x):
     return float(x.detach().cpu().item()) if hasattr(x, "detach") else float(x)
+
+
+def agent_loss(i, name):
+    """Loss of the agent that acts for AP i (independent: own; global: the shared one; beb: none -> 0)."""
+    if args.mode == "beb":
+        return 0.0
+    return scalar(getattr(agents[i if args.mode == "independent" else 0], name))
 
 
 fails = []
@@ -98,10 +115,10 @@ def check(cond, msg):
 if args.check:
     param_ids = [{p.data_ptr() for net in (a.actor, a.actor_target, a.critic, a.critic_target)
                   for p in net.parameters()} for a in agents]
-    for i in range(n):
-        for j in range(i + 1, n):
+    for i in range(n_agents):
+        for j in range(i + 1, n_agents):
             check(not (param_ids[i] & param_ids[j]), "agents %d,%d share parameters" % (i, j))
-    check(len({id(r) for r in replays}) == n, "replay buffers are not distinct")
+    check(len({id(r) for r in replays}) == n_agents, "replay buffers are not distinct")
 
 env = EnvWrapper(1, **sim_args)
 print("APs:", counts, "steps/ep:", steps_per_ep, "out:", out_dir)
@@ -115,16 +132,24 @@ try:
         except AlreadyRunningException:
             pass
         S = reshape_obs(env.reset()[0], n)
+        S_g = np.zeros(state_dim, dtype=np.float32)  # global mode: network loss; 0 before the first step
         ep_reward = np.zeros(n)
         for step in range(1, steps_per_ep + 1):
             acts = np.zeros(n, dtype=np.float32)
-            for i in range(n):
+            if args.mode == "independent":
+                for i in range(n):
+                    if time_step < args.start_timesteps:
+                        acts[i] = np.random.uniform(-max_action, max_action)
+                    else:
+                        a = agents[i].select_action(S[i, :state_dim]) + np.random.normal(0, max_action * args.expl_noise)
+                        acts[i] = np.clip(a, -max_action, max_action)[0]
+            elif args.mode == "global":
                 if time_step < args.start_timesteps:
-                    acts[i] = np.random.uniform(-max_action, max_action)
+                    acts[:] = np.random.uniform(-max_action, max_action)
                 else:
-                    a = agents[i].select_action(S[i, :state_dim]) + np.random.normal(0, max_action * args.expl_noise)
-                    acts[i] = np.clip(a, -max_action, max_action)[0]
-            real = (real_max_action * (acts + 1) / 2).astype(np.float32)
+                    a = agents[0].select_action(S_g) + np.random.normal(0, max_action * args.expl_noise)
+                    acts[:] = np.clip(a, -max_action, max_action)[0]
+            real = (real_max_action * (acts + 1) / 2).astype(np.float32)  # beb: ignored by cw.cc (dryRun)
 
             obs, _, done, info = env.step(np.array([real], dtype=np.float32))
             S2 = reshape_obs(obs[0], n)
@@ -133,13 +158,15 @@ try:
             for i in range(n):
                 r = recs[i]["reward"]
                 s_i, s2_i = S[i, :state_dim], S2[i, :state_dim]
-                replays[i].add(s_i, acts[i], s2_i, r, done[0])
+                if args.mode == "independent":
+                    replays[i].add(s_i, acts[i], s2_i, r, done[0])
                 if args.check:
-                    k = (replays[i].ptr - 1) % replays[i].max_size
-                    want_cw = int(min(1024, max(16, 2 ** (float(real[i]) + 4))))
-                    check(np.allclose(replays[i].state[k], s_i) and np.allclose(replays[i].next_state[k], s2_i)
-                          and np.isclose(replays[i].reward[k, 0], r) and np.isclose(replays[i].action[k, 0], acts[i]),
-                          "replay %d row mismatch at t=%d" % (i, time_step))
+                    if args.mode == "independent":
+                        k = (replays[i].ptr - 1) % replays[i].max_size
+                        check(np.allclose(replays[i].state[k], s_i) and np.allclose(replays[i].next_state[k], s2_i)
+                              and np.isclose(replays[i].reward[k, 0], r) and np.isclose(replays[i].action[k, 0], acts[i]),
+                              "replay %d row mismatch at t=%d" % (i, time_step))
+                    want_cw = 16 if args.mode == "beb" else int(min(1024, max(16, 2 ** (float(real[i]) + 4))))
                     check(recs[i]["cw_set"] == want_cw and recs[i]["cw_ap"] == want_cw,
                           "AP%d cw %s/%s != %d at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], want_cw, time_step))
                     check(0.0 <= r <= 1.0, "AP%d reward %s out of [0,1]" % (i + 1, r))
@@ -155,13 +182,31 @@ try:
                 pp = preprocess(S2[i].reshape(-1, 1, 1))[0][0]  # this AP's history only; logging only
                 trace.writerow([episode, step, i + 1, float(s_i[0]), float(acts[i]), float(real[i]), r, float(s2_i[0]),
                                 recs[i]["cw_set"], recs[i]["cw_ap"], recs[i]["loss"], recs[i]["rx"], recs[i]["tx"],
-                                float(pp[0]), float(pp[1]), scalar(agents[i].actor_loss), scalar(agents[i].critic_loss)])
-                if time_step >= args.start_timesteps:
+                                float(pp[0]), float(pp[1]), agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")])
+                if args.mode == "independent" and time_step >= args.start_timesteps:
                     agents[i].train(replays[i], args.batch_size)
+            if args.mode == "global":
+                # one agent: network-wide loss as state, network goodput (normalized by all STAs) as reward
+                tx_g = sum(r["tx"] for r in recs)
+                rx_g = sum(r["rx"] for r in recs)
+                s2_g = np.array([(tx_g - rx_g) / tx_g if tx_g else 0.0], dtype=np.float32)
+                r_g = min(1.0, max(0.0, rx_g * PAYLOAD_BITS / 1e6 / (OFFERED_MBPS * sum(counts) * args.stepTime)))
+                replays[0].add(S_g, acts[0], s2_g, r_g, done[0])
+                if args.check:
+                    k = (replays[0].ptr - 1) % replays[0].max_size
+                    check(np.allclose(replays[0].state[k], S_g) and np.allclose(replays[0].next_state[k], s2_g)
+                          and np.isclose(replays[0].reward[k, 0], r_g) and np.isclose(replays[0].action[k, 0], acts[0]),
+                          "global replay row mismatch at t=%d" % time_step)
+                    check(len({r["cw_set"] for r in recs}) == 1 and len({r["cw_ap"] for r in recs}) == 1,
+                          "global mode: APs got different CWs at t=%d" % time_step)
+                S_g = s2_g
+                if time_step >= args.start_timesteps:
+                    agents[0].train(replays[0], args.batch_size)
             trace_f.flush()
 
-            m = step_metrics(recs, [S2[i, 0] for i in range(n)], [scalar(a.actor_loss) for a in agents],
-                             [scalar(a.critic_loss) for a in agents], args.stepTime)
+            obs_logged = [float(S_g[0])] * n if args.mode == "global" else [S2[i, 0] for i in range(n)]
+            m = step_metrics(recs, obs_logged, [agent_loss(i, "actor_loss") for i in range(n)],
+                             [agent_loss(i, "critic_loss") for i in range(n)], args.stepTime)
             m.update({"Episode": episode, "Step": step})
             logged.append(m)
             if done[0] or step == steps_per_ep:
@@ -173,7 +218,7 @@ try:
                 print("ep%d step %4d | " % (episode, step) + " | ".join(
                     "AP%d cw=%4d r=%.3f loss=%.3f aL=%.3f cL=%.4f" % (
                         i + 1, recs[i]["cw_set"], recs[i]["reward"], recs[i]["loss"],
-                        scalar(agents[i].actor_loss), scalar(agents[i].critic_loss)) for i in range(n)), flush=True)
+                        agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")) for i in range(n)), flush=True)
             S = S2
             time_step += 1
             if done[0]:
@@ -197,9 +242,9 @@ finally:
         shutil.copy2(wlog, out_dir)
 
 if args.check:
-    for i in range(n):
+    for i in range(n_agents):
         check(replays[i].size == time_step, "replay %d size %d != steps %d" % (i, replays[i].size, time_step))
-        check(all(np.isfinite([scalar(agents[i].actor_loss), scalar(agents[i].critic_loss)])), "AP%d non-finite loss" % (i + 1))
+        check(all(np.isfinite([scalar(agents[i].actor_loss), scalar(agents[i].critic_loss)])), "agent %d non-finite loss" % (i + 1))
     # v0.8.0: read the logged history back from the run's .wandb file
     from wandb.proto import wandb_internal_pb2 as pb
     from wandb.sdk.internal import datastore

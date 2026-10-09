@@ -117,3 +117,4 @@ Smoke cumulative reward 10.59458; `--nWifi=5` dry seed 1 simTime 2 -> 10533 pkts
 - AP2 deassociation at 20,40 (t=1.144 s; STA nodeId=42 in one run, six STAs in the 2026-10-08 trained run, §3) — cause unproven.
 - W&B online sync untested; multi-AP gym supports `basic` scenario only; warm-up actions stored in [-1,1].
 - Baseline reward formula differs from the multi-AP one; throughput unit (Mibit/s vs Mbps) differs from the v0.1 report.
+- Correction (2026-10-09, v1.1.0): `--seed`/`--rng` did not change the ns-3 simulation until `cw.cc` was fixed (commit 0e71414); the "ns-3 seed" pinning in §2/§3 only affected agent-side randomness. Seed 1 results are unchanged by the fix. BEB whole-run numbers here are also biased high vs the per-step window (e.g. 2,3: 43.47 vs 40.47 Mbps). See `docs/benchmark-v1.1.0.md`.

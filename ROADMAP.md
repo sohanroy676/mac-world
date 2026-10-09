@@ -56,6 +56,7 @@
 
 ### v1.1.0
 - Benchmark against relevant baseline configurations.
+- Status: 🔄 IN PROGRESS 2026-10-09. Tooling + seed fix done; 2,3 and 5,15 benchmarked (3 modes x 3 seeds); 20,20 and 20,40 pending. See `docs/benchmark-v1.1.0.md`.
 
 ### v1.2.0
 - Scale to 4 APs.

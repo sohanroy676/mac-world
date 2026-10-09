@@ -7,6 +7,8 @@
 
 ## Done
 
+- **v1.1.0 IN PROGRESS (2026-10-09, branch `feature/v1.1.0-benchmarks`, merged to main + pushed, NOT tagged)** — trainer `--mode independent|global|beb`; `benchmark_v1_1_0.py` (resumable runner), `aggregate_bench.py` (95% CI, paired delta); `summarize_run.py` has `summarize()`. Found + fixed seed bug: `--seed`/`--rng` had no effect (SetSeed after node creation); fixed in `cw.cc`, rebuilt, regressions hold (10533, 9000, smoke 10.59458). Batch 1 done (18/18 PASS): 2,3 BEB 40.47 / global 40.41 / indep 39.98; 5,15 34.48 / 37.95 / 33.57 Mbps; all paired CIs include 0. Batches 2 (20,20) and 3 (20,40) NOT run. Details `docs/benchmark-v1.1.0.md`.
+
 - **v1.0.0 CLOSED (closeout 2026-10-08, branch `fix/v1.0.0-closeout`)** — audit vs roadmap: no required item missing in code. Reruns on rebuilt binary: 2,3 trained 40.4 Mbps (doc 40.3), 5,15 seed-pinned trained 39.6 vs BEB 36.8 (+7.5%, AP1 ~83%), BEB 5,15 reproduced exactly; v0.5 CW check + v0.6 gym tests PASS. Docs: README multi-AP section, CLAUDE.md roadmap line, reward-scale note (core-v1.0.0 §5). CHANGELOG not regenerated (`conventional-changelog` fails in WSL: `node: not found`). Next: v1.1.0.
 
 - **v1.0.0 long runs done (2026-10-08, branch `feature/v1.0.0-long-runs`, not merged; tag still pending user approval)** — binary rebuilt (regressions: smoke 10.59458, `--nWifi=5` dry 10533 pkts). BEB vs trained (policy phase, seed 0/ns-3 seed 1): 20,20 32.2 vs 30.0 Mbps (no gain); 20,40 29.2 vs 32.3 Mbps, Jain 0.886 -> 0.972. Both trained `--check` PASS. 20,40 trained log: 6 STAs deassoc from AP2 at t=1.144 s, back by 1.31 s (cause unproven; BEB not checked). Each run took ~13-18 min. Details `docs/core-v1.0.0.md` §3.

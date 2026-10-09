@@ -818,11 +818,6 @@ void set_nodes(int channelWidth,
     stack.Install(wifiApNode);
     stack.Install(wifiStaNode);
 
-    //Random
-    if(simSeed!=-1)
-        RngSeedManager::SetSeed(simSeed);
-    RngSeedManager::SetRun(rng);
-
     Ipv4AddressHelper address;
     address.SetBase("192.168.1.0", "255.255.255.0");
     Ipv4InterfaceContainer staNodeInterface;
@@ -1048,6 +1043,12 @@ int main(int argc, char *argv[])
     {
         Config::SetDefault("ns3::WifiRemoteStationManager::RtsCtsThreshold", StringValue("0"));
     }
+
+    // v1.1.0: seed/run must be set BEFORE any node, channel or MAC object exists. Random variable streams
+    // read the seed when they are created, so setting it later (as before) left backoff/channel streams on the default seed.
+    if (simSeed != -1)
+        RngSeedManager::SetSeed(simSeed);
+    RngSeedManager::SetRun(rng);
 
     NodeContainer wifiStaNode;
     NodeContainer wifiApNode;

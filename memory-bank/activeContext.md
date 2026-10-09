@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**2026-10-09:** v1.1.0 in progress (merged to main, pushed, NOT tagged). Done: tooling, seed fix, batch 1 (2,3 + 5,15). Next: batch 2 (20,20) then batch 3 (20,40) via `benchmark_v1_1_0.py --benchDir results/bench-v1.1.0` (resumes; ask before each; one ns-3 job at a time; ~2.5 h+ each, WSL timing erratic). Then aggregate, look at figures, finish `docs/benchmark-v1.1.0.md`, close/tag only with approval. Note `results/bench-v1.1.0/` is gitignored; its manifest is copied to `docs/figures/v1.1.0/manifest.csv`.
+
 **2026-10-08 closeout:** v1.0.0 closed (merged, tagged `v1.0.0`, pushed). Next: v1.1.0 baseline benchmarking (global-CW OSCAR baseline, multi-seed, per-step BEB window). Open: reward scale ~0.003-0.07 (see core-v1.0.0 §5), 20,40 deassoc cause, W&B online sync, CHANGELOG generator needs node on PATH in WSL.
 
 **2026-10-08 update:** 20,20 and 20,40 long runs DONE on branch `feature/v1.0.0-long-runs` (results in `docs/core-v1.0.0.md` §3; trained ~ BEB at 20,20, +11% at 20,40). Awaiting user approval to merge, push, and tag `v1.0.0`. Local clone only has tag v0.3.0 (origin has v0.4.0-v0.9.0; not fetched). Then v1.1.0.
