@@ -1,6 +1,6 @@
 # v1.1.0 — Baseline benchmarking (IN PROGRESS, 2026-10-09)
 
-Status: tooling done; batch 1 (2,3 and 5,15) done; batches 2 (20,20) and 3 (20,40) NOT run. v1.1.0 is not closed and not tagged.
+Status: tooling done; batch 1 (2,3 and 5,15) done; batch 2 (20,20) PARTIAL (seed 0 complete, seed 1 BEB done; seed 1 global/independent and seed 2 not complete); batch 3 (20,40) NOT run. v1.1.0 is not closed and not tagged.
 
 ## 1. Method
 Three systems on the same topology, traffic, PHY, duration (15 s, step 0.01 s) and seeds (python seed 0,1,2 -> ns-3 seed 1,2,3):
@@ -35,6 +35,20 @@ Paired difference vs BEB: 2,3 global -0.1 ± 1.6 %, independent -1.2 ± 2.1 %; 5
 - Run times were erratic on WSL (3-26 min per job, high sys time); one smoke job took 24 min with no cause found.
 - Smoke-test runs used the pre-fix binary and were discarded.
 
+## 4b. Batch 2 (20,20) partial results (2026-10-12, second laptop)
+Batch 1 raw traces (`results/bench-v1.1.0/` from the first laptop) are gitignored and were NOT available here (decision: skip them). Batch 2 was run into a fresh `results/bench-v1.1.0/` on the second laptop (2 cores, 5 GB RAM) with the rebuilt binary (regressions: `--nWifi=5` dry seed 1 -> 10533, `5,15` dry seed 1 -> 9000, seed 2 -> 9023). Outputs are kept separate from batch 1: `docs/figures/v1.1.0-b2/` (manifest, tables, 4 figures; figures not yet inspected by eye).
+Completed PASS runs (manifest): seed 0 beb/global/independent (1176/1158/1130 s) and seed 1 beb (1133 s). Seed 1 global was in flight when this was written; seed 1 independent and all of seed 2 were not run.
+
+| Mode (policy window, Mbps) | n | Aggregate | AP1 | AP2 |
+|---|---|---|---|---|
+| BEB | 2 | 30.06 ± 0.36 | 14.63 | 15.43 |
+| Global-CW | 1 | 38.20 | 17.91 | 20.29 |
+| Independent | 1 | 30.41 | 16.18 | 14.23 |
+
+- Fact: on seed 0, global-CW is +27.0 % over BEB (8.11 Mbps); independent is +1.1 %. n=1 per trained mode, so no CI and no claim.
+- Note: 20,20 BEB here (30.1 Mbps, policy window) is not comparable to the v1.0.0 whole-run 32.2 Mbps (window mismatch, see §3 of core-v1.0.0).
+- Run times ~19 min each on this laptop (batch 1 laptop: 8-32 min at 2 APs).
+
 ## 5. Remaining for v1.1.0
-Batch 2 (20,20) and 3 (20,40), 9 runs each (ask before each); aggregate all four topologies; look at figures; finish this doc; check the 20,40 BEB logs for the deassociation (cause still unproven); then close and tag only with user approval.
+Finish batch 2 (20,20: seed 1 global + independent, seed 2 x3 = 5 runs) and batch 3 (20,40: 9 runs) (ask before each); aggregate all four topologies; look at figures; finish this doc; check the 20,40 BEB logs for the deassociation (cause still unproven); then close and tag only with user approval.
 Command: `../../venv/bin/python benchmark_v1_1_0.py --topos 20,20 --seeds 0 1 2 --benchDir results/bench-v1.1.0` (same bench dir: resumes). Then `aggregate_bench.py results/bench-v1.1.0 --out ../../../docs/figures/v1.1.0`.

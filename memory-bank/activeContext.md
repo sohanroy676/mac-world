@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**2026-10-12 (second laptop):** v1.1.0 batch 2 (20,20) PARTIAL. Done (PASS): seed 0 beb/global/independent, seed 1 beb. Seed 1 global was running at handoff (may have been lost; manifest is authoritative); seed 1 independent + seed 2 x3 not run; batch 3 (20,40) not run. Batch 1 raw traces stay on the first laptop (results/ gitignored; decision: skip). Outputs in `docs/figures/v1.1.0-b2/` (separate from batch 1 `docs/figures/v1.1.0/`). Binary rebuilt, regressions hold. Resume: `cd ns-3.29/scratch/linear-mesh && ../../venv/bin/python benchmark_v1_1_0.py --topos 20,20 --seeds 1 2 --benchDir results/bench-v1.1.0` (ask first; ~19 min/run here; resumes PASS rows). Interim: global seed 0 +27% vs BEB (n=1), independent +1%. Figures not inspected. See `docs/benchmark-v1.1.0.md` §4b.
+
 **2026-10-09:** v1.1.0 in progress (merged to main, pushed, NOT tagged). Done: tooling, seed fix, batch 1 (2,3 + 5,15). Next: batch 2 (20,20) then batch 3 (20,40) via `benchmark_v1_1_0.py --benchDir results/bench-v1.1.0` (resumes; ask before each; one ns-3 job at a time; ~2.5 h+ each, WSL timing erratic). Then aggregate, look at figures, finish `docs/benchmark-v1.1.0.md`, close/tag only with approval. Note `results/bench-v1.1.0/` is gitignored; its manifest is copied to `docs/figures/v1.1.0/manifest.csv`.
 
 **2026-10-08 closeout:** v1.0.0 closed (merged, tagged `v1.0.0`, pushed). Next: v1.1.0 baseline benchmarking (global-CW OSCAR baseline, multi-seed, per-step BEB window). Open: reward scale ~0.003-0.07 (see core-v1.0.0 §5), 20,40 deassoc cause, W&B online sync, CHANGELOG generator needs node on PATH in WSL.
