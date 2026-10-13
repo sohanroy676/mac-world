@@ -7,6 +7,8 @@
 
 ## Done
 
+- **v1.1.0 batch 3 PARTIAL (2026-10-13, branch `feature/v1.1.0-benchmarks-b4`, NOT tagged)** — 20,40 beb seed 0 PASS (27.25 Mbps, Jain 0.891, ~42 min); global s0 killed by terminal restart; 8 runs remain. 20,40 BEB also shows the t=1.144 s deassociation. Data: `docs/figures/v1.1.0-b3-partial/`. `docs/benchmark-v1.1.0.md` §4c.
+
 - **v1.1.0 batch 2 DONE (2026-10-13, branch `feature/v1.1.0-benchmarks-b3`, NOT tagged)** — 20,20 9/9 PASS (3 modes x 3 seeds). Policy-window Mbps: BEB 30.10 ± 0.20, global 37.93 ± 4.17 (+26.0 ± 13.1 %), independent 30.19 ± 21.60 (+0.2 ± 71.1 %). Figures inspected. Trainer check fixed to mirror cw.cc float32 `4+a` (2/3000 rows had CW 139 vs 140; cw.cc unchanged). Batch 3 (20,40) pending. `docs/benchmark-v1.1.0.md` §4b, `docs/figures/v1.1.0-b2/`.
 
 - **v1.1.0 batch 2 PARTIAL (2026-10-12, branch `feature/v1.1.0-benchmarks-b2`, second laptop, NOT tagged)** — 20,20 seed 0 (3 modes) + seed 1 BEB PASS (~19 min each); seed 1 global/independent, seed 2, batch 3 pending. Aggregated to `docs/figures/v1.1.0-b2/`. Seed-0 aggregate: BEB 30.06 (n=2 seeds incl. s1), global 38.20, independent 30.41 Mbps (n=1 each). Binary rebuilt; regressions hold. Details `docs/benchmark-v1.1.0.md` §4b.

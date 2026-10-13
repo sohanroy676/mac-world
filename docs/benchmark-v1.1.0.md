@@ -1,6 +1,6 @@
 # v1.1.0 — Baseline benchmarking (IN PROGRESS, 2026-10-09)
 
-Status: tooling done; batch 1 (2,3 and 5,15) done; batch 2 (20,20) DONE (3 modes x 3 seeds, 9/9 PASS); batch 3 (20,40) NOT run. v1.1.0 is not closed and not tagged.
+Status: tooling done; batch 1 (2,3 and 5,15) done; batch 2 (20,20) DONE (3 modes x 3 seeds, 9/9 PASS); batch 3 (20,40) PARTIAL (1/9 run: beb seed 0). v1.1.0 is not closed and not tagged.
 
 ## 1. Method
 Three systems on the same topology, traffic, PHY, duration (15 s, step 0.01 s) and seeds (python seed 0,1,2 -> ns-3 seed 1,2,3):
@@ -54,6 +54,17 @@ Per-seed aggregate (policy window, Mbps), seeds 0/1/2: BEB 30.08/30.03/30.18; gl
 - Note: 20,20 BEB here (30.1 Mbps, policy window) is not comparable to the v1.0.0 whole-run 32.2 Mbps (window mismatch, see §3 of core-v1.0.0).
 - Trainer self-check bug (fixed, not a simulation bug): seed 2 global first FAILED `--check` because `cw.cc` computes `pow(2, 4 + a)` with a float `a` (4 + a is rounded to float32 before `pow`), giving CW 139 where the Python check (double) expected 140, in 2 of 3000 rows (both APs equal; readback == set value). Offline replay of all 6 trained 20,20 traces: float32 arithmetic explains exactly those 2 rows, 0 mismatches elsewhere. Only the check was changed (`OSCAR_multi_ap_train.py`); `cw.cc` and the binary are unchanged, and the re-run PASSED. The FAIL row stays in the manifest.
 
+## 4c. Batch 3 (20,40) — PARTIAL (2026-10-13; 1 of 9 runs)
+Data: `docs/figures/v1.1.0-b3-partial/` (no aggregate/figures yet). Runs take ~42 min each here (60 STAs; about 2x the 20,20 time), so the full batch is ~6 h. A terminal restart killed the job during `global` seed 0; only `beb` seed 0 reached the manifest.
+
+| Run | Policy-window Mbps | AP1 | AP2 | Jain | CW |
+|---|---|---|---|---|---|
+| 20,40 BEB seed 0 (n=1) | 27.25 | 8.85 | 18.39 | 0.891 | 16 |
+
+- Fact: `--check` PASS, 1500 steps, 2500 s.
+- Fact: the t=1.144 s deassociation also occurs in BEB at 20,40 (1 event, STA nodeId=42 off AP2). Together with 20,20 (0 events in BEB, 4-14 in global/independent seeds 0-1), it is therefore not exclusive to trained modes. Cause still unproven; it happens at an identical time in every run, so a fixed simulation event (not a policy effect) is the more likely explanation. Inference, untested.
+- Remaining: beb s1 s2; global s0 s1 s2; independent s0 s1 s2, then aggregate, figures, conclusion.
+
 ## 5. Remaining for v1.1.0
-Batch 3 (20,40; 9 runs, seeds 0 1 2; ask before starting; ~19 min each here) from `ns-3.29/scratch/linear-mesh`:
+Batch 3 (20,40; 8 of 9 runs left (beb s0 done); ask before starting; ~42 min each here, ~5.5 h) from `ns-3.29/scratch/linear-mesh`:
 `../../venv/bin/python benchmark_v1_1_0.py --topos 20,40 --seeds 0 1 2 --benchDir results/bench-v1.1.0` (same bench dir: resumes PASS rows). Then aggregate with `aggregate_bench.py results/bench-v1.1.0 --out ../../../docs/figures/v1.1.0-b3` (new dir; never overwrite `v1.1.0` or `v1.1.0-b2`), look at the figures, check the 20,40 BEB logs for the t=1.144 s STA deassociation (cause unproven; BEB not yet checked), add a §4c, and write a conclusion. Close and tag only with user approval.
