@@ -1,6 +1,6 @@
 # v1.1.0 — Baseline benchmarking (IN PROGRESS, 2026-10-09)
 
-Status: tooling done; batch 1 (2,3 and 5,15) done; batch 2 (20,20) PARTIAL (seed 0 complete, seed 1 BEB done; seed 1 global/independent and seed 2 not complete); batch 3 (20,40) NOT run. v1.1.0 is not closed and not tagged.
+Status: tooling done; batch 1 (2,3 and 5,15) done; batch 2 (20,20) DONE (3 modes x 3 seeds, 9/9 PASS); batch 3 (20,40) NOT run. v1.1.0 is not closed and not tagged.
 
 ## 1. Method
 Three systems on the same topology, traffic, PHY, duration (15 s, step 0.01 s) and seeds (python seed 0,1,2 -> ns-3 seed 1,2,3):
@@ -30,25 +30,30 @@ Paired difference vs BEB: 2,3 global -0.1 ± 1.6 %, independent -1.2 ± 2.1 %; 5
 - Inference (untested): CW tuning helps more under uneven load; the 5,15 evidence is too weak to claim it.
 
 ## 4. Caveats
-- n=3 gives wide CIs. Figures were generated but not yet inspected by eye.
+- n=3 gives wide CIs. Batch 1 and batch 2 figures were inspected; batch 3 pending.
 - Convergence step = first step after which rolling-100 aggregate throughput stays within ±5 % of the last-300 mean; for independent runs the CI is larger than the mean (unstable).
 - Run times were erratic on WSL (3-26 min per job, high sys time); one smoke job took 24 min with no cause found.
 - Smoke-test runs used the pre-fix binary and were discarded.
 
-## 4b. Batch 2 (20,20) partial results (2026-10-12, second laptop)
-Batch 1 raw traces (`results/bench-v1.1.0/` from the first laptop) are gitignored and were NOT available here (decision: skip them). Batch 2 was run into a fresh `results/bench-v1.1.0/` on the second laptop (2 cores, 5 GB RAM) with the rebuilt binary (regressions: `--nWifi=5` dry seed 1 -> 10533, `5,15` dry seed 1 -> 9000, seed 2 -> 9023). Outputs are kept separate from batch 1: `docs/figures/v1.1.0-b2/` (manifest, tables, 4 figures; figures not yet inspected by eye).
-Completed PASS runs (manifest): seed 0 beb/global/independent (1176/1158/1130 s) and seed 1 beb (1133 s). Seed 1 global was in flight when this was written; seed 1 independent and all of seed 2 were not run.
+## 4b. Batch 2 (20,20) results (2026-10-13, second laptop; n = 3 seeds)
+Batch 1 raw traces (`results/bench-v1.1.0/` from the first laptop) are gitignored and were NOT available here (decision: skip). Batch 2 was run into a fresh `results/bench-v1.1.0/` on the second laptop (2 cores, 5 GB RAM) with the rebuilt binary (regressions re-verified 2026-10-13: `--nWifi=5` dry seed 1 -> 10533; `5,15` dry seed 1 -> 9000 = 2520 + 6480; per-AP stats/CW/association checks PASS). Outputs are kept separate from batch 1: `docs/figures/v1.1.0-b2/` (manifest, tables, 4 figures, all inspected). Runs took 16-20 min each.
 
-| Mode (policy window, Mbps) | n | Aggregate | AP1 | AP2 |
-|---|---|---|---|---|
-| BEB | 2 | 30.06 ± 0.36 | 14.63 | 15.43 |
-| Global-CW | 1 | 38.20 | 17.91 | 20.29 |
-| Independent | 1 | 30.41 | 16.18 | 14.23 |
+| Mode (policy window, Mbps) | n | Aggregate | AP1 | AP2 | Jain | Δ vs BEB (paired) |
+|---|---|---|---|---|---|---|
+| BEB | 3 | 30.10 ± 0.20 | 14.87 ± 1.07 | 15.23 ± 0.92 | 0.999 ± 0.001 | n/a |
+| Global-CW | 3 | 37.93 ± 4.17 | 23.11 ± 24.57 | 14.82 ± 21.29 | 0.877 ± 0.510 | +26.0 ± 13.1 % |
+| Independent | 3 | 30.19 ± 21.60 | 16.68 ± 28.88 | 13.51 ± 7.44 | 0.870 ± 0.271 | +0.2 ± 71.1 % |
 
-- Fact: on seed 0, global-CW is +27.0 % over BEB (8.11 Mbps); independent is +1.1 %. n=1 per trained mode, so no CI and no claim.
+Per-seed aggregate (policy window, Mbps), seeds 0/1/2: BEB 30.08/30.03/30.18; global 38.20/36.13/39.45 (seed 2 Jain 0.64); independent 30.41/21.38/38.77.
+
+- Fact: global-CW beats BEB on all three seeds (+6.1 to +9.3 Mbps); the paired CI excludes zero (n=3). This is the first topology where a trained system is distinguishable from BEB.
+- Fact: independent per-AP is not distinguishable from BEB; its seed-to-seed spread is huge (21.4 to 38.8 Mbps). Seed 1 ends well below BEB, seed 2 well above.
+- Fact (figures): global CW rises past the step-300 warm-up marker and holds ~38 Mbps from step ~500 with CW ~2^8 on both APs (one shared value). Independent starts ~35 Mbps, then the 3-seed mean decays to ~27.5 Mbps by step ~1100 while both CWs drift from ~2^8 down to ~2^6 (AP1 drops last, ~step 900).
+- Fact: global-CW fairness is uneven on some seeds (seed 2 Jain 0.64: one AP is starved while the aggregate is highest); the large per-AP CIs reflect this.
+- Inference (untested): the independent agents fail to coordinate (each lowers its own CW, raising contention); n=3 cannot confirm this.
 - Note: 20,20 BEB here (30.1 Mbps, policy window) is not comparable to the v1.0.0 whole-run 32.2 Mbps (window mismatch, see §3 of core-v1.0.0).
-- Run times ~19 min each on this laptop (batch 1 laptop: 8-32 min at 2 APs).
+- Trainer self-check bug (fixed, not a simulation bug): seed 2 global first FAILED `--check` because `cw.cc` computes `pow(2, 4 + a)` with a float `a` (4 + a is rounded to float32 before `pow`), giving CW 139 where the Python check (double) expected 140, in 2 of 3000 rows (both APs equal; readback == set value). Offline replay of all 6 trained 20,20 traces: float32 arithmetic explains exactly those 2 rows, 0 mismatches elsewhere. Only the check was changed (`OSCAR_multi_ap_train.py`); `cw.cc` and the binary are unchanged, and the re-run PASSED. The FAIL row stays in the manifest.
 
 ## 5. Remaining for v1.1.0
-Finish batch 2 (20,20: seed 1 global + independent, seed 2 x3 = 5 runs) and batch 3 (20,40: 9 runs) (ask before each); aggregate all four topologies; look at figures; finish this doc; check the 20,40 BEB logs for the deassociation (cause still unproven); then close and tag only with user approval.
-Command: `../../venv/bin/python benchmark_v1_1_0.py --topos 20,20 --seeds 0 1 2 --benchDir results/bench-v1.1.0` (same bench dir: resumes). Then `aggregate_bench.py results/bench-v1.1.0 --out ../../../docs/figures/v1.1.0`.
+Batch 3 (20,40; 9 runs, seeds 0 1 2; ask before starting; ~19 min each here) from `ns-3.29/scratch/linear-mesh`:
+`../../venv/bin/python benchmark_v1_1_0.py --topos 20,40 --seeds 0 1 2 --benchDir results/bench-v1.1.0` (same bench dir: resumes PASS rows). Then aggregate with `aggregate_bench.py results/bench-v1.1.0 --out ../../../docs/figures/v1.1.0-b3` (new dir; never overwrite `v1.1.0` or `v1.1.0-b2`), look at the figures, check the 20,40 BEB logs for the t=1.144 s STA deassociation (cause unproven; BEB not yet checked), add a §4c, and write a conclusion. Close and tag only with user approval.

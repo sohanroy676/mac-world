@@ -3,3 +3,9 @@ topo,mode,seed,run_dir,result,returncode,seconds
 "20,20",global,0,results/multi-ap-20261012-135846,PASS,0,1158
 "20,20",independent,0,results/multi-ap-20261012-141806,PASS,0,1130
 "20,20",beb,1,results/multi-ap-20261012-144614,PASS,0,1133
+"20,20",global,1,results/multi-ap-20261013-095537,PASS,0,1130
+"20,20",independent,1,results/multi-ap-20261013-101426,PASS,0,1209
+"20,20",beb,2,results/multi-ap-20261013-103435,PASS,0,1178
+"20,20",global,2,results/multi-ap-20261013-105413,FAIL,1,1095
+"20,20",global,2,results/multi-ap-20261013-112637,PASS,0,962
+"20,20",independent,2,results/multi-ap-20261013-114237,PASS,0,971

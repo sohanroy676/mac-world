@@ -166,7 +166,9 @@ try:
                         check(np.allclose(replays[i].state[k], s_i) and np.allclose(replays[i].next_state[k], s2_i)
                               and np.isclose(replays[i].reward[k, 0], r) and np.isclose(replays[i].action[k, 0], acts[i]),
                               "replay %d row mismatch at t=%d" % (i, time_step))
-                    want_cw = 16 if args.mode == "beb" else int(min(1024, max(16, 2 ** (float(real[i]) + 4))))
+                    # cw.cc computes pow(2, 4 + a) with a float, so 4 + a is rounded to float32 before pow.
+                    want_cw = 16 if args.mode == "beb" else int(min(1024, max(
+                        16, 2 ** float(np.float32(4) + np.float32(real[i])))))
                     check(recs[i]["cw_set"] == want_cw and recs[i]["cw_ap"] == want_cw,
                           "AP%d cw %s/%s != %d at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], want_cw, time_step))
                     check(0.0 <= r <= 1.0, "AP%d reward %s out of [0,1]" % (i + 1, r))
