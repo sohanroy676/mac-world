@@ -54,17 +54,29 @@ Per-seed aggregate (policy window, Mbps), seeds 0/1/2: BEB 30.08/30.03/30.18; gl
 - Note: 20,20 BEB here (30.1 Mbps, policy window) is not comparable to the v1.0.0 whole-run 32.2 Mbps (window mismatch, see §3 of core-v1.0.0).
 - Trainer self-check bug (fixed, not a simulation bug): seed 2 global first FAILED `--check` because `cw.cc` computes `pow(2, 4 + a)` with a float `a` (4 + a is rounded to float32 before `pow`), giving CW 139 where the Python check (double) expected 140, in 2 of 3000 rows (both APs equal; readback == set value). Offline replay of all 6 trained 20,20 traces: float32 arithmetic explains exactly those 2 rows, 0 mismatches elsewhere. Only the check was changed (`OSCAR_multi_ap_train.py`); `cw.cc` and the binary are unchanged, and the re-run PASSED. The FAIL row stays in the manifest.
 
-## 4c. Batch 3 (20,40) — PARTIAL (2026-10-13; 1 of 9 runs)
-Data: `docs/figures/v1.1.0-b3-partial/` (no aggregate/figures yet). Runs take ~42 min each here (60 STAs; about 2x the 20,20 time), so the full batch is ~6 h. A terminal restart killed the job during `global` seed 0; only `beb` seed 0 reached the manifest.
+## 4c. Batch 3 (20,40) — PARTIAL (2026-10-14; 5 of 9 runs)
+Data: `docs/figures/v1.1.0-b3/` (tables, 4 figures inspected, manifest). Run times 16-21 min each for global/independent/beb s1; beb s0 took 2500 s (slower, other load that day). Done: beb s0 s1, global s0 s1, independent s0. NOT run: independent s1, beb/global/independent s2. Stopped by user time budget, not by failure; all 5 runs `--check` PASS.
 
-| Run | Policy-window Mbps | AP1 | AP2 | Jain | CW |
-|---|---|---|---|---|---|
-| 20,40 BEB seed 0 (n=1) | 27.25 | 8.85 | 18.39 | 0.891 | 16 |
+| Mode (policy window, Mbps) | n | Aggregate | AP1 | AP2 | Jain | CW last-100 AP1/AP2 |
+|---|---|---|---|---|---|---|
+| BEB | 2 | 27.16 ± 1.05 | 9.01 | 18.15 | 0.898 | 16 / 16 |
+| Global-CW OSCAR | 2 | 36.66 ± 34.66 | 11.68 | 24.98 | 0.885 | ~260 / ~260 |
+| Independent per-AP | 1 | 32.41 (n=1) | 13.23 | 19.18 | 0.967 | 108 / 136 |
 
-- Fact: `--check` PASS, 1500 steps, 2500 s.
-- Fact: the t=1.144 s deassociation also occurs in BEB at 20,40 (1 event, STA nodeId=42 off AP2). Together with 20,20 (0 events in BEB, 4-14 in global/independent seeds 0-1), it is therefore not exclusive to trained modes. Cause still unproven; it happens at an identical time in every run, so a fixed simulation event (not a policy effect) is the more likely explanation. Inference, untested.
-- Remaining: beb s1 s2; global s0 s1 s2; independent s0 s1 s2, then aggregate, figures, conclusion.
+Paired vs BEB (same ns-3 seed): global +9.50 ± 35.72 Mbps (+35.0 ± 132.8 %, n=2 pairs, CI far too wide to conclude); independent +5.16 Mbps (+18.9 %, n=1 pair, no CI).
 
-## 5. Remaining for v1.1.0
-Batch 3 (20,40; 8 of 9 runs left (beb s0 done); ask before starting; ~42 min each here, ~5.5 h) from `ns-3.29/scratch/linear-mesh`:
-`../../venv/bin/python benchmark_v1_1_0.py --topos 20,40 --seeds 0 1 2 --benchDir results/bench-v1.1.0` (same bench dir: resumes PASS rows). Then aggregate with `aggregate_bench.py results/bench-v1.1.0 --out ../../../docs/figures/v1.1.0-b3` (new dir; never overwrite `v1.1.0` or `v1.1.0-b2`), look at the figures, check the 20,40 BEB logs for the t=1.144 s STA deassociation (cause unproven; BEB not yet checked), add a §4c, and write a conclusion. Close and tag only with user approval.
+- Fact: with n<=2 no 20,40 difference is statistically established. Point estimates favour both trained modes over BEB, but the global-CW seed spread is large (CI 2-71 Mbps in the figure).
+- Fact (figures): global-CW CW wanders around 2^8 at both topologies; independent agents both fall to ~2^6-2^7 by step ~1500 with AP2 above AP1 at 20,40. Independent is still descending at the end of the run (not converged).
+- Fact: t=1.144 s STA deassociation counts at 20,40: beb s0 = 1, beb s1 = 0, global s0 = 7, global s1 = 14, independent s0 = 6. Every event is at t=1.144 s and every deassociated STA re-associates (re-assoc count == deassoc count). At 20,20 (earlier): BEB 0, trained 4-14. So it occurs in BEB too but much more often in trained modes. Cause still unproven.
+- Inference, untested: 1.144 s is a fixed simulation time (warm-up/first action boundary, when trained modes first change CW and STAs pick up a new EDCA set from beacons, §v0.5 rounding), so it is a transient at the start of policy control; BEB's single event argues for a second, policy-independent trigger. To test: log CW + beacon events around t=1.1-1.2 s in one trained and one BEB run.
+
+## 5. Remaining for v1.1.0 and conclusion so far
+Not run: 20,40 independent s1, beb/global/independent s2 (4 runs, ~16-21 min each, ~70-85 min). From `ns-3.29/scratch/linear-mesh`:
+`../../venv/bin/python benchmark_v1_1_0.py --topos 20,40 --seeds 1 2 --benchDir results/bench-v1.1.0` (resumes PASS rows; ask first; one job at a time). Then re-aggregate to a NEW dir (e.g. `docs/figures/v1.1.0-b4`; never overwrite earlier ones), re-read §4c and replace its n=1/2 numbers.
+
+Provisional conclusion across topologies (will change if 20,40 seeds change it):
+- 2,3 and 5,15: all paired CIs include 0 (section 3).
+- 20,20 (n=3): global-CW +26.0 ± 13.1 % over BEB, CI excludes 0; independent per-AP +0.2 ± 71.1 %, no evidence of gain, huge seed variance.
+- 20,40 (n<=2): both trained modes above BEB in point estimate, no CI that supports a claim.
+- So far the supported claim is only: a single global CW beats BEB at 20,20. Independent per-AP agents have not shown a reliable gain over BEB or over global-CW, and converge slowly (convergence step ~1000+).
+Close and tag only with user approval.
