@@ -54,18 +54,18 @@ Per-seed aggregate (policy window, Mbps), seeds 0/1/2: BEB 30.08/30.03/30.18; gl
 - Note: 20,20 BEB here (30.1 Mbps, policy window) is not comparable to the v1.0.0 whole-run 32.2 Mbps (window mismatch, see §3 of core-v1.0.0).
 - Trainer self-check bug (fixed, not a simulation bug): seed 2 global first FAILED `--check` because `cw.cc` computes `pow(2, 4 + a)` with a float `a` (4 + a is rounded to float32 before `pow`), giving CW 139 where the Python check (double) expected 140, in 2 of 3000 rows (both APs equal; readback == set value). Offline replay of all 6 trained 20,20 traces: float32 arithmetic explains exactly those 2 rows, 0 mismatches elsewhere. Only the check was changed (`OSCAR_multi_ap_train.py`); `cw.cc` and the binary are unchanged, and the re-run PASSED. The FAIL row stays in the manifest.
 
-## 4c. Batch 3 (20,40) results (2026-10-14; 9/9 PASS, n = 3 seeds)
-Data: `docs/figures/v1.1.0-b4/` (tables, 4 figures inspected, manifest with all 9 PASS rows). Final 4 runs: independent s1 941 s, beb s2 1468 s, global s2 1022 s, independent s2 1157 s. All `--check` PASS. Earlier partial aggregates (`v1.1.0-b3`, `-b3-partial`) are superseded.
+## 4c. Batch 3 (20,40) results (2026-10-14/15; 15/15 PASS, n = 5 seeds)
+Data: `docs/figures/v1.1.0-b5/` (n=5; tables, 4 figures inspected). Seeds 3,4 added 2026-10-15 (6 runs, 864-953 s each, all PASS, one job at a time, binary unchanged). `v1.1.0-b4` (n=3) and earlier partial aggregates are superseded.
 
 | Mode (policy window, Mbps) | n | Aggregate | AP1 | AP2 | Jain | CW last-100 AP1/AP2 |
 |---|---|---|---|---|---|---|
-| BEB | 3 | 27.30 ± 0.63 | 9.48 | 17.82 | 0.913 | 16 / 16 |
-| Global-CW OSCAR | 3 | 35.61 ± 8.13 | 11.68 | 23.94 | 0.895 | ~224 / ~224 |
-| Independent per-AP | 3 | 28.57 ± 9.37 | 8.89 | 19.68 | 0.859 | 116 / 119 |
+| BEB | 5 | 27.96 ± 1.26 | 10.52 | 17.44 | 0.933 | 16 / 16 |
+| Global-CW OSCAR | 5 | 36.89 ± 3.62 | 11.97 | 24.92 | 0.890 | 280 / 280 |
+| Independent per-AP | 5 | 25.27 ± 8.21 | 6.96 | 18.31 | 0.814 | 160 / 108 |
 
-Paired vs BEB (same ns-3 seed, n=3): global +8.31 ± 8.64 Mbps (+30.5 ± 32.3 %); independent +1.27 ± 9.20 Mbps (+4.6 ± 33.8 %). Both paired CIs include 0 (global's lower bound is about -0.3 Mbps, only just).
+Paired vs BEB (same ns-3 seed, n=5): global +8.93 ± 3.24 Mbps (+31.9 ± 11.8 %), CI excludes 0; independent -2.69 ± 8.70 Mbps (-9.3 ± 31.0 %), CI includes 0. (n=3 earlier: global +30.5 ± 32.3 %, independent +4.6 ± 33.8 %.)
 
-- Fact: at 20,40 no difference vs BEB is statistically established at n=3. Global-CW is above BEB in point estimate and in the mean-curve figure (~35.5 vs ~27.3 Mbps after step ~400); independent is not distinguishable from BEB.
+- Fact: at 20,40 with n=5, global-CW beats BEB (paired +31.9 ± 11.8 %, CI excludes 0); independent is not distinguishable from BEB, and its point estimate is below BEB and below the n=3 value (seed variance, 25.27 ± 8.21).
 - Fact (figures): global-CW CW wanders around 2^8 (mean-over-seeds trace drifts down to ~2^7.5 after step ~1100); independent agents fall to ~2^6.5-2^7 with AP1 above AP2 until step ~1000, then converge together. Independent aggregate throughput is NOT monotone: at 20,40 it dips to ~26.5 Mbps (below BEB) at steps 400-650, recovers to ~31, then ends ~28.5; at 20,20 it declines from ~35 to ~28 (below BEB's ~30) by step 1100-1500. The policy-window mean (30.2 / 28.6) hides that the end-of-run level is at or below BEB.
 - Fact: per-AP split is BEB 9.5/17.8 (AP2 has 40 STAs and gets more). Global raises both APs; independent mainly moves AP2 up.
 - Fact: t=1.144 s STA deassociation counts at 20,40 (all 9 runs; every event at t=1.144 s, every STA re-associates, re-assoc count == deassoc count):
@@ -76,16 +76,18 @@ Paired vs BEB (same ns-3 seed, n=3): global +8.31 ± 8.64 Mbps (+30.5 ± 32.3 %)
 | Global-CW | 7 | 14 | 4 | 25 |
 | Independent | 6 | 12 | 0 | 18 |
 
-  At 20,20 (earlier): BEB 0, trained 4-14. So it occurs in BEB too but much more often in trained modes, and independent s2 shows 0 even though trained. Cause still unproven.
+  Seeds 3 / 4 (added 2026-10-15; same t=1.144 s, all re-associate): BEB 0 / 0, global 1 / 7, independent 9 / 9. n=5 totals at 20,40: BEB 1, global 33, independent 36.
+
+  At 20,20 (earlier): BEB 0, trained 4-14. So it occurs in BEB too but much more often in trained modes (runs with at least one event at 20,40: BEB 1/5, global 5/5, independent 4/5; independent s2 shows 0 even though trained). Cause still unproven.
 - Inference, untested: 1.144 s is a fixed simulation time (warm-up/first action boundary, when trained modes first change CW and STAs pick up a new EDCA set from beacons, §v0.5 rounding), so it is a transient at the start of policy control; BEB's single event and independent s2's zero argue the trigger is not simply "CW changed". To test: log CW + beacon events around t=1.1-1.2 s in one trained (global s1, 14 events) and one BEB (beb s0) run.
 
 ## 5. Conclusion and remaining for v1.1.0
-All 18 + 9 + 9 benchmark runs (2,3; 5,15; 20,20; 20,40; 3 modes x 3 seeds each) are PASS. Remaining before close: user approval and tag only.
+All 18 + 9 + 15 benchmark runs (2,3; 5,15; 20,20 at n=3; 20,40 at n=5; 3 modes) are PASS. Remaining before close: user approval and tag only.
 
-Conclusion across topologies (n = 3 seeds each; policy window; paired vs BEB):
+Conclusion across topologies (n = 3 seeds; 20,40 n = 5; policy window; paired vs BEB):
 - 2,3 and 5,15: all paired CIs include 0 (section 3).
-- 20,20: global-CW +26.0 ± 13.1 %, CI excludes 0 (the only CI-supported gain); independent +0.2 ± 71.1 %.
-- 20,40: global-CW +30.5 ± 32.3 % (CI includes 0, barely); independent +4.6 ± 33.8 %.
-- Supported claim: a single global CW beats BEB at 20,20; the same direction at 20,40 is not established with 3 seeds. Independent per-AP agents show no reliable gain over BEB or over global-CW at any topology, have very large seed variance, converge slowly (step ~1000-1300), and their throughput trends down late in the run at 20,20.
-- Not tested: more seeds (would be needed to settle 20,40), longer training, reward/obs changes. The unproven t=1.144 s deassociation cause remains open.
+- 20,20: global-CW +26.0 ± 13.1 %, CI excludes 0; independent +0.2 ± 71.1 %.
+- 20,40 (n=5): global-CW +31.9 ± 11.8 % (CI excludes 0); independent -9.3 ± 31.0 % (CI includes 0).
+- Supported claim: a single global CW beats BEB at 20,20 (+26 %) and at 20,40 (+32 %, n=5); at 2,3 and 5,15 no difference. Independent per-AP agents show no reliable gain over BEB or over global-CW at any topology, have very large seed variance, converge slowly (step ~1000-1300), and their throughput trends down late in the run at 20,20.
+- Not tested: longer training, reward/obs changes. The unproven t=1.144 s deassociation cause remains open.
 Close and tag only with user approval.

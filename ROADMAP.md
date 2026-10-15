@@ -56,7 +56,7 @@
 
 ### v1.1.0
 - Benchmark against relevant baseline configurations.
-- Status: 🔄 ALL RUNS DONE 2026-10-14, awaiting close/tag approval. 36/36 benchmark runs PASS (4 topologies x 3 modes x 3 seeds). Only CI-supported gain: global-CW +26.0 ± 13.1 % vs BEB at 20,20; 20,40 global +30.5 ± 32.3 % (CI includes 0), independent +4.6 ± 33.8 %. See `docs/benchmark-v1.1.0.md` §4c, §5.
+- Status: 🔄 ALL RUNS DONE 2026-10-15, awaiting close/tag approval. 42/42 benchmark runs PASS (20,40 extended to n=5). CI-supported gains: global-CW +26.0 ± 13.1 % vs BEB at 20,20 and +31.9 ± 11.8 % at 20,40 (n=5); independent per-AP -9.3 ± 31.0 % at 20,40 (CI includes 0). See `docs/benchmark-v1.1.0.md` §4c, §5.
 
 ### v1.2.0
 - Scale to 4 APs.
