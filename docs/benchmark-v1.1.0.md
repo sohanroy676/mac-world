@@ -1,4 +1,4 @@
-# v1.1.0 — Baseline benchmarking (IN PROGRESS, 2026-10-09)
+# v1.1.0 — Baseline benchmarking (CLOSED, tagged v1.1.0, 2026-10-15)
 
 Status: tooling done; batch 1 (2,3 and 5,15) done; batch 2 (20,20) DONE (3 modes x 3 seeds, 9/9 PASS); batch 3 (20,40) PARTIAL (1/9 run: beb seed 0). v1.1.0 is not closed and not tagged.
 
