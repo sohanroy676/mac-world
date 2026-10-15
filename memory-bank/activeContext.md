@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**2026-10-15 (v1.2.0 seeds 1,2):** 4-AP (5,10,15,20) extended to n=3 on branch `feature/v1.2.0-benchmarks-b2` (not merged, v1.2.0 still NOT tagged by user choice). 9/9 PASS. BEB 28.63 ± 2.26, global 37.29 ± 4.81 (paired +30.5 ± 27.2 %, CI excludes 0), independent 23.27 ± 13.19 (-18.6 ± 47.6 %, CI includes 0). Deassoc t=1.144 s: BEB 0/0/0, global 4/10/17, independent 5/10/17 (cause unproven). `docs/figures/v1.2.0-b2/`, `docs/scaling-v1.2.0.md` §2b/§3. Next: user decides tag v1.2.0 + merge/push, then v1.3.0 (6 APs).
+
 **2026-10-15 (v1.2.0):** v1.1.0 TAGGED + pushed (ae45828). v1.2.0 4-AP validation all PASS, 3 long runs (5,10,15,20, seed 0, n=1, ~12-13 min each) PASS: BEB 27.64, global 39.53 (Jain 0.60), independent 23.34 Mbps (CW pinned ~16, late drift). Fixed trainer n==2 check + aggregate plot. Merged to main + pushed (2026-10-15), NOT tagged v1.2.0. Raw 4-AP run dirs force-committed under `ns-3.29/scratch/linear-mesh/results/` (bench-v1.2.0 + 3 multi-ap-20261015-{135006,140203,141411}; user-approved exception to the results/ ignore rule). Docs `docs/scaling-v1.2.0.md`, figures `docs/figures/v1.2.0/`. Next: user approval to merge/tag v1.2.0, then v1.3.0 (6 APs) or more 4-AP seeds.
 
 **2026-10-15 handoff:** v1.1.0 20,40 extended to n=5 (seeds 3,4, 6 runs PASS, branch `feature/v1.1.0-benchmarks-b7`, not merged/tagged). 20,40 policy window: BEB 27.96, global 36.89 (paired +31.9 ± 11.8 %, CI excludes 0), independent 25.27 (-9.3 ± 31.0 %, CI includes 0). Aggregate `docs/figures/v1.1.0-b5/`, `docs/benchmark-v1.1.0.md` §4c, §5 updated. Deassoc t=1.144 s seeds 3/4: BEB 0/0, global 1/7, independent 9/9 (cause still unproven). Next: user approval to merge + tag `v1.1.0`, then v1.2.0 (4 APs) per plan.
