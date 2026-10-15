@@ -60,10 +60,11 @@
 
 ### v1.2.0
 - Scale to 4 APs.
-- Status: 🔄 validation + 3 long runs (5,10,15,20, seed 0, n=1) PASS 2026-10-15, merged to main + pushed, awaiting tag approval. See `docs/scaling-v1.2.0.md`.
+- Status: ✅ 4 APs, n=3 (global +30.5 ± 27.2 %, CI excludes 0; independent -18.6 ± 47.6 %, CI includes 0). Tagged `v1.2.0` + pushed 2026-10-15. See `docs/scaling-v1.2.0.md`.
 
 ### v1.3.0
 - Scale to 6 APs.
+- Status: 🔄 validation + 9 long runs (5,10,15,20,25,30, seeds 0-2, n=3) PASS 2026-10-15, merged to main + pushed, NOT tagged. Global +36.4 ± 49.3 % (CI includes 0, beats BEB at 3/3 seeds); independent -21.6 ± 81.0 % (bimodal). See `docs/scaling-v1.3.0.md`.
 
 ### v1.4.0
 - Scale to 8 APs.

@@ -7,6 +7,8 @@
 
 ## Done
 
+- **v1.3.0 6 APs DONE at n=3 (2026-10-15, branch `feature/v1.3.0-six-aps`, merged to main + pushed, NOT tagged)** — 5,10,15,20,25,30, seeds 0-2, 9/9 PASS. BEB 23.83 ± 1.15, global 32.53 ± 12.48 (+36.4 ± 49.3 %, CI includes 0, 3/3 seeds above BEB), independent 18.72 ± 19.75 (-21.6 ± 81.0 %, bimodal). No code change. Runs 1514-1676 s (independent s1 2617 s). Full-size trainer check 6:19, 365 MB. `docs/scaling-v1.3.0.md`, `docs/figures/v1.3.0{,-b2}/`. v1.2.0 tagged + pushed.
+
 - **v1.2.0 4-AP EXTENDED to n=3 (2026-10-15, branch `feature/v1.2.0-benchmarks-b2`, NOT merged/tagged)** — seeds 1,2 PASS (6 runs, 716-850 s each). BEB 28.63 ± 2.26, global 37.29 ± 4.81 (+30.5 ± 27.2 %, CI excludes 0), independent 23.27 ± 13.19 (-18.6 ± 47.6 %, CI includes 0). `docs/figures/v1.2.0-b2/`, `docs/scaling-v1.2.0.md` §2b.
 
 - **v1.2.0 4-AP validated (2026-10-15, merged to main + pushed, NOT tagged)** — dry/CW/gym/trainer checks PASS at 2,3,4,5 and 5,10,15,20; long runs seed 0 PASS (BEB 27.64, global 39.53, independent 23.34 Mbps; n=1). `docs/scaling-v1.2.0.md`. v1.1.0 tagged + pushed.
