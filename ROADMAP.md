@@ -60,6 +60,7 @@
 
 ### v1.2.0
 - Scale to 4 APs.
+- Status: 🔄 validation + 3 long runs (5,10,15,20, seed 0, n=1) PASS 2026-10-15, merged to main + pushed, awaiting tag approval. See `docs/scaling-v1.2.0.md`.
 
 ### v1.3.0
 - Scale to 6 APs.

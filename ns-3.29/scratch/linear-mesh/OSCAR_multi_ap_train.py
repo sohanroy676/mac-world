@@ -293,7 +293,8 @@ if args.check:
     left = os.popen("pgrep -x linear-mesh || true").read().split()
     check(not left, "leftover ns-3 process(es): %s" % left)
     print("W&B check: %d rows, %d keys each" % (len(hist), len(keys)))
-    if n == 2:
-        check(not np.allclose(reward_cols[0], reward_cols[1]), "reward columns identical across APs")
+    for i in range(n):
+        for j in range(i + 1, n):
+            check(not np.allclose(reward_cols[i], reward_cols[j]), "reward columns identical for AP%d and AP%d" % (i + 1, j + 1))
     print("RESULT:", "FAIL (%d)" % len(fails) if fails else "PASS", "| steps:", time_step)
     sys.exit(1 if fails else 0)

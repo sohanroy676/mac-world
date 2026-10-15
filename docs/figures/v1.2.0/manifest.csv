@@ -1,0 +1,4 @@
+topo,mode,seed,run_dir,result,returncode,seconds
+"5,10,15,20",beb,0,results/multi-ap-20261015-135006,PASS,0,716
+"5,10,15,20",global,0,results/multi-ap-20261015-140203,PASS,0,728
+"5,10,15,20",independent,0,results/multi-ap-20261015-141411,PASS,0,793
