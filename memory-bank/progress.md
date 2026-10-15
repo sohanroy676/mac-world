@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v1.2.0 4-AP validated (2026-10-15, branch `feature/v1.2.0-four-aps`, NOT merged/tagged)** — dry/CW/gym/trainer checks PASS at 2,3,4,5 and 5,10,15,20; long runs seed 0 PASS (BEB 27.64, global 39.53, independent 23.34 Mbps; n=1). `docs/scaling-v1.2.0.md`. v1.1.0 tagged + pushed.
+- **v1.2.0 4-AP validated (2026-10-15, merged to main + pushed, NOT tagged)** — dry/CW/gym/trainer checks PASS at 2,3,4,5 and 5,10,15,20; long runs seed 0 PASS (BEB 27.64, global 39.53, independent 23.34 Mbps; n=1). `docs/scaling-v1.2.0.md`. v1.1.0 tagged + pushed.
 
 - **v1.1.0 20,40 EXTENDED to n=5 (2026-10-15, branch `feature/v1.1.0-benchmarks-b7`, NOT merged/tagged)** — seeds 3,4 PASS. BEB 27.96 ± 1.26, global 36.89 ± 3.62 (+31.9 ± 11.8 %, CI excludes 0), independent 25.27 ± 8.21 (-9.3 ± 31.0 %). `docs/figures/v1.1.0-b5/`.
 
