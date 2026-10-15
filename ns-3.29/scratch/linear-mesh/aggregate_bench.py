@@ -126,10 +126,12 @@ for ax, t in zip(axes[0], topos):
         bottom = 0
         for a in S[0]["aps"]:
             v = np.mean([s["thr_policy"][a] for s in S])
-            ax.bar(j, v, bottom=bottom, color=COLOR[m], alpha=1.0 if a == 1 else 0.55, edgecolor="white")
+            n_ap = len(S[0]["aps"])
+            ax.bar(j, v, bottom=bottom, color=COLOR[m], alpha=1.0 - 0.6 * (a - 1) / max(1, n_ap - 1), edgecolor="white")
             bottom += v
     ax.set_xticks(range(len(MODES))); ax.set_xticklabels(["BEB", "Global", "Indep."])
-    ax.set_title(t + " (AP1 dark, AP2 light)"); ax.set_ylabel("Mbps")
+    n_ap = len(next(iter(runs[t][next(iter(runs[t]))].values()))["aps"])
+    ax.set_title("%s (AP1 darkest .. AP%d lightest)" % (t, n_ap)); ax.set_ylabel("Mbps")
 fig.tight_layout(); fig.savefig(os.path.join(args.out, "per_ap_throughput.png"), dpi=150); plt.close(fig)
 
 fig, axes = plt.subplots(len(topos), 1, figsize=(8, 2.8 * len(topos)), squeeze=False)
