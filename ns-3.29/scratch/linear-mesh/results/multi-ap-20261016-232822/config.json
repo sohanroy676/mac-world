@@ -1,0 +1,1 @@
+{"apStaCounts": "2,3", "simTime": 3.0, "stepTime": 0.1, "historyLength": 20, "episodes": 1, "start_timesteps": 10, "batch_size": 8, "expl_noise": 0.1, "discount": 0.7, "tau": 0.001, "seed": 0, "print_every": 10, "online": false, "wandb_project": "contention_window", "mode": "central", "check": true, "ns3_seed": 1, "counts": [2, 3]}

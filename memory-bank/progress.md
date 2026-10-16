@@ -7,6 +7,8 @@
 
 ## Done
 
+- **v1.8.0 central critic PROTOTYPE (2026-10-16, branch `feature/v1.8.0-central-critic-prototype`, code 3a292d0, NOT merged/tagged)** — `--mode central`: N local actors + one shared `Critic(N,N)` on the global reward, joint replay, MADDPG actor update; `--check` extended (joint row, r_g, actor input isolation, finite losses/Q). Python only, no rebuild. 2,3 short + full and 20,40 short (30 steps) PASS; independent/global short traces identical to pre-change. Merged to main + pushed. v1.7.0 tagged + pushed. `docs/central-critic-v1.8.0.md`.
+
 - **v1.7.0 central critic DESIGN written (2026-10-16, branch `feature/v1.7.0-central-critic-design`, merged to main + pushed, NOT tagged)** — `docs/central-critic-v1.7.0.md` + ADR-0003 (Proposed). User decisions: one shared critic on global reward; spec + timeboxed build (v1.8 <= 1 session, v1.9 small eval; else optional/negative result). No code, no runs. v1.6.0 TAGGED + pushed.
 
 - **v1.6.0 scaling analysis DONE (2026-10-16, branch `feature/v1.6.0-scaling-analysis`, merged to main + pushed, NOT tagged; raw traces force-committed)** — `scaling_analysis.py` + `docs/scaling-v1.6.0.md` + `docs/figures/v1.6.0/` (table, per-seed CSV, 10 figures). Recomputed from raw traces N=2 (20,40 n=5), 4, 6, 8, 10 (n=3); cross-check vs per-version tables PASS. No new runs. v1.5.0 tagged + pushed. Assoc cause deferred.

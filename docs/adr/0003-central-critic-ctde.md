@@ -1,7 +1,7 @@
 # ADR-0003: Optional central critic (CTDE, shared global-reward critic)
 
 ## Status
-Proposed
+Proposed. v1.8.0 prototype implemented (`--mode central`); acceptance depends on the v1.9 evaluation (`docs/central-critic-v1.8.0.md`).
 
 ## Date
 2026-10-16
