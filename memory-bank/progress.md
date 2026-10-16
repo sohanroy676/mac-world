@@ -7,6 +7,8 @@
 
 ## Done
 
+- **v1.7.0 central critic DESIGN written (2026-10-16, branch `feature/v1.7.0-central-critic-design`, not merged)** — `docs/central-critic-v1.7.0.md` + ADR-0003 (Proposed). User decisions: one shared critic on global reward; spec + timeboxed build (v1.8 <= 1 session, v1.9 small eval; else optional/negative result). No code, no runs. v1.6.0 TAGGED + pushed.
+
 - **v1.6.0 scaling analysis DONE (2026-10-16, branch `feature/v1.6.0-scaling-analysis`, merged to main + pushed, NOT tagged; raw traces force-committed)** — `scaling_analysis.py` + `docs/scaling-v1.6.0.md` + `docs/figures/v1.6.0/` (table, per-seed CSV, 10 figures). Recomputed from raw traces N=2 (20,40 n=5), 4, 6, 8, 10 (n=3); cross-check vs per-version tables PASS. No new runs. v1.5.0 tagged + pushed. Assoc cause deferred.
 
 - **v1.5.0 10 APs DONE at n=3 (2026-10-16, branch `feature/v1.5.0-ten-aps`, merged to main + pushed, NOT tagged)** — 4,8,...,40 (220 STAs), seeds 0-2, 9/9 PASS, no code change. BEB 19.24 ± 1.85, global 27.04 ± 15.20 (+41.0 ± 83.9 %, CI includes 0, above BEB 3/3), independent 9.00 ± 6.16 (-53.5 ± 27.6 %, CI excludes 0, below BEB 3/3). Runs 3223-4315 s. Full-size dry association check FAILS (late association, AP10 deassoc bursts; cause unproven; recorded as open). Trainer full check 13:41, 478 MB. v1.4.0 tagged + pushed. `docs/scaling-v1.5.0.md`, `docs/figures/v1.5.0/`.

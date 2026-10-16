@@ -76,12 +76,13 @@
 
 ### v1.6.0
 - Analyze scaling behavior and performance.
-- Status: 🔄 analysis done on branch `feature/v1.6.0-scaling-analysis` (merged to main + pushed 2026-10-16, NOT tagged): recomputed from raw traces v1.1.0..v1.5.0, no new runs. See `docs/scaling-v1.6.0.md`, `docs/figures/v1.6.0/`.
+- Status: 🔄 analysis done on branch `feature/v1.6.0-scaling-analysis` (merged to main + pushed 2026-10-16, tagged `v1.6.0` + pushed 2026-10-16): recomputed from raw traces v1.1.0..v1.5.0, no new runs. See `docs/scaling-v1.6.0.md`, `docs/figures/v1.6.0/`.
 
 ## Later — Central Critic
 
 ### v1.7.0
 - Design centralized critic.
+- Status: 🔄 spec written on branch `feature/v1.7.0-central-critic-design` (not merged): one shared global-reward critic, local actors (CTDE), timeboxed v1.8/v1.9, optional. See `docs/central-critic-v1.7.0.md`, `docs/adr/0003-central-critic-ctde.md`.
 
 ### v1.8.0
 - Implement centralized critic prototype.
