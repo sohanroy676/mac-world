@@ -1,0 +1,653 @@
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
+wandb: Tracking run with wandb version 0.18.7
+wandb: W&B syncing is set to `offline` in this directory.  
+wandb: Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+Waf: Entering directory `/home/pranay/mac-world/ns-3.29/build'
+Waf: Leaving directory `/home/pranay/mac-world/ns-3.29/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (2.816s)
+Ns3Env parameters:
+--nWifi: 220
+--apStaCounts: 4,8,12,16,20,24,28,32,36,40
+--apCws: (none, every AP uses CW)
+--simulationTime: 15
+--openGymPort: 16700
+--envStepTime: 0.01
+--seed: 1
+--agentType: continuous
+--scenario: basic
+--dryRun: 0
+--disableGym: 0
+Multi-AP topology:
+--apCount: 10
+--totalStaCount: 220
+AP1 nodeId=220 staCount=4
+AP1 STA1 nodeId=0
+AP1 STA2 nodeId=1
+AP1 STA3 nodeId=2
+AP1 STA4 nodeId=3
+AP2 nodeId=221 staCount=8
+AP2 STA1 nodeId=4
+AP2 STA2 nodeId=5
+AP2 STA3 nodeId=6
+AP2 STA4 nodeId=7
+AP2 STA5 nodeId=8
+AP2 STA6 nodeId=9
+AP2 STA7 nodeId=10
+AP2 STA8 nodeId=11
+AP3 nodeId=222 staCount=12
+AP3 STA1 nodeId=12
+AP3 STA2 nodeId=13
+AP3 STA3 nodeId=14
+AP3 STA4 nodeId=15
+AP3 STA5 nodeId=16
+AP3 STA6 nodeId=17
+AP3 STA7 nodeId=18
+AP3 STA8 nodeId=19
+AP3 STA9 nodeId=20
+AP3 STA10 nodeId=21
+AP3 STA11 nodeId=22
+AP3 STA12 nodeId=23
+AP4 nodeId=223 staCount=16
+AP4 STA1 nodeId=24
+AP4 STA2 nodeId=25
+AP4 STA3 nodeId=26
+AP4 STA4 nodeId=27
+AP4 STA5 nodeId=28
+AP4 STA6 nodeId=29
+AP4 STA7 nodeId=30
+AP4 STA8 nodeId=31
+AP4 STA9 nodeId=32
+AP4 STA10 nodeId=33
+AP4 STA11 nodeId=34
+AP4 STA12 nodeId=35
+AP4 STA13 nodeId=36
+AP4 STA14 nodeId=37
+AP4 STA15 nodeId=38
+AP4 STA16 nodeId=39
+AP5 nodeId=224 staCount=20
+AP5 STA1 nodeId=40
+AP5 STA2 nodeId=41
+AP5 STA3 nodeId=42
+AP5 STA4 nodeId=43
+AP5 STA5 nodeId=44
+AP5 STA6 nodeId=45
+AP5 STA7 nodeId=46
+AP5 STA8 nodeId=47
+AP5 STA9 nodeId=48
+AP5 STA10 nodeId=49
+AP5 STA11 nodeId=50
+AP5 STA12 nodeId=51
+AP5 STA13 nodeId=52
+AP5 STA14 nodeId=53
+AP5 STA15 nodeId=54
+AP5 STA16 nodeId=55
+AP5 STA17 nodeId=56
+AP5 STA18 nodeId=57
+AP5 STA19 nodeId=58
+AP5 STA20 nodeId=59
+AP6 nodeId=225 staCount=24
+AP6 STA1 nodeId=60
+AP6 STA2 nodeId=61
+AP6 STA3 nodeId=62
+AP6 STA4 nodeId=63
+AP6 STA5 nodeId=64
+AP6 STA6 nodeId=65
+AP6 STA7 nodeId=66
+AP6 STA8 nodeId=67
+AP6 STA9 nodeId=68
+AP6 STA10 nodeId=69
+AP6 STA11 nodeId=70
+AP6 STA12 nodeId=71
+AP6 STA13 nodeId=72
+AP6 STA14 nodeId=73
+AP6 STA15 nodeId=74
+AP6 STA16 nodeId=75
+AP6 STA17 nodeId=76
+AP6 STA18 nodeId=77
+AP6 STA19 nodeId=78
+AP6 STA20 nodeId=79
+AP6 STA21 nodeId=80
+AP6 STA22 nodeId=81
+AP6 STA23 nodeId=82
+AP6 STA24 nodeId=83
+AP7 nodeId=226 staCount=28
+AP7 STA1 nodeId=84
+AP7 STA2 nodeId=85
+AP7 STA3 nodeId=86
+AP7 STA4 nodeId=87
+AP7 STA5 nodeId=88
+AP7 STA6 nodeId=89
+AP7 STA7 nodeId=90
+AP7 STA8 nodeId=91
+AP7 STA9 nodeId=92
+AP7 STA10 nodeId=93
+AP7 STA11 nodeId=94
+AP7 STA12 nodeId=95
+AP7 STA13 nodeId=96
+AP7 STA14 nodeId=97
+AP7 STA15 nodeId=98
+AP7 STA16 nodeId=99
+AP7 STA17 nodeId=100
+AP7 STA18 nodeId=101
+AP7 STA19 nodeId=102
+AP7 STA20 nodeId=103
+AP7 STA21 nodeId=104
+AP7 STA22 nodeId=105
+AP7 STA23 nodeId=106
+AP7 STA24 nodeId=107
+AP7 STA25 nodeId=108
+AP7 STA26 nodeId=109
+AP7 STA27 nodeId=110
+AP7 STA28 nodeId=111
+AP8 nodeId=227 staCount=32
+AP8 STA1 nodeId=112
+AP8 STA2 nodeId=113
+AP8 STA3 nodeId=114
+AP8 STA4 nodeId=115
+AP8 STA5 nodeId=116
+AP8 STA6 nodeId=117
+AP8 STA7 nodeId=118
+AP8 STA8 nodeId=119
+AP8 STA9 nodeId=120
+AP8 STA10 nodeId=121
+AP8 STA11 nodeId=122
+AP8 STA12 nodeId=123
+AP8 STA13 nodeId=124
+AP8 STA14 nodeId=125
+AP8 STA15 nodeId=126
+AP8 STA16 nodeId=127
+AP8 STA17 nodeId=128
+AP8 STA18 nodeId=129
+AP8 STA19 nodeId=130
+AP8 STA20 nodeId=131
+AP8 STA21 nodeId=132
+AP8 STA22 nodeId=133
+AP8 STA23 nodeId=134
+AP8 STA24 nodeId=135
+AP8 STA25 nodeId=136
+AP8 STA26 nodeId=137
+AP8 STA27 nodeId=138
+AP8 STA28 nodeId=139
+AP8 STA29 nodeId=140
+AP8 STA30 nodeId=141
+AP8 STA31 nodeId=142
+AP8 STA32 nodeId=143
+AP9 nodeId=228 staCount=36
+AP9 STA1 nodeId=144
+AP9 STA2 nodeId=145
+AP9 STA3 nodeId=146
+AP9 STA4 nodeId=147
+AP9 STA5 nodeId=148
+AP9 STA6 nodeId=149
+AP9 STA7 nodeId=150
+AP9 STA8 nodeId=151
+AP9 STA9 nodeId=152
+AP9 STA10 nodeId=153
+AP9 STA11 nodeId=154
+AP9 STA12 nodeId=155
+AP9 STA13 nodeId=156
+AP9 STA14 nodeId=157
+AP9 STA15 nodeId=158
+AP9 STA16 nodeId=159
+AP9 STA17 nodeId=160
+AP9 STA18 nodeId=161
+AP9 STA19 nodeId=162
+AP9 STA20 nodeId=163
+AP9 STA21 nodeId=164
+AP9 STA22 nodeId=165
+AP9 STA23 nodeId=166
+AP9 STA24 nodeId=167
+AP9 STA25 nodeId=168
+AP9 STA26 nodeId=169
+AP9 STA27 nodeId=170
+AP9 STA28 nodeId=171
+AP9 STA29 nodeId=172
+AP9 STA30 nodeId=173
+AP9 STA31 nodeId=174
+AP9 STA32 nodeId=175
+AP9 STA33 nodeId=176
+AP9 STA34 nodeId=177
+AP9 STA35 nodeId=178
+AP9 STA36 nodeId=179
+AP10 nodeId=229 staCount=40
+AP10 STA1 nodeId=180
+AP10 STA2 nodeId=181
+AP10 STA3 nodeId=182
+AP10 STA4 nodeId=183
+AP10 STA5 nodeId=184
+AP10 STA6 nodeId=185
+AP10 STA7 nodeId=186
+AP10 STA8 nodeId=187
+AP10 STA9 nodeId=188
+AP10 STA10 nodeId=189
+AP10 STA11 nodeId=190
+AP10 STA12 nodeId=191
+AP10 STA13 nodeId=192
+AP10 STA14 nodeId=193
+AP10 STA15 nodeId=194
+AP10 STA16 nodeId=195
+AP10 STA17 nodeId=196
+AP10 STA18 nodeId=197
+AP10 STA19 nodeId=198
+AP10 STA20 nodeId=199
+AP10 STA21 nodeId=200
+AP10 STA22 nodeId=201
+AP10 STA23 nodeId=202
+AP10 STA24 nodeId=203
+AP10 STA25 nodeId=204
+AP10 STA26 nodeId=205
+AP10 STA27 nodeId=206
+AP10 STA28 nodeId=207
+AP10 STA29 nodeId=208
+AP10 STA30 nodeId=209
+AP10 STA31 nodeId=210
+AP10 STA32 nodeId=211
+AP10 STA33 nodeId=212
+AP10 STA34 nodeId=213
+AP10 STA35 nodeId=214
+AP10 STA36 nodeId=215
+AP10 STA37 nodeId=216
+AP10 STA38 nodeId=217
+AP10 STA39 nodeId=218
+AP10 STA40 nodeId=219
+Gym map: AP1 nodeId=220 stas=4 obsRow=0 actionIdx=0 rewardIdx=0
+Gym map: AP2 nodeId=221 stas=8 obsRow=1 actionIdx=1 rewardIdx=1
+Gym map: AP3 nodeId=222 stas=12 obsRow=2 actionIdx=2 rewardIdx=2
+Gym map: AP4 nodeId=223 stas=16 obsRow=3 actionIdx=3 rewardIdx=3
+Gym map: AP5 nodeId=224 stas=20 obsRow=4 actionIdx=4 rewardIdx=4
+Gym map: AP6 nodeId=225 stas=24 obsRow=5 actionIdx=5 rewardIdx=5
+Gym map: AP7 nodeId=226 stas=28 obsRow=6 actionIdx=6 rewardIdx=6
+Gym map: AP8 nodeId=227 stas=32 obsRow=7 actionIdx=7 rewardIdx=7
+Gym map: AP9 nodeId=228 stas=36 obsRow=8 actionIdx=8 rewardIdx=8
+Gym map: AP10 nodeId=229 stas=40 obsRow=9 actionIdx=9 rewardIdx=9
+Simulation started
+CW readback [start] t=0 s:
+  AP1 set=0/0 ap=0/0 stas: exact=4 edcaRounded(0/0)=0 other=0 missing=0
+  AP2 set=0/0 ap=0/0 stas: exact=8 edcaRounded(0/0)=0 other=0 missing=0
+  AP3 set=0/0 ap=0/0 stas: exact=12 edcaRounded(0/0)=0 other=0 missing=0
+  AP4 set=0/0 ap=0/0 stas: exact=16 edcaRounded(0/0)=0 other=0 missing=0
+  AP5 set=0/0 ap=0/0 stas: exact=20 edcaRounded(0/0)=0 other=0 missing=0
+  AP6 set=0/0 ap=0/0 stas: exact=24 edcaRounded(0/0)=0 other=0 missing=0
+  AP7 set=0/0 ap=0/0 stas: exact=28 edcaRounded(0/0)=0 other=0 missing=0
+  AP8 set=0/0 ap=0/0 stas: exact=32 edcaRounded(0/0)=0 other=0 missing=0
+  AP9 set=0/0 ap=0/0 stas: exact=36 edcaRounded(0/0)=0 other=0 missing=0
+  AP10 set=0/0 ap=0/0 stas: exact=40 edcaRounded(0/0)=0 other=0 missing=0
+CW readback [warmup] t=1 s:
+  AP1 set=0/0 ap=0/0 stas: exact=4 edcaRounded(0/0)=0 other=0 missing=0
+  AP2 set=0/0 ap=0/0 stas: exact=8 edcaRounded(0/0)=0 other=0 missing=0
+  AP3 set=0/0 ap=0/0 stas: exact=12 edcaRounded(0/0)=0 other=0 missing=0
+  AP4 set=0/0 ap=0/0 stas: exact=16 edcaRounded(0/0)=0 other=0 missing=0
+  AP5 set=0/0 ap=0/0 stas: exact=20 edcaRounded(0/0)=0 other=0 missing=0
+  AP6 set=0/0 ap=0/0 stas: exact=24 edcaRounded(0/0)=0 other=0 missing=0
+  AP7 set=0/0 ap=0/0 stas: exact=28 edcaRounded(0/0)=0 other=0 missing=0
+  AP8 set=0/0 ap=0/0 stas: exact=32 edcaRounded(0/0)=0 other=0 missing=0
+  AP9 set=0/0 ap=0/0 stas: exact=36 edcaRounded(0/0)=0 other=0 missing=0
+  AP10 set=0/0 ap=0/0 stas: exact=40 edcaRounded(0/0)=0 other=0 missing=0
+Simulation process id: 4559 (parent (waf shell) id: 4512)
+Waiting for Python process to connect on port: tcp://localhost:16700
+Please start proper Python Gym Agent
+Waiting for simulation script to connect on port: tcp://localhost:16700
+Please start proper ns-3 simulation script using ./waf --run "..."
+APs: [4, 8, 12, 16, 20, 24, 28, 32, 36, 40] steps/ep: 1500 out: results/multi-ap-20261016-134111
+ep0 step    1 | AP1 cw= 188 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw= 188 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw= 188 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP4 cw= 188 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP5 cw= 188 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP6 cw= 188 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP7 cw= 188 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP8 cw= 188 r=0.000 loss=0.909 aL=0.000 cL=0.0000 | AP9 cw= 188 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw= 188 r=0.000 loss=1.000 aL=0.000 cL=0.0000
+ep0 step   10 | AP1 cw= 116 r=0.010 loss=0.615 aL=0.000 cL=0.0000 | AP2 cw= 116 r=0.001 loss=0.909 aL=0.000 cL=0.0000 | AP3 cw= 116 r=0.002 loss=0.727 aL=0.000 cL=0.0000 | AP4 cw= 116 r=0.001 loss=0.750 aL=0.000 cL=0.0000 | AP5 cw= 116 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP6 cw= 116 r=0.002 loss=0.688 aL=0.000 cL=0.0000 | AP7 cw= 116 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP8 cw= 116 r=0.000 loss=0.889 aL=0.000 cL=0.0000 | AP9 cw= 116 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw= 116 r=0.000 loss=1.000 aL=0.000 cL=0.0000
+STA nodeId=5 deassociated from 00:00:00:00:00:0e at t=1.144s
+STA nodeId=6 deassociated from 00:00:00:00:00:0e at t=1.144s
+STA nodeId=7 deassociated from 00:00:00:00:00:0e at t=1.144s
+STA nodeId=9 deassociated from 00:00:00:00:00:0e at t=1.144s
+STA nodeId=24 deassociated from 00:00:00:00:00:2c at t=1.144s
+STA nodeId=71 deassociated from 00:00:00:00:00:5a at t=1.144s
+STA nodeId=192 deassociated from 00:00:00:00:00:e6 at t=1.144s
+STA nodeId=194 deassociated from 00:00:00:00:00:e6 at t=1.144s
+STA nodeId=197 deassociated from 00:00:00:00:00:e6 at t=1.144s
+STA nodeId=199 deassociated from 00:00:00:00:00:e6 at t=1.144s
+STA nodeId=217 deassociated from 00:00:00:00:00:e6 at t=1.144s
+ep0 step   20 | AP1 cw= 596 r=0.002 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw= 596 r=0.002 loss=0.600 aL=0.000 cL=0.0000 | AP3 cw= 596 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP4 cw= 596 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP5 cw= 596 r=0.002 loss=0.692 aL=0.000 cL=0.0000 | AP6 cw= 596 r=0.001 loss=0.727 aL=0.000 cL=0.0000 | AP7 cw= 596 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP8 cw= 596 r=0.000 loss=0.900 aL=0.000 cL=0.0000 | AP9 cw= 596 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw= 596 r=0.000 loss=1.000 aL=0.000 cL=0.0000
+ep0 step   30 | AP1 cw= 114 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw= 114 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw= 114 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP4 cw= 114 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP5 cw= 114 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP6 cw= 114 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP7 cw= 114 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP8 cw= 114 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP9 cw= 114 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw= 114 r=0.000 loss=1.000 aL=0.000 cL=0.0000
+ep0 step   40 | AP1 cw= 103 r=0.000 loss=0.000 aL=0.000 cL=0.0000 | AP2 cw= 103 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw= 103 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP4 cw= 103 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP5 cw= 103 r=0.000 loss=0.833 aL=0.000 cL=0.0000 | AP6 cw= 103 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP7 cw= 103 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP8 cw= 103 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP9 cw= 103 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw= 103 r=0.000 loss=1.000 aL=0.000 cL=0.0000
+STA nodeId=24 re-associated with 00:00:00:00:00:2c at t=1.42737s
+STA nodeId=194 re-associated with 00:00:00:00:00:e6 at t=1.44581s
+STA nodeId=5 re-associated with 00:00:00:00:00:0e at t=1.45174s
+STA nodeId=7 re-associated with 00:00:00:00:00:0e at t=1.45478s
+STA nodeId=9 re-associated with 00:00:00:00:00:0e at t=1.46957s
+ep0 step   50 | AP1 cw=  61 r=0.000 loss=0.000 aL=0.000 cL=0.0000 | AP2 cw=  61 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw=  61 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP4 cw=  61 r=0.000 loss=0.929 aL=0.000 cL=0.0000 | AP5 cw=  61 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP6 cw=  61 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP7 cw=  61 r=0.000 loss=0.955 aL=0.000 cL=0.0000 | AP8 cw=  61 r=0.000 loss=0.600 aL=0.000 cL=0.0000 | AP9 cw=  61 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw=  61 r=0.000 loss=1.000 aL=0.000 cL=0.0000
+STA nodeId=71 re-associated with 00:00:00:00:00:5a at t=1.53845s
+ep0 step   60 | AP1 cw= 213 r=0.002 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw= 213 r=0.002 loss=0.600 aL=0.000 cL=0.0000 | AP3 cw= 213 r=0.001 loss=0.500 aL=0.000 cL=0.0000 | AP4 cw= 213 r=0.000 loss=0.750 aL=0.000 cL=0.0000 | AP5 cw= 213 r=0.001 loss=0.818 aL=0.000 cL=0.0000 | AP6 cw= 213 r=0.000 loss=0.933 aL=0.000 cL=0.0000 | AP7 cw= 213 r=0.000 loss=0.857 aL=0.000 cL=0.0000 | AP8 cw= 213 r=0.001 loss=0.625 aL=0.000 cL=0.0000 | AP9 cw= 213 r=0.001 loss=0.833 aL=0.000 cL=0.0000 | AP10 cw= 213 r=0.000 loss=0.875 aL=0.000 cL=0.0000
+ep0 step   70 | AP1 cw= 911 r=0.002 loss=0.667 aL=0.000 cL=0.0000 | AP2 cw= 911 r=0.001 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw= 911 r=0.001 loss=0.800 aL=0.000 cL=0.0000 | AP4 cw= 911 r=0.001 loss=0.571 aL=0.000 cL=0.0000 | AP5 cw= 911 r=0.000 loss=0.667 aL=0.000 cL=0.0000 | AP6 cw= 911 r=0.001 loss=0.833 aL=0.000 cL=0.0000 | AP7 cw= 911 r=0.001 loss=0.500 aL=0.000 cL=0.0000 | AP8 cw= 911 r=0.001 loss=0.714 aL=0.000 cL=0.0000 | AP9 cw= 911 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw= 911 r=0.000 loss=0.750 aL=0.000 cL=0.0000
+STA nodeId=6 re-associated with 00:00:00:00:00:0e at t=1.7796s
+ep0 step   80 | AP1 cw= 280 r=0.004 loss=0.600 aL=0.000 cL=0.0000 | AP2 cw= 280 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw= 280 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP4 cw= 280 r=0.001 loss=0.769 aL=0.000 cL=0.0000 | AP5 cw= 280 r=0.000 loss=0.857 aL=0.000 cL=0.0000 | AP6 cw= 280 r=0.001 loss=0.714 aL=0.000 cL=0.0000 | AP7 cw= 280 r=0.001 loss=0.750 aL=0.000 cL=0.0000 | AP8 cw= 280 r=0.001 loss=0.727 aL=0.000 cL=0.0000 | AP9 cw= 280 r=0.000 loss=0.800 aL=0.000 cL=0.0000 | AP10 cw= 280 r=0.000 loss=0.875 aL=0.000 cL=0.0000
+STA nodeId=197 re-associated with 00:00:00:00:00:e6 at t=1.83103s
+STA nodeId=217 re-associated with 00:00:00:00:00:e6 at t=1.84602s
+STA nodeId=192 re-associated with 00:00:00:00:00:e6 at t=1.84639s
+ep0 step   90 | AP1 cw=  50 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw=  50 r=0.001 loss=0.500 aL=0.000 cL=0.0000 | AP3 cw=  50 r=0.001 loss=0.714 aL=0.000 cL=0.0000 | AP4 cw=  50 r=0.001 loss=0.778 aL=0.000 cL=0.0000 | AP5 cw=  50 r=0.000 loss=0.857 aL=0.000 cL=0.0000 | AP6 cw=  50 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP7 cw=  50 r=0.000 loss=0.900 aL=0.000 cL=0.0000 | AP8 cw=  50 r=0.000 loss=0.857 aL=0.000 cL=0.0000 | AP9 cw=  50 r=0.001 loss=0.826 aL=0.000 cL=0.0000 | AP10 cw=  50 r=0.001 loss=0.765 aL=0.000 cL=0.0000
+ep0 step  100 | AP1 cw=  29 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw=  29 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw=  29 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP4 cw=  29 r=0.001 loss=0.833 aL=0.000 cL=0.0000 | AP5 cw=  29 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP6 cw=  29 r=0.000 loss=0.971 aL=0.000 cL=0.0000 | AP7 cw=  29 r=0.001 loss=0.889 aL=0.000 cL=0.0000 | AP8 cw=  29 r=0.000 loss=0.966 aL=0.000 cL=0.0000 | AP9 cw=  29 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw=  29 r=0.000 loss=0.933 aL=0.000 cL=0.0000
+STA nodeId=199 re-associated with 00:00:00:00:00:e6 at t=2.02563s
+ep0 step  110 | AP1 cw= 270 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw= 270 r=0.002 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw= 270 r=0.001 loss=0.750 aL=0.000 cL=0.0000 | AP4 cw= 270 r=0.001 loss=0.714 aL=0.000 cL=0.0000 | AP5 cw= 270 r=0.001 loss=0.571 aL=0.000 cL=0.0000 | AP6 cw= 270 r=0.001 loss=0.636 aL=0.000 cL=0.0000 | AP7 cw= 270 r=0.001 loss=0.778 aL=0.000 cL=0.0000 | AP8 cw= 270 r=0.001 loss=0.625 aL=0.000 cL=0.0000 | AP9 cw= 270 r=0.000 loss=0.833 aL=0.000 cL=0.0000 | AP10 cw= 270 r=0.000 loss=0.857 aL=0.000 cL=0.0000
+ep0 step  120 | AP1 cw= 184 r=0.000 loss=0.000 aL=0.000 cL=0.0000 | AP2 cw= 184 r=0.003 loss=0.571 aL=0.000 cL=0.0000 | AP3 cw= 184 r=0.001 loss=0.750 aL=0.000 cL=0.0000 | AP4 cw= 184 r=0.001 loss=0.778 aL=0.000 cL=0.0000 | AP5 cw= 184 r=0.003 loss=0.632 aL=0.000 cL=0.0000 | AP6 cw= 184 r=0.002 loss=0.688 aL=0.000 cL=0.0000 | AP7 cw= 184 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP8 cw= 184 r=0.000 loss=0.750 aL=0.000 cL=0.0000 | AP9 cw= 184 r=0.000 loss=0.667 aL=0.000 cL=0.0000 | AP10 cw= 184 r=0.001 loss=0.667 aL=0.000 cL=0.0000
+ep0 step  130 | AP1 cw=  78 r=0.002 loss=0.750 aL=0.000 cL=0.0000 | AP2 cw=  78 r=0.001 loss=0.800 aL=0.000 cL=0.0000 | AP3 cw=  78 r=0.001 loss=0.818 aL=0.000 cL=0.0000 | AP4 cw=  78 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP5 cw=  78 r=0.001 loss=0.800 aL=0.000 cL=0.0000 | AP6 cw=  78 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP7 cw=  78 r=0.001 loss=0.846 aL=0.000 cL=0.0000 | AP8 cw=  78 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP9 cw=  78 r=0.000 loss=0.909 aL=0.000 cL=0.0000 | AP10 cw=  78 r=0.000 loss=1.000 aL=0.000 cL=0.0000
+ep0 step  140 | AP1 cw=  40 r=0.002 loss=0.833 aL=0.000 cL=0.0000 | AP2 cw=  40 r=0.002 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  40 r=0.003 loss=0.688 aL=0.000 cL=0.0000 | AP4 cw=  40 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP5 cw=  40 r=0.001 loss=0.857 aL=0.000 cL=0.0000 | AP6 cw=  40 r=0.000 loss=0.929 aL=0.000 cL=0.0000 | AP7 cw=  40 r=0.002 loss=0.700 aL=0.000 cL=0.0000 | AP8 cw=  40 r=0.001 loss=0.765 aL=0.000 cL=0.0000 | AP9 cw=  40 r=0.000 loss=0.750 aL=0.000 cL=0.0000 | AP10 cw=  40 r=0.000 loss=0.917 aL=0.000 cL=0.0000
+ep0 step  150 | AP1 cw= 528 r=0.000 loss=0.000 aL=0.000 cL=0.0000 | AP2 cw= 528 r=0.001 loss=0.833 aL=0.000 cL=0.0000 | AP3 cw= 528 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP4 cw= 528 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP5 cw= 528 r=0.002 loss=0.636 aL=0.000 cL=0.0000 | AP6 cw= 528 r=0.001 loss=0.750 aL=0.000 cL=0.0000 | AP7 cw= 528 r=0.001 loss=0.818 aL=0.000 cL=0.0000 | AP8 cw= 528 r=0.000 loss=0.857 aL=0.000 cL=0.0000 | AP9 cw= 528 r=0.001 loss=0.800 aL=0.000 cL=0.0000 | AP10 cw= 528 r=0.001 loss=0.643 aL=0.000 cL=0.0000
+ep0 step  160 | AP1 cw= 952 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw= 952 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw= 952 r=0.001 loss=0.857 aL=0.000 cL=0.0000 | AP4 cw= 952 r=0.000 loss=0.857 aL=0.000 cL=0.0000 | AP5 cw= 952 r=0.002 loss=0.789 aL=0.000 cL=0.0000 | AP6 cw= 952 r=0.000 loss=0.933 aL=0.000 cL=0.0000 | AP7 cw= 952 r=0.001 loss=0.769 aL=0.000 cL=0.0000 | AP8 cw= 952 r=0.000 loss=0.818 aL=0.000 cL=0.0000 | AP9 cw= 952 r=0.000 loss=0.833 aL=0.000 cL=0.0000 | AP10 cw= 952 r=0.001 loss=0.818 aL=0.000 cL=0.0000
+ep0 step  170 | AP1 cw=  65 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw=  65 r=0.001 loss=0.500 aL=0.000 cL=0.0000 | AP3 cw=  65 r=0.002 loss=0.625 aL=0.000 cL=0.0000 | AP4 cw=  65 r=0.001 loss=0.750 aL=0.000 cL=0.0000 | AP5 cw=  65 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP6 cw=  65 r=0.001 loss=0.812 aL=0.000 cL=0.0000 | AP7 cw=  65 r=0.000 loss=0.875 aL=0.000 cL=0.0000 | AP8 cw=  65 r=0.001 loss=0.762 aL=0.000 cL=0.0000 | AP9 cw=  65 r=0.001 loss=0.769 aL=0.000 cL=0.0000 | AP10 cw=  65 r=0.000 loss=0.889 aL=0.000 cL=0.0000
+ep0 step  180 | AP1 cw= 416 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw= 416 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw= 416 r=0.001 loss=0.600 aL=0.000 cL=0.0000 | AP4 cw= 416 r=0.002 loss=0.667 aL=0.000 cL=0.0000 | AP5 cw= 416 r=0.002 loss=0.692 aL=0.000 cL=0.0000 | AP6 cw= 416 r=0.000 loss=0.750 aL=0.000 cL=0.0000 | AP7 cw= 416 r=0.003 loss=0.524 aL=0.000 cL=0.0000 | AP8 cw= 416 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP9 cw= 416 r=0.000 loss=0.875 aL=0.000 cL=0.0000 | AP10 cw= 416 r=0.001 loss=0.786 aL=0.000 cL=0.0000
+ep0 step  190 | AP1 cw= 160 r=0.004 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw= 160 r=0.003 loss=0.500 aL=0.000 cL=0.0000 | AP3 cw= 160 r=0.001 loss=0.500 aL=0.000 cL=0.0000 | AP4 cw= 160 r=0.002 loss=0.500 aL=0.000 cL=0.0000 | AP5 cw= 160 r=0.004 loss=0.550 aL=0.000 cL=0.0000 | AP6 cw= 160 r=0.001 loss=0.625 aL=0.000 cL=0.0000 | AP7 cw= 160 r=0.001 loss=0.500 aL=0.000 cL=0.0000 | AP8 cw= 160 r=0.000 loss=0.714 aL=0.000 cL=0.0000 | AP9 cw= 160 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw= 160 r=0.001 loss=0.562 aL=0.000 cL=0.0000
+ep0 step  200 | AP1 cw= 121 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw= 121 r=0.002 loss=0.800 aL=0.000 cL=0.0000 | AP3 cw= 121 r=0.001 loss=0.889 aL=0.000 cL=0.0000 | AP4 cw= 121 r=0.000 loss=0.833 aL=0.000 cL=0.0000 | AP5 cw= 121 r=0.000 loss=0.833 aL=0.000 cL=0.0000 | AP6 cw= 121 r=0.002 loss=0.706 aL=0.000 cL=0.0000 | AP7 cw= 121 r=0.001 loss=0.727 aL=0.000 cL=0.0000 | AP8 cw= 121 r=0.001 loss=0.773 aL=0.000 cL=0.0000 | AP9 cw= 121 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw= 121 r=0.001 loss=0.810 aL=0.000 cL=0.0000
+ep0 step  210 | AP1 cw= 312 r=0.002 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw= 312 r=0.002 loss=0.714 aL=0.000 cL=0.0000 | AP3 cw= 312 r=0.001 loss=0.600 aL=0.000 cL=0.0000 | AP4 cw= 312 r=0.002 loss=0.615 aL=0.000 cL=0.0000 | AP5 cw= 312 r=0.001 loss=0.833 aL=0.000 cL=0.0000 | AP6 cw= 312 r=0.001 loss=0.818 aL=0.000 cL=0.0000 | AP7 cw= 312 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP8 cw= 312 r=0.001 loss=0.600 aL=0.000 cL=0.0000 | AP9 cw= 312 r=0.001 loss=0.571 aL=0.000 cL=0.0000 | AP10 cw= 312 r=0.000 loss=0.857 aL=0.000 cL=0.0000
+ep0 step  220 | AP1 cw= 138 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw= 138 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw= 138 r=0.003 loss=0.667 aL=0.000 cL=0.0000 | AP4 cw= 138 r=0.001 loss=0.700 aL=0.000 cL=0.0000 | AP5 cw= 138 r=0.001 loss=0.769 aL=0.000 cL=0.0000 | AP6 cw= 138 r=0.001 loss=0.750 aL=0.000 cL=0.0000 | AP7 cw= 138 r=0.001 loss=0.800 aL=0.000 cL=0.0000 | AP8 cw= 138 r=0.000 loss=0.800 aL=0.000 cL=0.0000 | AP9 cw= 138 r=0.001 loss=0.600 aL=0.000 cL=0.0000 | AP10 cw= 138 r=0.001 loss=0.769 aL=0.000 cL=0.0000
+ep0 step  230 | AP1 cw= 622 r=0.002 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw= 622 r=0.001 loss=0.500 aL=0.000 cL=0.0000 | AP3 cw= 622 r=0.001 loss=0.889 aL=0.000 cL=0.0000 | AP4 cw= 622 r=0.002 loss=0.556 aL=0.000 cL=0.0000 | AP5 cw= 622 r=0.001 loss=0.833 aL=0.000 cL=0.0000 | AP6 cw= 622 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP7 cw= 622 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP8 cw= 622 r=0.001 loss=0.647 aL=0.000 cL=0.0000 | AP9 cw= 622 r=0.000 loss=0.667 aL=0.000 cL=0.0000 | AP10 cw= 622 r=0.001 loss=0.812 aL=0.000 cL=0.0000
+ep0 step  240 | AP1 cw= 459 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw= 459 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw= 459 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP4 cw= 459 r=0.000 loss=0.857 aL=0.000 cL=0.0000 | AP5 cw= 459 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP6 cw= 459 r=0.001 loss=0.786 aL=0.000 cL=0.0000 | AP7 cw= 459 r=0.001 loss=0.833 aL=0.000 cL=0.0000 | AP8 cw= 459 r=0.000 loss=0.833 aL=0.000 cL=0.0000 | AP9 cw= 459 r=0.000 loss=0.857 aL=0.000 cL=0.0000 | AP10 cw= 459 r=0.001 loss=0.762 aL=0.000 cL=0.0000
+ep0 step  250 | AP1 cw=  26 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw=  26 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw=  26 r=0.001 loss=0.944 aL=0.000 cL=0.0000 | AP4 cw=  26 r=0.000 loss=0.875 aL=0.000 cL=0.0000 | AP5 cw=  26 r=0.000 loss=0.944 aL=0.000 cL=0.0000 | AP6 cw=  26 r=0.000 loss=0.955 aL=0.000 cL=0.0000 | AP7 cw=  26 r=0.000 loss=0.929 aL=0.000 cL=0.0000 | AP8 cw=  26 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP9 cw=  26 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw=  26 r=0.001 loss=0.850 aL=0.000 cL=0.0000
+ep0 step  260 | AP1 cw=  52 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw=  52 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw=  52 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP4 cw=  52 r=0.001 loss=0.833 aL=0.000 cL=0.0000 | AP5 cw=  52 r=0.000 loss=0.950 aL=0.000 cL=0.0000 | AP6 cw=  52 r=0.001 loss=0.889 aL=0.000 cL=0.0000 | AP7 cw=  52 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP8 cw=  52 r=0.000 loss=0.875 aL=0.000 cL=0.0000 | AP9 cw=  52 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw=  52 r=0.000 loss=0.900 aL=0.000 cL=0.0000
+ep0 step  270 | AP1 cw= 178 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw= 178 r=0.002 loss=0.500 aL=0.000 cL=0.0000 | AP3 cw= 178 r=0.003 loss=0.643 aL=0.000 cL=0.0000 | AP4 cw= 178 r=0.001 loss=0.846 aL=0.000 cL=0.0000 | AP5 cw= 178 r=0.002 loss=0.733 aL=0.000 cL=0.0000 | AP6 cw= 178 r=0.001 loss=0.750 aL=0.000 cL=0.0000 | AP7 cw= 178 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP8 cw= 178 r=0.000 loss=0.778 aL=0.000 cL=0.0000 | AP9 cw= 178 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP10 cw= 178 r=0.001 loss=0.727 aL=0.000 cL=0.0000
+ep0 step  280 | AP1 cw= 127 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw= 127 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw= 127 r=0.001 loss=0.800 aL=0.000 cL=0.0000 | AP4 cw= 127 r=0.002 loss=0.583 aL=0.000 cL=0.0000 | AP5 cw= 127 r=0.001 loss=0.800 aL=0.000 cL=0.0000 | AP6 cw= 127 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP7 cw= 127 r=0.001 loss=0.643 aL=0.000 cL=0.0000 | AP8 cw= 127 r=0.001 loss=0.625 aL=0.000 cL=0.0000 | AP9 cw= 127 r=0.000 loss=0.750 aL=0.000 cL=0.0000 | AP10 cw= 127 r=0.001 loss=0.786 aL=0.000 cL=0.0000
+ep0 step  290 | AP1 cw=  49 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP2 cw=  49 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw=  49 r=0.001 loss=0.714 aL=0.000 cL=0.0000 | AP4 cw=  49 r=0.002 loss=0.789 aL=0.000 cL=0.0000 | AP5 cw=  49 r=0.000 loss=0.800 aL=0.000 cL=0.0000 | AP6 cw=  49 r=0.000 loss=0.875 aL=0.000 cL=0.0000 | AP7 cw=  49 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP8 cw=  49 r=0.000 loss=0.833 aL=0.000 cL=0.0000 | AP9 cw=  49 r=0.000 loss=0.875 aL=0.000 cL=0.0000 | AP10 cw=  49 r=0.001 loss=0.810 aL=0.000 cL=0.0000
+ep0 step  300 | AP1 cw= 425 r=0.002 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw= 425 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw= 425 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP4 cw= 425 r=0.000 loss=0.667 aL=0.000 cL=0.0000 | AP5 cw= 425 r=0.002 loss=0.714 aL=0.000 cL=0.0000 | AP6 cw= 425 r=0.002 loss=0.684 aL=0.000 cL=0.0000 | AP7 cw= 425 r=0.001 loss=0.750 aL=0.000 cL=0.0000 | AP8 cw= 425 r=0.001 loss=0.636 aL=0.000 cL=0.0000 | AP9 cw= 425 r=0.001 loss=0.692 aL=0.000 cL=0.0000 | AP10 cw= 425 r=0.000 loss=0.818 aL=0.000 cL=0.0000
+ep0 step  310 | AP1 cw= 178 r=0.000 loss=0.000 aL=-0.025 cL=0.0084 | AP2 cw= 178 r=0.002 loss=0.600 aL=-0.025 cL=0.0084 | AP3 cw= 178 r=0.001 loss=0.714 aL=-0.025 cL=0.0084 | AP4 cw= 178 r=0.002 loss=0.600 aL=-0.025 cL=0.0084 | AP5 cw= 178 r=0.001 loss=0.818 aL=-0.025 cL=0.0084 | AP6 cw= 178 r=0.001 loss=0.667 aL=-0.025 cL=0.0084 | AP7 cw= 178 r=0.000 loss=0.909 aL=-0.025 cL=0.0084 | AP8 cw= 178 r=0.001 loss=0.667 aL=-0.025 cL=0.0084 | AP9 cw= 178 r=0.000 loss=1.000 aL=-0.025 cL=0.0084 | AP10 cw= 178 r=0.001 loss=0.812 aL=-0.025 cL=0.0084
+ep0 step  320 | AP1 cw= 241 r=0.002 loss=0.500 aL=-0.037 cL=0.0027 | AP2 cw= 241 r=0.003 loss=0.667 aL=-0.037 cL=0.0027 | AP3 cw= 241 r=0.001 loss=0.750 aL=-0.037 cL=0.0027 | AP4 cw= 241 r=0.000 loss=0.857 aL=-0.037 cL=0.0027 | AP5 cw= 241 r=0.003 loss=0.632 aL=-0.037 cL=0.0027 | AP6 cw= 241 r=0.000 loss=0.800 aL=-0.037 cL=0.0027 | AP7 cw= 241 r=0.001 loss=0.818 aL=-0.037 cL=0.0027 | AP8 cw= 241 r=0.000 loss=0.778 aL=-0.037 cL=0.0027 | AP9 cw= 241 r=0.001 loss=0.700 aL=-0.037 cL=0.0027 | AP10 cw= 241 r=0.001 loss=0.688 aL=-0.037 cL=0.0027
+ep0 step  330 | AP1 cw= 190 r=0.000 loss=1.000 aL=-0.088 cL=0.0007 | AP2 cw= 190 r=0.002 loss=0.714 aL=-0.088 cL=0.0007 | AP3 cw= 190 r=0.001 loss=0.800 aL=-0.088 cL=0.0007 | AP4 cw= 190 r=0.001 loss=0.818 aL=-0.088 cL=0.0007 | AP5 cw= 190 r=0.001 loss=0.857 aL=-0.088 cL=0.0007 | AP6 cw= 190 r=0.000 loss=0.889 aL=-0.088 cL=0.0007 | AP7 cw= 190 r=0.000 loss=0.857 aL=-0.088 cL=0.0007 | AP8 cw= 190 r=0.001 loss=0.722 aL=-0.088 cL=0.0007 | AP9 cw= 190 r=0.001 loss=0.727 aL=-0.088 cL=0.0007 | AP10 cw= 190 r=0.000 loss=1.000 aL=-0.088 cL=0.0007
+ep0 step  340 | AP1 cw= 145 r=0.000 loss=1.000 aL=-0.083 cL=0.0001 | AP2 cw= 145 r=0.001 loss=0.667 aL=-0.083 cL=0.0001 | AP3 cw= 145 r=0.001 loss=0.857 aL=-0.083 cL=0.0001 | AP4 cw= 145 r=0.001 loss=0.778 aL=-0.083 cL=0.0001 | AP5 cw= 145 r=0.001 loss=0.778 aL=-0.083 cL=0.0001 | AP6 cw= 145 r=0.001 loss=0.857 aL=-0.083 cL=0.0001 | AP7 cw= 145 r=0.001 loss=0.769 aL=-0.083 cL=0.0001 | AP8 cw= 145 r=0.000 loss=1.000 aL=-0.083 cL=0.0001 | AP9 cw= 145 r=0.000 loss=0.833 aL=-0.083 cL=0.0001 | AP10 cw= 145 r=0.001 loss=0.667 aL=-0.083 cL=0.0001
+ep0 step  350 | AP1 cw= 124 r=0.006 loss=0.625 aL=-0.063 cL=0.0001 | AP2 cw= 124 r=0.000 loss=1.000 aL=-0.063 cL=0.0001 | AP3 cw= 124 r=0.002 loss=0.727 aL=-0.063 cL=0.0001 | AP4 cw= 124 r=0.000 loss=0.889 aL=-0.063 cL=0.0001 | AP5 cw= 124 r=0.002 loss=0.714 aL=-0.063 cL=0.0001 | AP6 cw= 124 r=0.000 loss=1.000 aL=-0.063 cL=0.0001 | AP7 cw= 124 r=0.001 loss=0.778 aL=-0.063 cL=0.0001 | AP8 cw= 124 r=0.000 loss=0.846 aL=-0.063 cL=0.0001 | AP9 cw= 124 r=0.000 loss=0.900 aL=-0.063 cL=0.0001 | AP10 cw= 124 r=0.001 loss=0.800 aL=-0.063 cL=0.0001
+ep0 step  360 | AP1 cw= 137 r=0.002 loss=0.800 aL=-0.077 cL=0.0001 | AP2 cw= 137 r=0.000 loss=1.000 aL=-0.077 cL=0.0001 | AP3 cw= 137 r=0.001 loss=0.889 aL=-0.077 cL=0.0001 | AP4 cw= 137 r=0.000 loss=0.923 aL=-0.077 cL=0.0001 | AP5 cw= 137 r=0.001 loss=0.818 aL=-0.077 cL=0.0001 | AP6 cw= 137 r=0.000 loss=0.938 aL=-0.077 cL=0.0001 | AP7 cw= 137 r=0.001 loss=0.846 aL=-0.077 cL=0.0001 | AP8 cw= 137 r=0.000 loss=0.900 aL=-0.077 cL=0.0001 | AP9 cw= 137 r=0.001 loss=0.667 aL=-0.077 cL=0.0001 | AP10 cw= 137 r=0.001 loss=0.600 aL=-0.077 cL=0.0001
+ep0 step  370 | AP1 cw= 156 r=0.002 loss=0.667 aL=-0.074 cL=0.0000 | AP2 cw= 156 r=0.000 loss=1.000 aL=-0.074 cL=0.0000 | AP3 cw= 156 r=0.000 loss=1.000 aL=-0.074 cL=0.0000 | AP4 cw= 156 r=0.000 loss=0.889 aL=-0.074 cL=0.0000 | AP5 cw= 156 r=0.000 loss=0.923 aL=-0.074 cL=0.0000 | AP6 cw= 156 r=0.000 loss=0.933 aL=-0.074 cL=0.0000 | AP7 cw= 156 r=0.001 loss=0.812 aL=-0.074 cL=0.0000 | AP8 cw= 156 r=0.001 loss=0.727 aL=-0.074 cL=0.0000 | AP9 cw= 156 r=0.000 loss=1.000 aL=-0.074 cL=0.0000 | AP10 cw= 156 r=0.000 loss=0.920 aL=-0.074 cL=0.0000
+ep0 step  380 | AP1 cw= 118 r=0.004 loss=0.500 aL=-0.069 cL=0.0000 | AP2 cw= 118 r=0.000 loss=1.000 aL=-0.069 cL=0.0000 | AP3 cw= 118 r=0.000 loss=1.000 aL=-0.069 cL=0.0000 | AP4 cw= 118 r=0.000 loss=0.800 aL=-0.069 cL=0.0000 | AP5 cw= 118 r=0.002 loss=0.789 aL=-0.069 cL=0.0000 | AP6 cw= 118 r=0.001 loss=0.789 aL=-0.069 cL=0.0000 | AP7 cw= 118 r=0.001 loss=0.818 aL=-0.069 cL=0.0000 | AP8 cw= 118 r=0.001 loss=0.625 aL=-0.069 cL=0.0000 | AP9 cw= 118 r=0.000 loss=0.857 aL=-0.069 cL=0.0000 | AP10 cw= 118 r=0.001 loss=0.684 aL=-0.069 cL=0.0000
+ep0 step  390 | AP1 cw= 129 r=0.000 loss=1.000 aL=-0.070 cL=0.0000 | AP2 cw= 129 r=0.000 loss=1.000 aL=-0.070 cL=0.0000 | AP3 cw= 129 r=0.003 loss=0.714 aL=-0.070 cL=0.0000 | AP4 cw= 129 r=0.000 loss=0.889 aL=-0.070 cL=0.0000 | AP5 cw= 129 r=0.001 loss=0.889 aL=-0.070 cL=0.0000 | AP6 cw= 129 r=0.001 loss=0.889 aL=-0.070 cL=0.0000 | AP7 cw= 129 r=0.000 loss=0.909 aL=-0.070 cL=0.0000 | AP8 cw= 129 r=0.000 loss=1.000 aL=-0.070 cL=0.0000 | AP9 cw= 129 r=0.000 loss=1.000 aL=-0.070 cL=0.0000 | AP10 cw= 129 r=0.001 loss=0.778 aL=-0.070 cL=0.0000
+ep0 step  400 | AP1 cw= 103 r=0.000 loss=1.000 aL=-0.070 cL=0.0000 | AP2 cw= 103 r=0.000 loss=1.000 aL=-0.070 cL=0.0000 | AP3 cw= 103 r=0.001 loss=0.667 aL=-0.070 cL=0.0000 | AP4 cw= 103 r=0.000 loss=0.857 aL=-0.070 cL=0.0000 | AP5 cw= 103 r=0.001 loss=0.833 aL=-0.070 cL=0.0000 | AP6 cw= 103 r=0.001 loss=0.800 aL=-0.070 cL=0.0000 | AP7 cw= 103 r=0.001 loss=0.846 aL=-0.070 cL=0.0000 | AP8 cw= 103 r=0.000 loss=0.875 aL=-0.070 cL=0.0000 | AP9 cw= 103 r=0.000 loss=0.857 aL=-0.070 cL=0.0000 | AP10 cw= 103 r=0.001 loss=0.812 aL=-0.070 cL=0.0000
+ep0 step  410 | AP1 cw= 161 r=0.000 loss=1.000 aL=-0.068 cL=0.0000 | AP2 cw= 161 r=0.001 loss=0.750 aL=-0.068 cL=0.0000 | AP3 cw= 161 r=0.000 loss=1.000 aL=-0.068 cL=0.0000 | AP4 cw= 161 r=0.000 loss=1.000 aL=-0.068 cL=0.0000 | AP5 cw= 161 r=0.002 loss=0.840 aL=-0.068 cL=0.0000 | AP6 cw= 161 r=0.001 loss=0.875 aL=-0.068 cL=0.0000 | AP7 cw= 161 r=0.000 loss=1.000 aL=-0.068 cL=0.0000 | AP8 cw= 161 r=0.001 loss=0.812 aL=-0.068 cL=0.0000 | AP9 cw= 161 r=0.000 loss=1.000 aL=-0.068 cL=0.0000 | AP10 cw= 161 r=0.000 loss=0.938 aL=-0.068 cL=0.0000
+ep0 step  420 | AP1 cw= 129 r=0.000 loss=1.000 aL=-0.067 cL=0.0000 | AP2 cw= 129 r=0.000 loss=1.000 aL=-0.067 cL=0.0000 | AP3 cw= 129 r=0.001 loss=0.750 aL=-0.067 cL=0.0000 | AP4 cw= 129 r=0.000 loss=0.923 aL=-0.067 cL=0.0000 | AP5 cw= 129 r=0.001 loss=0.905 aL=-0.067 cL=0.0000 | AP6 cw= 129 r=0.001 loss=0.800 aL=-0.067 cL=0.0000 | AP7 cw= 129 r=0.000 loss=1.000 aL=-0.067 cL=0.0000 | AP8 cw= 129 r=0.000 loss=0.900 aL=-0.067 cL=0.0000 | AP9 cw= 129 r=0.000 loss=0.909 aL=-0.067 cL=0.0000 | AP10 cw= 129 r=0.000 loss=1.000 aL=-0.067 cL=0.0000
+ep0 step  430 | AP1 cw= 198 r=0.000 loss=1.000 aL=-0.067 cL=0.0000 | AP2 cw= 198 r=0.000 loss=1.000 aL=-0.067 cL=0.0000 | AP3 cw= 198 r=0.001 loss=0.667 aL=-0.067 cL=0.0000 | AP4 cw= 198 r=0.000 loss=0.889 aL=-0.067 cL=0.0000 | AP5 cw= 198 r=0.001 loss=0.812 aL=-0.067 cL=0.0000 | AP6 cw= 198 r=0.002 loss=0.737 aL=-0.067 cL=0.0000 | AP7 cw= 198 r=0.001 loss=0.750 aL=-0.067 cL=0.0000 | AP8 cw= 198 r=0.000 loss=0.778 aL=-0.067 cL=0.0000 | AP9 cw= 198 r=0.000 loss=1.000 aL=-0.067 cL=0.0000 | AP10 cw= 198 r=0.001 loss=0.810 aL=-0.067 cL=0.0000
+ep0 step  440 | AP1 cw= 150 r=0.002 loss=0.500 aL=-0.066 cL=0.0000 | AP2 cw= 150 r=0.002 loss=0.714 aL=-0.066 cL=0.0000 | AP3 cw= 150 r=0.001 loss=0.714 aL=-0.066 cL=0.0000 | AP4 cw= 150 r=0.001 loss=0.800 aL=-0.066 cL=0.0000 | AP5 cw= 150 r=0.002 loss=0.722 aL=-0.066 cL=0.0000 | AP6 cw= 150 r=0.000 loss=0.909 aL=-0.066 cL=0.0000 | AP7 cw= 150 r=0.001 loss=0.600 aL=-0.066 cL=0.0000 | AP8 cw= 150 r=0.001 loss=0.714 aL=-0.066 cL=0.0000 | AP9 cw= 150 r=0.000 loss=0.800 aL=-0.066 cL=0.0000 | AP10 cw= 150 r=0.001 loss=0.786 aL=-0.066 cL=0.0000
+ep0 step  450 | AP1 cw= 153 r=0.002 loss=0.667 aL=-0.066 cL=0.0000 | AP2 cw= 153 r=0.002 loss=0.778 aL=-0.066 cL=0.0000 | AP3 cw= 153 r=0.000 loss=1.000 aL=-0.066 cL=0.0000 | AP4 cw= 153 r=0.001 loss=0.769 aL=-0.066 cL=0.0000 | AP5 cw= 153 r=0.001 loss=0.769 aL=-0.066 cL=0.0000 | AP6 cw= 153 r=0.000 loss=0.917 aL=-0.066 cL=0.0000 | AP7 cw= 153 r=0.000 loss=0.857 aL=-0.066 cL=0.0000 | AP8 cw= 153 r=0.000 loss=1.000 aL=-0.066 cL=0.0000 | AP9 cw= 153 r=0.000 loss=0.857 aL=-0.066 cL=0.0000 | AP10 cw= 153 r=0.001 loss=0.650 aL=-0.066 cL=0.0000
+ep0 step  460 | AP1 cw= 178 r=0.000 loss=1.000 aL=-0.065 cL=0.0000 | AP2 cw= 178 r=0.002 loss=0.667 aL=-0.065 cL=0.0000 | AP3 cw= 178 r=0.001 loss=0.833 aL=-0.065 cL=0.0000 | AP4 cw= 178 r=0.001 loss=0.800 aL=-0.065 cL=0.0000 | AP5 cw= 178 r=0.001 loss=0.727 aL=-0.065 cL=0.0000 | AP6 cw= 178 r=0.001 loss=0.846 aL=-0.065 cL=0.0000 | AP7 cw= 178 r=0.000 loss=0.750 aL=-0.065 cL=0.0000 | AP8 cw= 178 r=0.001 loss=0.800 aL=-0.065 cL=0.0000 | AP9 cw= 178 r=0.000 loss=0.900 aL=-0.065 cL=0.0000 | AP10 cw= 178 r=0.001 loss=0.750 aL=-0.065 cL=0.0000
+ep0 step  470 | AP1 cw= 181 r=0.000 loss=1.000 aL=-0.065 cL=0.0000 | AP2 cw= 181 r=0.003 loss=0.667 aL=-0.065 cL=0.0000 | AP3 cw= 181 r=0.002 loss=0.667 aL=-0.065 cL=0.0000 | AP4 cw= 181 r=0.001 loss=0.700 aL=-0.065 cL=0.0000 | AP5 cw= 181 r=0.000 loss=1.000 aL=-0.065 cL=0.0000 | AP6 cw= 181 r=0.002 loss=0.737 aL=-0.065 cL=0.0000 | AP7 cw= 181 r=0.001 loss=0.778 aL=-0.065 cL=0.0000 | AP8 cw= 181 r=0.001 loss=0.750 aL=-0.065 cL=0.0000 | AP9 cw= 181 r=0.000 loss=1.000 aL=-0.065 cL=0.0000 | AP10 cw= 181 r=0.000 loss=0.923 aL=-0.065 cL=0.0000
+ep0 step  480 | AP1 cw= 145 r=0.002 loss=0.667 aL=-0.065 cL=0.0000 | AP2 cw= 145 r=0.000 loss=1.000 aL=-0.065 cL=0.0000 | AP3 cw= 145 r=0.001 loss=0.714 aL=-0.065 cL=0.0000 | AP4 cw= 145 r=0.001 loss=0.700 aL=-0.065 cL=0.0000 | AP5 cw= 145 r=0.001 loss=0.800 aL=-0.065 cL=0.0000 | AP6 cw= 145 r=0.001 loss=0.750 aL=-0.065 cL=0.0000 | AP7 cw= 145 r=0.001 loss=0.667 aL=-0.065 cL=0.0000 | AP8 cw= 145 r=0.001 loss=0.667 aL=-0.065 cL=0.0000 | AP9 cw= 145 r=0.000 loss=1.000 aL=-0.065 cL=0.0000 | AP10 cw= 145 r=0.001 loss=0.789 aL=-0.065 cL=0.0000
+ep0 step  490 | AP1 cw= 210 r=0.000 loss=0.000 aL=-0.065 cL=0.0000 | AP2 cw= 210 r=0.001 loss=0.750 aL=-0.065 cL=0.0000 | AP3 cw= 210 r=0.002 loss=0.625 aL=-0.065 cL=0.0000 | AP4 cw= 210 r=0.000 loss=0.857 aL=-0.065 cL=0.0000 | AP5 cw= 210 r=0.001 loss=0.750 aL=-0.065 cL=0.0000 | AP6 cw= 210 r=0.001 loss=0.750 aL=-0.065 cL=0.0000 | AP7 cw= 210 r=0.002 loss=0.625 aL=-0.065 cL=0.0000 | AP8 cw= 210 r=0.001 loss=0.667 aL=-0.065 cL=0.0000 | AP9 cw= 210 r=0.000 loss=0.750 aL=-0.065 cL=0.0000 | AP10 cw= 210 r=0.001 loss=0.812 aL=-0.065 cL=0.0000
+ep0 step  500 | AP1 cw= 261 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP2 cw= 261 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP3 cw= 261 r=0.002 loss=0.625 aL=-0.064 cL=0.0000 | AP4 cw= 261 r=0.000 loss=0.800 aL=-0.064 cL=0.0000 | AP5 cw= 261 r=0.002 loss=0.615 aL=-0.064 cL=0.0000 | AP6 cw= 261 r=0.001 loss=0.786 aL=-0.064 cL=0.0000 | AP7 cw= 261 r=0.001 loss=0.769 aL=-0.064 cL=0.0000 | AP8 cw= 261 r=0.001 loss=0.714 aL=-0.064 cL=0.0000 | AP9 cw= 261 r=0.000 loss=0.750 aL=-0.064 cL=0.0000 | AP10 cw= 261 r=0.001 loss=0.727 aL=-0.064 cL=0.0000
+ep0 step  510 | AP1 cw= 189 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP2 cw= 189 r=0.002 loss=0.750 aL=-0.064 cL=0.0000 | AP3 cw= 189 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP4 cw= 189 r=0.001 loss=0.786 aL=-0.064 cL=0.0000 | AP5 cw= 189 r=0.001 loss=0.818 aL=-0.064 cL=0.0000 | AP6 cw= 189 r=0.001 loss=0.714 aL=-0.064 cL=0.0000 | AP7 cw= 189 r=0.001 loss=0.800 aL=-0.064 cL=0.0000 | AP8 cw= 189 r=0.001 loss=0.667 aL=-0.064 cL=0.0000 | AP9 cw= 189 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP10 cw= 189 r=0.001 loss=0.769 aL=-0.064 cL=0.0000
+ep0 step  520 | AP1 cw= 240 r=0.000 loss=1.000 aL=-0.065 cL=0.0000 | AP2 cw= 240 r=0.001 loss=0.833 aL=-0.065 cL=0.0000 | AP3 cw= 240 r=0.001 loss=0.667 aL=-0.065 cL=0.0000 | AP4 cw= 240 r=0.000 loss=0.875 aL=-0.065 cL=0.0000 | AP5 cw= 240 r=0.002 loss=0.714 aL=-0.065 cL=0.0000 | AP6 cw= 240 r=0.002 loss=0.583 aL=-0.065 cL=0.0000 | AP7 cw= 240 r=0.001 loss=0.750 aL=-0.065 cL=0.0000 | AP8 cw= 240 r=0.001 loss=0.700 aL=-0.065 cL=0.0000 | AP9 cw= 240 r=0.000 loss=0.833 aL=-0.065 cL=0.0000 | AP10 cw= 240 r=0.001 loss=0.786 aL=-0.065 cL=0.0000
+ep0 step  530 | AP1 cw= 306 r=0.000 loss=1.000 aL=-0.065 cL=0.0000 | AP2 cw= 306 r=0.000 loss=1.000 aL=-0.065 cL=0.0000 | AP3 cw= 306 r=0.001 loss=0.500 aL=-0.065 cL=0.0000 | AP4 cw= 306 r=0.002 loss=0.667 aL=-0.065 cL=0.0000 | AP5 cw= 306 r=0.001 loss=0.571 aL=-0.065 cL=0.0000 | AP6 cw= 306 r=0.002 loss=0.538 aL=-0.065 cL=0.0000 | AP7 cw= 306 r=0.001 loss=0.727 aL=-0.065 cL=0.0000 | AP8 cw= 306 r=0.001 loss=0.667 aL=-0.065 cL=0.0000 | AP9 cw= 306 r=0.000 loss=0.833 aL=-0.065 cL=0.0000 | AP10 cw= 306 r=0.000 loss=0.750 aL=-0.065 cL=0.0000
+ep0 step  540 | AP1 cw= 287 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP2 cw= 287 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP3 cw= 287 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP4 cw= 287 r=0.000 loss=0.857 aL=-0.064 cL=0.0000 | AP5 cw= 287 r=0.002 loss=0.667 aL=-0.064 cL=0.0000 | AP6 cw= 287 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP7 cw= 287 r=0.001 loss=0.750 aL=-0.064 cL=0.0000 | AP8 cw= 287 r=0.001 loss=0.786 aL=-0.064 cL=0.0000 | AP9 cw= 287 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP10 cw= 287 r=0.001 loss=0.750 aL=-0.064 cL=0.0000
+ep0 step  550 | AP1 cw= 164 r=0.000 loss=0.000 aL=-0.064 cL=0.0000 | AP2 cw= 164 r=0.002 loss=0.667 aL=-0.064 cL=0.0000 | AP3 cw= 164 r=0.002 loss=0.571 aL=-0.064 cL=0.0000 | AP4 cw= 164 r=0.003 loss=0.600 aL=-0.064 cL=0.0000 | AP5 cw= 164 r=0.002 loss=0.667 aL=-0.064 cL=0.0000 | AP6 cw= 164 r=0.001 loss=0.600 aL=-0.064 cL=0.0000 | AP7 cw= 164 r=0.000 loss=0.917 aL=-0.064 cL=0.0000 | AP8 cw= 164 r=0.001 loss=0.786 aL=-0.064 cL=0.0000 | AP9 cw= 164 r=0.000 loss=0.750 aL=-0.064 cL=0.0000 | AP10 cw= 164 r=0.000 loss=0.750 aL=-0.064 cL=0.0000
+ep0 step  560 | AP1 cw= 172 r=0.002 loss=0.667 aL=-0.064 cL=0.0000 | AP2 cw= 172 r=0.001 loss=0.750 aL=-0.064 cL=0.0000 | AP3 cw= 172 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP4 cw= 172 r=0.001 loss=0.727 aL=-0.064 cL=0.0000 | AP5 cw= 172 r=0.001 loss=0.727 aL=-0.064 cL=0.0000 | AP6 cw= 172 r=0.002 loss=0.625 aL=-0.064 cL=0.0000 | AP7 cw= 172 r=0.000 loss=0.875 aL=-0.064 cL=0.0000 | AP8 cw= 172 r=0.001 loss=0.700 aL=-0.064 cL=0.0000 | AP9 cw= 172 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP10 cw= 172 r=0.001 loss=0.737 aL=-0.064 cL=0.0000
+ep0 step  570 | AP1 cw= 232 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP2 cw= 232 r=0.002 loss=0.600 aL=-0.064 cL=0.0000 | AP3 cw= 232 r=0.001 loss=0.500 aL=-0.064 cL=0.0000 | AP4 cw= 232 r=0.002 loss=0.643 aL=-0.064 cL=0.0000 | AP5 cw= 232 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP6 cw= 232 r=0.001 loss=0.750 aL=-0.064 cL=0.0000 | AP7 cw= 232 r=0.001 loss=0.667 aL=-0.064 cL=0.0000 | AP8 cw= 232 r=0.000 loss=0.750 aL=-0.064 cL=0.0000 | AP9 cw= 232 r=0.000 loss=0.857 aL=-0.064 cL=0.0000 | AP10 cw= 232 r=0.001 loss=0.733 aL=-0.064 cL=0.0000
+ep0 step  580 | AP1 cw= 161 r=0.002 loss=0.500 aL=-0.064 cL=0.0000 | AP2 cw= 161 r=0.002 loss=0.500 aL=-0.064 cL=0.0000 | AP3 cw= 161 r=0.001 loss=0.714 aL=-0.064 cL=0.0000 | AP4 cw= 161 r=0.002 loss=0.692 aL=-0.064 cL=0.0000 | AP5 cw= 161 r=0.000 loss=0.667 aL=-0.064 cL=0.0000 | AP6 cw= 161 r=0.001 loss=0.733 aL=-0.064 cL=0.0000 | AP7 cw= 161 r=0.001 loss=0.750 aL=-0.064 cL=0.0000 | AP8 cw= 161 r=0.001 loss=0.692 aL=-0.064 cL=0.0000 | AP9 cw= 161 r=0.000 loss=0.667 aL=-0.064 cL=0.0000 | AP10 cw= 161 r=0.001 loss=0.571 aL=-0.064 cL=0.0000
+ep0 step  590 | AP1 cw= 224 r=0.000 loss=1.000 aL=-0.063 cL=0.0000 | AP2 cw= 224 r=0.003 loss=0.727 aL=-0.063 cL=0.0000 | AP3 cw= 224 r=0.001 loss=0.800 aL=-0.063 cL=0.0000 | AP4 cw= 224 r=0.000 loss=0.875 aL=-0.063 cL=0.0000 | AP5 cw= 224 r=0.001 loss=0.727 aL=-0.063 cL=0.0000 | AP6 cw= 224 r=0.001 loss=0.714 aL=-0.063 cL=0.0000 | AP7 cw= 224 r=0.001 loss=0.750 aL=-0.063 cL=0.0000 | AP8 cw= 224 r=0.000 loss=0.833 aL=-0.063 cL=0.0000 | AP9 cw= 224 r=0.000 loss=0.714 aL=-0.063 cL=0.0000 | AP10 cw= 224 r=0.001 loss=0.786 aL=-0.063 cL=0.0000
+ep0 step  600 | AP1 cw= 242 r=0.000 loss=0.000 aL=-0.063 cL=0.0000 | AP2 cw= 242 r=0.000 loss=1.000 aL=-0.063 cL=0.0000 | AP3 cw= 242 r=0.000 loss=1.000 aL=-0.063 cL=0.0000 | AP4 cw= 242 r=0.001 loss=0.700 aL=-0.063 cL=0.0000 | AP5 cw= 242 r=0.001 loss=0.727 aL=-0.063 cL=0.0000 | AP6 cw= 242 r=0.001 loss=0.750 aL=-0.063 cL=0.0000 | AP7 cw= 242 r=0.001 loss=0.800 aL=-0.063 cL=0.0000 | AP8 cw= 242 r=0.001 loss=0.765 aL=-0.063 cL=0.0000 | AP9 cw= 242 r=0.000 loss=0.667 aL=-0.063 cL=0.0000 | AP10 cw= 242 r=0.000 loss=0.900 aL=-0.063 cL=0.0000
+ep0 step  610 | AP1 cw= 234 r=0.002 loss=0.500 aL=-0.063 cL=0.0000 | AP2 cw= 234 r=0.000 loss=1.000 aL=-0.063 cL=0.0000 | AP3 cw= 234 r=0.001 loss=0.714 aL=-0.063 cL=0.0000 | AP4 cw= 234 r=0.001 loss=0.800 aL=-0.063 cL=0.0000 | AP5 cw= 234 r=0.002 loss=0.765 aL=-0.063 cL=0.0000 | AP6 cw= 234 r=0.000 loss=0.833 aL=-0.063 cL=0.0000 | AP7 cw= 234 r=0.001 loss=0.750 aL=-0.063 cL=0.0000 | AP8 cw= 234 r=0.001 loss=0.769 aL=-0.063 cL=0.0000 | AP9 cw= 234 r=0.000 loss=1.000 aL=-0.063 cL=0.0000 | AP10 cw= 234 r=0.001 loss=0.786 aL=-0.063 cL=0.0000
+ep0 step  620 | AP1 cw= 175 r=0.000 loss=1.000 aL=-0.064 cL=0.0000 | AP2 cw= 175 r=0.001 loss=0.833 aL=-0.064 cL=0.0000 | AP3 cw= 175 r=0.001 loss=0.800 aL=-0.064 cL=0.0000 | AP4 cw= 175 r=0.000 loss=0.857 aL=-0.064 cL=0.0000 | AP5 cw= 175 r=0.000 loss=0.900 aL=-0.064 cL=0.0000 | AP6 cw= 175 r=0.001 loss=0.833 aL=-0.064 cL=0.0000 | AP7 cw= 175 r=0.001 loss=0.800 aL=-0.064 cL=0.0000 | AP8 cw= 175 r=0.001 loss=0.812 aL=-0.064 cL=0.0000 | AP9 cw= 175 r=0.000 loss=0.714 aL=-0.064 cL=0.0000 | AP10 cw= 175 r=0.001 loss=0.824 aL=-0.064 cL=0.0000
+ep0 step  630 | AP1 cw= 161 r=0.002 loss=0.750 aL=-0.063 cL=0.0000 | AP2 cw= 161 r=0.001 loss=0.750 aL=-0.063 cL=0.0000 | AP3 cw= 161 r=0.002 loss=0.625 aL=-0.063 cL=0.0000 | AP4 cw= 161 r=0.000 loss=0.800 aL=-0.063 cL=0.0000 | AP5 cw= 161 r=0.002 loss=0.722 aL=-0.063 cL=0.0000 | AP6 cw= 161 r=0.001 loss=0.733 aL=-0.063 cL=0.0000 | AP7 cw= 161 r=0.001 loss=0.643 aL=-0.063 cL=0.0000 | AP8 cw= 161 r=0.000 loss=0.875 aL=-0.063 cL=0.0000 | AP9 cw= 161 r=0.000 loss=0.857 aL=-0.063 cL=0.0000 | AP10 cw= 161 r=0.000 loss=0.714 aL=-0.063 cL=0.0000
+ep0 step  640 | AP1 cw= 287 r=0.002 loss=0.667 aL=-0.063 cL=0.0000 | AP2 cw= 287 r=0.000 loss=1.000 aL=-0.063 cL=0.0000 | AP3 cw= 287 r=0.001 loss=0.800 aL=-0.063 cL=0.0000 | AP4 cw= 287 r=0.002 loss=0.692 aL=-0.063 cL=0.0000 | AP5 cw= 287 r=0.002 loss=0.733 aL=-0.063 cL=0.0000 | AP6 cw= 287 r=0.001 loss=0.778 aL=-0.063 cL=0.0000 | AP7 cw= 287 r=0.001 loss=0.667 aL=-0.063 cL=0.0000 | AP8 cw= 287 r=0.001 loss=0.727 aL=-0.063 cL=0.0000 | AP9 cw= 287 r=0.000 loss=1.000 aL=-0.063 cL=0.0000 | AP10 cw= 287 r=0.001 loss=0.667 aL=-0.063 cL=0.0000
+ep0 step  650 | AP1 cw= 329 r=0.000 loss=1.000 aL=-0.063 cL=0.0000 | AP2 cw= 329 r=0.001 loss=0.667 aL=-0.063 cL=0.0000 | AP3 cw= 329 r=0.000 loss=1.000 aL=-0.063 cL=0.0000 | AP4 cw= 329 r=0.001 loss=0.750 aL=-0.063 cL=0.0000 | AP5 cw= 329 r=0.001 loss=0.818 aL=-0.063 cL=0.0000 | AP6 cw= 329 r=0.000 loss=0.667 aL=-0.063 cL=0.0000 | AP7 cw= 329 r=0.001 loss=0.706 aL=-0.063 cL=0.0000 | AP8 cw= 329 r=0.001 loss=0.750 aL=-0.063 cL=0.0000 | AP9 cw= 329 r=0.000 loss=0.900 aL=-0.063 cL=0.0000 | AP10 cw= 329 r=0.001 loss=0.714 aL=-0.063 cL=0.0000
+ep0 step  660 | AP1 cw= 236 r=0.000 loss=1.000 aL=-0.063 cL=0.0000 | AP2 cw= 236 r=0.003 loss=0.625 aL=-0.063 cL=0.0000 | AP3 cw= 236 r=0.001 loss=0.778 aL=-0.063 cL=0.0000 | AP4 cw= 236 r=0.000 loss=0.833 aL=-0.063 cL=0.0000 | AP5 cw= 236 r=0.002 loss=0.706 aL=-0.063 cL=0.0000 | AP6 cw= 236 r=0.000 loss=1.000 aL=-0.063 cL=0.0000 | AP7 cw= 236 r=0.000 loss=0.900 aL=-0.063 cL=0.0000 | AP8 cw= 236 r=0.000 loss=0.875 aL=-0.063 cL=0.0000 | AP9 cw= 236 r=0.000 loss=0.750 aL=-0.063 cL=0.0000 | AP10 cw= 236 r=0.001 loss=0.773 aL=-0.063 cL=0.0000
+ep0 step  670 | AP1 cw= 279 r=0.002 loss=0.500 aL=-0.062 cL=0.0000 | AP2 cw= 279 r=0.002 loss=0.667 aL=-0.062 cL=0.0000 | AP3 cw= 279 r=0.003 loss=0.636 aL=-0.062 cL=0.0000 | AP4 cw= 279 r=0.000 loss=0.833 aL=-0.062 cL=0.0000 | AP5 cw= 279 r=0.000 loss=0.857 aL=-0.062 cL=0.0000 | AP6 cw= 279 r=0.002 loss=0.667 aL=-0.062 cL=0.0000 | AP7 cw= 279 r=0.001 loss=0.667 aL=-0.062 cL=0.0000 | AP8 cw= 279 r=0.001 loss=0.714 aL=-0.062 cL=0.0000 | AP9 cw= 279 r=0.001 loss=0.737 aL=-0.062 cL=0.0000 | AP10 cw= 279 r=0.000 loss=1.000 aL=-0.062 cL=0.0000
+ep0 step  680 | AP1 cw= 201 r=0.000 loss=0.000 aL=-0.062 cL=0.0000 | AP2 cw= 201 r=0.000 loss=1.000 aL=-0.062 cL=0.0000 | AP3 cw= 201 r=0.001 loss=0.800 aL=-0.062 cL=0.0000 | AP4 cw= 201 r=0.001 loss=0.769 aL=-0.062 cL=0.0000 | AP5 cw= 201 r=0.002 loss=0.714 aL=-0.062 cL=0.0000 | AP6 cw= 201 r=0.001 loss=0.778 aL=-0.062 cL=0.0000 | AP7 cw= 201 r=0.001 loss=0.750 aL=-0.062 cL=0.0000 | AP8 cw= 201 r=0.002 loss=0.611 aL=-0.062 cL=0.0000 | AP9 cw= 201 r=0.000 loss=0.714 aL=-0.062 cL=0.0000 | AP10 cw= 201 r=0.001 loss=0.727 aL=-0.062 cL=0.0000
+ep0 step  690 | AP1 cw= 190 r=0.004 loss=0.600 aL=-0.061 cL=0.0000 | AP2 cw= 190 r=0.001 loss=0.500 aL=-0.061 cL=0.0000 | AP3 cw= 190 r=0.001 loss=0.750 aL=-0.061 cL=0.0000 | AP4 cw= 190 r=0.000 loss=0.833 aL=-0.061 cL=0.0000 | AP5 cw= 190 r=0.002 loss=0.571 aL=-0.061 cL=0.0000 | AP6 cw= 190 r=0.001 loss=0.625 aL=-0.061 cL=0.0000 | AP7 cw= 190 r=0.001 loss=0.643 aL=-0.061 cL=0.0000 | AP8 cw= 190 r=0.000 loss=0.667 aL=-0.061 cL=0.0000 | AP9 cw= 190 r=0.000 loss=0.667 aL=-0.061 cL=0.0000 | AP10 cw= 190 r=0.001 loss=0.684 aL=-0.061 cL=0.0000
+ep0 step  700 | AP1 cw= 219 r=0.000 loss=1.000 aL=-0.061 cL=0.0000 | AP2 cw= 219 r=0.001 loss=0.750 aL=-0.061 cL=0.0000 | AP3 cw= 219 r=0.001 loss=0.750 aL=-0.061 cL=0.0000 | AP4 cw= 219 r=0.000 loss=1.000 aL=-0.061 cL=0.0000 | AP5 cw= 219 r=0.000 loss=0.900 aL=-0.061 cL=0.0000 | AP6 cw= 219 r=0.002 loss=0.706 aL=-0.061 cL=0.0000 | AP7 cw= 219 r=0.001 loss=0.692 aL=-0.061 cL=0.0000 | AP8 cw= 219 r=0.001 loss=0.750 aL=-0.061 cL=0.0000 | AP9 cw= 219 r=0.000 loss=0.714 aL=-0.061 cL=0.0000 | AP10 cw= 219 r=0.001 loss=0.750 aL=-0.061 cL=0.0000
+ep0 step  710 | AP1 cw= 227 r=0.006 loss=0.500 aL=-0.061 cL=0.0000 | AP2 cw= 227 r=0.001 loss=0.750 aL=-0.061 cL=0.0000 | AP3 cw= 227 r=0.001 loss=0.667 aL=-0.061 cL=0.0000 | AP4 cw= 227 r=0.000 loss=0.833 aL=-0.061 cL=0.0000 | AP5 cw= 227 r=0.000 loss=1.000 aL=-0.061 cL=0.0000 | AP6 cw= 227 r=0.001 loss=0.786 aL=-0.061 cL=0.0000 | AP7 cw= 227 r=0.001 loss=0.778 aL=-0.061 cL=0.0000 | AP8 cw= 227 r=0.000 loss=0.857 aL=-0.061 cL=0.0000 | AP9 cw= 227 r=0.000 loss=0.800 aL=-0.061 cL=0.0000 | AP10 cw= 227 r=0.000 loss=0.800 aL=-0.061 cL=0.0000
+ep0 step  720 | AP1 cw= 243 r=0.000 loss=1.000 aL=-0.061 cL=0.0000 | AP2 cw= 243 r=0.002 loss=0.500 aL=-0.061 cL=0.0000 | AP3 cw= 243 r=0.001 loss=0.750 aL=-0.061 cL=0.0000 | AP4 cw= 243 r=0.001 loss=0.625 aL=-0.061 cL=0.0000 | AP5 cw= 243 r=0.001 loss=0.667 aL=-0.061 cL=0.0000 | AP6 cw= 243 r=0.001 loss=0.667 aL=-0.061 cL=0.0000 | AP7 cw= 243 r=0.001 loss=0.714 aL=-0.061 cL=0.0000 | AP8 cw= 243 r=0.001 loss=0.714 aL=-0.061 cL=0.0000 | AP9 cw= 243 r=0.001 loss=0.636 aL=-0.061 cL=0.0000 | AP10 cw= 243 r=0.001 loss=0.538 aL=-0.061 cL=0.0000
+ep0 step  730 | AP1 cw= 201 r=0.004 loss=0.600 aL=-0.061 cL=0.0000 | AP2 cw= 201 r=0.003 loss=0.667 aL=-0.061 cL=0.0000 | AP3 cw= 201 r=0.000 loss=1.000 aL=-0.061 cL=0.0000 | AP4 cw= 201 r=0.000 loss=0.875 aL=-0.061 cL=0.0000 | AP5 cw= 201 r=0.002 loss=0.722 aL=-0.061 cL=0.0000 | AP6 cw= 201 r=0.000 loss=1.000 aL=-0.061 cL=0.0000 | AP7 cw= 201 r=0.001 loss=0.750 aL=-0.061 cL=0.0000 | AP8 cw= 201 r=0.001 loss=0.700 aL=-0.061 cL=0.0000 | AP9 cw= 201 r=0.001 loss=0.727 aL=-0.061 cL=0.0000 | AP10 cw= 201 r=0.001 loss=0.833 aL=-0.061 cL=0.0000
+ep0 step  740 | AP1 cw= 229 r=0.000 loss=1.000 aL=-0.060 cL=0.0000 | AP2 cw= 229 r=0.002 loss=0.600 aL=-0.060 cL=0.0000 | AP3 cw= 229 r=0.001 loss=0.714 aL=-0.060 cL=0.0000 | AP4 cw= 229 r=0.000 loss=0.857 aL=-0.060 cL=0.0000 | AP5 cw= 229 r=0.001 loss=0.786 aL=-0.060 cL=0.0000 | AP6 cw= 229 r=0.001 loss=0.833 aL=-0.060 cL=0.0000 | AP7 cw= 229 r=0.001 loss=0.667 aL=-0.060 cL=0.0000 | AP8 cw= 229 r=0.000 loss=0.750 aL=-0.060 cL=0.0000 | AP9 cw= 229 r=0.000 loss=0.800 aL=-0.060 cL=0.0000 | AP10 cw= 229 r=0.001 loss=0.643 aL=-0.060 cL=0.0000
+ep0 step  750 | AP1 cw= 161 r=0.000 loss=0.000 aL=-0.061 cL=0.0000 | AP2 cw= 161 r=0.000 loss=1.000 aL=-0.061 cL=0.0000 | AP3 cw= 161 r=0.001 loss=0.800 aL=-0.061 cL=0.0000 | AP4 cw= 161 r=0.000 loss=0.875 aL=-0.061 cL=0.0000 | AP5 cw= 161 r=0.002 loss=0.733 aL=-0.061 cL=0.0000 | AP6 cw= 161 r=0.001 loss=0.818 aL=-0.061 cL=0.0000 | AP7 cw= 161 r=0.001 loss=0.727 aL=-0.061 cL=0.0000 | AP8 cw= 161 r=0.001 loss=0.750 aL=-0.061 cL=0.0000 | AP9 cw= 161 r=0.000 loss=0.800 aL=-0.061 cL=0.0000 | AP10 cw= 161 r=0.001 loss=0.812 aL=-0.061 cL=0.0000
+ep0 step  760 | AP1 cw= 262 r=0.002 loss=0.833 aL=-0.060 cL=0.0000 | AP2 cw= 262 r=0.000 loss=1.000 aL=-0.060 cL=0.0000 | AP3 cw= 262 r=0.001 loss=0.750 aL=-0.060 cL=0.0000 | AP4 cw= 262 r=0.002 loss=0.692 aL=-0.060 cL=0.0000 | AP5 cw= 262 r=0.001 loss=0.750 aL=-0.060 cL=0.0000 | AP6 cw= 262 r=0.002 loss=0.667 aL=-0.060 cL=0.0000 | AP7 cw= 262 r=0.000 loss=0.800 aL=-0.060 cL=0.0000 | AP8 cw= 262 r=0.001 loss=0.692 aL=-0.060 cL=0.0000 | AP9 cw= 262 r=0.000 loss=0.900 aL=-0.060 cL=0.0000 | AP10 cw= 262 r=0.001 loss=0.692 aL=-0.060 cL=0.0000
+ep0 step  770 | AP1 cw= 177 r=0.000 loss=0.000 aL=-0.060 cL=0.0000 | AP2 cw= 177 r=0.001 loss=0.750 aL=-0.060 cL=0.0000 | AP3 cw= 177 r=0.000 loss=1.000 aL=-0.060 cL=0.0000 | AP4 cw= 177 r=0.002 loss=0.636 aL=-0.060 cL=0.0000 | AP5 cw= 177 r=0.001 loss=0.769 aL=-0.060 cL=0.0000 | AP6 cw= 177 r=0.001 loss=0.818 aL=-0.060 cL=0.0000 | AP7 cw= 177 r=0.000 loss=0.833 aL=-0.060 cL=0.0000 | AP8 cw= 177 r=0.002 loss=0.696 aL=-0.060 cL=0.0000 | AP9 cw= 177 r=0.000 loss=0.833 aL=-0.060 cL=0.0000 | AP10 cw= 177 r=0.000 loss=0.846 aL=-0.060 cL=0.0000
+ep0 step  780 | AP1 cw= 230 r=0.002 loss=0.667 aL=-0.060 cL=0.0000 | AP2 cw= 230 r=0.000 loss=1.000 aL=-0.060 cL=0.0000 | AP3 cw= 230 r=0.001 loss=0.667 aL=-0.060 cL=0.0000 | AP4 cw= 230 r=0.001 loss=0.700 aL=-0.060 cL=0.0000 | AP5 cw= 230 r=0.002 loss=0.667 aL=-0.060 cL=0.0000 | AP6 cw= 230 r=0.002 loss=0.632 aL=-0.060 cL=0.0000 | AP7 cw= 230 r=0.001 loss=0.750 aL=-0.060 cL=0.0000 | AP8 cw= 230 r=0.000 loss=0.750 aL=-0.060 cL=0.0000 | AP9 cw= 230 r=0.000 loss=0.833 aL=-0.060 cL=0.0000 | AP10 cw= 230 r=0.001 loss=0.692 aL=-0.060 cL=0.0000
+ep0 step  790 | AP1 cw= 163 r=0.004 loss=0.600 aL=-0.060 cL=0.0000 | AP2 cw= 163 r=0.000 loss=1.000 aL=-0.060 cL=0.0000 | AP3 cw= 163 r=0.001 loss=0.833 aL=-0.060 cL=0.0000 | AP4 cw= 163 r=0.000 loss=1.000 aL=-0.060 cL=0.0000 | AP5 cw= 163 r=0.002 loss=0.667 aL=-0.060 cL=0.0000 | AP6 cw= 163 r=0.000 loss=0.833 aL=-0.060 cL=0.0000 | AP7 cw= 163 r=0.001 loss=0.786 aL=-0.060 cL=0.0000 | AP8 cw= 163 r=0.001 loss=0.786 aL=-0.060 cL=0.0000 | AP9 cw= 163 r=0.000 loss=0.846 aL=-0.060 cL=0.0000 | AP10 cw= 163 r=0.000 loss=0.846 aL=-0.060 cL=0.0000
+ep0 step  800 | AP1 cw= 206 r=0.000 loss=1.000 aL=-0.059 cL=0.0000 | AP2 cw= 206 r=0.001 loss=0.500 aL=-0.059 cL=0.0000 | AP3 cw= 206 r=0.000 loss=1.000 aL=-0.059 cL=0.0000 | AP4 cw= 206 r=0.001 loss=0.800 aL=-0.059 cL=0.0000 | AP5 cw= 206 r=0.000 loss=0.900 aL=-0.059 cL=0.0000 | AP6 cw= 206 r=0.003 loss=0.654 aL=-0.059 cL=0.0000 | AP7 cw= 206 r=0.000 loss=0.857 aL=-0.059 cL=0.0000 | AP8 cw= 206 r=0.001 loss=0.692 aL=-0.059 cL=0.0000 | AP9 cw= 206 r=0.000 loss=1.000 aL=-0.059 cL=0.0000 | AP10 cw= 206 r=0.001 loss=0.643 aL=-0.059 cL=0.0000
+ep0 step  810 | AP1 cw= 269 r=0.000 loss=0.000 aL=-0.060 cL=0.0000 | AP2 cw= 269 r=0.003 loss=0.625 aL=-0.060 cL=0.0000 | AP3 cw= 269 r=0.001 loss=0.750 aL=-0.060 cL=0.0000 | AP4 cw= 269 r=0.001 loss=0.667 aL=-0.060 cL=0.0000 | AP5 cw= 269 r=0.000 loss=0.900 aL=-0.060 cL=0.0000 | AP6 cw= 269 r=0.001 loss=0.750 aL=-0.060 cL=0.0000 | AP7 cw= 269 r=0.001 loss=0.750 aL=-0.060 cL=0.0000 | AP8 cw= 269 r=0.000 loss=0.857 aL=-0.060 cL=0.0000 | AP9 cw= 269 r=0.001 loss=0.667 aL=-0.060 cL=0.0000 | AP10 cw= 269 r=0.000 loss=0.857 aL=-0.060 cL=0.0000
+ep0 step  820 | AP1 cw= 238 r=0.002 loss=0.500 aL=-0.059 cL=0.0000 | AP2 cw= 238 r=0.000 loss=1.000 aL=-0.059 cL=0.0000 | AP3 cw= 238 r=0.003 loss=0.600 aL=-0.059 cL=0.0000 | AP4 cw= 238 r=0.000 loss=0.750 aL=-0.059 cL=0.0000 | AP5 cw= 238 r=0.001 loss=0.846 aL=-0.059 cL=0.0000 | AP6 cw= 238 r=0.001 loss=0.824 aL=-0.059 cL=0.0000 | AP7 cw= 238 r=0.001 loss=0.545 aL=-0.059 cL=0.0000 | AP8 cw= 238 r=0.001 loss=0.667 aL=-0.059 cL=0.0000 | AP9 cw= 238 r=0.000 loss=0.778 aL=-0.059 cL=0.0000 | AP10 cw= 238 r=0.000 loss=1.000 aL=-0.059 cL=0.0000
+ep0 step  830 | AP1 cw= 243 r=0.004 loss=0.600 aL=-0.059 cL=0.0000 | AP2 cw= 243 r=0.001 loss=0.500 aL=-0.059 cL=0.0000 | AP3 cw= 243 r=0.002 loss=0.500 aL=-0.059 cL=0.0000 | AP4 cw= 243 r=0.003 loss=0.538 aL=-0.059 cL=0.0000 | AP5 cw= 243 r=0.002 loss=0.643 aL=-0.059 cL=0.0000 | AP6 cw= 243 r=0.001 loss=0.769 aL=-0.059 cL=0.0000 | AP7 cw= 243 r=0.001 loss=0.700 aL=-0.059 cL=0.0000 | AP8 cw= 243 r=0.001 loss=0.667 aL=-0.059 cL=0.0000 | AP9 cw= 243 r=0.000 loss=0.778 aL=-0.059 cL=0.0000 | AP10 cw= 243 r=0.000 loss=0.600 aL=-0.059 cL=0.0000
+ep0 step  840 | AP1 cw= 278 r=0.000 loss=1.000 aL=-0.059 cL=0.0000 | AP2 cw= 278 r=0.001 loss=0.667 aL=-0.059 cL=0.0000 | AP3 cw= 278 r=0.001 loss=0.800 aL=-0.059 cL=0.0000 | AP4 cw= 278 r=0.000 loss=1.000 aL=-0.059 cL=0.0000 | AP5 cw= 278 r=0.002 loss=0.692 aL=-0.059 cL=0.0000 | AP6 cw= 278 r=0.002 loss=0.682 aL=-0.059 cL=0.0000 | AP7 cw= 278 r=0.001 loss=0.857 aL=-0.059 cL=0.0000 | AP8 cw= 278 r=0.000 loss=0.800 aL=-0.059 cL=0.0000 | AP9 cw= 278 r=0.000 loss=0.750 aL=-0.059 cL=0.0000 | AP10 cw= 278 r=0.001 loss=0.750 aL=-0.059 cL=0.0000
+ep0 step  850 | AP1 cw= 208 r=0.000 loss=1.000 aL=-0.058 cL=0.0000 | AP2 cw= 208 r=0.000 loss=0.000 aL=-0.058 cL=0.0000 | AP3 cw= 208 r=0.001 loss=0.714 aL=-0.058 cL=0.0000 | AP4 cw= 208 r=0.002 loss=0.692 aL=-0.058 cL=0.0000 | AP5 cw= 208 r=0.002 loss=0.692 aL=-0.058 cL=0.0000 | AP6 cw= 208 r=0.002 loss=0.722 aL=-0.058 cL=0.0000 | AP7 cw= 208 r=0.000 loss=1.000 aL=-0.058 cL=0.0000 | AP8 cw= 208 r=0.001 loss=0.636 aL=-0.058 cL=0.0000 | AP9 cw= 208 r=0.000 loss=0.714 aL=-0.058 cL=0.0000 | AP10 cw= 208 r=0.000 loss=0.846 aL=-0.058 cL=0.0000
+ep0 step  860 | AP1 cw= 212 r=0.000 loss=1.000 aL=-0.058 cL=0.0000 | AP2 cw= 212 r=0.001 loss=0.800 aL=-0.058 cL=0.0000 | AP3 cw= 212 r=0.001 loss=0.714 aL=-0.058 cL=0.0000 | AP4 cw= 212 r=0.002 loss=0.583 aL=-0.058 cL=0.0000 | AP5 cw= 212 r=0.001 loss=0.800 aL=-0.058 cL=0.0000 | AP6 cw= 212 r=0.001 loss=0.778 aL=-0.058 cL=0.0000 | AP7 cw= 212 r=0.000 loss=1.000 aL=-0.058 cL=0.0000 | AP8 cw= 212 r=0.000 loss=0.600 aL=-0.058 cL=0.0000 | AP9 cw= 212 r=0.000 loss=0.800 aL=-0.058 cL=0.0000 | AP10 cw= 212 r=0.001 loss=0.789 aL=-0.058 cL=0.0000
+ep0 step  870 | AP1 cw= 257 r=0.000 loss=1.000 aL=-0.058 cL=0.0000 | AP2 cw= 257 r=0.002 loss=0.500 aL=-0.058 cL=0.0000 | AP3 cw= 257 r=0.001 loss=0.750 aL=-0.058 cL=0.0000 | AP4 cw= 257 r=0.000 loss=0.750 aL=-0.058 cL=0.0000 | AP5 cw= 257 r=0.002 loss=0.643 aL=-0.058 cL=0.0000 | AP6 cw= 257 r=0.001 loss=0.765 aL=-0.058 cL=0.0000 | AP7 cw= 257 r=0.001 loss=0.643 aL=-0.058 cL=0.0000 | AP8 cw= 257 r=0.001 loss=0.636 aL=-0.058 cL=0.0000 | AP9 cw= 257 r=0.000 loss=1.000 aL=-0.058 cL=0.0000 | AP10 cw= 257 r=0.001 loss=0.667 aL=-0.058 cL=0.0000
+ep0 step  880 | AP1 cw= 317 r=0.000 loss=1.000 aL=-0.058 cL=0.0000 | AP2 cw= 317 r=0.002 loss=0.667 aL=-0.058 cL=0.0000 | AP3 cw= 317 r=0.001 loss=0.800 aL=-0.058 cL=0.0000 | AP4 cw= 317 r=0.001 loss=0.714 aL=-0.058 cL=0.0000 | AP5 cw= 317 r=0.001 loss=0.800 aL=-0.058 cL=0.0000 | AP6 cw= 317 r=0.001 loss=0.812 aL=-0.058 cL=0.0000 | AP7 cw= 317 r=0.001 loss=0.846 aL=-0.058 cL=0.0000 | AP8 cw= 317 r=0.000 loss=1.000 aL=-0.058 cL=0.0000 | AP9 cw= 317 r=0.000 loss=1.000 aL=-0.058 cL=0.0000 | AP10 cw= 317 r=0.001 loss=0.733 aL=-0.058 cL=0.0000
+ep0 step  890 | AP1 cw= 238 r=0.000 loss=1.000 aL=-0.058 cL=0.0000 | AP2 cw= 238 r=0.000 loss=1.000 aL=-0.058 cL=0.0000 | AP3 cw= 238 r=0.001 loss=0.667 aL=-0.058 cL=0.0000 | AP4 cw= 238 r=0.000 loss=0.875 aL=-0.058 cL=0.0000 | AP5 cw= 238 r=0.002 loss=0.636 aL=-0.058 cL=0.0000 | AP6 cw= 238 r=0.000 loss=0.833 aL=-0.058 cL=0.0000 | AP7 cw= 238 r=0.001 loss=0.643 aL=-0.058 cL=0.0000 | AP8 cw= 238 r=0.000 loss=0.857 aL=-0.058 cL=0.0000 | AP9 cw= 238 r=0.000 loss=0.833 aL=-0.058 cL=0.0000 | AP10 cw= 238 r=0.001 loss=0.714 aL=-0.058 cL=0.0000
+ep0 step  900 | AP1 cw= 170 r=0.004 loss=0.667 aL=-0.058 cL=0.0000 | AP2 cw= 170 r=0.000 loss=1.000 aL=-0.058 cL=0.0000 | AP3 cw= 170 r=0.001 loss=0.714 aL=-0.058 cL=0.0000 | AP4 cw= 170 r=0.001 loss=0.750 aL=-0.058 cL=0.0000 | AP5 cw= 170 r=0.001 loss=0.818 aL=-0.058 cL=0.0000 | AP6 cw= 170 r=0.001 loss=0.824 aL=-0.058 cL=0.0000 | AP7 cw= 170 r=0.001 loss=0.600 aL=-0.058 cL=0.0000 | AP8 cw= 170 r=0.001 loss=0.556 aL=-0.058 cL=0.0000 | AP9 cw= 170 r=0.000 loss=0.800 aL=-0.058 cL=0.0000 | AP10 cw= 170 r=0.001 loss=0.692 aL=-0.058 cL=0.0000
+ep0 step  910 | AP1 cw= 181 r=0.000 loss=0.000 aL=-0.057 cL=0.0000 | AP2 cw= 181 r=0.000 loss=1.000 aL=-0.057 cL=0.0000 | AP3 cw= 181 r=0.001 loss=0.714 aL=-0.057 cL=0.0000 | AP4 cw= 181 r=0.000 loss=1.000 aL=-0.057 cL=0.0000 | AP5 cw= 181 r=0.000 loss=0.889 aL=-0.057 cL=0.0000 | AP6 cw= 181 r=0.002 loss=0.684 aL=-0.057 cL=0.0000 | AP7 cw= 181 r=0.001 loss=0.714 aL=-0.057 cL=0.0000 | AP8 cw= 181 r=0.001 loss=0.600 aL=-0.057 cL=0.0000 | AP9 cw= 181 r=0.000 loss=0.833 aL=-0.057 cL=0.0000 | AP10 cw= 181 r=0.001 loss=0.750 aL=-0.057 cL=0.0000
+ep0 step  920 | AP1 cw= 199 r=0.002 loss=0.667 aL=-0.057 cL=0.0000 | AP2 cw= 199 r=0.001 loss=0.750 aL=-0.057 cL=0.0000 | AP3 cw= 199 r=0.003 loss=0.545 aL=-0.057 cL=0.0000 | AP4 cw= 199 r=0.003 loss=0.571 aL=-0.057 cL=0.0000 | AP5 cw= 199 r=0.002 loss=0.636 aL=-0.057 cL=0.0000 | AP6 cw= 199 r=0.001 loss=0.769 aL=-0.057 cL=0.0000 | AP7 cw= 199 r=0.000 loss=0.667 aL=-0.057 cL=0.0000 | AP8 cw= 199 r=0.001 loss=0.692 aL=-0.057 cL=0.0000 | AP9 cw= 199 r=0.000 loss=0.667 aL=-0.057 cL=0.0000 | AP10 cw= 199 r=0.000 loss=0.778 aL=-0.057 cL=0.0000
+ep0 step  930 | AP1 cw= 277 r=0.004 loss=0.600 aL=-0.057 cL=0.0000 | AP2 cw= 277 r=0.000 loss=1.000 aL=-0.057 cL=0.0000 | AP3 cw= 277 r=0.001 loss=0.750 aL=-0.057 cL=0.0000 | AP4 cw= 277 r=0.002 loss=0.692 aL=-0.057 cL=0.0000 | AP5 cw= 277 r=0.001 loss=0.786 aL=-0.057 cL=0.0000 | AP6 cw= 277 r=0.000 loss=0.875 aL=-0.057 cL=0.0000 | AP7 cw= 277 r=0.001 loss=0.667 aL=-0.057 cL=0.0000 | AP8 cw= 277 r=0.000 loss=0.889 aL=-0.057 cL=0.0000 | AP9 cw= 277 r=0.001 loss=0.571 aL=-0.057 cL=0.0000 | AP10 cw= 277 r=0.001 loss=0.714 aL=-0.057 cL=0.0000
+ep0 step  940 | AP1 cw= 265 r=0.000 loss=1.000 aL=-0.057 cL=0.0000 | AP2 cw= 265 r=0.000 loss=1.000 aL=-0.057 cL=0.0000 | AP3 cw= 265 r=0.000 loss=0.000 aL=-0.057 cL=0.0000 | AP4 cw= 265 r=0.004 loss=0.579 aL=-0.057 cL=0.0000 | AP5 cw= 265 r=0.002 loss=0.500 aL=-0.057 cL=0.0000 | AP6 cw= 265 r=0.001 loss=0.714 aL=-0.057 cL=0.0000 | AP7 cw= 265 r=0.001 loss=0.643 aL=-0.057 cL=0.0000 | AP8 cw= 265 r=0.001 loss=0.571 aL=-0.057 cL=0.0000 | AP9 cw= 265 r=0.000 loss=0.750 aL=-0.057 cL=0.0000 | AP10 cw= 265 r=0.001 loss=0.714 aL=-0.057 cL=0.0000
+ep0 step  950 | AP1 cw= 194 r=0.002 loss=0.667 aL=-0.057 cL=0.0000 | AP2 cw= 194 r=0.001 loss=0.833 aL=-0.057 cL=0.0000 | AP3 cw= 194 r=0.001 loss=0.714 aL=-0.057 cL=0.0000 | AP4 cw= 194 r=0.001 loss=0.714 aL=-0.057 cL=0.0000 | AP5 cw= 194 r=0.001 loss=0.750 aL=-0.057 cL=0.0000 | AP6 cw= 194 r=0.002 loss=0.643 aL=-0.057 cL=0.0000 | AP7 cw= 194 r=0.001 loss=0.625 aL=-0.057 cL=0.0000 | AP8 cw= 194 r=0.000 loss=0.800 aL=-0.057 cL=0.0000 | AP9 cw= 194 r=0.000 loss=0.857 aL=-0.057 cL=0.0000 | AP10 cw= 194 r=0.001 loss=0.667 aL=-0.057 cL=0.0000
+ep0 step  960 | AP1 cw= 259 r=0.002 loss=0.750 aL=-0.057 cL=0.0000 | AP2 cw= 259 r=0.001 loss=0.750 aL=-0.057 cL=0.0000 | AP3 cw= 259 r=0.001 loss=0.714 aL=-0.057 cL=0.0000 | AP4 cw= 259 r=0.001 loss=0.778 aL=-0.057 cL=0.0000 | AP5 cw= 259 r=0.001 loss=0.833 aL=-0.057 cL=0.0000 | AP6 cw= 259 r=0.001 loss=0.833 aL=-0.057 cL=0.0000 | AP7 cw= 259 r=0.000 loss=0.857 aL=-0.057 cL=0.0000 | AP8 cw= 259 r=0.000 loss=0.750 aL=-0.057 cL=0.0000 | AP9 cw= 259 r=0.001 loss=0.667 aL=-0.057 cL=0.0000 | AP10 cw= 259 r=0.000 loss=0.833 aL=-0.057 cL=0.0000
+ep0 step  970 | AP1 cw= 265 r=0.000 loss=0.000 aL=-0.057 cL=0.0000 | AP2 cw= 265 r=0.001 loss=0.800 aL=-0.057 cL=0.0000 | AP3 cw= 265 r=0.001 loss=0.714 aL=-0.057 cL=0.0000 | AP4 cw= 265 r=0.000 loss=0.875 aL=-0.057 cL=0.0000 | AP5 cw= 265 r=0.000 loss=1.000 aL=-0.057 cL=0.0000 | AP6 cw= 265 r=0.001 loss=0.667 aL=-0.057 cL=0.0000 | AP7 cw= 265 r=0.001 loss=0.833 aL=-0.057 cL=0.0000 | AP8 cw= 265 r=0.000 loss=0.800 aL=-0.057 cL=0.0000 | AP9 cw= 265 r=0.001 loss=0.700 aL=-0.057 cL=0.0000 | AP10 cw= 265 r=0.001 loss=0.688 aL=-0.057 cL=0.0000
+ep0 step  980 | AP1 cw= 334 r=0.004 loss=0.667 aL=-0.056 cL=0.0000 | AP2 cw= 334 r=0.002 loss=0.714 aL=-0.056 cL=0.0000 | AP3 cw= 334 r=0.000 loss=1.000 aL=-0.056 cL=0.0000 | AP4 cw= 334 r=0.001 loss=0.714 aL=-0.056 cL=0.0000 | AP5 cw= 334 r=0.002 loss=0.714 aL=-0.056 cL=0.0000 | AP6 cw= 334 r=0.001 loss=0.769 aL=-0.056 cL=0.0000 | AP7 cw= 334 r=0.000 loss=0.909 aL=-0.056 cL=0.0000 | AP8 cw= 334 r=0.000 loss=0.833 aL=-0.056 cL=0.0000 | AP9 cw= 334 r=0.000 loss=0.778 aL=-0.056 cL=0.0000 | AP10 cw= 334 r=0.000 loss=0.889 aL=-0.056 cL=0.0000
+ep0 step  990 | AP1 cw= 163 r=0.002 loss=0.500 aL=-0.056 cL=0.0000 | AP2 cw= 163 r=0.001 loss=0.833 aL=-0.056 cL=0.0000 | AP3 cw= 163 r=0.001 loss=0.800 aL=-0.056 cL=0.0000 | AP4 cw= 163 r=0.001 loss=0.769 aL=-0.056 cL=0.0000 | AP5 cw= 163 r=0.002 loss=0.692 aL=-0.056 cL=0.0000 | AP6 cw= 163 r=0.000 loss=0.800 aL=-0.056 cL=0.0000 | AP7 cw= 163 r=0.001 loss=0.636 aL=-0.056 cL=0.0000 | AP8 cw= 163 r=0.001 loss=0.750 aL=-0.056 cL=0.0000 | AP9 cw= 163 r=0.001 loss=0.571 aL=-0.056 cL=0.0000 | AP10 cw= 163 r=0.001 loss=0.750 aL=-0.056 cL=0.0000
+ep0 step 1000 | AP1 cw= 181 r=0.000 loss=1.000 aL=-0.055 cL=0.0000 | AP2 cw= 181 r=0.003 loss=0.625 aL=-0.055 cL=0.0000 | AP3 cw= 181 r=0.001 loss=0.889 aL=-0.055 cL=0.0000 | AP4 cw= 181 r=0.000 loss=1.000 aL=-0.055 cL=0.0000 | AP5 cw= 181 r=0.000 loss=0.923 aL=-0.055 cL=0.0000 | AP6 cw= 181 r=0.000 loss=0.909 aL=-0.055 cL=0.0000 | AP7 cw= 181 r=0.001 loss=0.818 aL=-0.055 cL=0.0000 | AP8 cw= 181 r=0.000 loss=0.857 aL=-0.055 cL=0.0000 | AP9 cw= 181 r=0.000 loss=0.800 aL=-0.055 cL=0.0000 | AP10 cw= 181 r=0.001 loss=0.750 aL=-0.055 cL=0.0000
+ep0 step 1010 | AP1 cw= 273 r=0.000 loss=0.000 aL=-0.055 cL=0.0000 | AP2 cw= 273 r=0.001 loss=0.500 aL=-0.055 cL=0.0000 | AP3 cw= 273 r=0.001 loss=0.750 aL=-0.055 cL=0.0000 | AP4 cw= 273 r=0.002 loss=0.500 aL=-0.055 cL=0.0000 | AP5 cw= 273 r=0.001 loss=0.727 aL=-0.055 cL=0.0000 | AP6 cw= 273 r=0.001 loss=0.700 aL=-0.055 cL=0.0000 | AP7 cw= 273 r=0.002 loss=0.538 aL=-0.055 cL=0.0000 | AP8 cw= 273 r=0.001 loss=0.600 aL=-0.055 cL=0.0000 | AP9 cw= 273 r=0.001 loss=0.700 aL=-0.055 cL=0.0000 | AP10 cw= 273 r=0.001 loss=0.692 aL=-0.055 cL=0.0000
+ep0 step 1020 | AP1 cw= 174 r=0.000 loss=0.000 aL=-0.056 cL=0.0000 | AP2 cw= 174 r=0.002 loss=0.667 aL=-0.056 cL=0.0000 | AP3 cw= 174 r=0.001 loss=0.875 aL=-0.056 cL=0.0000 | AP4 cw= 174 r=0.001 loss=0.625 aL=-0.056 cL=0.0000 | AP5 cw= 174 r=0.001 loss=0.750 aL=-0.056 cL=0.0000 | AP6 cw= 174 r=0.001 loss=0.571 aL=-0.056 cL=0.0000 | AP7 cw= 174 r=0.001 loss=0.643 aL=-0.056 cL=0.0000 | AP8 cw= 174 r=0.001 loss=0.750 aL=-0.056 cL=0.0000 | AP9 cw= 174 r=0.001 loss=0.636 aL=-0.056 cL=0.0000 | AP10 cw= 174 r=0.001 loss=0.727 aL=-0.056 cL=0.0000
+ep0 step 1030 | AP1 cw= 242 r=0.000 loss=0.000 aL=-0.055 cL=0.0000 | AP2 cw= 242 r=0.000 loss=1.000 aL=-0.055 cL=0.0000 | AP3 cw= 242 r=0.001 loss=0.714 aL=-0.055 cL=0.0000 | AP4 cw= 242 r=0.001 loss=0.714 aL=-0.055 cL=0.0000 | AP5 cw= 242 r=0.002 loss=0.545 aL=-0.055 cL=0.0000 | AP6 cw= 242 r=0.003 loss=0.640 aL=-0.055 cL=0.0000 | AP7 cw= 242 r=0.001 loss=0.667 aL=-0.055 cL=0.0000 | AP8 cw= 242 r=0.000 loss=0.800 aL=-0.055 cL=0.0000 | AP9 cw= 242 r=0.000 loss=1.000 aL=-0.055 cL=0.0000 | AP10 cw= 242 r=0.001 loss=0.688 aL=-0.055 cL=0.0000
+ep0 step 1040 | AP1 cw= 238 r=0.002 loss=0.500 aL=-0.055 cL=0.0000 | AP2 cw= 238 r=0.001 loss=0.500 aL=-0.055 cL=0.0000 | AP3 cw= 238 r=0.003 loss=0.556 aL=-0.055 cL=0.0000 | AP4 cw= 238 r=0.001 loss=0.727 aL=-0.055 cL=0.0000 | AP5 cw= 238 r=0.001 loss=0.778 aL=-0.055 cL=0.0000 | AP6 cw= 238 r=0.001 loss=0.733 aL=-0.055 cL=0.0000 | AP7 cw= 238 r=0.001 loss=0.667 aL=-0.055 cL=0.0000 | AP8 cw= 238 r=0.000 loss=0.800 aL=-0.055 cL=0.0000 | AP9 cw= 238 r=0.000 loss=0.714 aL=-0.055 cL=0.0000 | AP10 cw= 238 r=0.001 loss=0.571 aL=-0.055 cL=0.0000
+ep0 step 1050 | AP1 cw= 147 r=0.000 loss=1.000 aL=-0.055 cL=0.0000 | AP2 cw= 147 r=0.001 loss=0.833 aL=-0.055 cL=0.0000 | AP3 cw= 147 r=0.001 loss=0.500 aL=-0.055 cL=0.0000 | AP4 cw= 147 r=0.001 loss=0.667 aL=-0.055 cL=0.0000 | AP5 cw= 147 r=0.000 loss=0.889 aL=-0.055 cL=0.0000 | AP6 cw= 147 r=0.002 loss=0.647 aL=-0.055 cL=0.0000 | AP7 cw= 147 r=0.001 loss=0.667 aL=-0.055 cL=0.0000 | AP8 cw= 147 r=0.000 loss=0.857 aL=-0.055 cL=0.0000 | AP9 cw= 147 r=0.001 loss=0.700 aL=-0.055 cL=0.0000 | AP10 cw= 147 r=0.001 loss=0.632 aL=-0.055 cL=0.0000
+ep0 step 1060 | AP1 cw= 177 r=0.000 loss=1.000 aL=-0.055 cL=0.0000 | AP2 cw= 177 r=0.001 loss=0.750 aL=-0.055 cL=0.0000 | AP3 cw= 177 r=0.001 loss=0.833 aL=-0.055 cL=0.0000 | AP4 cw= 177 r=0.001 loss=0.800 aL=-0.055 cL=0.0000 | AP5 cw= 177 r=0.001 loss=0.867 aL=-0.055 cL=0.0000 | AP6 cw= 177 r=0.000 loss=0.917 aL=-0.055 cL=0.0000 | AP7 cw= 177 r=0.001 loss=0.600 aL=-0.055 cL=0.0000 | AP8 cw= 177 r=0.001 loss=0.667 aL=-0.055 cL=0.0000 | AP9 cw= 177 r=0.000 loss=1.000 aL=-0.055 cL=0.0000 | AP10 cw= 177 r=0.000 loss=0.846 aL=-0.055 cL=0.0000
+ep0 step 1070 | AP1 cw= 205 r=0.002 loss=0.667 aL=-0.054 cL=0.0000 | AP2 cw= 205 r=0.001 loss=0.800 aL=-0.054 cL=0.0000 | AP3 cw= 205 r=0.001 loss=0.778 aL=-0.054 cL=0.0000 | AP4 cw= 205 r=0.001 loss=0.600 aL=-0.054 cL=0.0000 | AP5 cw= 205 r=0.000 loss=0.900 aL=-0.054 cL=0.0000 | AP6 cw= 205 r=0.001 loss=0.765 aL=-0.054 cL=0.0000 | AP7 cw= 205 r=0.001 loss=0.727 aL=-0.054 cL=0.0000 | AP8 cw= 205 r=0.001 loss=0.750 aL=-0.054 cL=0.0000 | AP9 cw= 205 r=0.000 loss=0.800 aL=-0.054 cL=0.0000 | AP10 cw= 205 r=0.001 loss=0.667 aL=-0.054 cL=0.0000
+ep0 step 1080 | AP1 cw= 265 r=0.006 loss=0.500 aL=-0.055 cL=0.0000 | AP2 cw= 265 r=0.002 loss=0.667 aL=-0.055 cL=0.0000 | AP3 cw= 265 r=0.000 loss=1.000 aL=-0.055 cL=0.0000 | AP4 cw= 265 r=0.000 loss=1.000 aL=-0.055 cL=0.0000 | AP5 cw= 265 r=0.001 loss=0.800 aL=-0.055 cL=0.0000 | AP6 cw= 265 r=0.001 loss=0.769 aL=-0.055 cL=0.0000 | AP7 cw= 265 r=0.001 loss=0.615 aL=-0.055 cL=0.0000 | AP8 cw= 265 r=0.001 loss=0.636 aL=-0.055 cL=0.0000 | AP9 cw= 265 r=0.001 loss=0.615 aL=-0.055 cL=0.0000 | AP10 cw= 265 r=0.000 loss=0.875 aL=-0.055 cL=0.0000
+ep0 step 1090 | AP1 cw= 220 r=0.002 loss=0.667 aL=-0.054 cL=0.0000 | AP2 cw= 220 r=0.000 loss=1.000 aL=-0.054 cL=0.0000 | AP3 cw= 220 r=0.000 loss=1.000 aL=-0.054 cL=0.0000 | AP4 cw= 220 r=0.000 loss=0.800 aL=-0.054 cL=0.0000 | AP5 cw= 220 r=0.001 loss=0.833 aL=-0.054 cL=0.0000 | AP6 cw= 220 r=0.001 loss=0.769 aL=-0.054 cL=0.0000 | AP7 cw= 220 r=0.001 loss=0.800 aL=-0.054 cL=0.0000 | AP8 cw= 220 r=0.000 loss=0.833 aL=-0.054 cL=0.0000 | AP9 cw= 220 r=0.000 loss=1.000 aL=-0.054 cL=0.0000 | AP10 cw= 220 r=0.001 loss=0.773 aL=-0.054 cL=0.0000
+ep0 step 1100 | AP1 cw= 235 r=0.002 loss=0.500 aL=-0.054 cL=0.0000 | AP2 cw= 235 r=0.003 loss=0.500 aL=-0.054 cL=0.0000 | AP3 cw= 235 r=0.001 loss=0.667 aL=-0.054 cL=0.0000 | AP4 cw= 235 r=0.000 loss=0.833 aL=-0.054 cL=0.0000 | AP5 cw= 235 r=0.002 loss=0.600 aL=-0.054 cL=0.0000 | AP6 cw= 235 r=0.002 loss=0.647 aL=-0.054 cL=0.0000 | AP7 cw= 235 r=0.002 loss=0.562 aL=-0.054 cL=0.0000 | AP8 cw= 235 r=0.001 loss=0.750 aL=-0.054 cL=0.0000 | AP9 cw= 235 r=0.000 loss=0.750 aL=-0.054 cL=0.0000 | AP10 cw= 235 r=0.001 loss=0.667 aL=-0.054 cL=0.0000
+ep0 step 1110 | AP1 cw= 322 r=0.002 loss=0.500 aL=-0.054 cL=0.0000 | AP2 cw= 322 r=0.001 loss=0.800 aL=-0.054 cL=0.0000 | AP3 cw= 322 r=0.000 loss=1.000 aL=-0.054 cL=0.0000 | AP4 cw= 322 r=0.001 loss=0.750 aL=-0.054 cL=0.0000 | AP5 cw= 322 r=0.002 loss=0.625 aL=-0.054 cL=0.0000 | AP6 cw= 322 r=0.001 loss=0.786 aL=-0.054 cL=0.0000 | AP7 cw= 322 r=0.001 loss=0.714 aL=-0.054 cL=0.0000 | AP8 cw= 322 r=0.000 loss=0.917 aL=-0.054 cL=0.0000 | AP9 cw= 322 r=0.000 loss=0.750 aL=-0.054 cL=0.0000 | AP10 cw= 322 r=0.000 loss=0.778 aL=-0.054 cL=0.0000
+ep0 step 1120 | AP1 cw= 236 r=0.000 loss=0.000 aL=-0.054 cL=0.0000 | AP2 cw= 236 r=0.001 loss=0.667 aL=-0.054 cL=0.0000 | AP3 cw= 236 r=0.002 loss=0.625 aL=-0.054 cL=0.0000 | AP4 cw= 236 r=0.001 loss=0.600 aL=-0.054 cL=0.0000 | AP5 cw= 236 r=0.002 loss=0.722 aL=-0.054 cL=0.0000 | AP6 cw= 236 r=0.001 loss=0.667 aL=-0.054 cL=0.0000 | AP7 cw= 236 r=0.001 loss=0.700 aL=-0.054 cL=0.0000 | AP8 cw= 236 r=0.001 loss=0.636 aL=-0.054 cL=0.0000 | AP9 cw= 236 r=0.000 loss=1.000 aL=-0.054 cL=0.0000 | AP10 cw= 236 r=0.001 loss=0.722 aL=-0.054 cL=0.0000
+ep0 step 1130 | AP1 cw= 346 r=0.000 loss=1.000 aL=-0.054 cL=0.0000 | AP2 cw= 346 r=0.002 loss=0.600 aL=-0.054 cL=0.0000 | AP3 cw= 346 r=0.000 loss=1.000 aL=-0.054 cL=0.0000 | AP4 cw= 346 r=0.000 loss=0.875 aL=-0.054 cL=0.0000 | AP5 cw= 346 r=0.001 loss=0.786 aL=-0.054 cL=0.0000 | AP6 cw= 346 r=0.001 loss=0.818 aL=-0.054 cL=0.0000 | AP7 cw= 346 r=0.001 loss=0.727 aL=-0.054 cL=0.0000 | AP8 cw= 346 r=0.000 loss=0.846 aL=-0.054 cL=0.0000 | AP9 cw= 346 r=0.001 loss=0.769 aL=-0.054 cL=0.0000 | AP10 cw= 346 r=0.001 loss=0.714 aL=-0.054 cL=0.0000
+ep0 step 1140 | AP1 cw= 249 r=0.000 loss=1.000 aL=-0.053 cL=0.0000 | AP2 cw= 249 r=0.001 loss=0.833 aL=-0.053 cL=0.0000 | AP3 cw= 249 r=0.001 loss=0.833 aL=-0.053 cL=0.0000 | AP4 cw= 249 r=0.002 loss=0.583 aL=-0.053 cL=0.0000 | AP5 cw= 249 r=0.002 loss=0.583 aL=-0.053 cL=0.0000 | AP6 cw= 249 r=0.001 loss=0.812 aL=-0.053 cL=0.0000 | AP7 cw= 249 r=0.001 loss=0.636 aL=-0.053 cL=0.0000 | AP8 cw= 249 r=0.000 loss=0.667 aL=-0.053 cL=0.0000 | AP9 cw= 249 r=0.000 loss=1.000 aL=-0.053 cL=0.0000 | AP10 cw= 249 r=0.001 loss=0.667 aL=-0.053 cL=0.0000
+ep0 step 1150 | AP1 cw= 231 r=0.000 loss=0.000 aL=-0.053 cL=0.0000 | AP2 cw= 231 r=0.000 loss=1.000 aL=-0.053 cL=0.0000 | AP3 cw= 231 r=0.001 loss=0.667 aL=-0.053 cL=0.0000 | AP4 cw= 231 r=0.000 loss=0.857 aL=-0.053 cL=0.0000 | AP5 cw= 231 r=0.002 loss=0.615 aL=-0.053 cL=0.0000 | AP6 cw= 231 r=0.001 loss=0.692 aL=-0.053 cL=0.0000 | AP7 cw= 231 r=0.001 loss=0.778 aL=-0.053 cL=0.0000 | AP8 cw= 231 r=0.001 loss=0.750 aL=-0.053 cL=0.0000 | AP9 cw= 231 r=0.001 loss=0.667 aL=-0.053 cL=0.0000 | AP10 cw= 231 r=0.001 loss=0.692 aL=-0.053 cL=0.0000
+ep0 step 1160 | AP1 cw= 184 r=0.002 loss=0.500 aL=-0.053 cL=0.0000 | AP2 cw= 184 r=0.002 loss=0.778 aL=-0.053 cL=0.0000 | AP3 cw= 184 r=0.001 loss=0.600 aL=-0.053 cL=0.0000 | AP4 cw= 184 r=0.002 loss=0.714 aL=-0.053 cL=0.0000 | AP5 cw= 184 r=0.001 loss=0.769 aL=-0.053 cL=0.0000 | AP6 cw= 184 r=0.001 loss=0.765 aL=-0.053 cL=0.0000 | AP7 cw= 184 r=0.000 loss=0.833 aL=-0.053 cL=0.0000 | AP8 cw= 184 r=0.000 loss=0.846 aL=-0.053 cL=0.0000 | AP9 cw= 184 r=0.000 loss=0.857 aL=-0.053 cL=0.0000 | AP10 cw= 184 r=0.001 loss=0.750 aL=-0.053 cL=0.0000
+ep0 step 1170 | AP1 cw= 194 r=0.002 loss=0.667 aL=-0.053 cL=0.0000 | AP2 cw= 194 r=0.000 loss=1.000 aL=-0.053 cL=0.0000 | AP3 cw= 194 r=0.001 loss=0.800 aL=-0.053 cL=0.0000 | AP4 cw= 194 r=0.000 loss=0.857 aL=-0.053 cL=0.0000 | AP5 cw= 194 r=0.002 loss=0.688 aL=-0.053 cL=0.0000 | AP6 cw= 194 r=0.000 loss=0.889 aL=-0.053 cL=0.0000 | AP7 cw= 194 r=0.001 loss=0.714 aL=-0.053 cL=0.0000 | AP8 cw= 194 r=0.001 loss=0.643 aL=-0.053 cL=0.0000 | AP9 cw= 194 r=0.001 loss=0.636 aL=-0.053 cL=0.0000 | AP10 cw= 194 r=0.000 loss=1.000 aL=-0.053 cL=0.0000
+ep0 step 1180 | AP1 cw= 239 r=0.002 loss=0.667 aL=-0.053 cL=0.0000 | AP2 cw= 239 r=0.001 loss=0.750 aL=-0.053 cL=0.0000 | AP3 cw= 239 r=0.001 loss=0.833 aL=-0.053 cL=0.0000 | AP4 cw= 239 r=0.001 loss=0.667 aL=-0.053 cL=0.0000 | AP5 cw= 239 r=0.002 loss=0.571 aL=-0.053 cL=0.0000 | AP6 cw= 239 r=0.001 loss=0.556 aL=-0.053 cL=0.0000 | AP7 cw= 239 r=0.002 loss=0.538 aL=-0.053 cL=0.0000 | AP8 cw= 239 r=0.000 loss=1.000 aL=-0.053 cL=0.0000 | AP9 cw= 239 r=0.001 loss=0.600 aL=-0.053 cL=0.0000 | AP10 cw= 239 r=0.001 loss=0.733 aL=-0.053 cL=0.0000
+ep0 step 1190 | AP1 cw= 209 r=0.002 loss=0.800 aL=-0.053 cL=0.0000 | AP2 cw= 209 r=0.000 loss=1.000 aL=-0.053 cL=0.0000 | AP3 cw= 209 r=0.001 loss=0.667 aL=-0.053 cL=0.0000 | AP4 cw= 209 r=0.000 loss=0.857 aL=-0.053 cL=0.0000 | AP5 cw= 209 r=0.002 loss=0.765 aL=-0.053 cL=0.0000 | AP6 cw= 209 r=0.001 loss=0.750 aL=-0.053 cL=0.0000 | AP7 cw= 209 r=0.000 loss=0.900 aL=-0.053 cL=0.0000 | AP8 cw= 209 r=0.000 loss=0.929 aL=-0.053 cL=0.0000 | AP9 cw= 209 r=0.000 loss=0.778 aL=-0.053 cL=0.0000 | AP10 cw= 209 r=0.000 loss=0.909 aL=-0.053 cL=0.0000
+ep0 step 1200 | AP1 cw= 243 r=0.000 loss=0.000 aL=-0.053 cL=0.0000 | AP2 cw= 243 r=0.000 loss=1.000 aL=-0.053 cL=0.0000 | AP3 cw= 243 r=0.000 loss=1.000 aL=-0.053 cL=0.0000 | AP4 cw= 243 r=0.001 loss=0.778 aL=-0.053 cL=0.0000 | AP5 cw= 243 r=0.001 loss=0.778 aL=-0.053 cL=0.0000 | AP6 cw= 243 r=0.002 loss=0.625 aL=-0.053 cL=0.0000 | AP7 cw= 243 r=0.001 loss=0.750 aL=-0.053 cL=0.0000 | AP8 cw= 243 r=0.001 loss=0.727 aL=-0.053 cL=0.0000 | AP9 cw= 243 r=0.000 loss=0.833 aL=-0.053 cL=0.0000 | AP10 cw= 243 r=0.001 loss=0.750 aL=-0.053 cL=0.0000
+ep0 step 1210 | AP1 cw= 166 r=0.000 loss=0.000 aL=-0.052 cL=0.0000 | AP2 cw= 166 r=0.000 loss=1.000 aL=-0.052 cL=0.0000 | AP3 cw= 166 r=0.001 loss=0.500 aL=-0.052 cL=0.0000 | AP4 cw= 166 r=0.002 loss=0.692 aL=-0.052 cL=0.0000 | AP5 cw= 166 r=0.002 loss=0.647 aL=-0.052 cL=0.0000 | AP6 cw= 166 r=0.000 loss=0.750 aL=-0.052 cL=0.0000 | AP7 cw= 166 r=0.001 loss=0.636 aL=-0.052 cL=0.0000 | AP8 cw= 166 r=0.000 loss=0.600 aL=-0.052 cL=0.0000 | AP9 cw= 166 r=0.001 loss=0.800 aL=-0.052 cL=0.0000 | AP10 cw= 166 r=0.001 loss=0.650 aL=-0.052 cL=0.0000
+ep0 step 1220 | AP1 cw= 385 r=0.000 loss=1.000 aL=-0.052 cL=0.0000 | AP2 cw= 385 r=0.002 loss=0.714 aL=-0.052 cL=0.0000 | AP3 cw= 385 r=0.001 loss=0.667 aL=-0.052 cL=0.0000 | AP4 cw= 385 r=0.002 loss=0.556 aL=-0.052 cL=0.0000 | AP5 cw= 385 r=0.002 loss=0.714 aL=-0.052 cL=0.0000 | AP6 cw= 385 r=0.001 loss=0.750 aL=-0.052 cL=0.0000 | AP7 cw= 385 r=0.001 loss=0.667 aL=-0.052 cL=0.0000 | AP8 cw= 385 r=0.001 loss=0.636 aL=-0.052 cL=0.0000 | AP9 cw= 385 r=0.000 loss=0.833 aL=-0.052 cL=0.0000 | AP10 cw= 385 r=0.001 loss=0.700 aL=-0.052 cL=0.0000
+ep0 step 1230 | AP1 cw= 258 r=0.004 loss=0.714 aL=-0.052 cL=0.0000 | AP2 cw= 258 r=0.001 loss=0.833 aL=-0.052 cL=0.0000 | AP3 cw= 258 r=0.001 loss=0.875 aL=-0.052 cL=0.0000 | AP4 cw= 258 r=0.000 loss=0.889 aL=-0.052 cL=0.0000 | AP5 cw= 258 r=0.001 loss=0.625 aL=-0.052 cL=0.0000 | AP6 cw= 258 r=0.000 loss=1.000 aL=-0.052 cL=0.0000 | AP7 cw= 258 r=0.001 loss=0.846 aL=-0.052 cL=0.0000 | AP8 cw= 258 r=0.000 loss=1.000 aL=-0.052 cL=0.0000 | AP9 cw= 258 r=0.000 loss=0.714 aL=-0.052 cL=0.0000 | AP10 cw= 258 r=0.001 loss=0.722 aL=-0.052 cL=0.0000
+ep0 step 1240 | AP1 cw= 302 r=0.002 loss=0.500 aL=-0.052 cL=0.0000 | AP2 cw= 302 r=0.000 loss=1.000 aL=-0.052 cL=0.0000 | AP3 cw= 302 r=0.001 loss=0.714 aL=-0.052 cL=0.0000 | AP4 cw= 302 r=0.000 loss=0.800 aL=-0.052 cL=0.0000 | AP5 cw= 302 r=0.002 loss=0.750 aL=-0.052 cL=0.0000 | AP6 cw= 302 r=0.001 loss=0.857 aL=-0.052 cL=0.0000 | AP7 cw= 302 r=0.000 loss=0.857 aL=-0.052 cL=0.0000 | AP8 cw= 302 r=0.001 loss=0.727 aL=-0.052 cL=0.0000 | AP9 cw= 302 r=0.000 loss=0.889 aL=-0.052 cL=0.0000 | AP10 cw= 302 r=0.001 loss=0.688 aL=-0.052 cL=0.0000
+ep0 step 1250 | AP1 cw= 178 r=0.000 loss=1.000 aL=-0.051 cL=0.0000 | AP2 cw= 178 r=0.001 loss=0.857 aL=-0.051 cL=0.0000 | AP3 cw= 178 r=0.001 loss=0.750 aL=-0.051 cL=0.0000 | AP4 cw= 178 r=0.000 loss=0.750 aL=-0.051 cL=0.0000 | AP5 cw= 178 r=0.001 loss=0.700 aL=-0.051 cL=0.0000 | AP6 cw= 178 r=0.001 loss=0.750 aL=-0.051 cL=0.0000 | AP7 cw= 178 r=0.001 loss=0.846 aL=-0.051 cL=0.0000 | AP8 cw= 178 r=0.001 loss=0.636 aL=-0.051 cL=0.0000 | AP9 cw= 178 r=0.000 loss=0.875 aL=-0.051 cL=0.0000 | AP10 cw= 178 r=0.001 loss=0.750 aL=-0.051 cL=0.0000
+ep0 step 1260 | AP1 cw= 233 r=0.000 loss=1.000 aL=-0.051 cL=0.0000 | AP2 cw= 233 r=0.002 loss=0.667 aL=-0.051 cL=0.0000 | AP3 cw= 233 r=0.001 loss=0.800 aL=-0.051 cL=0.0000 | AP4 cw= 233 r=0.000 loss=0.833 aL=-0.051 cL=0.0000 | AP5 cw= 233 r=0.001 loss=0.700 aL=-0.051 cL=0.0000 | AP6 cw= 233 r=0.001 loss=0.882 aL=-0.051 cL=0.0000 | AP7 cw= 233 r=0.001 loss=0.727 aL=-0.051 cL=0.0000 | AP8 cw= 233 r=0.001 loss=0.583 aL=-0.051 cL=0.0000 | AP9 cw= 233 r=0.000 loss=0.600 aL=-0.051 cL=0.0000 | AP10 cw= 233 r=0.000 loss=0.909 aL=-0.051 cL=0.0000
+ep0 step 1270 | AP1 cw= 234 r=0.002 loss=0.750 aL=-0.051 cL=0.0000 | AP2 cw= 234 r=0.001 loss=0.667 aL=-0.051 cL=0.0000 | AP3 cw= 234 r=0.001 loss=0.714 aL=-0.051 cL=0.0000 | AP4 cw= 234 r=0.000 loss=1.000 aL=-0.051 cL=0.0000 | AP5 cw= 234 r=0.002 loss=0.750 aL=-0.051 cL=0.0000 | AP6 cw= 234 r=0.001 loss=0.700 aL=-0.051 cL=0.0000 | AP7 cw= 234 r=0.000 loss=0.889 aL=-0.051 cL=0.0000 | AP8 cw= 234 r=0.000 loss=0.667 aL=-0.051 cL=0.0000 | AP9 cw= 234 r=0.000 loss=0.714 aL=-0.051 cL=0.0000 | AP10 cw= 234 r=0.000 loss=0.857 aL=-0.051 cL=0.0000
+ep0 step 1280 | AP1 cw= 237 r=0.000 loss=1.000 aL=-0.051 cL=0.0000 | AP2 cw= 237 r=0.001 loss=0.667 aL=-0.051 cL=0.0000 | AP3 cw= 237 r=0.001 loss=0.667 aL=-0.051 cL=0.0000 | AP4 cw= 237 r=0.000 loss=1.000 aL=-0.051 cL=0.0000 | AP5 cw= 237 r=0.001 loss=0.818 aL=-0.051 cL=0.0000 | AP6 cw= 237 r=0.002 loss=0.611 aL=-0.051 cL=0.0000 | AP7 cw= 237 r=0.002 loss=0.684 aL=-0.051 cL=0.0000 | AP8 cw= 237 r=0.001 loss=0.500 aL=-0.051 cL=0.0000 | AP9 cw= 237 r=0.000 loss=1.000 aL=-0.051 cL=0.0000 | AP10 cw= 237 r=0.001 loss=0.786 aL=-0.051 cL=0.0000
+ep0 step 1290 | AP1 cw= 233 r=0.000 loss=1.000 aL=-0.051 cL=0.0000 | AP2 cw= 233 r=0.002 loss=0.778 aL=-0.051 cL=0.0000 | AP3 cw= 233 r=0.001 loss=0.800 aL=-0.051 cL=0.0000 | AP4 cw= 233 r=0.001 loss=0.667 aL=-0.051 cL=0.0000 | AP5 cw= 233 r=0.001 loss=0.714 aL=-0.051 cL=0.0000 | AP6 cw= 233 r=0.001 loss=0.857 aL=-0.051 cL=0.0000 | AP7 cw= 233 r=0.001 loss=0.643 aL=-0.051 cL=0.0000 | AP8 cw= 233 r=0.001 loss=0.727 aL=-0.051 cL=0.0000 | AP9 cw= 233 r=0.001 loss=0.692 aL=-0.051 cL=0.0000 | AP10 cw= 233 r=0.000 loss=0.857 aL=-0.051 cL=0.0000
+ep0 step 1300 | AP1 cw= 351 r=0.002 loss=0.750 aL=-0.050 cL=0.0000 | AP2 cw= 351 r=0.002 loss=0.667 aL=-0.050 cL=0.0000 | AP3 cw= 351 r=0.001 loss=0.818 aL=-0.050 cL=0.0000 | AP4 cw= 351 r=0.000 loss=0.889 aL=-0.050 cL=0.0000 | AP5 cw= 351 r=0.002 loss=0.765 aL=-0.050 cL=0.0000 | AP6 cw= 351 r=0.000 loss=0.857 aL=-0.050 cL=0.0000 | AP7 cw= 351 r=0.001 loss=0.700 aL=-0.050 cL=0.0000 | AP8 cw= 351 r=0.001 loss=0.571 aL=-0.050 cL=0.0000 | AP9 cw= 351 r=0.000 loss=1.000 aL=-0.050 cL=0.0000 | AP10 cw= 351 r=0.001 loss=0.667 aL=-0.050 cL=0.0000
+ep0 step 1310 | AP1 cw= 206 r=0.000 loss=1.000 aL=-0.051 cL=0.0000 | AP2 cw= 206 r=0.001 loss=0.667 aL=-0.051 cL=0.0000 | AP3 cw= 206 r=0.001 loss=0.818 aL=-0.051 cL=0.0000 | AP4 cw= 206 r=0.001 loss=0.727 aL=-0.051 cL=0.0000 | AP5 cw= 206 r=0.001 loss=0.824 aL=-0.051 cL=0.0000 | AP6 cw= 206 r=0.002 loss=0.615 aL=-0.051 cL=0.0000 | AP7 cw= 206 r=0.001 loss=0.667 aL=-0.051 cL=0.0000 | AP8 cw= 206 r=0.000 loss=0.800 aL=-0.051 cL=0.0000 | AP9 cw= 206 r=0.000 loss=0.800 aL=-0.051 cL=0.0000 | AP10 cw= 206 r=0.000 loss=0.857 aL=-0.051 cL=0.0000
+ep0 step 1320 | AP1 cw= 308 r=0.000 loss=1.000 aL=-0.050 cL=0.0000 | AP2 cw= 308 r=0.002 loss=0.600 aL=-0.050 cL=0.0000 | AP3 cw= 308 r=0.003 loss=0.636 aL=-0.050 cL=0.0000 | AP4 cw= 308 r=0.001 loss=0.786 aL=-0.050 cL=0.0000 | AP5 cw= 308 r=0.001 loss=0.800 aL=-0.050 cL=0.0000 | AP6 cw= 308 r=0.001 loss=0.786 aL=-0.050 cL=0.0000 | AP7 cw= 308 r=0.000 loss=0.900 aL=-0.050 cL=0.0000 | AP8 cw= 308 r=0.000 loss=1.000 aL=-0.050 cL=0.0000 | AP9 cw= 308 r=0.000 loss=0.714 aL=-0.050 cL=0.0000 | AP10 cw= 308 r=0.000 loss=0.750 aL=-0.050 cL=0.0000
+ep0 step 1330 | AP1 cw= 212 r=0.000 loss=0.000 aL=-0.050 cL=0.0000 | AP2 cw= 212 r=0.001 loss=0.667 aL=-0.050 cL=0.0000 | AP3 cw= 212 r=0.001 loss=0.714 aL=-0.050 cL=0.0000 | AP4 cw= 212 r=0.001 loss=0.571 aL=-0.050 cL=0.0000 | AP5 cw= 212 r=0.001 loss=0.800 aL=-0.050 cL=0.0000 | AP6 cw= 212 r=0.001 loss=0.727 aL=-0.050 cL=0.0000 | AP7 cw= 212 r=0.000 loss=0.800 aL=-0.050 cL=0.0000 | AP8 cw= 212 r=0.001 loss=0.636 aL=-0.050 cL=0.0000 | AP9 cw= 212 r=0.001 loss=0.750 aL=-0.050 cL=0.0000 | AP10 cw= 212 r=0.000 loss=0.818 aL=-0.050 cL=0.0000
+ep0 step 1340 | AP1 cw= 226 r=0.000 loss=1.000 aL=-0.050 cL=0.0000 | AP2 cw= 226 r=0.001 loss=0.857 aL=-0.050 cL=0.0000 | AP3 cw= 226 r=0.001 loss=0.600 aL=-0.050 cL=0.0000 | AP4 cw= 226 r=0.001 loss=0.700 aL=-0.050 cL=0.0000 | AP5 cw= 226 r=0.001 loss=0.824 aL=-0.050 cL=0.0000 | AP6 cw= 226 r=0.001 loss=0.800 aL=-0.050 cL=0.0000 | AP7 cw= 226 r=0.001 loss=0.600 aL=-0.050 cL=0.0000 | AP8 cw= 226 r=0.001 loss=0.700 aL=-0.050 cL=0.0000 | AP9 cw= 226 r=0.000 loss=0.750 aL=-0.050 cL=0.0000 | AP10 cw= 226 r=0.001 loss=0.812 aL=-0.050 cL=0.0000
+ep0 step 1350 | AP1 cw= 291 r=0.000 loss=0.000 aL=-0.050 cL=0.0000 | AP2 cw= 291 r=0.001 loss=0.750 aL=-0.050 cL=0.0000 | AP3 cw= 291 r=0.000 loss=1.000 aL=-0.050 cL=0.0000 | AP4 cw= 291 r=0.001 loss=0.571 aL=-0.050 cL=0.0000 | AP5 cw= 291 r=0.002 loss=0.625 aL=-0.050 cL=0.0000 | AP6 cw= 291 r=0.001 loss=0.778 aL=-0.050 cL=0.0000 | AP7 cw= 291 r=0.002 loss=0.611 aL=-0.050 cL=0.0000 | AP8 cw= 291 r=0.001 loss=0.583 aL=-0.050 cL=0.0000 | AP9 cw= 291 r=0.000 loss=1.000 aL=-0.050 cL=0.0000 | AP10 cw= 291 r=0.001 loss=0.714 aL=-0.050 cL=0.0000
+ep0 step 1360 | AP1 cw= 204 r=0.000 loss=1.000 aL=-0.050 cL=0.0000 | AP2 cw= 204 r=0.001 loss=0.667 aL=-0.050 cL=0.0000 | AP3 cw= 204 r=0.002 loss=0.625 aL=-0.050 cL=0.0000 | AP4 cw= 204 r=0.002 loss=0.600 aL=-0.050 cL=0.0000 | AP5 cw= 204 r=0.001 loss=0.750 aL=-0.050 cL=0.0000 | AP6 cw= 204 r=0.001 loss=0.818 aL=-0.050 cL=0.0000 | AP7 cw= 204 r=0.001 loss=0.700 aL=-0.050 cL=0.0000 | AP8 cw= 204 r=0.001 loss=0.667 aL=-0.050 cL=0.0000 | AP9 cw= 204 r=0.000 loss=1.000 aL=-0.050 cL=0.0000 | AP10 cw= 204 r=0.001 loss=0.625 aL=-0.050 cL=0.0000
+ep0 step 1370 | AP1 cw= 210 r=0.002 loss=0.750 aL=-0.049 cL=0.0000 | AP2 cw= 210 r=0.001 loss=0.857 aL=-0.049 cL=0.0000 | AP3 cw= 210 r=0.001 loss=0.750 aL=-0.049 cL=0.0000 | AP4 cw= 210 r=0.001 loss=0.667 aL=-0.049 cL=0.0000 | AP5 cw= 210 r=0.001 loss=0.571 aL=-0.049 cL=0.0000 | AP6 cw= 210 r=0.002 loss=0.643 aL=-0.049 cL=0.0000 | AP7 cw= 210 r=0.001 loss=0.667 aL=-0.049 cL=0.0000 | AP8 cw= 210 r=0.000 loss=0.818 aL=-0.049 cL=0.0000 | AP9 cw= 210 r=0.001 loss=0.727 aL=-0.049 cL=0.0000 | AP10 cw= 210 r=0.001 loss=0.727 aL=-0.049 cL=0.0000
+ep0 step 1380 | AP1 cw= 183 r=0.000 loss=1.000 aL=-0.050 cL=0.0000 | AP2 cw= 183 r=0.000 loss=1.000 aL=-0.050 cL=0.0000 | AP3 cw= 183 r=0.002 loss=0.625 aL=-0.050 cL=0.0000 | AP4 cw= 183 r=0.001 loss=0.750 aL=-0.050 cL=0.0000 | AP5 cw= 183 r=0.002 loss=0.667 aL=-0.050 cL=0.0000 | AP6 cw= 183 r=0.002 loss=0.643 aL=-0.050 cL=0.0000 | AP7 cw= 183 r=0.001 loss=0.667 aL=-0.050 cL=0.0000 | AP8 cw= 183 r=0.000 loss=0.875 aL=-0.050 cL=0.0000 | AP9 cw= 183 r=0.000 loss=0.500 aL=-0.050 cL=0.0000 | AP10 cw= 183 r=0.000 loss=0.818 aL=-0.050 cL=0.0000
+ep0 step 1390 | AP1 cw= 203 r=0.002 loss=0.800 aL=-0.049 cL=0.0000 | AP2 cw= 203 r=0.000 loss=1.000 aL=-0.049 cL=0.0000 | AP3 cw= 203 r=0.003 loss=0.500 aL=-0.049 cL=0.0000 | AP4 cw= 203 r=0.001 loss=0.750 aL=-0.049 cL=0.0000 | AP5 cw= 203 r=0.001 loss=0.818 aL=-0.049 cL=0.0000 | AP6 cw= 203 r=0.001 loss=0.765 aL=-0.049 cL=0.0000 | AP7 cw= 203 r=0.000 loss=0.889 aL=-0.049 cL=0.0000 | AP8 cw= 203 r=0.001 loss=0.667 aL=-0.049 cL=0.0000 | AP9 cw= 203 r=0.000 loss=0.600 aL=-0.049 cL=0.0000 | AP10 cw= 203 r=0.001 loss=0.667 aL=-0.049 cL=0.0000
+ep0 step 1400 | AP1 cw= 229 r=0.000 loss=1.000 aL=-0.049 cL=0.0000 | AP2 cw= 229 r=0.001 loss=0.833 aL=-0.049 cL=0.0000 | AP3 cw= 229 r=0.001 loss=0.875 aL=-0.049 cL=0.0000 | AP4 cw= 229 r=0.002 loss=0.714 aL=-0.049 cL=0.0000 | AP5 cw= 229 r=0.000 loss=0.929 aL=-0.049 cL=0.0000 | AP6 cw= 229 r=0.000 loss=0.900 aL=-0.049 cL=0.0000 | AP7 cw= 229 r=0.001 loss=0.800 aL=-0.049 cL=0.0000 | AP8 cw= 229 r=0.000 loss=0.857 aL=-0.049 cL=0.0000 | AP9 cw= 229 r=0.000 loss=1.000 aL=-0.049 cL=0.0000 | AP10 cw= 229 r=0.001 loss=0.727 aL=-0.049 cL=0.0000
+ep0 step 1410 | AP1 cw= 239 r=0.002 loss=0.750 aL=-0.049 cL=0.0000 | AP2 cw= 239 r=0.000 loss=1.000 aL=-0.049 cL=0.0000 | AP3 cw= 239 r=0.003 loss=0.556 aL=-0.049 cL=0.0000 | AP4 cw= 239 r=0.002 loss=0.636 aL=-0.049 cL=0.0000 | AP5 cw= 239 r=0.001 loss=0.857 aL=-0.049 cL=0.0000 | AP6 cw= 239 r=0.001 loss=0.833 aL=-0.049 cL=0.0000 | AP7 cw= 239 r=0.001 loss=0.727 aL=-0.049 cL=0.0000 | AP8 cw= 239 r=0.000 loss=0.750 aL=-0.049 cL=0.0000 | AP9 cw= 239 r=0.000 loss=0.750 aL=-0.049 cL=0.0000 | AP10 cw= 239 r=0.000 loss=0.833 aL=-0.049 cL=0.0000
+ep0 step 1420 | AP1 cw= 219 r=0.002 loss=0.667 aL=-0.048 cL=0.0000 | AP2 cw= 219 r=0.001 loss=0.857 aL=-0.048 cL=0.0000 | AP3 cw= 219 r=0.001 loss=0.800 aL=-0.048 cL=0.0000 | AP4 cw= 219 r=0.002 loss=0.714 aL=-0.048 cL=0.0000 | AP5 cw= 219 r=0.001 loss=0.786 aL=-0.048 cL=0.0000 | AP6 cw= 219 r=0.001 loss=0.727 aL=-0.048 cL=0.0000 | AP7 cw= 219 r=0.001 loss=0.750 aL=-0.048 cL=0.0000 | AP8 cw= 219 r=0.001 loss=0.667 aL=-0.048 cL=0.0000 | AP9 cw= 219 r=0.000 loss=0.750 aL=-0.048 cL=0.0000 | AP10 cw= 219 r=0.000 loss=0.778 aL=-0.048 cL=0.0000
+ep0 step 1430 | AP1 cw= 298 r=0.000 loss=1.000 aL=-0.048 cL=0.0000 | AP2 cw= 298 r=0.000 loss=1.000 aL=-0.048 cL=0.0000 | AP3 cw= 298 r=0.002 loss=0.571 aL=-0.048 cL=0.0000 | AP4 cw= 298 r=0.001 loss=0.667 aL=-0.048 cL=0.0000 | AP5 cw= 298 r=0.001 loss=0.700 aL=-0.048 cL=0.0000 | AP6 cw= 298 r=0.001 loss=0.833 aL=-0.048 cL=0.0000 | AP7 cw= 298 r=0.001 loss=0.714 aL=-0.048 cL=0.0000 | AP8 cw= 298 r=0.000 loss=0.800 aL=-0.048 cL=0.0000 | AP9 cw= 298 r=0.001 loss=0.750 aL=-0.048 cL=0.0000 | AP10 cw= 298 r=0.001 loss=0.667 aL=-0.048 cL=0.0000
+ep0 step 1440 | AP1 cw= 253 r=0.002 loss=0.750 aL=-0.048 cL=0.0000 | AP2 cw= 253 r=0.001 loss=0.750 aL=-0.048 cL=0.0000 | AP3 cw= 253 r=0.001 loss=0.714 aL=-0.048 cL=0.0000 | AP4 cw= 253 r=0.000 loss=0.800 aL=-0.048 cL=0.0000 | AP5 cw= 253 r=0.001 loss=0.600 aL=-0.048 cL=0.0000 | AP6 cw= 253 r=0.001 loss=0.786 aL=-0.048 cL=0.0000 | AP7 cw= 253 r=0.001 loss=0.769 aL=-0.048 cL=0.0000 | AP8 cw= 253 r=0.001 loss=0.733 aL=-0.048 cL=0.0000 | AP9 cw= 253 r=0.000 loss=1.000 aL=-0.048 cL=0.0000 | AP10 cw= 253 r=0.001 loss=0.786 aL=-0.048 cL=0.0000
+ep0 step 1450 | AP1 cw= 266 r=0.002 loss=0.500 aL=-0.047 cL=0.0000 | AP2 cw= 266 r=0.002 loss=0.667 aL=-0.047 cL=0.0000 | AP3 cw= 266 r=0.001 loss=0.750 aL=-0.047 cL=0.0000 | AP4 cw= 266 r=0.002 loss=0.583 aL=-0.047 cL=0.0000 | AP5 cw= 266 r=0.000 loss=0.750 aL=-0.047 cL=0.0000 | AP6 cw= 266 r=0.002 loss=0.500 aL=-0.047 cL=0.0000 | AP7 cw= 266 r=0.001 loss=0.700 aL=-0.047 cL=0.0000 | AP8 cw= 266 r=0.000 loss=0.833 aL=-0.047 cL=0.0000 | AP9 cw= 266 r=0.001 loss=0.667 aL=-0.047 cL=0.0000 | AP10 cw= 266 r=0.001 loss=0.625 aL=-0.047 cL=0.0000
+ep0 step 1460 | AP1 cw= 255 r=0.000 loss=1.000 aL=-0.048 cL=0.0000 | AP2 cw= 255 r=0.001 loss=0.800 aL=-0.048 cL=0.0000 | AP3 cw= 255 r=0.001 loss=0.714 aL=-0.048 cL=0.0000 | AP4 cw= 255 r=0.001 loss=0.833 aL=-0.048 cL=0.0000 | AP5 cw= 255 r=0.002 loss=0.733 aL=-0.048 cL=0.0000 | AP6 cw= 255 r=0.001 loss=0.765 aL=-0.048 cL=0.0000 | AP7 cw= 255 r=0.000 loss=1.000 aL=-0.048 cL=0.0000 | AP8 cw= 255 r=0.001 loss=0.667 aL=-0.048 cL=0.0000 | AP9 cw= 255 r=0.000 loss=0.857 aL=-0.048 cL=0.0000 | AP10 cw= 255 r=0.000 loss=0.923 aL=-0.048 cL=0.0000
+ep0 step 1470 | AP1 cw= 278 r=0.002 loss=0.667 aL=-0.048 cL=0.0000 | AP2 cw= 278 r=0.000 loss=1.000 aL=-0.048 cL=0.0000 | AP3 cw= 278 r=0.000 loss=1.000 aL=-0.048 cL=0.0000 | AP4 cw= 278 r=0.001 loss=0.818 aL=-0.048 cL=0.0000 | AP5 cw= 278 r=0.001 loss=0.667 aL=-0.048 cL=0.0000 | AP6 cw= 278 r=0.002 loss=0.688 aL=-0.048 cL=0.0000 | AP7 cw= 278 r=0.001 loss=0.667 aL=-0.048 cL=0.0000 | AP8 cw= 278 r=0.001 loss=0.769 aL=-0.048 cL=0.0000 | AP9 cw= 278 r=0.001 loss=0.700 aL=-0.048 cL=0.0000 | AP10 cw= 278 r=0.001 loss=0.769 aL=-0.048 cL=0.0000
+ep0 step 1480 | AP1 cw= 304 r=0.002 loss=0.500 aL=-0.047 cL=0.0000 | AP2 cw= 304 r=0.003 loss=0.500 aL=-0.047 cL=0.0000 | AP3 cw= 304 r=0.001 loss=0.833 aL=-0.047 cL=0.0000 | AP4 cw= 304 r=0.000 loss=0.889 aL=-0.047 cL=0.0000 | AP5 cw= 304 r=0.001 loss=0.769 aL=-0.047 cL=0.0000 | AP6 cw= 304 r=0.001 loss=0.692 aL=-0.047 cL=0.0000 | AP7 cw= 304 r=0.001 loss=0.778 aL=-0.047 cL=0.0000 | AP8 cw= 304 r=0.000 loss=1.000 aL=-0.047 cL=0.0000 | AP9 cw= 304 r=0.001 loss=0.667 aL=-0.047 cL=0.0000 | AP10 cw= 304 r=0.001 loss=0.667 aL=-0.047 cL=0.0000
+ep0 step 1490 | AP1 cw= 274 r=0.000 loss=1.000 aL=-0.047 cL=0.0000 | AP2 cw= 274 r=0.001 loss=0.750 aL=-0.047 cL=0.0000 | AP3 cw= 274 r=0.003 loss=0.556 aL=-0.047 cL=0.0000 | AP4 cw= 274 r=0.000 loss=0.750 aL=-0.047 cL=0.0000 | AP5 cw= 274 r=0.002 loss=0.625 aL=-0.047 cL=0.0000 | AP6 cw= 274 r=0.001 loss=0.765 aL=-0.047 cL=0.0000 | AP7 cw= 274 r=0.001 loss=0.556 aL=-0.047 cL=0.0000 | AP8 cw= 274 r=0.000 loss=0.667 aL=-0.047 cL=0.0000 | AP9 cw= 274 r=0.000 loss=0.875 aL=-0.047 cL=0.0000 | AP10 cw= 274 r=0.001 loss=0.688 aL=-0.047 cL=0.0000
+ep0 step 1500 | AP1 cw= 157 r=0.004 loss=0.600 aL=-0.047 cL=0.0000 | AP2 cw= 157 r=0.001 loss=0.500 aL=-0.047 cL=0.0000 | AP3 cw= 157 r=0.000 loss=1.000 aL=-0.047 cL=0.0000 | AP4 cw= 157 r=0.002 loss=0.600 aL=-0.047 cL=0.0000 | AP5 cw= 157 r=0.001 loss=0.824 aL=-0.047 cL=0.0000 | AP6 cw= 157 r=0.001 loss=0.733 aL=-0.047 cL=0.0000 | AP7 cw= 157 r=0.000 loss=0.857 aL=-0.047 cL=0.0000 | AP8 cw= 157 r=0.000 loss=0.833 aL=-0.047 cL=0.0000 | AP9 cw= 157 r=0.000 loss=0.900 aL=-0.047 cL=0.0000 | AP10 cw= 157 r=0.000 loss=0.846 aL=-0.047 cL=0.0000
+wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:           AP1/ActorLoss ████████▁▃▃▃▃▃▃▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▅▅▅▅▅▅▅
+wandb:                  AP1/CW ▁▁█▄▅▂▂▂▂▃▄▄▄▃▃▂▃▃▅▂▄▃▃▄▄▃▅▃▄▄▂▃▃▃▃▃▃▃▃▂
+wandb:          AP1/CriticLoss ▁▁▁▁▁▁█▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    AP1/CumulativeReward ▁
+wandb:           AP1/LossRatio █▇▅▁█▅▁████▅▁▅█▆██▅▅▆█▆▆█▇▅▁▆▅█▅███▇▇██▆
+wandb:         AP1/Observation ▄▂▃▆▃▅▂▄▄█▆▅▃▄▃▃▁▂▃▃▄▂▃▃▃▂▃▂▄▅▅▃▃▅▃▂▃▂▄▄
+wandb:              AP1/Reward ▃▃▃▁▁▁▃▁▁▃▆▁▁▁▁▁▃▃▁▁▁▁▃▁▁▁▁▆▁▁▃▆▁▃▃▁█▃▃▁
+wandb:          AP1/Throughput ▁█▆▁▁▁█▁▁▁▃▁▁▆▃▁▃▃▃▁▁▁▁▁▁▁▁▆▁▁▃▃▃▃▁█▁▁▃▁
+wandb:          AP10/ActorLoss ██████▁▃▃▃▃▃▃▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▅▅▅▅▅▅▅
+wandb:                 AP10/CW ▅▄▁▂▁█▂▁▂▃▂▂▃▃▃▃▃▂▂▃▃▂▃▂▂▃▂▃▃▂▃▃▃▄▂▃▂▂▃▃
+wandb:         AP10/CriticLoss ▁▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:   AP10/CumulativeReward ▁
+wandb:          AP10/LossRatio █▇█▅▃█▄▆▆▆▆▃▆▂▅▅▅▃▄▅▅█▂▄▄▅▅▅▆▃▄▄▂▆▅▃▁▅▄▃
+wandb:        AP10/Observation ██▇█▁▇█▅▇▇▅█▃▄▅▇▆▆▆▃▅▅▇▄▁▄▄▃▂▂▃▂▅▃▅▄▆▄▅▂
+wandb:             AP10/Reward ▁▁▁▅▆▄█▃▂▅▆▅▄▃▄▅▅▄▄▃▁▇▃▃▄▃▄▅█▅▅▅▃▄▇▃█▂▂▄
+wandb:         AP10/Throughput ▂▁▄▇▂▁▂▅▆▄▃▄▄▅▃▃█▆▄▅▄▅▃▃▁▂▃▃▆▃█▇▆▅▄▆▄█▄▅
+wandb:           AP2/ActorLoss ██████▃▁▁▁▁▁▁▁▁▁▁▁▁▂▂▂▂▂▂▂▂▂▂▂▂▂▂▃▃▃▃▃▃▃
+wandb:                  AP2/CW ▂█▁▂▃▁▁▃▂▃▃▄▄▄▅▃▄▄▄▅▄▅▃▃▄▄▃▃▃▃▄▃▄▄▄▄▇▃▃▄
+wandb:          AP2/CriticLoss ▁▁▁▁▁▁▁▁▁▁█▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    AP2/CumulativeReward ▁
+wandb:           AP2/LossRatio ▇▆█▆███▅█▇▅▆▆▆█▅▆▅▅▅▇█▆▆▆█▅█▅▆▆▆▆▅██▁▆▆▆
+wandb:         AP2/Observation ▃▆▃▃▇█▆▇▆▅▅▃▄▃▄▃▃▄▄▄▃▄▃▂▅▃▂▂▅▂▁▃▄▅▅▄▂▁▄▆
+wandb:              AP2/Reward ▃▁▁▃▁▁▆▃█▃▁▁▁▆▆▁█▃▆▁▁▆██▆██▆▃▁▃▃█▁▁▃▆▆▃▃
+wandb:          AP2/Throughput ▁▃▁▁▁▁▃▃█▃▃▃▃▁▅▁▃▃▃▁█▃▅▃▃▃▆▁▁▃▃▁▅▁▃█▅█▅▅
+wandb:           AP3/ActorLoss █████████▁▂▂▂▂▂▂▂▂▂▂▂▂▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃
+wandb:                  AP3/CW ▁█▁▄▃▂▄▃▅▂▃▃▃▃▃▅▅▅▄▄▃▃▄▄▃▂▃▅▅▄▄▄▂▃▂▄▃▃▃▄
+wandb:          AP3/CriticLoss ▁▁▁▁▁▁▁▁▁▁█▄▂▂▂▂▂▂▂▂▂▁▁▁▁▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    AP3/CumulativeReward ▁
+wandb:           AP3/LossRatio ▆█▆▂▃██▃▂▅▆▄▁▃▃▅▆██▅▆██▄▃▃█▆█▆▁▅▃▆▃▃▂▁▆▄
+wandb:         AP3/Observation ▇█▆▇▇█▆▂█▁▇▇▆▅▆█▆▆▃▄▃▄▄▄▅▃▅▄▅▄▄▆▆▆▅▃▄▃▄▄
+wandb:              AP3/Reward ▁▃▃▆█▁▂▂▃▁▂▅▁▂▅▁▃▃▁▂▂▁▅▆▃▂▃▁▂▁▃▁▂▁▂▂▂▂▂▁
+wandb:          AP3/Throughput ▂▂▂▂▂▂▄▅█▁▂▁▂▂▅▂▇▄▄▁▂█▄▂▁▁▂▂▄▂▄▇▁▁▁▁▅▂▁▄
+wandb:           AP4/ActorLoss ▅▅▅▅▅▅▅▅█▁▁▁▁▁▁▁▁▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂
+wandb:                  AP4/CW █▂▄▁▁▁▁▁▁▂▂▂▂▂▂▃▃▂▄▃▄▃▃▂▃▂▃▃▃▃▃▃▃▃▂▃▄▃▂▃
+wandb:          AP4/CriticLoss ▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    AP4/CumulativeReward ▁
+wandb:           AP4/LossRatio ▆▆▄██▄▄█▇▅▅▄▅▁▄▃▄▄▅▆▆▁▄▅▅▄▅▃▅▂▄▅▂▃█▃▄▃▄▅
+wandb:         AP4/Observation ██▇█▄▄▂▃▁▃▆▅▅▄▅▃▄▄▅▄▄▅▄▂▄▅▄▃▃▂▄▃▅▄▃▄▄▄▃▄
+wandb:              AP4/Reward ▁▆▃█▅▁▆█▃▁▃▆▆▁▃▃▃▃▆▆▃▅▃▅▆▅▅▁▅▁█▃▅▃▅▅▅▃▃▁
+wandb:          AP4/Throughput ▁▁▁█▂▄▄▂▂▁▁▄▅▅▅▅▄▇▂▇▁▅▁▇▄▁▂▄█▂▅▅▅▅▄▄▄▅▄▂
+wandb:           AP5/ActorLoss ███████▂▁▁▂▁▂▂▂▂▂▂▂▂▂▂▂▂▂▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃
+wandb:                  AP5/CW ▄▁█▃▂▁▂▄▆▅▁▃▂▂▂▂▂▃▂▃▃▂▃▃▂▂▃▃▂▃▂▃▃▃▂▂▃▂▂▃
+wandb:          AP5/CriticLoss ▁▁▁▁▁█▄▃▂▂▂▂▂▁▂▂▂▂▂▂▂▂▁▁▂▁▂▁▃▂▂▂▁▁▁▁▁▁▁▁
+wandb:    AP5/CumulativeReward ▁
+wandb:           AP5/LossRatio ██▄▆▃▇▅▁▁▅▃█▄▇▄▄▄▅▂▄▄▃▅▄▅▅▆▅▅▇▁▅▄▅▅▃▆▆▅▄
+wandb:         AP5/Observation ▅▅▅█▂▁▃▃▆▆▇▆▆▄▅▃▆▅▅▅▄▂▄▄▃▄▅▃▃▄▄▅▅▃▄▄▄▄▃▂
+wandb:              AP5/Reward ▁▄▅▄▄▄▂▂▄▃▂▁▄▃▂▅██▃▄▆▅▄▆█▇▃▆▆▂▂▃▃▆▄▂▃▅▁▂
+wandb:          AP5/Throughput ▁▁▅▂▆▃▂▅▁▃▅▂▃▃▃▅▃▃▃▂▇▁█▅▅▆▂▆▆▅▂█▁▇▃▅▇▅▆▆
+wandb:           AP6/ActorLoss ██████▁▂▃▃▃▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▅▅▅
+wandb:                  AP6/CW ▅█▂▃▂▁▂▅▁▅▂▂▂▂▂▃▂▃▂▂▂▂▂▂▂▃▂▃▂▂▂▂▂▂▂▂▂▂▂▃
+wandb:          AP6/CriticLoss ▁▁▁▁▁▁▁▁█▄▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    AP6/CumulativeReward ▁
+wandb:           AP6/LossRatio ▅▁▃▅█▆▃▅▆▄▃▄▇▂▇▆▆█▆▄█▅▄▅▃▃▆▅▂▅▃▅▅▄▇▆▅▇▅▃
+wandb:         AP6/Observation ▇█▅█▆▂▂▁▆▅▇▇█▆▅▅▃▃▄▃▆▅▄▄▅▂▃▃▄▄▄▃▄▄▃▂▃▄▃▆
+wandb:              AP6/Reward ▆▁▄▅▁▃▃▂▄▂▂▃█▁▄▃▃▃▄▁▅▄▃▆▃▄▅▅▆▄▄▅▄▂▄▅▇▄▅▇
+wandb:          AP6/Throughput ▅▅▂▁▄█▅▃▃▂▄▃▁▄▅▃▄▅▅▄▆▅▇▅▆▄▅▆▇▂█▅▅▆▃█▄▂▃▅
+wandb:           AP7/ActorLoss ███████▁▂▃▃▃▃▃▃▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▅▅▅▅
+wandb:                  AP7/CW ▁▁▄█▄█▁▄▃▃▅▅▆▄▅▅▄▅▄▅▄▅▄▅▄▄▅▅▄▃▇▅▄▅▄▅▄▄▄▄
+wandb:          AP7/CriticLoss ▁▁▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    AP7/CumulativeReward ▁
+wandb:           AP7/LossRatio ███▁▄▇▆▅▃▆▆▅▃▅▄▄▆▄▅▇▆▅▅▃▅▆▄▅█▃▅█▅▄▄▃▃▅▅▅
+wandb:         AP7/Observation █▄▄▄▂▆▅▅▆▄▃▃▂▂▅▄▄▃▃▂▃▃▅▂▃▁▃▁▂▂▂▂▂▂▃▂▃▄▁▃
+wandb:              AP7/Reward ▁▁▁▁▁▃▁▃▆▅▂▆▄▁█▂▁▃▃▃▃▃▅▄▄▇▇▄▁▄▄▂▄▂▅▃▂▆▄▂
+wandb:          AP7/Throughput ▁▁▁▁▁▁▃▂▂▇▇█▂▅▁▅▅▃▅▅▅▅▃▆▆▅▅▅▇▂▆▅▅▇▅▂▂▃▂▁
+wandb:           AP8/ActorLoss ██████████████▂▁▁▂▂▂▂▃▃▃▃▃▃▃▃▃▃▃▃▃▃▄▃▄▄▄
+wandb:                  AP8/CW ▁▁▁█▂█▃▃▂▃▃▃▃▃▃▃▃▃▂▄▃▂▃▃▂▃▃▃▃▃▃▃▄▅▃▃▃▃▃▃
+wandb:          AP8/CriticLoss ▁▁▁▁▁▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    AP8/CumulativeReward ▁
+wandb:           AP8/LossRatio ▆▃▁█▂▄▂▇▃█▄▆▃▃▆▃▃▄▃▃▃▃▄▅▄▄▅▄▄▄▂▃▆▆▆█▂▂▅▃
+wandb:         AP8/Observation ▅▅█▄▄▅▄▃▅▄▅▆▄▅▄▃▃▂▃▁▁▂▃▃▁▄▃▃▃▄▃▄▃▂▄▄▃▄▁▂
+wandb:              AP8/Reward ▁▇▂▅▁▄▇▅▂▁▅▅█▄▄▄▁▂▄▇▇█▄▂▄▇▄▇▄█▇▂▅▂▅▂▂▇▇▇
+wandb:          AP8/Throughput ▁▃▃▂▂▆▅▁▃▆▃▃▃▅▇▆▃▅▆▆▆▅▃▆▇▂▇▂▂▅▃▅▃▂▅█▆█▆▅
+wandb:           AP9/ActorLoss █████████▁▁▃▃▃▃▃▃▃▃▃▃▃▃▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+wandb:                  AP9/CW ▃▂▁▁▂▂▂▁▁█▁▃▂▂▂▃▂▃▂▃▃▂▃▂▃▃▂▃▂▃▂▂▂▃▂▃▂▂▃▂
+wandb:          AP9/CriticLoss ▁▁▁▁▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    AP9/CumulativeReward ▁
+wandb:           AP9/LossRatio ████▁▃▅▃█▆█▄▂▂▅▂▃█▅▆█▂▅▂▃▄▄▄▄▆▂▄▅█▅▃▅▁▂▂
+wandb:         AP9/Observation ▇▃▆▇▂▃▃▅█▅▇▆█▄▃▅▆▄▄▅▄▃▅▄▅▄▃▄▅▅▅▆▁▅▆▅▅▆▄▄
+wandb:              AP9/Reward ▃▂▃▃▁▂▂▃▃▂▁▁▁▂▅▇▂▁▂▂▁▂▆▁▁▃▁▆▂▁▃▂█▆▃▁▁▁▁▂
+wandb:          AP9/Throughput ▁▁▁▁▁▁▃▃▁▃▃▁▃▁▁▃▁▅█▃▃▃▅▃▃▆▃▃▃▅▁█▆▃▅▆▁▃▃▆
+wandb:                 Episode ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: Global/CumulativeReward ▁
+wandb:         Global/Fairness ▆▄▇▅█▆▅▅▆▆▅▇▁▅▅▄▂▅▅▅▆▅▆▆▇▄▄▄▅▆▆▆▆█▄▇▇▆▃▆
+wandb:        Global/LossRatio ███▄▆▄▃▅▅▇▆▇▅▅▄▄▃▃▄▄▅▄▄▃▂▄▄▄▃▁▄▆▃▂▅▂▅▅▃▄
+wandb:       Global/Throughput ▁▃▆▆▃▅▇▆▇▅▆▅▆▇▇▆▇▇▆▇▆▆█▇▇▇▇▇▇▇▅▆▅▆▇█▇▆▅▆
+wandb:                    Step ▁▁▁▁▁▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇▇▇█
+wandb: 
+wandb: Run summary:
+wandb:           AP1/ActorLoss -0.04692
+wandb:                  AP1/CW 157
+wandb:          AP1/CriticLoss 0.0
+wandb:    AP1/CumulativeReward 1.76851
+wandb:           AP1/LossRatio 0.6
+wandb:         AP1/Observation 0.78947
+wandb:              AP1/Reward 0.0039
+wandb:          AP1/Throughput 2.3424
+wandb:          AP10/ActorLoss -0.04692
+wandb:                 AP10/CW 157
+wandb:         AP10/CriticLoss 0.0
+wandb:   AP10/CumulativeReward 0.911
+wandb:          AP10/LossRatio 0.84615
+wandb:        AP10/Observation 0.78947
+wandb:             AP10/Reward 0.00039
+wandb:         AP10/Throughput 2.3424
+wandb:           AP2/ActorLoss -0.04692
+wandb:                  AP2/CW 157
+wandb:          AP2/CriticLoss 0.0
+wandb:    AP2/CumulativeReward 1.66603
+wandb:           AP2/LossRatio 0.5
+wandb:         AP2/Observation 0.78947
+wandb:              AP2/Reward 0.00098
+wandb:          AP2/Throughput 1.1712
+wandb:           AP3/ActorLoss -0.04692
+wandb:                  AP3/CW 157
+wandb:          AP3/CriticLoss 0.0
+wandb:    AP3/CumulativeReward 1.56944
+wandb:           AP3/LossRatio 1
+wandb:         AP3/Observation 0.78947
+wandb:              AP3/Reward 0
+wandb:          AP3/Throughput 0
+wandb:           AP4/ActorLoss -0.04692
+wandb:                  AP4/CW 157
+wandb:          AP4/CriticLoss 0.0
+wandb:    AP4/CumulativeReward 1.45375
+wandb:           AP4/LossRatio 0.6
+wandb:         AP4/Observation 0.78947
+wandb:              AP4/Reward 0.00195
+wandb:          AP4/Throughput 4.6848
+wandb:           AP5/ActorLoss -0.04692
+wandb:                  AP5/CW 157
+wandb:          AP5/CriticLoss 0.0
+wandb:    AP5/CumulativeReward 1.73688
+wandb:           AP5/LossRatio 0.82353
+wandb:         AP5/Observation 0.78947
+wandb:              AP5/Reward 0.00117
+wandb:          AP5/Throughput 3.5136
+wandb:           AP6/ActorLoss -0.04692
+wandb:                  AP6/CW 157
+wandb:          AP6/CriticLoss 0.0
+wandb:    AP6/CumulativeReward 1.45162
+wandb:           AP6/LossRatio 0.73333
+wandb:         AP6/Observation 0.78947
+wandb:              AP6/Reward 0.0013
+wandb:          AP6/Throughput 4.6848
+wandb:           AP7/ActorLoss -0.04692
+wandb:                  AP7/CW 157
+wandb:          AP7/CriticLoss 0.0
+wandb:    AP7/CumulativeReward 1.04197
+wandb:           AP7/LossRatio 0.85714
+wandb:         AP7/Observation 0.78947
+wandb:              AP7/Reward 0.00028
+wandb:          AP7/Throughput 1.1712
+wandb:           AP8/ActorLoss -0.04692
+wandb:                  AP8/CW 157
+wandb:          AP8/CriticLoss 0.0
+wandb:    AP8/CumulativeReward 0.9738
+wandb:           AP8/LossRatio 0.83333
+wandb:         AP8/Observation 0.78947
+wandb:              AP8/Reward 0.00049
+wandb:          AP8/Throughput 2.3424
+wandb:           AP9/ActorLoss -0.04692
+wandb:                  AP9/CW 157
+wandb:          AP9/CriticLoss 0.0
+wandb:    AP9/CumulativeReward 0.51122
+wandb:           AP9/LossRatio 0.9
+wandb:         AP9/Observation 0.78947
+wandb:              AP9/Reward 0.00022
+wandb:          AP9/Throughput 1.1712
+wandb:                 Episode 0
+wandb: Global/CumulativeReward 13.08423
+wandb:         Global/Fairness 0.71429
+wandb:        Global/LossRatio 0.78947
+wandb:       Global/Throughput 23.424
+wandb:                    Step 1500
+wandb: 
+wandb: You can sync this run to the cloud by running:
+wandb: wandb sync /home/pranay/mac-world/ns-3.29/scratch/linear-mesh/wandb/offline-run-20261016_134111-p5725t6r
+wandb: Find logs at: ./wandb/offline-run-20261016_134111-p5725t6r/logs
+episode 0 cumulative reward per AP: [1.769, 1.666, 1.569, 1.454, 1.737, 1.452, 1.042, 0.974, 0.511, 0.911]
+W&B check: 1500 rows, 75 keys each
+RESULT: PASS | steps: 1500
