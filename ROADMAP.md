@@ -76,7 +76,7 @@
 
 ### v1.6.0
 - Analyze scaling behavior and performance.
-- Status: 🔄 analysis done on branch `feature/v1.6.0-scaling-analysis` (not merged, not tagged): recomputed from raw traces v1.1.0..v1.5.0, no new runs. See `docs/scaling-v1.6.0.md`, `docs/figures/v1.6.0/`.
+- Status: 🔄 analysis done on branch `feature/v1.6.0-scaling-analysis` (merged to main + pushed 2026-10-16, NOT tagged): recomputed from raw traces v1.1.0..v1.5.0, no new runs. See `docs/scaling-v1.6.0.md`, `docs/figures/v1.6.0/`.
 
 ## Later — Central Critic
 
