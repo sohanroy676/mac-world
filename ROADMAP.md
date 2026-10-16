@@ -86,7 +86,7 @@
 
 ### v1.8.0
 - Implement centralized critic prototype.
-- Status: 🔄 prototype on branch `feature/v1.8.0-central-critic-prototype` (code 3a292d0, NOT merged/tagged): `--mode central` passes `--check` at 2,3 (short + full). See `docs/central-critic-v1.8.0.md`.
+- Status: 🔄 prototype on branch `feature/v1.8.0-central-critic-prototype` (code 3a292d0, merged to main + pushed 2026-10-16, NOT tagged): `--mode central` passes `--check` at 2,3 (short + full) and 20,40 (short). See `docs/central-critic-v1.8.0.md`.
 
 ### v1.9.0
 - Evaluate centralized critic against independent AP agents.
