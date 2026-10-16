@@ -8,6 +8,8 @@ v0.9.0: --check also recomputes obs (Test A) and reward (Test D) per AP and chec
 v1.1.0: --mode independent (default, above) | global (ONE agent, one CW broadcast to every AP; state = network
 loss (sum tx - sum rx)/sum tx, reward = network goodput / (offered load x all STAs x step)) | beb (ns-3 --dryRun
 through the same stepping loop, no agent: standard 802.11 measured in the same per-step window).
+v1.8.0: --mode central (CTDE): N local actors (each sees only its own loss) + ONE shared critic Q(s_joint, a_joint)
+trained on the global goodput reward, joint replay, MADDPG-style actor update (agents/our_ddpg/central.py).
 Run from this directory: ../../venv/bin/python OSCAR_multi_ap_train.py --apStaCounts 2,3 --check
 """
 import argparse
@@ -34,7 +36,7 @@ parser.add_argument("--seed", type=int, default=0)
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "global", "beb"], default="independent")
+parser.add_argument("--mode", choices=["independent", "global", "beb", "central"], default="independent")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 args = parser.parse_args()
 
@@ -48,7 +50,8 @@ import wandb  # noqa: E402
 
 from agents.our_ddpg.Our_DDPG import DDPG  # noqa: E402
 from agents.our_ddpg.preprocessor import Preprocessor  # noqa: E402
-from agents.our_ddpg.utils import ReplayBuffer  # noqa: E402
+from agents.our_ddpg.central import CentralDDPG  # noqa: E402
+from agents.our_ddpg.utils import JointReplayBuffer, ReplayBuffer  # noqa: E402
 from config import wandb_entity  # noqa: E402
 from exceptions import AlreadyRunningException  # noqa: E402
 from multi_ap import PAYLOAD_BITS, jain, parse_ap_info, reshape_obs, step_metrics  # noqa: E402
@@ -71,7 +74,7 @@ sim_args = {"simTime": args.simTime, "envStepTime": args.stepTime, "historyLengt
             "seed": args.seed + 1}  # ns-3 rejects seed 0, so ns-3 seed = python seed + 1
 if args.mode == "beb":
     sim_args["dryRun"] = "true"  # cw.cc skips setApCw; every AP keeps BEB CW 16..1024
-n_agents = {"independent": n, "global": 1, "beb": 0}[args.mode]
+n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0}[args.mode]  # central: one CentralDDPG object
 
 out_dir = "results/multi-ap-%s" % time.strftime("%Y%m%d-%H%M%S")
 os.makedirs(out_dir)
@@ -89,6 +92,8 @@ run = wandb.init(name="%s multi-AP OurDDPG v1.0.0%s" % (args.apStaCounts, suffix
 
 agents = [DDPG(state_dim, action_dim, max_action, args.discount, args.tau) for _ in range(n_agents)]
 replays = [ReplayBuffer(state_dim, action_dim) for _ in range(n_agents)]
+central = CentralDDPG(n, max_action, args.discount, args.tau) if args.mode == "central" else None
+joint = JointReplayBuffer(n) if args.mode == "central" else None
 preprocess = Preprocessor(False).preprocess
 
 
@@ -100,7 +105,15 @@ def agent_loss(i, name):
     """Loss of the agent that acts for AP i (independent: own; global: the shared one; beb: none -> 0)."""
     if args.mode == "beb":
         return 0.0
+    if args.mode == "central":
+        return scalar(central.actor_losses[i] if name == "actor_loss" else central.critic_loss)
     return scalar(getattr(agents[i if args.mode == "independent" else 0], name))
+
+
+def global_reward(recs):
+    """Network goodput normalized by offered load of all STAs (global and central modes)."""
+    rx_g = sum(r["rx"] for r in recs)
+    return min(1.0, max(0.0, rx_g * PAYLOAD_BITS / 1e6 / (OFFERED_MBPS * sum(counts) * args.stepTime)))
 
 
 fails = []
@@ -120,6 +133,27 @@ if args.check:
             check(not (param_ids[i] & param_ids[j]), "agents %d,%d share parameters" % (i, j))
     check(len({id(r) for r in replays}) == n_agents, "replay buffers are not distinct")
 
+if args.mode == "central" and args.check:
+    # Execution isolation: an actor only ever receives a [B, 1] tensor; during execution B == 1 and the value is s_i.
+    exec_probe = {"expect": None}
+
+    def make_hook(i):
+        def hook(module, inp):
+            x = inp[0]
+            check(x.dim() == 2 and x.shape[1] == 1, "actor %d input shape %s is not [B,1]" % (i, tuple(x.shape)))
+            if exec_probe["expect"] is not None:
+                check(x.shape[0] == 1 and abs(float(x[0, 0]) - float(exec_probe["expect"][i])) < 1e-6,
+                      "actor %d execution input is not its own s_i" % i)
+        return hook
+    for i, a in enumerate(central.actors):
+        a.register_forward_pre_hook(make_hook(i))
+    ids = [{p.data_ptr() for net in (a, t) for p in net.parameters()}
+           for a, t in zip(central.actors, central.actor_targets)]
+    for i in range(n):
+        for j in range(i + 1, n):
+            check(not (ids[i] & ids[j]), "central actors %d,%d share parameters" % (i, j))
+        check(not (ids[i] & {p.data_ptr() for p in central.critic.parameters()}), "actor %d shares critic parameters" % i)
+
 env = EnvWrapper(1, **sim_args)
 print("APs:", counts, "steps/ep:", steps_per_ep, "out:", out_dir)
 time_step = 0
@@ -136,13 +170,19 @@ try:
         ep_reward = np.zeros(n)
         for step in range(1, steps_per_ep + 1):
             acts = np.zeros(n, dtype=np.float32)
-            if args.mode == "independent":
+            if args.mode in ("independent", "central"):
+                if args.mode == "central" and args.check:
+                    exec_probe["expect"] = S[:, 0]
                 for i in range(n):
                     if time_step < args.start_timesteps:
                         acts[i] = np.random.uniform(-max_action, max_action)
                     else:
-                        a = agents[i].select_action(S[i, :state_dim]) + np.random.normal(0, max_action * args.expl_noise)
+                        sel = agents[i] if args.mode == "independent" else None
+                        a = (sel.select_action(S[i, :state_dim]) if sel else central.select_action(i, S[i, :state_dim])) \
+                            + np.random.normal(0, max_action * args.expl_noise)
                         acts[i] = np.clip(a, -max_action, max_action)[0]
+                if args.mode == "central" and args.check:
+                    exec_probe["expect"] = None
             elif args.mode == "global":
                 if time_step < args.start_timesteps:
                     acts[:] = np.random.uniform(-max_action, max_action)
@@ -192,7 +232,7 @@ try:
                 tx_g = sum(r["tx"] for r in recs)
                 rx_g = sum(r["rx"] for r in recs)
                 s2_g = np.array([(tx_g - rx_g) / tx_g if tx_g else 0.0], dtype=np.float32)
-                r_g = min(1.0, max(0.0, rx_g * PAYLOAD_BITS / 1e6 / (OFFERED_MBPS * sum(counts) * args.stepTime)))
+                r_g = global_reward(recs)
                 replays[0].add(S_g, acts[0], s2_g, r_g, done[0])
                 if args.check:
                     k = (replays[0].ptr - 1) % replays[0].max_size
@@ -204,6 +244,22 @@ try:
                 S_g = s2_g
                 if time_step >= args.start_timesteps:
                     agents[0].train(replays[0], args.batch_size)
+            if args.mode == "central":
+                # joint row: (s, a, r_g, r_local, s'); one critic update then N actor updates
+                r_g = global_reward(recs)
+                r_loc = [recs[i]["reward"] for i in range(n)]
+                joint.add(S[:, 0], acts, S2[:, 0], r_g, r_loc, done[0])
+                if args.check:
+                    k = (joint.ptr - 1) % joint.max_size
+                    check(np.allclose(joint.state[k], S[:, 0]) and np.allclose(joint.next_state[k], S2[:, 0])
+                          and np.allclose(joint.action[k], acts) and np.isclose(joint.reward_g[k, 0], r_g)
+                          and np.allclose(joint.reward_local[k], r_loc), "joint replay row mismatch at t=%d" % time_step)
+                    check(0.0 <= r_g <= 1.0, "r_g %s out of [0,1]" % r_g)
+                if time_step >= args.start_timesteps:
+                    central.train(joint, args.batch_size)
+                    if args.check:
+                        vals = [scalar(central.critic_loss), scalar(central.q_mean)] + [scalar(x) for x in central.actor_losses]
+                        check(all(np.isfinite(vals)), "non-finite central loss/Q at t=%d: %s" % (time_step, vals))
             trace_f.flush()
 
             obs_logged = [float(S_g[0])] * n if args.mode == "global" else [S2[i, 0] for i in range(n)]
@@ -244,6 +300,12 @@ finally:
         shutil.copy2(wlog, out_dir)
 
 if args.check:
+    if args.mode == "central":
+        check(joint.size == time_step, "joint replay size %d != steps %d" % (joint.size, time_step))
+        check(all(np.isfinite([scalar(central.critic_loss), scalar(central.q_mean)] + [scalar(x) for x in central.actor_losses])),
+              "non-finite central loss/Q at end")
+        print("central: critic_loss %.5f  Q_mean %.4f  actor_losses %s" % (
+            scalar(central.critic_loss), scalar(central.q_mean), [round(scalar(x), 4) for x in central.actor_losses]))
     for i in range(n_agents):
         check(replays[i].size == time_step, "replay %d size %d != steps %d" % (i, replays[i].size, time_step))
         check(all(np.isfinite([scalar(agents[i].actor_loss), scalar(agents[i].critic_loss)])), "agent %d non-finite loss" % (i + 1))
