@@ -82,10 +82,11 @@
 
 ### v1.7.0
 - Design centralized critic.
-- Status: 🔄 spec written on branch `feature/v1.7.0-central-critic-design` (merged to main + pushed 2026-10-16, NOT tagged): one shared global-reward critic, local actors (CTDE), timeboxed v1.8/v1.9, optional. See `docs/central-critic-v1.7.0.md`, `docs/adr/0003-central-critic-ctde.md`.
+- Status: ✅ TAGGED `v1.7.0` + pushed 2026-10-16. Spec merged to main (6e482ce): one shared global-reward critic, local actors (CTDE), timeboxed v1.8/v1.9, optional. See `docs/central-critic-v1.7.0.md`, `docs/adr/0003-central-critic-ctde.md`.
 
 ### v1.8.0
 - Implement centralized critic prototype.
+- Status: 🔄 prototype on branch `feature/v1.8.0-central-critic-prototype` (code 3a292d0, NOT merged/tagged): `--mode central` passes `--check` at 2,3 (short + full). See `docs/central-critic-v1.8.0.md`.
 
 ### v1.9.0
 - Evaluate centralized critic against independent AP agents.
