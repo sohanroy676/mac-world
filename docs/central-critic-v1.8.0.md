@@ -18,10 +18,11 @@ Joint replay row equals traced (s, a, r_g, r_local, s'); `r_g` in [0,1]; actor f
 | 2,3 short (simTime 3, step 0.1), independent / global | PASS, trace.csv byte-identical to pre-change |
 | 2,3 short, central | PASS (30 steps) |
 | 2,3 full (1500 steps, 1200 training), central | PASS; W&B 1500 rows x 19 keys; no NaN; critic loss max 0.028, ~0 after step 600 |
+| 20,40 short (simTime 3, step 0.1; 30 steps, 20 training), central | PASS; W&B 30 rows x 19 keys; 4m39s wall; no leftover ns-3 process |
 
 Full 2,3 central policy window (`summarize_run.py`): 41.5 Mbps total (AP1 0.34, AP2 41.15), Jain 0.56; AP1 CW ends ~940, AP2 ~17. BEB 2,3 reference is 40.47 (`docs/benchmark-v1.1.0.md`). One seed: not a claim.
 
 ## 4. Observations and open items
 - The shared global reward lets the larger AP win and the 2-STA AP starve: the fairness risk named in spec §11. v1.9 must report per-AP throughput and Jain.
-- Not run: 20,40, N=4/10, other seeds (v1.9). Trainer `--check` at large N untested for central.
+- 20,40 only ran 20 training steps: it proves the plumbing at 60 STAs, not learning. Not run: full-length 20,40, N=4/10, other seeds (v1.9).
 - `benchmark_v1_1_0.py --modes central` not tried (v1.9).
