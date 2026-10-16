@@ -82,7 +82,7 @@
 
 ### v1.7.0
 - Design centralized critic.
-- Status: 🔄 spec written on branch `feature/v1.7.0-central-critic-design` (not merged): one shared global-reward critic, local actors (CTDE), timeboxed v1.8/v1.9, optional. See `docs/central-critic-v1.7.0.md`, `docs/adr/0003-central-critic-ctde.md`.
+- Status: 🔄 spec written on branch `feature/v1.7.0-central-critic-design` (merged to main + pushed 2026-10-16, NOT tagged): one shared global-reward critic, local actors (CTDE), timeboxed v1.8/v1.9, optional. See `docs/central-critic-v1.7.0.md`, `docs/adr/0003-central-critic-ctde.md`.
 
 ### v1.8.0
 - Implement centralized critic prototype.

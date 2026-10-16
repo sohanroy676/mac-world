@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v1.7.0 central critic DESIGN written (2026-10-16, branch `feature/v1.7.0-central-critic-design`, not merged)** — `docs/central-critic-v1.7.0.md` + ADR-0003 (Proposed). User decisions: one shared critic on global reward; spec + timeboxed build (v1.8 <= 1 session, v1.9 small eval; else optional/negative result). No code, no runs. v1.6.0 TAGGED + pushed.
+- **v1.7.0 central critic DESIGN written (2026-10-16, branch `feature/v1.7.0-central-critic-design`, merged to main + pushed, NOT tagged)** — `docs/central-critic-v1.7.0.md` + ADR-0003 (Proposed). User decisions: one shared critic on global reward; spec + timeboxed build (v1.8 <= 1 session, v1.9 small eval; else optional/negative result). No code, no runs. v1.6.0 TAGGED + pushed.
 
 - **v1.6.0 scaling analysis DONE (2026-10-16, branch `feature/v1.6.0-scaling-analysis`, merged to main + pushed, NOT tagged; raw traces force-committed)** — `scaling_analysis.py` + `docs/scaling-v1.6.0.md` + `docs/figures/v1.6.0/` (table, per-seed CSV, 10 figures). Recomputed from raw traces N=2 (20,40 n=5), 4, 6, 8, 10 (n=3); cross-check vs per-version tables PASS. No new runs. v1.5.0 tagged + pushed. Assoc cause deferred.
 
