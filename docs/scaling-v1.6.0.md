@@ -79,6 +79,6 @@ Mean deassociation events per run (from logs; every one re-associated in all per
 ## 7. Open
 - Late-association / deassociation cause (deferred); end-of-run association not recorded for long runs.
 - Why independent < BEB (not tested; inference in §3 only).
-- AP count vs STA load is confounded; a fixed-total-STA sweep would separate them (needs new runs, not done).
+- AP count vs STA load is confounded; a fixed-total-STA sweep would separate them (needs new runs, not done). Deferred to v2.0.0 (station-density variation), user decision 2026-10-16.
 - n=3 for N>=4; N=6/8 independent bimodal.
 - Per-STA/per-AP numbers use the policy-window throughput definition from `summarize_run.py`; reward is not compared across modes.

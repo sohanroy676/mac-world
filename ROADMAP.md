@@ -93,6 +93,7 @@
 
 ### v2.0.0
 - Additional robustness experiments.
+- Fixed-total-STA sweep (separate AP count from load; deferred from v1.6.0).
 
 ### v2.1.0
 - Reproducibility and cleanup.
