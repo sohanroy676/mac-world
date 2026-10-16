@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v1.4.0 8 APs DONE at n=3 (2026-10-16, branch `feature/v1.4.0-eight-aps`, NOT merged/tagged)** — 5,10,15,20,25,30,35,40 (180 STAs), seeds 0-2, 9/9 PASS, no code change. BEB 20.05 ± 0.94, global 27.99 ± 17.20 (+40.1 ± 92.7 %, CI includes 0, above BEB 3/3 seeds), independent 12.54 ± 18.74 (-37.1 ± 96.8 %, CI includes 0; seed 1 21.1, seeds 0,2 6.8/9.7). Runs 2733-3796 s. Full-size trainer check 11:56, 367 MB. v1.3.0 tagged + pushed. `docs/scaling-v1.4.0.md`, `docs/figures/v1.4.0/`.
+- **v1.4.0 8 APs DONE at n=3 (2026-10-16, branch `feature/v1.4.0-eight-aps`, merged to main + pushed, NOT tagged)** — 5,10,15,20,25,30,35,40 (180 STAs), seeds 0-2, 9/9 PASS, no code change. BEB 20.05 ± 0.94, global 27.99 ± 17.20 (+40.1 ± 92.7 %, CI includes 0, above BEB 3/3 seeds), independent 12.54 ± 18.74 (-37.1 ± 96.8 %, CI includes 0; seed 1 21.1, seeds 0,2 6.8/9.7). Runs 2733-3796 s. Full-size trainer check 11:56, 367 MB. v1.3.0 tagged + pushed. `docs/scaling-v1.4.0.md`, `docs/figures/v1.4.0/`.
 
 - **v1.3.0 6 APs DONE at n=3 (2026-10-15, branch `feature/v1.3.0-six-aps`, merged to main + pushed, NOT tagged)** — 5,10,15,20,25,30, seeds 0-2, 9/9 PASS. BEB 23.83 ± 1.15, global 32.53 ± 12.48 (+36.4 ± 49.3 %, CI includes 0, 3/3 seeds above BEB), independent 18.72 ± 19.75 (-21.6 ± 81.0 %, bimodal). No code change. Runs 1514-1676 s (independent s1 2617 s). Full-size trainer check 6:19, 365 MB. `docs/scaling-v1.3.0.md`, `docs/figures/v1.3.0{,-b2}/`. v1.2.0 tagged + pushed.
 
