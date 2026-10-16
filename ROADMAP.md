@@ -72,10 +72,11 @@
 
 ### v1.5.0
 - Scale to 10 APs.
-- Status: 🔄 validation + 9 long runs (4,8,...,40 = 220 STAs, seeds 0-2, n=3) PASS 2026-10-16, merged to main + pushed 2026-10-16, NOT tagged. Global +41.0 ± 83.9 % (CI includes 0, beats BEB at 3/3 seeds); independent -53.5 ± 27.6 % (CI excludes 0). Full-size dry association check FAILS (late association + deassoc bursts, see doc §3). See `docs/scaling-v1.5.0.md`.
+- Status: ✅ validation + 9 long runs (4,8,...,40 = 220 STAs, seeds 0-2, n=3) PASS 2026-10-16, merged to main + pushed 2026-10-16, tagged `v1.5.0` + pushed 2026-10-16. Global +41.0 ± 83.9 % (CI includes 0, beats BEB at 3/3 seeds); independent -53.5 ± 27.6 % (CI excludes 0). Full-size dry association check FAILS (late association + deassoc bursts, see doc §3). See `docs/scaling-v1.5.0.md`.
 
 ### v1.6.0
 - Analyze scaling behavior and performance.
+- Status: 🔄 analysis done on branch `feature/v1.6.0-scaling-analysis` (not merged, not tagged): recomputed from raw traces v1.1.0..v1.5.0, no new runs. See `docs/scaling-v1.6.0.md`, `docs/figures/v1.6.0/`.
 
 ## Later — Central Critic
 
