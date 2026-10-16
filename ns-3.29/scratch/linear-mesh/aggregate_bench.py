@@ -27,6 +27,7 @@ COLOR = {"beb": "#888888", "global": "#d95f02", "independent": "#1b9e77", "centr
 parser = argparse.ArgumentParser()
 parser.add_argument("bench_dirs", nargs="+")
 parser.add_argument("--out", default="docs/figures/v1.1.0")
+parser.add_argument("--topo", default=None, help="only this apStaCounts value")
 parser.add_argument("--stepTime", type=float, default=0.01)
 parser.add_argument("--warmup", type=int, default=300)
 args = parser.parse_args()
@@ -57,7 +58,7 @@ def convergence_step(tot, win=100, tol=0.05, tail=300):
 runs = defaultdict(lambda: defaultdict(dict))  # topo -> mode -> {seed: summary}
 for base in args.bench_dirs:
     for r in csv.DictReader(open(os.path.join(base, "manifest.csv"))):
-        if r["result"] != "PASS":
+        if r["result"] != "PASS" or (args.topo and r["topo"] != args.topo):
             continue
         assert int(r["seed"]) not in runs[r["topo"]][r["mode"]], "duplicate run %s %s %s" % (r["topo"], r["mode"], r["seed"])
         s = summarize(r["run_dir"], args.stepTime, args.warmup)

@@ -86,10 +86,11 @@
 
 ### v1.8.0
 - Implement centralized critic prototype.
-- Status: 🔄 prototype on branch `feature/v1.8.0-central-critic-prototype` (code 3a292d0, merged to main + pushed 2026-10-16, NOT tagged): `--mode central` passes `--check` at 2,3 (short + full) and 20,40 (short). See `docs/central-critic-v1.8.0.md`.
+- Status: 🔄 prototype on branch `feature/v1.8.0-central-critic-prototype` (code 3a292d0, merged to main + pushed; TAGGED `v1.8.0` + pushed 2026-10-16): `--mode central` passes `--check` at 2,3 (short + full) and 20,40 (short). See `docs/central-critic-v1.8.0.md`.
 
 ### v1.9.0
 - Evaluate centralized critic against independent AP agents.
+- Status: 🔄 evaluation DONE 2026-10-17 on branch `feature/v1.9.0-central-eval` (not merged/tagged): 6/6 runs PASS. Rule NOT met: N=10 central vs independent -5.80 ± 10.48 Mbps (CI includes 0, 0/3 above; central ~3.2 Mbps, below BEB). Optional/negative result; next v2.x. See `docs/central-eval-v1.9.0.md`.
 
 ## Later — Finalization
 
