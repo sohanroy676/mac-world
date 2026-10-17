@@ -1009,6 +1009,7 @@ int main(int argc, char *argv[])
     cmd.AddValue("apStaCounts", "Comma-separated station counts per AP, e.g. 20,40. Default: empty = single AP with nWifi stations", apStaCountsArg);
     cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);
     cmd.AddValue("seed", "Random seed", simSeed);
+    cmd.AddValue("offeredLoad", "Per-STA offered load in Mbps. Default: 150", offeredLoad);
 
     cmd.Parse(argc, argv);
 
