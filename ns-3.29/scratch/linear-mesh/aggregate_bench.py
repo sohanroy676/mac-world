@@ -1,7 +1,7 @@
 """v1.1.0: aggregate benchmark runs into tables (mean +- 95% CI over seeds, paired delta vs BEB) and plots.
 Usage (from this directory):
-  ../../venv/bin/python aggregate_bench.py results/bench-<ts> [--out docs/figures/v1.1.0] [--stepTime 0.01] [--warmup 300]
-Reads <benchDir>/manifest.csv (PASS rows only). Every mode uses the same per-step policy window (steps >= warmup).
+  ../../venv/bin/python aggregate_bench.py results/bench-<ts> [results/bench-<ts2> ...] [--out docs/figures/v1.1.0] [--stepTime 0.01] [--warmup 300]
+Reads <benchDir>/manifest.csv for each bench dir (PASS rows only; a (topo, mode, seed) must not appear twice). Every mode uses the same per-step policy window (steps >= warmup).
 Throughput = per-step rx * payload bits / step time, from trace.csv, identically for beb / global / independent.
 Reward is NOT compared across modes: the trace reward is each mode's own per-AP env reward (not used here).
 """
@@ -19,13 +19,15 @@ from summarize_run import summarize  # noqa: E402
 
 # two-sided 95% Student t critical values, df = 1..10 (no scipy in the venv)
 T95 = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228}
-MODES = ["beb", "global", "independent"]
-LABEL = {"beb": "BEB (802.11)", "global": "Global-CW OSCAR", "independent": "Independent per-AP"}
-COLOR = {"beb": "#888888", "global": "#d95f02", "independent": "#1b9e77"}
+MODES = ["beb", "global", "independent", "central"]
+LABEL = {"beb": "BEB (802.11)", "global": "Global-CW OSCAR", "independent": "Independent per-AP", "central": "Central critic"}
+SHORT = {"beb": "BEB", "global": "Global", "independent": "Indep.", "central": "Central"}
+COLOR = {"beb": "#888888", "global": "#d95f02", "independent": "#1b9e77", "central": "#7570b3"}
 
 parser = argparse.ArgumentParser()
-parser.add_argument("bench_dir")
+parser.add_argument("bench_dirs", nargs="+")
 parser.add_argument("--out", default="docs/figures/v1.1.0")
+parser.add_argument("--topo", default=None, help="only this apStaCounts value")
 parser.add_argument("--stepTime", type=float, default=0.01)
 parser.add_argument("--warmup", type=int, default=300)
 args = parser.parse_args()
@@ -54,13 +56,14 @@ def convergence_step(tot, win=100, tol=0.05, tail=300):
 
 
 runs = defaultdict(lambda: defaultdict(dict))  # topo -> mode -> {seed: summary}
-base = args.bench_dir
-for r in csv.DictReader(open(os.path.join(base, "manifest.csv"))):
-    if r["result"] != "PASS":
-        continue
-    s = summarize(r["run_dir"], args.stepTime, args.warmup)
-    s["conv"] = convergence_step(s["tot"])
-    runs[r["topo"]][r["mode"]][int(r["seed"])] = s
+for base in args.bench_dirs:
+    for r in csv.DictReader(open(os.path.join(base, "manifest.csv"))):
+        if r["result"] != "PASS" or (args.topo and r["topo"] != args.topo):
+            continue
+        assert int(r["seed"]) not in runs[r["topo"]][r["mode"]], "duplicate run %s %s %s" % (r["topo"], r["mode"], r["seed"])
+        s = summarize(r["run_dir"], args.stepTime, args.warmup)
+        s["conv"] = convergence_step(s["tot"])
+        runs[r["topo"]][r["mode"]][int(r["seed"])] = s
 
 topos = list(runs)
 os.makedirs(args.out, exist_ok=True)
@@ -97,6 +100,13 @@ for topo in topos:
             p = [100 * x / runs[topo]["beb"][s]["tot_policy"] for x, s in zip(d, seeds)]
             md.append("| %s | %d | %s | %s |" % (LABEL[m], len(seeds), fmt(d), fmt(p, 1)))
         md.append("")
+    if "central" in runs[topo] and "independent" in runs[topo]:
+        md += ["Paired difference of Central critic vs Independent per-AP (same ns-3 seed), aggregate throughput:", "",
+               "| n pairs | Δ Mbps | Δ % | above Independent |", "|---|---|---|---|"]
+        seeds = sorted(set(runs[topo]["central"]) & set(runs[topo]["independent"]))
+        d = [runs[topo]["central"][s]["tot_policy"] - runs[topo]["independent"][s]["tot_policy"] for s in seeds]
+        p = [100 * x / runs[topo]["independent"][s]["tot_policy"] for x, s in zip(d, seeds)]
+        md += ["| %d | %s | %s | %d/%d |" % (len(seeds), fmt(d), fmt(p, 1), sum(x > 0 for x in d), len(d)), ""]
 
 with open(os.path.join(args.out, "tables.md"), "w") as f:
     f.write("\n".join(md) + "\n")
@@ -110,7 +120,7 @@ for j, m in enumerate(MODES):
     for i, t in enumerate(topos):
         if m in runs[t]:
             mean, h = ci([s["tot_policy"] for s in runs[t][m].values()])
-            ms.append(mean); hs.append(0 if np.isnan(h) else h); xs.append(i + (j - 1) * w)
+            ms.append(mean); hs.append(0 if np.isnan(h) else h); xs.append(i + (j - (len(MODES) - 1) / 2) * w)
     ax.bar(xs, ms, w, yerr=hs, capsize=3, label=LABEL[m], color=COLOR[m])
 ax.set_xticks(range(len(topos))); ax.set_xticklabels(topos)
 ax.set_xlabel("STAs per AP"); ax.set_ylabel("Aggregate throughput, policy window (Mbps)")
@@ -129,7 +139,7 @@ for ax, t in zip(axes[0], topos):
             n_ap = len(S[0]["aps"])
             ax.bar(j, v, bottom=bottom, color=COLOR[m], alpha=1.0 - 0.6 * (a - 1) / max(1, n_ap - 1), edgecolor="white")
             bottom += v
-    ax.set_xticks(range(len(MODES))); ax.set_xticklabels(["BEB", "Global", "Indep."])
+    ax.set_xticks(range(len(MODES))); ax.set_xticklabels([SHORT[m] for m in MODES])
     n_ap = len(next(iter(runs[t][next(iter(runs[t]))].values()))["aps"])
     ax.set_title("%s (AP1 darkest .. AP%d lightest)" % (t, n_ap)); ax.set_ylabel("Mbps")
 fig.tight_layout(); fig.savefig(os.path.join(args.out, "per_ap_throughput.png"), dpi=150); plt.close(fig)
@@ -146,9 +156,10 @@ for ax, t in zip(axes[:, 0], topos):
 axes[-1, 0].set_xlabel("step"); axes[0, 0].legend(fontsize=8)
 fig.tight_layout(); fig.savefig(os.path.join(args.out, "convergence.png"), dpi=150); plt.close(fig)
 
-fig, axes = plt.subplots(len(topos), 2, figsize=(10, 2.8 * len(topos)), squeeze=False)
+CW_MODES = ["global", "independent", "central"]
+fig, axes = plt.subplots(len(topos), len(CW_MODES), figsize=(5 * len(CW_MODES), 2.8 * len(topos)), squeeze=False)
 for row, t in zip(axes, topos):
-    for ax, m in zip(row, ["global", "independent"]):
+    for ax, m in zip(row, CW_MODES):
         if m not in runs[t]:
             continue
         S = list(runs[t][m].values())

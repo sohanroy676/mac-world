@@ -7,6 +7,8 @@
 
 ## Done
 
+- **v1.9.0 central critic evaluation DONE (2026-10-17, branch `feature/v1.9.0-central-eval`, NOT merged/tagged)** — central at N=4 and N=10, seeds 0-2, 6/6 PASS. Decision rule not met (N=10 central vs independent -5.80 ± 10.48 Mbps, CI includes 0, 0/3 above; central ~3.2 Mbps). Optional/negative result; core unaffected; next v2.x. `docs/central-eval-v1.9.0.md`, `docs/figures/v1.9.0/`. v1.8.0 tagged + pushed.
+
 - **v1.8.0 central critic PROTOTYPE (2026-10-16, branch `feature/v1.8.0-central-critic-prototype`, code 3a292d0, NOT merged/tagged)** — `--mode central`: N local actors + one shared `Critic(N,N)` on the global reward, joint replay, MADDPG actor update; `--check` extended (joint row, r_g, actor input isolation, finite losses/Q). Python only, no rebuild. 2,3 short + full and 20,40 short (30 steps) PASS; independent/global short traces identical to pre-change. Merged to main + pushed. v1.7.0 tagged + pushed. `docs/central-critic-v1.8.0.md`.
 
 - **v1.7.0 central critic DESIGN written (2026-10-16, branch `feature/v1.7.0-central-critic-design`, merged to main + pushed, NOT tagged)** — `docs/central-critic-v1.7.0.md` + ADR-0003 (Proposed). User decisions: one shared critic on global reward; spec + timeboxed build (v1.8 <= 1 session, v1.9 small eval; else optional/negative result). No code, no runs. v1.6.0 TAGGED + pushed.
