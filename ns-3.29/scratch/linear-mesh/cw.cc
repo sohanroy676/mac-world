@@ -224,7 +224,9 @@ uint32_t edcaRoundedCw(uint32_t cw)
 
 // Read MinCw/MaxCw back from the nodes. The AP must match the value written exactly; STAs may
 // match it exactly or after EDCA rounding. Clears g_apCwOk on any mismatch.
-void checkApCw(std::string label)
+double g_cwReadbackEvery = 0.0; // seconds between extra CW readbacks; 0 = off
+
+void checkApCw(std::string label, bool recordResult = true)
 {
     bool ok = true;
     NS_LOG_UNCOND("CW readback [" << label << "] t=" << Simulator::Now().GetSeconds() << " s:");
@@ -266,8 +268,15 @@ void checkApCw(std::string label)
         if (other != 0 || missing != 0)
             ok = false;
     }
-    if (!ok)
+    if (!ok && recordResult)
         g_apCwOk = false;
+}
+
+// Log-only: sample STA CWs during the run (does not affect the CW check result).
+void periodicCwReadback()
+{
+    checkApCw("periodic", false);
+    Simulator::Schedule(Seconds(g_cwReadbackEvery), &periodicCwReadback);
 }
 
 /*
@@ -1009,6 +1018,7 @@ int main(int argc, char *argv[])
     cmd.AddValue("apStaCounts", "Comma-separated station counts per AP, e.g. 20,40. Default: empty = single AP with nWifi stations", apStaCountsArg);
     cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);
     cmd.AddValue("seed", "Random seed", simSeed);
+    cmd.AddValue("cwReadbackEvery", "Log STA CW readback every N seconds (diagnostic). Default: 0 = off", g_cwReadbackEvery);
     cmd.AddValue("offeredLoad", "Per-STA offered load in Mbps. Default: 150", offeredLoad);
 
     cmd.Parse(argc, argv);
@@ -1099,8 +1109,10 @@ int main(int argc, char *argv[])
     Ipv4GlobalRoutingHelper::PopulateRoutingTables();
 
 
-    Simulator::Schedule(Seconds(0), &checkApCw, std::string("start"));
-    Simulator::Schedule(Seconds(warmup), &checkApCw, std::string("warmup"));
+    Simulator::Schedule(Seconds(0), &checkApCw, std::string("start"), true);
+    Simulator::Schedule(Seconds(warmup), &checkApCw, std::string("warmup"), true);
+    if (g_cwReadbackEvery > 0)
+        Simulator::Schedule(Seconds(warmup + g_cwReadbackEvery), &periodicCwReadback);
 
     set_sim(tracing, dry_run, disable_gym, warmup, openGymPort, phy, apDevice, end_delay, monitor, flowmon);
 
