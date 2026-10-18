@@ -13,6 +13,8 @@
 using namespace std;
 using namespace ns3;
 
+extern double g_trafficStartTime; // seconds; data sources start here (cw.cc --trafficStart, default 0)
+
 class Scenario
 {
   protected:
@@ -249,7 +251,7 @@ void BasicScenario::installScenario(double simulationTime, double envStepTime, n
                                     this->wifiApNode.Get(apIndex),
                                     this->port++,
                                     this->offeredLoad,
-                                    0.0,
+                                    g_trafficStartTime,
                                     simulationTime + 2 + envStepTime*history_length,
                                     callback);
         }

@@ -224,6 +224,8 @@ uint32_t edcaRoundedCw(uint32_t cw)
 
 // Read MinCw/MaxCw back from the nodes. The AP must match the value written exactly; STAs may
 // match it exactly or after EDCA rounding. Clears g_apCwOk on any mismatch.
+double g_trafficStartTime = 0.0;      // see scenario.h
+uint32_t g_staMaxMissedBeacons = 10;  // ns-3 default; --staMaxMissedBeacons (diagnostic)
 double g_cwReadbackEvery = 0.0; // seconds between extra CW readbacks; 0 = off
 
 void checkApCw(std::string label, bool recordResult = true)
@@ -798,6 +800,7 @@ void set_nodes(int channelWidth,
         mac.SetType("ns3::StaWifiMac",
                     "Ssid", SsidValue(ssid),
                     "ActiveProbing", BooleanValue(false),
+                    "MaxMissedBeacons", UintegerValue(g_staMaxMissedBeacons),
                     "BE_MaxAmpduSize", UintegerValue(0));
         staDevice.Add(wifi.Install(phy, mac, staGroup));
 
@@ -929,6 +932,7 @@ void set_sim(bool tracing, bool dry_run, bool disableGym, int warmup, uint32_t o
 // STA node id -> BSSID of the AP it last associated with, and per-STA DeAssoc counts.
 std::map<uint32_t, Mac48Address> g_staBssid;
 std::map<uint32_t, uint32_t> g_staDeAssocCount;
+std::map<uint32_t, double> g_staFirstAssoc; // STA node id -> time of first association
 
 uint32_t nodeIdFromContext(std::string context)
 {
@@ -946,6 +950,8 @@ void staAssociated(std::string context, Mac48Address bssid)
 {
     uint32_t nodeId = nodeIdFromContext(context);
     g_staBssid[nodeId] = bssid;
+    if (!g_staFirstAssoc.count(nodeId))
+        g_staFirstAssoc[nodeId] = Simulator::Now().GetSeconds();
     if (g_staDeAssocCount.count(nodeId))
     {
         std::cout << "STA nodeId=" << nodeId << " re-associated with " << bssid << " at t=" << Simulator::Now().GetSeconds() << "s" << endl;
@@ -980,6 +986,18 @@ bool reportAssociation(std::vector<NodeContainer> apStaNodes, NetDeviceContainer
             if (g_staDeAssocCount.count(nodeId))
                 deassoc += g_staDeAssocCount[nodeId];
         }
+        double latest = 0.0;
+        uint32_t after1s = 0;
+        for (uint32_t staIndex = 0; staIndex < apStaNodes.at(apIndex).GetN(); ++staIndex)
+        {
+            std::map<uint32_t, double>::const_iterator f = g_staFirstAssoc.find(apStaNodes.at(apIndex).Get(staIndex)->GetId());
+            if (f == g_staFirstAssoc.end())
+                continue;
+            latest = std::max(latest, f->second);
+            if (f->second > 1.0)
+                ++after1s;
+        }
+        NS_LOG_UNCOND("AP" << apIndex + 1 << " first association: latest=" << latest << "s after1s=" << after1s);
         NS_LOG_UNCOND("AP" << apIndex + 1 << " association: ok=" << associated << "/" << apStaNodes.at(apIndex).GetN()
                            << " wrongAp=" << mismatched << " unassociated=" << unassociated << " deassoc=" << deassoc);
         ok = ok && mismatched == 0 && unassociated == 0;
@@ -1036,6 +1054,8 @@ int main(int argc, char *argv[])
     cmd.AddValue("apStaCounts", "Comma-separated station counts per AP, e.g. 20,40. Default: empty = single AP with nWifi stations", apStaCountsArg);
     cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);
     cmd.AddValue("seed", "Random seed", simSeed);
+    cmd.AddValue("trafficStart", "Diagnostic: time (s) at which the data sources start. Default: 0", g_trafficStartTime);
+    cmd.AddValue("staMaxMissedBeacons", "Diagnostic: StaWifiMac MaxMissedBeacons. Default: 10 (ns-3 default)", g_staMaxMissedBeacons);
     cmd.AddValue("cwReadbackEvery", "Log STA CW readback every N seconds (diagnostic). Default: 0 = off", g_cwReadbackEvery);
     cmd.AddValue("offeredLoad", "Per-STA offered load in Mbps. Default: 150", offeredLoad);
 
