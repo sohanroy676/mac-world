@@ -276,6 +276,22 @@ void checkApCw(std::string label, bool recordResult = true)
 void periodicCwReadback()
 {
     checkApCw("periodic", false);
+    // Per AP: sinks (one per STA) that have received at least one packet so far.
+    for (uint32_t ap = 0; ap < g_apBss.size(); ++ap)
+    {
+        uint32_t sinks = 0, active = 0;
+        Ptr<Node> apNode = g_apBss.at(ap).Get(0);
+        for (uint32_t i = 0; i < apNode->GetNApplications(); ++i)
+        {
+            Ptr<UdpServer> server = DynamicCast<UdpServer>(apNode->GetApplication(i));
+            if (!server)
+                continue;
+            ++sinks;
+            if (server->GetReceived() > 0)
+                ++active;
+        }
+        NS_LOG_UNCOND("  AP" << ap + 1 << " sinks with rx>0: " << active << "/" << sinks);
+    }
     Simulator::Schedule(Seconds(g_cwReadbackEvery), &periodicCwReadback);
 }
 
