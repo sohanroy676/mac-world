@@ -872,6 +872,8 @@ void set_nodes(int channelWidth,
             setApCw(apIndex, 16, 1024);
         else if (!g_apCwOverride.empty())
             setApCw(apIndex, g_apCwOverride.at(apIndex), g_apCwOverride.at(apIndex));
+        else if (CW == 0 && g_apBss.size() > 1)
+            setApCw(apIndex, 16, 1024); // v2.0.0: CW 0/0 (no backoff) starves most STAs during warm-up; start like BEB until the first action
         else
             setApCw(apIndex, CW, CW);
     }
