@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v2.2.0 final results DONE (2026-10-19, branch `feature/v2.2.0-final-results`, NOT merged/tagged)** — analysis only from the 81 fixed-binary runs; new reward/fairness plots, per-seed and time-series CSVs, fixed60 scaling preset, load sweep. Regression checks identical to committed tables. W&B sync deferred, raw data local. `docs/final-results-v2.2.0.md`. v2.1.0 tagged + pushed.
+- **v2.2.0 final results CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.2.0`; no CI)** — analysis only from the 81 fixed-binary runs; new reward/fairness plots, per-seed and time-series CSVs, fixed60 scaling preset, load sweep. Regression checks identical to committed tables. W&B sync deferred, raw data local. `docs/final-results-v2.2.0.md`. v2.1.0 tagged + pushed.
 
 - **v2.1.0 reproducibility and cleanup CLOSED (2026-10-19, branch `feature/v2.1.0-reproducibility`, merged to main + pushed, TAGGED `v2.1.0`; no CI)** — W&B names/tags, git_rev, trafficStart/staMaxMissedBeacons pass-through, runner flags, dependency doc. Defaults unchanged (byte-identical traces, 4 modes); seed and reset verified on short runs. No cw.cc change. `docs/reproducibility-v2.1.0.md`. v2.0.0 tagged + pushed.
 
