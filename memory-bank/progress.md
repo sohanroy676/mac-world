@@ -7,6 +7,8 @@
 
 ## Done
 
+- **v2.5.0 final audit DONE (2026-10-19, branch `feature/v2.5.0-final-audit`, NOT merged/tagged)** — 26-item checklist in `docs/final-audit-v2.5.0.md`: Impl 9/10 PASS, Eval 7/8 PASS, Docs 4/8 PASS (3 partial, references FAIL). Five short reruns PASS; upstream import diffed against pristine ns-3.29 and ns3-gym. No code change.
+
 - **v2.4.0 presentation CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.4.0`; no CI)** — 14-slide slides artifact from committed report/figures only, `docs/presentation-v2.4.0.md` with demo script; one short demo rehearsal (32.7 s, PASS). No code change, no benchmark run.
 
 - **v2.3.0 technical report CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.3.0`; no CI)** — `docs/technical-report-v2.3.0.md` follows the 26-section roadmap structure, numbers copied from v2.2.0 tables, inherited/new labels, 21 `[REF:]` placeholders awaiting user references. No runs, no code change.
