@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v2.4.0 presentation DRAFT (2026-10-19, branch `feature/v2.4.0-presentation`, NOT merged/tagged)** — 14-slide slides artifact from committed report/figures only, `docs/presentation-v2.4.0.md` with demo script; one short demo rehearsal (32.7 s, PASS). No code change, no benchmark run.
+- **v2.4.0 presentation CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.4.0`; no CI)** — 14-slide slides artifact from committed report/figures only, `docs/presentation-v2.4.0.md` with demo script; one short demo rehearsal (32.7 s, PASS). No code change, no benchmark run.
 
 - **v2.3.0 technical report CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.3.0`; no CI)** — `docs/technical-report-v2.3.0.md` follows the 26-section roadmap structure, numbers copied from v2.2.0 tables, inherited/new labels, 21 `[REF:]` placeholders awaiting user references. No runs, no code change.
 

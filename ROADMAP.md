@@ -113,7 +113,7 @@
 
 ### v2.4.0
 - Presentation and demonstration.
-- Status: DRAFT 2026-10-19 on `feature/v2.4.0-presentation` (not merged/tagged). 14-slide deck (private slides artifact, link in `docs/presentation-v2.4.0.md`), outline + demo script, one 33 s demo rehearsal PASS. Open: title slide team/course names, user review.
+- Status: ✅ CLOSED 2026-10-19 (merged to main + pushed, TAGGED `v2.4.0`; no CI configured). 14-slide deck (private slides artifact, link in `docs/presentation-v2.4.0.md`), outline + demo script, one 33 s demo rehearsal PASS. Open: title slide team/course names, user review.
 
 ### v2.5.0
 - Final project audit.
