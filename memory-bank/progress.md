@@ -7,6 +7,8 @@
 
 ## Done
 
+- **v2.0.0 robustness experiments DONE (2026-10-19, branch `feature/v2.0.0-robustness`, NOT merged/tagged)** — A fixed-total-STA, B imbalance, C traffic load, D association diagnostic, all rerun on the CW-start-fixed binary (63/63 PASS). Global +30..33 % vs BEB everywhere (neutral at 0.5 Mbps); independent negative at N>=4. Fixed multi-AP agent CW 0/0 start (1306e37). Large-N association failure = traffic from t=0 + MaxMissedBeacons. `docs/robustness-v2.0.0.md`, `docs/figures/v2.0.0/`. v1.9.0 tagged + pushed.
+
 - **v1.9.0 central critic evaluation DONE (2026-10-17, branch `feature/v1.9.0-central-eval`, NOT merged/tagged)** — central at N=4 and N=10, seeds 0-2, 6/6 PASS. Decision rule not met (N=10 central vs independent -5.80 ± 10.48 Mbps, CI includes 0, 0/3 above; central ~3.2 Mbps). Optional/negative result; core unaffected; next v2.x. `docs/central-eval-v1.9.0.md`, `docs/figures/v1.9.0/`. v1.8.0 tagged + pushed.
 
 - **v1.8.0 central critic PROTOTYPE (2026-10-16, branch `feature/v1.8.0-central-critic-prototype`, code 3a292d0, NOT merged/tagged)** — `--mode central`: N local actors + one shared `Critic(N,N)` on the global reward, joint replay, MADDPG actor update; `--check` extended (joint row, r_g, actor input isolation, finite losses/Q). Python only, no rebuild. 2,3 short + full and 20,40 short (30 steps) PASS; independent/global short traces identical to pre-change. Merged to main + pushed. v1.7.0 tagged + pushed. `docs/central-critic-v1.8.0.md`.

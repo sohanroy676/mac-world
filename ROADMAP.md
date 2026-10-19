@@ -97,6 +97,7 @@
 ### v2.0.0
 - Additional robustness experiments.
 - Fixed-total-STA sweep (separate AP count from load; deferred from v1.6.0).
+- Status: 🔄 experiments done 2026-10-19 on branch `feature/v2.0.0-robustness` (not merged/tagged): fixed-total-STA, AP imbalance, traffic load, rerun on the CW-start-fixed binary, and the large-N association diagnostic. Write-up `docs/robustness-v2.0.0.md`. v1.9.0 TAGGED + pushed.
 
 ### v2.1.0
 - Reproducibility and cleanup.
