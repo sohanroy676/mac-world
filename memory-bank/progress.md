@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v2.0.0 robustness experiments DONE (2026-10-19, branch `feature/v2.0.0-robustness`, NOT merged/tagged)** — A fixed-total-STA, B imbalance, C traffic load, D association diagnostic, all rerun on the CW-start-fixed binary (63/63 PASS). Global +30..33 % vs BEB everywhere (neutral at 0.5 Mbps); independent negative at N>=4. Fixed multi-AP agent CW 0/0 start (1306e37). Large-N association failure = traffic from t=0 + MaxMissedBeacons. `docs/robustness-v2.0.0.md`, `docs/figures/v2.0.0/`. v1.9.0 tagged + pushed.
+- **v2.0.0 robustness CLOSED (2026-10-19, branch `feature/v2.0.0-robustness`, merged to main + pushed, TAGGED `v2.0.0`; no CI configured)** — A fixed-total-STA, B imbalance, C traffic load, D association diagnostic, all rerun on the CW-start-fixed binary (63/63 PASS). Global +30..33 % vs BEB everywhere (neutral at 0.5 Mbps); independent negative at N>=4. Fixed multi-AP agent CW 0/0 start (1306e37). Large-N association failure = traffic from t=0 + MaxMissedBeacons. `docs/robustness-v2.0.0.md`, `docs/figures/v2.0.0/`. v1.9.0 tagged + pushed.
 
 - **v1.9.0 central critic evaluation DONE (2026-10-17, branch `feature/v1.9.0-central-eval`, NOT merged/tagged)** — central at N=4 and N=10, seeds 0-2, 6/6 PASS. Decision rule not met (N=10 central vs independent -5.80 ± 10.48 Mbps, CI includes 0, 0/3 above; central ~3.2 Mbps). Optional/negative result; core unaffected; next v2.x. `docs/central-eval-v1.9.0.md`, `docs/figures/v1.9.0/`. v1.8.0 tagged + pushed.
 
