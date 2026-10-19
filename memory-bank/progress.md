@@ -7,7 +7,7 @@
 
 ## Done
 
-- **Active-sink count measured (2026-10-19, branch `feature/active-sink-count`, not merged)** — 20,40 seed 0, 3 modes: 19/20 + 39/40 in every mode, traces identical to benchmark runs. No code change. `docs/robustness-v2.0.0.md` §F.5.
+- **Active-sink count CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.5.1`; no CI)** — 20,40 seed 0, 3 modes: 19/20 + 39/40 in every mode, traces identical to benchmark runs. No code change. `docs/robustness-v2.0.0.md` §F.5.
 
 - **v2.5.0 final audit CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.5.0`; no CI)** — 26-item checklist in `docs/final-audit-v2.5.0.md`: Impl 9/10 PASS, Eval 7/8 PASS, Docs 4/8 PASS (3 partial, references FAIL). Five short reruns PASS; upstream import diffed against pristine ns-3.29 and ns3-gym. No code change.
 
