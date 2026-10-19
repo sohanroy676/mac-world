@@ -7,7 +7,7 @@
 
 ## Done
 
-- **Central collapse follow-up (2026-10-19, branch `feature/traffic-start-check`, NOT merged/tagged)** — central 6x10 on fixed binary, 3/3 PASS, no collapse (30.05 ± 13.49); cause of the 4..40 collapse still unisolated. `docs/central-eval-v1.9.0.md` follow-up.
+- **Central collapse follow-up (2026-10-19, branch `feature/traffic-start-check`, NOT merged/tagged)** — central 6x10 on fixed binary, 3/3 PASS, no collapse (30.05 ± 13.49); central 4..40 s0 on fixed binary still collapses (1.62 Mbps, n=1): CW-start bug and N alone ruled out; load/size vs reward scale open. `docs/central-eval-v1.9.0.md` follow-up.
 
 - **Traffic-start/association dry check (2026-10-19, branch `feature/traffic-start-check`, NOT merged/tagged)** — 7 BEB dry runs (n=1): final-set topologies associate by 1.12 s at t=0 start; full-size 4..40 passes with `--trafficStart=1`. Then 6x10 rerun with `--trafficStart 1` (9/9 PASS): global unchanged, independent mean 14.99 -> 20.37 (CI wide). Docs only (`docs/robustness-v2.0.0.md` §G.5, §G.6).
 

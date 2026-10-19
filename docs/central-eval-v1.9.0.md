@@ -71,3 +71,15 @@ Central vs independent (paired): +15.06 ± 10.37 Mbps, +99.4 ± 48.4 %, above in
 - **Candidate causes, still untested:** the CW-start bug, STA count / load per AP, the tiny global reward with a 2N-dim critic (trace evidence above is consistent with it but does not isolate it).
 - **Limits:** n=3, central CI is wide (13.5 Mbps), one topology on the fixed binary. The v1.9.0 decision (central = optional / negative) is not changed by this: central does not beat global and its paired CI against BEB includes 0.
 - **Next test if wanted:** central 4,8,...,40 seed 0 on the fixed binary (about 70 min). If it still collapses, the CW-start bug is ruled out and size or reward scale remain.
+
+### Second follow-up: central 4,8,...,40 on the fixed binary (2026-10-19)
+
+- Run: `benchmark_v1_1_0.py --topos 4,8,12,16,20,24,28,32,36,40 --modes central --seeds 0 --benchDir results/bench-central-4to40-cwfix` (fixed binary, traffic from t=0, otherwise v1.9.0 settings). 1 run (n=1, no CI), `--check` PASS, 4081 s. Raw run dir local only.
+- **Result (fact, n=1):** aggregate 1.62 Mbps in the policy window, per-AP 0.04-0.31 Mbps (AP1 0.04, AP2 0.31, AP3 0.16, AP4 0.09, AP5 0.15, AP6 0.07). The v1.9.0 pre-fix runs gave 3.20 ± 4.91 Mbps (n=3). For reference, BEB at this topology was 19.24 ± 1.85 Mbps (v1.5.0, n=3, older binary; I assume BEB is unaffected by the agent-start fix, which touched only agent runs).
+- **Phases (fact):** estimated throughput from rx per step: steps 1-300 (random warm-up) about 18.6 Mbps; 301-400 about 4.5; 401-600 about 5.0; 601-900 about 1.5; after step 900 about 0. Critic loss about 1e-5 after step 300, as in the pre-fix traces.
+
+### Conclusion (updated)
+- **The CW 0/0 start bug is ruled out as the cause of the collapse (fact for seed 0, n=1):** with the fix, central at 4..40 still collapses to about 1.6 Mbps.
+- **N=10 alone is ruled out (fact, n=1 vs n=3):** central at 6 x 10 on the same binary does not collapse (30.05 ± 13.49 Mbps). What differs is the load: 220 vs 60 STAs, and 4-40 vs 6 STAs per AP.
+- **Still open:** whether STA count / per-AP load or the unequal AP sizes cause it, and what the mechanism is (tiny global reward with a weak critic is consistent with the traces but not isolated). A fixed-total-STA test at 4..40 sizes with equal split (22 per AP) or a reward-scale ablation would separate these; neither was run.
+- **Decision stays:** central is optional / negative (it does not beat global; it collapses at 220 STAs).
