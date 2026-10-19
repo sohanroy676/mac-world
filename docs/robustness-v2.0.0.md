@@ -256,3 +256,23 @@ All seven runs: `Per-AP statistics check: PASS`. The 20,40 row at t=0 reproduces
 - **Full size (fact, n=1):** with traffic from t=1 s the 220-STA topology passes the association check with no deassociations. Together with R0 (traffic at t=0, FAIL) and R2 (t=2, PASS) in G.2, the failure depends on the traffic start, not on the topology size alone. The first-association times equal R2's (0.35-0.63 s); that is expected, because association finishes before 1 s.
 - **Limits:** BEB only, dry runs without agents, one seed. Association under agent-chosen CWs (global, independent) was not re-measured; the benchmark logs show 0-3 deassociations per final-set run, all re-associated. Throughput with `--trafficStart=1` is not comparable to the benchmarks (dry run, shorter traffic, 1 s less of load).
 - **Not tested:** whether a trained-run rerun with `--trafficStart 1` changes any mode comparison. The 220-STA appendix runs (pre-fix binary) were not rerun.
+
+## G.6 Rerun of 6 x 10 with `--trafficStart 1` (2026-10-19)
+
+### Setup (fact)
+- `benchmark_v1_1_0.py --topos 6,6,6,6,6,6,6,6,6,6 --trafficStart 1 --benchDir results/bench-trafficstart1-6x10`: BEB, global, independent x seeds 0-2 (9 runs), 15 s, same binary and defaults as the cwfix reference `bench-v2.0.0-fixed60-cwfix` (traffic from t=0). 9/9 PASS (`--check`), 824-1239 s each. Raw run dirs are local only. Aggregated with `aggregate_bench.py`, same policy window (steps >= 300).
+- 0 deassociation events in all 9 logs (the t=0 reference has 0 for BEB and global and 0-3 for independent at this topology, G.4).
+
+### Results (fact, n=3, aggregate Mbps, mean ± 95% CI)
+| Mode | t=0 (reference) | `--trafficStart 1` | Paired vs BEB, t=0 | Paired vs BEB, start 1 |
+|---|---|---|---|---|
+| BEB | 27.89 ± 0.69 | 28.41 ± 0.22 | - | - |
+| Global-CW | 36.87 ± 5.96 | 36.84 ± 6.40 | +32.2 ± 23.9 % | +29.7 ± 22.0 % |
+| Independent | 14.99 ± 3.12 | 20.37 ± 17.74 | -46.2 ± 12.2 % | -28.3 ± 62.3 % |
+
+Per seed (start 1): BEB 28.50 / 28.40 / 28.32; global 36.92 / 39.37 / 34.23; independent 19.37 / 27.96 / 13.78 (t=0: 14.91 / 16.28 / 13.78).
+
+### Observations
+- **BEB and global are unchanged within the CIs (fact).** Global stays about +30 % over BEB with the CI excluding 0, as at t=0.
+- **Independent changes, but the evidence is weak (fact for the numbers, inference for the reading).** Its mean rises from 14.99 to 20.37 Mbps, driven by seeds 0 (+4.5) and 1 (+11.7); seed 2 is identical (13.78). The paired CI against BEB now includes 0 (-28.3 ± 62.3 %), where at t=0 it excluded 0 (-46.2 ± 12.2 %). With n=3 and a seed spread of 14-28 Mbps I cannot say whether the t=0 start explains part of the independent deficit; independent stays below BEB at all three seeds in both settings.
+- **Limits:** one topology, n=3, same seeds. Not rerun: other topologies, the 220-STA topology, 20,40.

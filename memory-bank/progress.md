@@ -7,7 +7,7 @@
 
 ## Done
 
-- **Traffic-start/association dry check (2026-10-19, branch `feature/traffic-start-check`, NOT merged/tagged)** — 7 BEB dry runs (n=1): final-set topologies associate by 1.12 s at t=0 start; full-size 4..40 passes with `--trafficStart=1`. Docs only (`docs/robustness-v2.0.0.md` §G.5).
+- **Traffic-start/association dry check (2026-10-19, branch `feature/traffic-start-check`, NOT merged/tagged)** — 7 BEB dry runs (n=1): final-set topologies associate by 1.12 s at t=0 start; full-size 4..40 passes with `--trafficStart=1`. Then 6x10 rerun with `--trafficStart 1` (9/9 PASS): global unchanged, independent mean 14.99 -> 20.37 (CI wide). Docs only (`docs/robustness-v2.0.0.md` §G.5, §G.6).
 
 - **Active-sink count CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.5.1`; no CI)** — 20,40 seed 0, 3 modes: 19/20 + 39/40 in every mode, traces identical to benchmark runs. No code change. `docs/robustness-v2.0.0.md` §F.5.
 
