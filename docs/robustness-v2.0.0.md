@@ -189,10 +189,17 @@ Saturating load, 20,40 at 150 Mbps per STA: BEB 27.30 ± 0.63, global 36.29 ± 7
 - **The conclusions of A and B do not change.** Global is 35.6-37.1 Mbps and +29.5 to +33.2 % over BEB in every topology; the paired CI excludes 0 in every fixed-binary cell (the lower bounds are close to 0: +29.7 ± 29.5 % at 5,55 and +29.5 ± 27.5 % at N=4). At 5,55 the first run's CI included 0 and the rerun's does not, by a small margin.
 - **Independent is negative at N>=4 and CI-supported at N=4 and N=10 (-27.0 %, -46.2 %).** N=6 (-35.8 ± 109.7 %) and N=2 (+3.8 %) include 0, as before. Under imbalance the independent differences stay CI-inclusive of 0 (-5.4 %, -16.2 %) and the heavy AP still loses most of its throughput (18.49 to 7.46 Mbps at 5,5,5,45).
 - **Size of the fix effect:** global moves by -1.1 to +0.4 Mbps and independent by -2.6 to +1.5 Mbps relative to the first runs, within the CIs. I cannot separate this from seed noise at n=3.
-- **Remaining limit (not measured):** the active-sink count for BEB and for the other topologies. The fix removes the CW 0/0 start, but a few inactive STAs at saturation (35/40 at 20,40) may still contribute to the agents' gain. That needs the active-sink logging on BEB too.
+- **Remaining limit:** the active-sink count for BEB was measured at 20,40 only (F.5: identical across modes); other topologies are not measured. The fix removes the CW 0/0 start, but a few inactive STAs at saturation (35/40 at 20,40) may still contribute to the agents' gain. That needs the active-sink logging on BEB too.
 
 ### F.4 Verdict
 - The first-run conclusions for A, B and the 150 Mbps anchor hold on the fixed binary. Section C was already produced on the fixed binary.
+
+### F.5 Active-sink count (2026-10-19, fact; n=1)
+- Setup: 20,40, 150 Mbps per STA, seed 0, same binary and trainer defaults as the F.2 anchor, plus `--cwReadbackEvery 1`. Metric: sinks with at least one packet received so far (cumulative, from `cw.cc` `periodicCwReadback`).
+- Non-interference: all three `--check` PASS and `trace.csv` is byte-identical to the F.2 seed-0 runs (`multi-ap-20261018-131142`, `-132505`, `-133903`).
+- Result: BEB, global and independent all show AP1 19/20 and AP2 39/40 at every one of the 15 readbacks (t = 2..16 s, sim time including the 1 s warm-up), i.e. the same 2 sinks never receive a packet in every mode.
+- Reading: with this seed, inactive STAs do not differ between BEB and the agent modes, so they cannot explain the agents' gain over BEB here. The earlier counts (global 20/20 and 35/40, seed not recorded) differ from these; I did not investigate why.
+- Limits: n=1, one topology and load. "rx>0 ever" misses STAs that go quiet later. Which 2 STAs are inactive, and why (association, starvation), was not checked.
 
 ## G. Batch D: association and deassociation at large N
 

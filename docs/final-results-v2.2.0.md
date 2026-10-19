@@ -82,7 +82,7 @@ Checks run: `aggregate_bench.py` reproduces `docs/figures/v2.0.0/load/load150/ta
 
 ## 6. Limits
 - n=3 per cell; most agent-vs-BEB CIs are wide and some include 0.
-- Active-sink count not measured for BEB or most topologies (`docs/robustness-v2.0.0.md` §F.3); a few inactive STAs at saturation may contribute to agent gains.
+- Active sinks measured only at 20,40 / 150 Mbps, seed 0 (`docs/robustness-v2.0.0.md` §F.5): 19/20 and 39/40 in BEB, global and independent alike, so inactive STAs do not explain the agent gain there. Other topologies not measured.
 - Traffic starts at t=0 (inherited); large-N association failures come from this (§G of the robustness doc); the final set was not rerun with `--trafficStart`.
 - Central critic: excluded (negative, pre-fix binary, N=10 collapse cause untested).
 - Raw data is not in git, so regeneration needs the local run dirs.

@@ -237,7 +237,7 @@ Inference (not tested):
 ## 23. Limitations
 
 - n = 3 per cell; most agent-versus-BEB intervals are wide and several include 0.
-- The number of active sinks was not measured for BEB or most topologies; a few inactive stations at saturation may contribute to agent gains (`robustness-v2.0.0.md` §F.3).
+- Active sinks were measured only at 20,40 / 150 Mbps, seed 0: 19/20 and 39/40 in BEB, global and independent alike, so inactive stations do not explain the agent gain there (`robustness-v2.0.0.md` §F.5, n = 1). Other topologies were not measured.
 - Traffic starts at t = 0 (inherited), which causes late association at large N; the final set was not rerun with `--trafficStart`.
 - Observation is one loss scalar; the 300-value history is unused.
 - Reward scale is small in saturation.
@@ -249,7 +249,7 @@ Inference (not tested):
 
 1. Find why the central critic collapsed at N = 10 (cause untested); rerun it on the fixed binary.
 2. Rerun the final set with traffic started after association.
-3. Measure active-sink counts for every mode.
+3. Measure active-sink counts for other topologies and seeds (only 20,40 seed 0 is done).
 4. Richer state (windowed statistics), reward shaping that uses more of [0, 1], and more seeds.
 5. Sync the final W&B runs.
 6. Neighbourhood information sharing between APs as a middle point between independent and global.
