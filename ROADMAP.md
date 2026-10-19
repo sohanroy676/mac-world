@@ -117,7 +117,7 @@
 
 ### v2.5.0
 - Final project audit.
-- Status: DONE 2026-10-19 on branch `feature/v2.5.0-final-audit` (not merged/tagged). `docs/final-audit-v2.5.0.md`: 26 items, short reruns PASS, src identical to ns-3.29, opengym core identical to ns3-gym db016f8b3. FAIL: references (21 placeholders). PARTIAL: W&B online sync, README, report/deck review, raw-data reproducibility.
+- Status: ✅ CLOSED 2026-10-19 (merged to main + pushed, TAGGED `v2.5.0`; no CI configured). `docs/final-audit-v2.5.0.md`: 26 items, short reruns PASS, src identical to ns-3.29, opengym core identical to ns3-gym db016f8b3. FAIL: references (21 placeholders). PARTIAL: W&B online sync, README, report/deck review, raw-data reproducibility.
 
 ## Not Planned for v1
 
