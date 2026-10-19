@@ -46,9 +46,9 @@ Cross-check: the load-sweep rows (0.5 / 1 / 150 Mbps) in the report (`technical-
 ### Documentation
 | Item | Status | Evidence / gap |
 |---|---|---|
-| README | PARTIAL | Root `README` is the stock ns-3-allinone text. `ns-3.29/scratch/linear-mesh/README.md` is the OSCAR original plus a "Multi-AP (v1.0.0)" section that predates `--mode`, the benchmark runner, results docs and `reproducibility-v2.1.0.md`. Suggested fix: a short project-level README pointing to those |
-| Setup instructions | PASS | `reproducibility-v2.1.0.md` (pinned versions, no machine paths). `AGENTS.md` still says root `~/college/major/ns-allinone-3.29` (stale; CLAUDE.md is correct) |
-| Architecture documentation | PASS | `multi-ap-design-v0.2.0.md`, ADR-0001..0003 (ADR-0003 status "Proposed", not updated after v1.8-v1.9) |
+| README | PARTIAL | Root `README` is the stock ns-3-allinone text. `ns-3.29/scratch/linear-mesh/README.md` is the OSCAR original plus a "Multi-AP (v1.0.0)" section that predates `--mode`, the benchmark runner, results docs and `reproducibility-v2.1.0.md`. Fixed after the audit: the multi-AP section now covers `--mode`, the runner and the docs (root `README` is still the stock ns-3 text) |
+| Setup instructions | PASS | `reproducibility-v2.1.0.md` (pinned versions, no machine paths). `AGENTS.md` root path fixed after the audit |
+| Architecture documentation | PASS | `multi-ap-design-v0.2.0.md`, ADR-0001..0003 (ADR-0003 status updated after the audit to accepted-optional, negative result) |
 | Experiment configuration | PASS | `reproducibility-v2.1.0.md`, per-doc command tables |
 | Final report | PARTIAL | `technical-report-v2.3.0.md` complete; waiting for user review |
 | References | **FAIL** | 21 `[REF:key]` placeholders (`grep -c REF: docs/technical-report-v2.3.0.md` = 21) until you supply them |
@@ -75,7 +75,7 @@ bc6f12c is the **root commit** (3946 files); it imports ns-3.29 and opengym and 
 3. Traffic starts at t=0 in all benchmarks; association failures at large N are linked to it (v2.0.0 D, n=1).
 4. Active-sink count for BEB: not measured.
 5. W&B online sync of the final runs: deferred.
-6. Project README stale, `AGENTS.md` root path stale, ADR-0003 still "Proposed".
+6. Fixed after the audit: project README multi-AP section, `AGENTS.md` root path, ADR-0003 status.
 7. Raw data for the final 81 runs is local only.
 
 ## 6. Verdict

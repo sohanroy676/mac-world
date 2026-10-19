@@ -1,7 +1,7 @@
 # ADR-0003: Optional central critic (CTDE, shared global-reward critic)
 
 ## Status
-Proposed. v1.8.0 prototype implemented (`--mode central`); acceptance depends on the v1.9 evaluation (`docs/central-critic-v1.8.0.md`).
+Accepted as an optional prototype with a negative evaluation result. v1.8.0 implemented `--mode central` (`docs/central-critic-v1.8.0.md`); v1.9.0 evaluation (N=4, 10, seeds 0-2) did not meet the decision rule: at N=10 central vs independent was -5.80 ± 10.48 Mbps (CI includes 0, 0/3 seeds above), central about 3.2 Mbps (`docs/central-eval-v1.9.0.md`). Not part of the core; the N=10 collapse cause is untested.
 
 ## Date
 2026-10-16
