@@ -7,7 +7,7 @@
 
 ## Done
 
-- **Central reward-scale ablation (2026-10-20, branch `feature/central-reward-scale`, not merged)** — 22x10 s0: x3.67 still collapses (3.1 Mbps), x100 does not (38.0, Jain 0.98); n=1.
+- **Central reward-scale ablation (2026-10-20, branch `feature/central-reward-scale`, not merged)** — 22x10 s0: x3.67 still collapses (3.1 Mbps), x100 does not (38.0, Jain 0.98); n=1; x100 seeds 1-2, BEB/global refs at 22x10 and x100 at 4..40 added (fifth follow-up in central-eval doc).
 - **Traffic-start + central-collapse session CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.5.2`; no CI)** — see activeContext HANDOFF.
 - **Central collapse follow-up (2026-10-19)** — central 6x10 on fixed binary, 3/3 PASS, no collapse (30.05 ± 13.49); central 4..40 s0 on fixed binary still collapses (1.62 Mbps, n=1): CW-start bug and N alone ruled out; 22x10 equal split also collapses (2.15 Mbps, n=1): unequal split ruled out; STA count / reward scale open. `docs/central-eval-v1.9.0.md` follow-up.
 

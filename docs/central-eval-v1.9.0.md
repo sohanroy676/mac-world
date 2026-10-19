@@ -104,5 +104,23 @@ Central vs independent (paired): +15.06 ± 10.37 Mbps, +99.4 ± 48.4 %, above in
 | x3.6667 (same normalization as 6 x 10) | 19.6 | 6.5 | 3.1 | 0.05 | 0.70 | 9e-7 |
 | x100 | 19.6 | 28.0 | 38.0 | 3.0 | 0.98 | 7e-5 |
 
-- Reading: matching the 6 x 10 normalization (x3.67) does not prevent the collapse. x100 does not collapse in this run: throughput rises after training starts and is fair (Jain 0.98), but CWs end at 714-1024 for all APs. Inference (n=1): reward magnitude matters through the Adam/critic learning signal, not through the 3.67x STA-count factor alone. Not shown: whether x100 beats BEB or global at 22 x 10 (no reference runs there), whether it holds across seeds, or whether it helps 4..40.
-- Decision stays: central is optional / negative. Reward scale is a candidate fix to verify with more seeds and BEB/global references at 22 x 10.
+- Reading (seed 0 only; superseded by the fifth follow-up): matching the 6 x 10 normalization (x3.67) does not prevent the collapse. x100 does not collapse in this run.
+
+### Fifth follow-up: x100 seeds 1-2, BEB/global references at 22 x 10, x100 at 4..40 (2026-10-20)
+
+- Runs (all `--check` PASS, fixed binary, traffic from t=0, raw run dirs local only): central x100 at 22 x 10 seeds 1, 2 (`bench-central-22x10-rs100-s12`); BEB and global at 22 x 10 seed 0 (`bench-ref-22x10`); central x100 at 4,8,...,40 seed 0 (`bench-central-4to40-rs100`). Aggregate Mbps from rx counters, mean over the stated steps; per-AP and Jain over steps 1200-1500.
+
+| 22 x 10 | steps 1-299 | 300-599 | 1200-1500 | min AP | Jain |
+|---|---|---|---|---|---|
+| BEB s0 | 16.8 | 17.6 | 18.0 | 1.37 | 0.98 |
+| global s0 | 20.9 | 12.1 | 10.8 | 0.60 | 0.94 |
+| central x1 s0 | 19.6 | 5.8 | 0.6 | ~0 | 0.52 |
+| central x100 s0 | 19.6 | 28.0 | 38.0 | 3.01 | 0.98 |
+| central x100 s1 | 20.0 | 23.6 | 36.5 | 1.53 | 0.82 |
+| central x100 s2 | 19.3 | 9.8 | 11.8 | 0.14 | 0.31 |
+
+- 4..40 central x100 s0: 18.5 / 14.7 / 34.5 Mbps, min AP 0.76, Jain 0.29, CWs 21 to 1024 (most at 714-1024). Not collapsed (x1 gave 1.62 Mbps overall). No BEB/global/independent run was made on the fixed binary at 4..40 for this comparison, so I make no comparison claim there.
+- **Fact (n=3 seeds at 22 x 10, n=1 elsewhere):** x100 avoids the collapse in all 3 seeds and 4..40 s0. Seeds 0 and 1 end about 2x BEB and about 3.5x global; seed 2 ends below BEB (11.8 vs 18.0), about level with global, with Jain 0.31. Mean over 3 seeds is about 28.8 Mbps, with a spread too large for a CI claim that it beats BEB.
+- **Inference:** reward magnitude is a main cause of the collapse (x1 and x3.67 collapse, x100 does not), but x100 does not make central reliable (seed variance, poor fairness at 4..40 and seed 2).
+- **Caveats:** BEB and global are a single seed (seed 0). Only x1, x3.67 and x100 were tried (x3.67 seed 0 only); no intermediate scale and no independent-mode run at 22 x 10. Central x100 CWs mostly saturate near 1024, so its gains may come from a high-CW regime rather than learned adaptation (not tested).
+- Decision stays: central is optional / negative for v1; `--rewardScale` is a documented ablation knob, not a default.
