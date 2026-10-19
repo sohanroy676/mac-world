@@ -17,6 +17,7 @@ import csv
 import json
 import os
 import shutil
+import subprocess
 import sys
 import time
 
@@ -34,6 +35,8 @@ parser.add_argument("--discount", type=float, default=0.7)
 parser.add_argument("--tau", type=float, default=1e-3)
 parser.add_argument("--seed", type=int, default=0)
 parser.add_argument("--cwReadbackEvery", type=float, default=0.0, help="diagnostic: log STA CW readback every N sim seconds (0 = off)")
+parser.add_argument("--trafficStart", type=float, default=0.0, help="diagnostic: time (s) the data sources start (0 = cw.cc default)")
+parser.add_argument("--staMaxMissedBeacons", type=int, default=0, help="diagnostic: StaWifiMac MaxMissedBeacons (0 = ns-3 default 10)")
 parser.add_argument("--offeredLoad", type=float, default=150.0, help="per-STA offered load in Mbps (cw.cc offeredLoad)")
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
@@ -76,22 +79,31 @@ sim_args = {"simTime": args.simTime, "envStepTime": args.stepTime, "historyLengt
             "seed": args.seed + 1, "offeredLoad": "%g" % args.offeredLoad}  # ns-3 rejects seed 0, so ns-3 seed = python seed + 1
 if args.cwReadbackEvery > 0:
     sim_args["cwReadbackEvery"] = args.cwReadbackEvery
+if args.trafficStart > 0:
+    sim_args["trafficStart"] = args.trafficStart
+if args.staMaxMissedBeacons > 0:
+    sim_args["staMaxMissedBeacons"] = args.staMaxMissedBeacons
 if args.mode == "beb":
     sim_args["dryRun"] = "true"  # cw.cc skips setApCw; every AP keeps BEB CW 16..1024
 n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0}[args.mode]  # central: one CentralDDPG object
 
+try:
+    git_rev = subprocess.check_output(["git", "describe", "--tags", "--always", "--dirty"], stderr=subprocess.DEVNULL,
+                                      cwd=os.path.dirname(os.path.abspath(__file__))).decode().strip()
+except (OSError, subprocess.CalledProcessError):
+    git_rev = "unknown"
+
 out_dir = "results/multi-ap-%s" % time.strftime("%Y%m%d-%H%M%S")
 os.makedirs(out_dir)
 with open(os.path.join(out_dir, "config.json"), "w") as f:
-    json.dump(dict(vars(args), ns3_seed=args.seed + 1, counts=counts), f)
+    json.dump(dict(vars(args), ns3_seed=args.seed + 1, counts=counts, git_rev=git_rev), f)
 trace_f = open(os.path.join(out_dir, "trace.csv"), "w", newline="")
 trace = csv.writer(trace_f)
 trace.writerow(["episode", "step", "ap", "state", "action", "real_action", "reward", "next_state", "cw_set",
                 "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"])
 
-suffix = "" if args.mode == "independent" else " " + args.mode
-run = wandb.init(name="%s multi-AP OurDDPG v1.0.0%s" % (args.apStaCounts, suffix), entity=wandb_entity,
-                 project=args.wandb_project, tags=["multi-ap", "v0.9.0", "mode-" + args.mode], reinit=True,
+run = wandb.init(name="%s %s s%d" % (args.apStaCounts, args.mode, args.seed), entity=os.environ.get("WANDB_ENTITY", wandb_entity),
+                 project=args.wandb_project, tags=["multi-ap", "mode-" + args.mode, git_rev], reinit=True,
                  config=dict(vars(args), AP_Count=n, Stations_Per_AP=counts))
 
 agents = [DDPG(state_dim, action_dim, max_action, args.discount, args.tau) for _ in range(n_agents)]
