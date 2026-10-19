@@ -109,6 +109,7 @@
 
 ### v2.3.0
 - Technical report.
+- Status: ✅ CLOSED 2026-10-19 (merged to main + pushed, TAGGED `v2.3.0`; no CI configured). `docs/technical-report-v2.3.0.md`, Markdown; citations are `[REF:key]` placeholders for the user to fill.
 
 ### v2.4.0
 - Presentation and demonstration.
