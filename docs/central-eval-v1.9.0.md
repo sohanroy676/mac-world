@@ -83,3 +83,12 @@ Central vs independent (paired): +15.06 ± 10.37 Mbps, +99.4 ± 48.4 %, above in
 - **N=10 alone is ruled out (fact, n=1 vs n=3):** central at 6 x 10 on the same binary does not collapse (30.05 ± 13.49 Mbps). What differs is the load: 220 vs 60 STAs, and 4-40 vs 6 STAs per AP.
 - **Still open:** whether STA count / per-AP load or the unequal AP sizes cause it, and what the mechanism is (tiny global reward with a weak critic is consistent with the traces but not isolated). A fixed-total-STA test at 4..40 sizes with equal split (22 per AP) or a reward-scale ablation would separate these; neither was run.
 - **Decision stays:** central is optional / negative (it does not beat global; it collapses at 220 STAs).
+
+### Third follow-up: central 22 x 10 (equal split, 220 STAs) on the fixed binary (2026-10-19)
+
+- Run: `benchmark_v1_1_0.py --topos 22,22,22,22,22,22,22,22,22,22 --modes central --seeds 0 --benchDir results/bench-central-22x10-cwfix` (fixed binary, traffic from t=0). 1 run (n=1), `--check` PASS, 4639 s, 7 deassociation events. Raw run dir local only. No BEB or global run at this topology.
+- **Result (fact, n=1):** aggregate 2.15 Mbps, per-AP 0.06-0.61 Mbps, phy loss 0.993, Jain 0.60, never converges (step 1500). Estimated throughput by phase: warm-up (steps 1-300) 19.6 Mbps, 301-400 6.6, 401-600 5.4, 601-900 2.0, after 900 about 0.2-0.6. Critic loss about 1e-5 or lower after step 300; end-of-run CWs differ strongly across APs (17 to 940).
+- **Reading:** the collapse does not depend on the unequal split (fact for seed 0): 4..40 gave 1.62 Mbps, 22 x 10 gives 2.15 Mbps. Together with 6 x 10 (60 STAs, no collapse, 30.05 ± 13.49) the remaining difference is total STA count (220 vs 60), i.e. total offered load. Per-AP STA count (6 vs 22) is confounded with that.
+- **Inference, not tested:** the per-AP and global rewards are normalized by `offeredLoad * STAs * stepTime`, so with 220 STAs they are about 3.7x smaller than with 60 STAs; this fits the near-zero critic loss but I did not vary the reward scale.
+- **Still untested:** (a) reward-scale ablation at 220 STAs (e.g. normalize by achievable rate), (b) intermediate STA counts (e.g. 11 x 10 = 110) to find where it breaks, (c) BEB/global/independent at 22 x 10 for reference, (d) more seeds.
+- Decision stays: central is optional / negative.
