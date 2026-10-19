@@ -109,6 +109,7 @@
 
 ### v2.3.0
 - Technical report.
+- Status: DRAFT on branch `feature/v2.3.0-technical-report` (not merged/tagged). `docs/technical-report-v2.3.0.md`, Markdown; citations are `[REF:key]` placeholders for the user to fill.
 
 ### v2.4.0
 - Presentation and demonstration.
