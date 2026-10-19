@@ -101,6 +101,7 @@
 
 ### v2.1.0
 - Reproducibility and cleanup.
+- Status: DONE on branch `feature/v2.1.0-reproducibility` (2026-10-19, not merged/tagged): W&B names/tags, `--trafficStart`/`--staMaxMissedBeacons` pass-through in the trainer, `--trafficStart`/`--offeredLoad` in the runner, `git_rev` in config.json, seed/reset verified, dependencies documented. Defaults unchanged (4 modes byte-identical traces). `docs/reproducibility-v2.1.0.md`.
 
 ### v2.2.0
 - Final experimental results.
