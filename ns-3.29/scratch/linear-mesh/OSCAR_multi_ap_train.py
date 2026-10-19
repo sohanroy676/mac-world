@@ -33,6 +33,8 @@ parser.add_argument("--expl_noise", type=float, default=0.1)
 parser.add_argument("--discount", type=float, default=0.7)
 parser.add_argument("--tau", type=float, default=1e-3)
 parser.add_argument("--seed", type=int, default=0)
+parser.add_argument("--cwReadbackEvery", type=float, default=0.0, help="diagnostic: log STA CW readback every N sim seconds (0 = off)")
+parser.add_argument("--offeredLoad", type=float, default=150.0, help="per-STA offered load in Mbps (cw.cc offeredLoad)")
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
@@ -64,14 +66,16 @@ steps_per_ep = int(args.simTime / args.stepTime)
 state_dim = action_dim = 1
 max_action = 1
 real_max_action = 6
-OFFERED_MBPS = 150.0  # per-STA offered load, cw.cc offeredLoad
+OFFERED_MBPS = args.offeredLoad  # per-STA offered load, cw.cc offeredLoad
 
 torch.manual_seed(args.seed)
 np.random.seed(args.seed)
 
 sim_args = {"simTime": args.simTime, "envStepTime": args.stepTime, "historyLength": args.historyLength,
             "agentType": "continuous", "scenario": "basic", "apStaCounts": args.apStaCounts,
-            "seed": args.seed + 1}  # ns-3 rejects seed 0, so ns-3 seed = python seed + 1
+            "seed": args.seed + 1, "offeredLoad": "%g" % args.offeredLoad}  # ns-3 rejects seed 0, so ns-3 seed = python seed + 1
+if args.cwReadbackEvery > 0:
+    sim_args["cwReadbackEvery"] = args.cwReadbackEvery
 if args.mode == "beb":
     sim_args["dryRun"] = "true"  # cw.cc skips setApCw; every AP keeps BEB CW 16..1024
 n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0}[args.mode]  # central: one CentralDDPG object
