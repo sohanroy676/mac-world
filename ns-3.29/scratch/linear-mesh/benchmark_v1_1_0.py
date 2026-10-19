@@ -4,6 +4,7 @@ Usage (from this directory):
 Resume an interrupted batch with --benchDir results/bench-<ts>: entries already PASS in manifest.csv are skipped.
 Each job is OSCAR_multi_ap_train.py --mode M --seed S --check; the log goes to <benchDir>/<topo>-<mode>-s<seed>.log.
 Seed S is the python seed; the ns-3 seed is S + 1 (same for every mode, so runs are paired by seed).
+--trafficStart / --offeredLoad are passed to the trainer only when given; the defaults (traffic at t=0, 150 Mbps) are unchanged.
 """
 import argparse
 import csv
@@ -23,6 +24,8 @@ parser.add_argument("--stepTime", type=float, default=0.01)
 parser.add_argument("--benchDir", default="results/bench-%s" % time.strftime("%Y%m%d-%H%M%S"))
 parser.add_argument("--no-check", action="store_true")
 parser.add_argument("--trainerArgs", default="", help="extra trainer args, e.g. '--historyLength 20 --start_timesteps 10'")
+parser.add_argument("--trafficStart", type=float, default=None, help="data source start time (s); unset = trainer default (0)")
+parser.add_argument("--offeredLoad", type=float, default=None, help="per-STA offered load in Mbps; unset = trainer default (150)")
 args = parser.parse_args()
 
 FIELDS = ["topo", "mode", "seed", "run_dir", "result", "returncode", "seconds"]
@@ -46,6 +49,10 @@ for n, (topo, mode, seed) in enumerate(jobs, 1):
     cmd = [sys.executable, "OSCAR_multi_ap_train.py", "--apStaCounts", topo, "--mode", mode, "--seed", str(seed),
            "--simTime", str(args.simTime), "--stepTime", str(args.stepTime)]
     cmd += shlex.split(args.trainerArgs)
+    if args.trafficStart is not None:
+        cmd += ["--trafficStart", str(args.trafficStart)]
+    if args.offeredLoad is not None:
+        cmd += ["--offeredLoad", str(args.offeredLoad)]
     if not args.no_check:
         cmd.append("--check")
     print("[%d/%d] %s mode=%s seed=%d ..." % (n, len(jobs), topo, mode, seed), flush=True)
