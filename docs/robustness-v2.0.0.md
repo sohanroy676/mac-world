@@ -230,3 +230,49 @@ Saturating load, 20,40 at 150 Mbps per STA: BEB 27.30 ± 0.63, global 36.29 ± 7
 - Every benchmark in this project starts the data sources at t=0, so large-N runs measure some association delay in their first seconds. The first-association times above (BEB, simTime 5) show that for N=10 some STAs are not yet associated until about 3-6 s, while the policy window starts at step 300 (about 4 s of simulated time). This applies to all three modes alike, so it does not by itself bias a mode comparison, but it affects the absolute large-N throughput and probably adds seed noise there.
 - Not tested: how much of the N=10 agent-vs-BEB differences, or of the independent-mode weakness at large N, comes from this. A rerun with `--trafficStart` after association would show it (the benchmark runner does not yet pass this switch).
 - Starting traffic after association would be a change to the inherited OSCAR scenario, so it is not applied; user decision needed.
+
+## G.5 Traffic start vs association, final-set topologies and full size (checked 2026-10-19)
+
+### Setup (fact)
+- Question: does the t=0 traffic start (G.4) affect association in the topologies of the final 81 runs, and does the full-size 10-AP association check still fail?
+- BEB dry runs (`--dryRun=true --disableGym=true`, no agents), simTime 5, `--seed=1` (the ns-3 seed of benchmark seed 0) for the first six rows, default seed for the last. One run per row (n=1). Current binary, no code change. Logs (local only): `results/bench-trafficstart-dry/*.log`.
+- `--trafficStart=1` equals the first gym step (t=1 s, `cw.cc` non_zero_start=false), so a rerun with it would keep traffic in every step.
+
+### Results (fact)
+| Topology | `--trafficStart` | Latest first association | STAs first associated after 1 s | Deassociations | Association check | Handler packets |
+|---|---|---|---|---|---|---|
+| 20,40 | 0 | 1.12 s | 1 | 1 (t=1.144 s) | PASS | 14145 |
+| 20,40 | 1 | 0.18 s | 0 | 0 | PASS | 12145 |
+| 6 x 10 | 0 | 0.74 s | 0 | 0 | PASS | 14487 |
+| 6 x 10 | 1 | 0.18 s | 0 | 0 | PASS | 12581 |
+| 5,5,5,45 | 0 | 0.37 s | 0 | 0 | PASS | 14340 |
+| 5,5,5,45 | 1 | 0.19 s | 0 | 0 | PASS | 13579 |
+| 4,8,...,40 (220 STAs) | 1 | 0.63 s | 0 | 0 | PASS | 9868 |
+
+All seven runs: `Per-AP statistics check: PASS`. The 20,40 row at t=0 reproduces the benchmark behaviour (one deassociation at t=1.144 s, as in 20,40 BEB seed 0).
+
+### Observations
+- **Final-set topologies (fact, n=1, BEB):** every STA is first associated by 1.12 s, well before the policy window starts at step 300 (about 4 s of simulated time). Late association is therefore not seen at 60 STAs in these topologies, with or without a delayed start.
+- **Full size (fact, n=1):** with traffic from t=1 s the 220-STA topology passes the association check with no deassociations. Together with R0 (traffic at t=0, FAIL) and R2 (t=2, PASS) in G.2, the failure depends on the traffic start, not on the topology size alone. The first-association times equal R2's (0.35-0.63 s); that is expected, because association finishes before 1 s.
+- **Limits:** BEB only, dry runs without agents, one seed. Association under agent-chosen CWs (global, independent) was not re-measured; the benchmark logs show 0-3 deassociations per final-set run, all re-associated. Throughput with `--trafficStart=1` is not comparable to the benchmarks (dry run, shorter traffic, 1 s less of load).
+- **Not tested:** whether a trained-run rerun with `--trafficStart 1` changes any mode comparison. The 220-STA appendix runs (pre-fix binary) were not rerun.
+
+## G.6 Rerun of 6 x 10 with `--trafficStart 1` (2026-10-19)
+
+### Setup (fact)
+- `benchmark_v1_1_0.py --topos 6,6,6,6,6,6,6,6,6,6 --trafficStart 1 --benchDir results/bench-trafficstart1-6x10`: BEB, global, independent x seeds 0-2 (9 runs), 15 s, same binary and defaults as the cwfix reference `bench-v2.0.0-fixed60-cwfix` (traffic from t=0). 9/9 PASS (`--check`), 824-1239 s each. Raw run dirs are local only. Aggregated with `aggregate_bench.py`, same policy window (steps >= 300).
+- 0 deassociation events in all 9 logs (the t=0 reference has 0 for BEB and global and 0-3 for independent at this topology, G.4).
+
+### Results (fact, n=3, aggregate Mbps, mean ± 95% CI)
+| Mode | t=0 (reference) | `--trafficStart 1` | Paired vs BEB, t=0 | Paired vs BEB, start 1 |
+|---|---|---|---|---|
+| BEB | 27.89 ± 0.69 | 28.41 ± 0.22 | - | - |
+| Global-CW | 36.87 ± 5.96 | 36.84 ± 6.40 | +32.2 ± 23.9 % | +29.7 ± 22.0 % |
+| Independent | 14.99 ± 3.12 | 20.37 ± 17.74 | -46.2 ± 12.2 % | -28.3 ± 62.3 % |
+
+Per seed (start 1): BEB 28.50 / 28.40 / 28.32; global 36.92 / 39.37 / 34.23; independent 19.37 / 27.96 / 13.78 (t=0: 14.91 / 16.28 / 13.78).
+
+### Observations
+- **BEB and global are unchanged within the CIs (fact).** Global stays about +30 % over BEB with the CI excluding 0, as at t=0.
+- **Independent changes, but the evidence is weak (fact for the numbers, inference for the reading).** Its mean rises from 14.99 to 20.37 Mbps, driven by seeds 0 (+4.5) and 1 (+11.7); seed 2 is identical (13.78). The paired CI against BEB now includes 0 (-28.3 ± 62.3 %), where at t=0 it excluded 0 (-46.2 ± 12.2 %). With n=3 and a seed spread of 14-28 Mbps I cannot say whether the t=0 start explains part of the independent deficit; independent stays below BEB at all three seeds in both settings.
+- **Limits:** one topology, n=3, same seeds. Not rerun: other topologies, the 220-STA topology, 20,40.

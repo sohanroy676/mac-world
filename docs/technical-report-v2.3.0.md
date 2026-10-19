@@ -125,7 +125,7 @@ Project code, all under `ns-3.29/scratch/linear-mesh/` ([Upstream] ns-3.29 and `
 - PHY/MAC: 802.11ax 5 GHz, HE MCS 11, 20 MHz channel width, 800 ns guard interval, constant-rate station manager. [Inherited baseline settings, unchanged]
 - Seeds: ns-3 seed = Python seed + 1; a bug where `--seed` did not affect ns-3 was fixed in v1.1.0 (commit 0e71414).
 - **Bug found and fixed (v2.0.0, commit 1306e37):** agent modes began with CW 0/0, which starved most stations during warm-up. Multi-AP agent runs now begin at 16/1024. All v1.1.0–v1.9.0 agent results were produced before this fix and are treated as pre-fix (appendix only). Only the 81 v2.0.0 `*-cwfix` runs are used for conclusions.
-- Association: with traffic starting at t = 0, large-N runs show late association and deassociation bursts; `--trafficStart=2` removed them in a diagnostic run (`docs/robustness-v2.0.0.md` §G). The final set keeps the inherited t = 0 start.
+- Association: with traffic starting at t = 0, large-N runs show late association and deassociation bursts; `--trafficStart=2` removed them in a diagnostic run (`docs/robustness-v2.0.0.md` §G). The final set keeps the inherited t = 0 start; dry BEB checks of its topologies (20,40, 6 x 10, 5,5,5,45) show every STA associated by 1.12 s, before the policy window (`docs/robustness-v2.0.0.md` §G.5).
 
 ## 16. Multi-Agent Architecture
 
@@ -238,7 +238,7 @@ Inference (not tested):
 
 - n = 3 per cell; most agent-versus-BEB intervals are wide and several include 0.
 - Active sinks were measured only at 20,40 / 150 Mbps, seed 0: 19/20 and 39/40 in BEB, global and independent alike, so inactive stations do not explain the agent gain there (`robustness-v2.0.0.md` §F.5, n = 1). Other topologies were not measured.
-- Traffic starts at t = 0 (inherited), which causes late association at large N; the final set was not rerun with `--trafficStart`.
+- Traffic starts at t = 0 (inherited), which causes late association at 220 STAs (not seen in the final-set topologies, §G.5 of the robustness doc, dry BEB, n=1); the final set was not rerun with `--trafficStart`.
 - Observation is one loss scalar; the 300-value history is unused.
 - Reward scale is small in saturation.
 - Pre-fix (CW 0/0) results for v1.x and the central critic are not comparable to the final set.

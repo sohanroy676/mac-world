@@ -7,6 +7,11 @@
 
 ## Done
 
+- **Traffic-start + central-collapse session CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.5.2`; no CI)** — see activeContext HANDOFF.
+- **Central collapse follow-up (2026-10-19)** — central 6x10 on fixed binary, 3/3 PASS, no collapse (30.05 ± 13.49); central 4..40 s0 on fixed binary still collapses (1.62 Mbps, n=1): CW-start bug and N alone ruled out; 22x10 equal split also collapses (2.15 Mbps, n=1): unequal split ruled out; STA count / reward scale open. `docs/central-eval-v1.9.0.md` follow-up.
+
+- **Traffic-start/association dry check (2026-10-19)** — 7 BEB dry runs (n=1): final-set topologies associate by 1.12 s at t=0 start; full-size 4..40 passes with `--trafficStart=1`. Then 6x10 rerun with `--trafficStart 1` (9/9 PASS): global unchanged, independent mean 14.99 -> 20.37 (CI wide). Docs only (`docs/robustness-v2.0.0.md` §G.5, §G.6).
+
 - **Active-sink count CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.5.1`; no CI)** — 20,40 seed 0, 3 modes: 19/20 + 39/40 in every mode, traces identical to benchmark runs. No code change. `docs/robustness-v2.0.0.md` §F.5.
 
 - **v2.5.0 final audit CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.5.0`; no CI)** — 26-item checklist in `docs/final-audit-v2.5.0.md`: Impl 9/10 PASS, Eval 7/8 PASS, Docs 4/8 PASS (3 partial, references FAIL). Five short reruns PASS; upstream import diffed against pristine ns-3.29 and ns3-gym. No code change.

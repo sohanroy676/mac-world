@@ -44,3 +44,51 @@ Per-AP throughput is in each `tables.md` (AP columns) and `per_ap_throughput.png
 - Why central collapses at N=10 (candidates, none tested: 2N=20-dim critic with ~1200 training transitions (spec §11), global-reward credit assignment across 10 APs, MADDPG actor update with a poor critic). Not investigated, per the timebox.
 - No hyperparameter tuning; no fixed-total-STA control; n=3.
 - The v1.8.0 2,3 result (lopsided AP split) is a single seed and was not repeated here.
+
+## Follow-up (2026-10-19): collapse cause, trace analysis and 6 x 10 rerun on the fixed binary
+
+### What was checked (fact)
+1. **Existing N=10 traces (4,8,...,40, 220 STAs, pre-CW-fix binary, seeds 0-2), steps > 300:**
+   - Global reward per step is tiny (0.0004-0.0013) and the critic loss falls to about 1e-5 after step 300, so the critic learns little and the actor gradient through it is probably near-noise (inference; the reward-scale note in `docs/core-v1.0.0.md` §5 applies).
+   - CWs keep moving after warm-up (per-AP time std 116-146) and differ strongly across APs. In independent mode at 6 x 10 the time std is 71 (across-AP std 137); in global it is 44 (across-AP 0).
+   - In seeds 1 and 2 the log CW spread across APs correlates with aggregate rx per step (-0.55, -0.50); in seed 0 it does not (-0.04). Correlation only.
+   - Confound: these runs used the binary where multi-AP agents started at CW 0/0 (fixed in v2.0.0) and a 220-STA topology that is not in the final set.
+2. **New runs:** `benchmark_v1_1_0.py --topos 6,6,6,6,6,6,6,6,6,6 --modes central --benchDir results/bench-central-6x10-cwfix`, seeds 0-2, fixed binary, traffic from t=0, same settings as the cwfix reference. 3/3 PASS, 897-917 s. Raw run dirs local only.
+
+### Results (fact, n=3, aggregate Mbps, policy window)
+| Mode | Aggregate | Paired vs BEB | Seeds |
+|---|---|---|---|
+| BEB | 27.89 ± 0.69 | - | 28.14 / 27.59 / 27.94 |
+| Global-CW | 36.87 ± 5.96 | +32.2 ± 23.9 % | 36.65 / 39.37 / 34.59 |
+| Independent | 14.99 ± 3.12 | -46.2 ± 12.2 % | 14.91 / 16.28 / 13.78 |
+| Central critic | 30.05 ± 13.49 | +7.8 ± 50.4 % (CI includes 0) | 29.84 / 35.58 / 24.73 |
+
+Central vs independent (paired): +15.06 ± 10.37 Mbps, +99.4 ± 48.4 %, above independent at 3/3 seeds. Jain: central 0.65 / 0.85 / 0.45 (global 0.99, BEB 0.97-0.99). Deassociations: 0 / 0 / 3 (seed 2, all re-associated).
+
+### Reading
+- **No collapse at 6 x 10 on the fixed binary (fact).** Central stays near BEB (about 25-36 Mbps per seed) instead of the ~3 Mbps seen at 4,8,...,40. It does not beat global (36.87) and its fairness is poor.
+- **The collapse is therefore not caused by N=10 alone (inference from two differences).** Between the v1.9.0 runs and this one, three things changed together: the CW 0/0 start bug (fixed), STA count (220 vs 60) and per-AP sizes. I did not separate them. The 220-STA topology on the fixed binary was not rerun.
+- **Candidate causes, still untested:** the CW-start bug, STA count / load per AP, the tiny global reward with a 2N-dim critic (trace evidence above is consistent with it but does not isolate it).
+- **Limits:** n=3, central CI is wide (13.5 Mbps), one topology on the fixed binary. The v1.9.0 decision (central = optional / negative) is not changed by this: central does not beat global and its paired CI against BEB includes 0.
+- **Next test if wanted:** central 4,8,...,40 seed 0 on the fixed binary (about 70 min). If it still collapses, the CW-start bug is ruled out and size or reward scale remain.
+
+### Second follow-up: central 4,8,...,40 on the fixed binary (2026-10-19)
+
+- Run: `benchmark_v1_1_0.py --topos 4,8,12,16,20,24,28,32,36,40 --modes central --seeds 0 --benchDir results/bench-central-4to40-cwfix` (fixed binary, traffic from t=0, otherwise v1.9.0 settings). 1 run (n=1, no CI), `--check` PASS, 4081 s. Raw run dir local only.
+- **Result (fact, n=1):** aggregate 1.62 Mbps in the policy window, per-AP 0.04-0.31 Mbps (AP1 0.04, AP2 0.31, AP3 0.16, AP4 0.09, AP5 0.15, AP6 0.07). The v1.9.0 pre-fix runs gave 3.20 ± 4.91 Mbps (n=3). For reference, BEB at this topology was 19.24 ± 1.85 Mbps (v1.5.0, n=3, older binary; I assume BEB is unaffected by the agent-start fix, which touched only agent runs).
+- **Phases (fact):** estimated throughput from rx per step: steps 1-300 (random warm-up) about 18.6 Mbps; 301-400 about 4.5; 401-600 about 5.0; 601-900 about 1.5; after step 900 about 0. Critic loss about 1e-5 after step 300, as in the pre-fix traces.
+
+### Conclusion (updated)
+- **The CW 0/0 start bug is ruled out as the cause of the collapse (fact for seed 0, n=1):** with the fix, central at 4..40 still collapses to about 1.6 Mbps.
+- **N=10 alone is ruled out (fact, n=1 vs n=3):** central at 6 x 10 on the same binary does not collapse (30.05 ± 13.49 Mbps). What differs is the load: 220 vs 60 STAs, and 4-40 vs 6 STAs per AP.
+- **Still open:** whether STA count / per-AP load or the unequal AP sizes cause it, and what the mechanism is (tiny global reward with a weak critic is consistent with the traces but not isolated). A fixed-total-STA test at 4..40 sizes with equal split (22 per AP) or a reward-scale ablation would separate these; neither was run.
+- **Decision stays:** central is optional / negative (it does not beat global; it collapses at 220 STAs).
+
+### Third follow-up: central 22 x 10 (equal split, 220 STAs) on the fixed binary (2026-10-19)
+
+- Run: `benchmark_v1_1_0.py --topos 22,22,22,22,22,22,22,22,22,22 --modes central --seeds 0 --benchDir results/bench-central-22x10-cwfix` (fixed binary, traffic from t=0). 1 run (n=1), `--check` PASS, 4639 s, 7 deassociation events. Raw run dir local only. No BEB or global run at this topology.
+- **Result (fact, n=1):** aggregate 2.15 Mbps, per-AP 0.06-0.61 Mbps, phy loss 0.993, Jain 0.60, never converges (step 1500). Estimated throughput by phase: warm-up (steps 1-300) 19.6 Mbps, 301-400 6.6, 401-600 5.4, 601-900 2.0, after 900 about 0.2-0.6. Critic loss about 1e-5 or lower after step 300; end-of-run CWs differ strongly across APs (17 to 940).
+- **Reading:** the collapse does not depend on the unequal split (fact for seed 0): 4..40 gave 1.62 Mbps, 22 x 10 gives 2.15 Mbps. Together with 6 x 10 (60 STAs, no collapse, 30.05 ± 13.49) the remaining difference is total STA count (220 vs 60), i.e. total offered load. Per-AP STA count (6 vs 22) is confounded with that.
+- **Inference, not tested:** the per-AP and global rewards are normalized by `offeredLoad * STAs * stepTime`, so with 220 STAs they are about 3.7x smaller than with 60 STAs; this fits the near-zero critic loss but I did not vary the reward scale.
+- **Still untested:** (a) reward-scale ablation at 220 STAs (e.g. normalize by achievable rate), (b) intermediate STA counts (e.g. 11 x 10 = 110) to find where it breaks, (c) BEB/global/independent at 22 x 10 for reference, (d) more seeds.
+- Decision stays: central is optional / negative.
