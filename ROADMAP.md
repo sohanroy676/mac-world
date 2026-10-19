@@ -105,6 +105,7 @@
 
 ### v2.2.0
 - Final experimental results.
+- Status: DONE on branch `feature/v2.2.0-final-results` (NOT merged/tagged, awaiting user). Analysis only, no new runs: final set = fixed-binary v2.0.0 `*-cwfix` runs (81, n=3). `docs/final-results-v2.2.0.md`, `docs/figures/v2.2.0/`. Raw data local, W&B sync deferred.
 
 ### v2.3.0
 - Technical report.
