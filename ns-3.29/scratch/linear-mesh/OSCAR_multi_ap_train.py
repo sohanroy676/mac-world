@@ -38,6 +38,7 @@ parser.add_argument("--cwReadbackEvery", type=float, default=0.0, help="diagnost
 parser.add_argument("--trafficStart", type=float, default=0.0, help="diagnostic: time (s) the data sources start (0 = cw.cc default)")
 parser.add_argument("--staMaxMissedBeacons", type=int, default=0, help="diagnostic: StaWifiMac MaxMissedBeacons (0 = ns-3 default 10)")
 parser.add_argument("--offeredLoad", type=float, default=150.0, help="per-STA offered load in Mbps (cw.cc offeredLoad)")
+parser.add_argument("--rewardScale", type=float, default=1.0, help="ablation: central mode multiplies the global reward by this before the joint replay (1 = unchanged)")
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
@@ -264,11 +265,11 @@ try:
                 # joint row: (s, a, r_g, r_local, s'); one critic update then N actor updates
                 r_g = global_reward(recs)
                 r_loc = [recs[i]["reward"] for i in range(n)]
-                joint.add(S[:, 0], acts, S2[:, 0], r_g, r_loc, done[0])
+                joint.add(S[:, 0], acts, S2[:, 0], r_g * args.rewardScale, r_loc, done[0])
                 if args.check:
                     k = (joint.ptr - 1) % joint.max_size
                     check(np.allclose(joint.state[k], S[:, 0]) and np.allclose(joint.next_state[k], S2[:, 0])
-                          and np.allclose(joint.action[k], acts) and np.isclose(joint.reward_g[k, 0], r_g)
+                          and np.allclose(joint.action[k], acts) and np.isclose(joint.reward_g[k, 0], r_g * args.rewardScale)
                           and np.allclose(joint.reward_local[k], r_loc), "joint replay row mismatch at t=%d" % time_step)
                     check(0.0 <= r_g <= 1.0, "r_g %s out of [0,1]" % r_g)
                 if time_step >= args.start_timesteps:
