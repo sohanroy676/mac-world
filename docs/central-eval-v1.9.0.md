@@ -92,3 +92,17 @@ Central vs independent (paired): +15.06 ± 10.37 Mbps, +99.4 ± 48.4 %, above in
 - **Inference, not tested:** the per-AP and global rewards are normalized by `offeredLoad * STAs * stepTime`, so with 220 STAs they are about 3.7x smaller than with 60 STAs; this fits the near-zero critic loss but I did not vary the reward scale.
 - **Still untested:** (a) reward-scale ablation at 220 STAs (e.g. normalize by achievable rate), (b) intermediate STA counts (e.g. 11 x 10 = 110) to find where it breaks, (c) BEB/global/independent at 22 x 10 for reference, (d) more seeds.
 - Decision stays: central is optional / negative.
+
+### Fourth follow-up: reward-scale ablation, central 22 x 10 (2026-10-20)
+
+- Setup: new trainer flag `--rewardScale S` (multiplies the global reward stored in the joint replay; default 1, short-run trace byte-identical at default). Same topology/seed/binary as the third follow-up (22 x 10, seed 0, traffic from t=0), run via `benchmark_v1_1_0.py --trainerArgs "--rewardScale S"`. n=1 per scale, `--check` PASS. Raw run dirs local only (`bench-central-22x10-rs3.67`, `bench-central-22x10-rs100`).
+- Result (fact, n=1; aggregate Mbps from rx counters; last 300 steps for per-AP):
+
+| scale | steps 1-299 | 300-599 | 1200-1500 | min AP (Mbps) | Jain | critic loss (last) |
+|---|---|---|---|---|---|---|
+| x1 (third follow-up) | 19.6 | 5.8 | 0.6 | ~0.00 | 0.52 | 2e-6 |
+| x3.6667 (same normalization as 6 x 10) | 19.6 | 6.5 | 3.1 | 0.05 | 0.70 | 9e-7 |
+| x100 | 19.6 | 28.0 | 38.0 | 3.0 | 0.98 | 7e-5 |
+
+- Reading: matching the 6 x 10 normalization (x3.67) does not prevent the collapse. x100 does not collapse in this run: throughput rises after training starts and is fair (Jain 0.98), but CWs end at 714-1024 for all APs. Inference (n=1): reward magnitude matters through the Adam/critic learning signal, not through the 3.67x STA-count factor alone. Not shown: whether x100 beats BEB or global at 22 x 10 (no reference runs there), whether it holds across seeds, or whether it helps 4..40.
+- Decision stays: central is optional / negative. Reward scale is a candidate fix to verify with more seeds and BEB/global references at 22 x 10.
