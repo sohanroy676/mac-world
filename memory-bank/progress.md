@@ -7,6 +7,7 @@
 
 ## Done
 
+- **Independent mode at 22x10 (2026-10-20, branch `feature/independent-22x10`, committed, NOT merged/tagged)** — seeds 0-2, 3/3 `--check` PASS (3498-3635 s): last-300-step Mbps 8.2 / 12.7 / 10.5 (mean 10.5), Jain 0.55-0.65, min AP 0.09-0.28; below BEB s0 18.0 in all seeds, about level with global s0 10.8. BEB/global still n=1. Docs `docs/central-eval-v1.9.0.md` sixth follow-up. Raw dirs local `results/bench-indep-22x10`, `-s12`. Docs only, no code/binary change.
 - **Central reward-scale ablation (2026-10-20, merged to main + pushed, TAGGED `v2.6.0`; no CI)** — 22x10 s0: x3.67 still collapses (3.1 Mbps), x100 does not (38.0, Jain 0.98); n=1; x100 seeds 1-2, BEB/global refs at 22x10 and x100 at 4..40 added (fifth follow-up in central-eval doc).
 - **Traffic-start + central-collapse session CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.5.2`; no CI)** — see activeContext HANDOFF.
 - **Central collapse follow-up (2026-10-19)** — central 6x10 on fixed binary, 3/3 PASS, no collapse (30.05 ± 13.49); central 4..40 s0 on fixed binary still collapses (1.62 Mbps, n=1): CW-start bug and N alone ruled out; 22x10 equal split also collapses (2.15 Mbps, n=1): unequal split ruled out; STA count / reward scale open. `docs/central-eval-v1.9.0.md` follow-up.

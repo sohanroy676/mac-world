@@ -122,5 +122,20 @@ Central vs independent (paired): +15.06 ± 10.37 Mbps, +99.4 ± 48.4 %, above in
 - 4..40 central x100 s0: 18.5 / 14.7 / 34.5 Mbps, min AP 0.76, Jain 0.29, CWs 21 to 1024 (most at 714-1024). Not collapsed (x1 gave 1.62 Mbps overall). No BEB/global/independent run was made on the fixed binary at 4..40 for this comparison, so I make no comparison claim there.
 - **Fact (n=3 seeds at 22 x 10, n=1 elsewhere):** x100 avoids the collapse in all 3 seeds and 4..40 s0. Seeds 0 and 1 end about 2x BEB and about 3.5x global; seed 2 ends below BEB (11.8 vs 18.0), about level with global, with Jain 0.31. Mean over 3 seeds is about 28.8 Mbps, with a spread too large for a CI claim that it beats BEB.
 - **Inference:** reward magnitude is a main cause of the collapse (x1 and x3.67 collapse, x100 does not), but x100 does not make central reliable (seed variance, poor fairness at 4..40 and seed 2).
-- **Caveats:** BEB and global are a single seed (seed 0). Only x1, x3.67 and x100 were tried (x3.67 seed 0 only); no intermediate scale and no independent-mode run at 22 x 10. Central x100 CWs mostly saturate near 1024, so its gains may come from a high-CW regime rather than learned adaptation (not tested).
+- **Caveats:** BEB and global are a single seed (seed 0). Only x1, x3.67 and x100 were tried (x3.67 seed 0 only); no intermediate scale (the independent-mode run at 22 x 10 is in the sixth follow-up). Central x100 CWs mostly saturate near 1024, so its gains may come from a high-CW regime rather than learned adaptation (not tested).
 - Decision stays: central is optional / negative for v1; `--rewardScale` is a documented ablation knob, not a default.
+
+### Sixth follow-up: independent mode at 22 x 10 (2026-10-20)
+
+- Runs (all `--check` PASS, fixed binary, traffic from t=0, raw run dirs local only): `benchmark_v1_1_0.py --topos 22,22,22,22,22,22,22,22,22,22 --modes independent`, seed 0 in `bench-indep-22x10` (3635 s), seeds 1-2 in `bench-indep-22x10-s12` (3498 s, 3517 s). Deassociation events: 7 / 6 / 4 (seeds 0 / 1 / 2). Same metric definitions as the fifth follow-up (steps 1200-1500 for the last column, per-AP and Jain over the same window).
+
+| 22 x 10 | steps 1-299 | 300-599 | 1200-1500 | min AP | Jain |
+|---|---|---|---|---|---|
+| independent s0 | 19.6 | 8.6 | 8.2 | 0.09 | 0.55 |
+| independent s1 | 20.0 | 13.2 | 12.7 | 0.28 | 0.65 |
+| independent s2 | 19.3 | 10.5 | 10.5 | 0.09 | 0.57 |
+
+- **Fact (n=3):** independent ends at 8.2 / 12.7 / 10.5 Mbps (mean 10.5), below BEB seed 0 (18.0) in all three seeds, about level with global seed 0 (10.8). Min AP 0.09-0.28 Mbps, Jain 0.55-0.65. CWs after step 300 span 16 to 1024 (median 140-157 per run), not saturated near 1024.
+- **Fact:** all three modes start level at 19-20 Mbps in steps 1-299 (BEB 16.8, global 20.9) and independent loses throughput after the warm-up.
+- **Inference:** central x100 seeds 0 and 1 (38.0, 36.5) beat independent at this topology; seed 2 (11.8) is in the independent range. Central x1 (0.6) is far below independent. Not tested with a paired CI.
+- **Caveats:** BEB and global are still a single seed (seed 0), so the BEB comparison has no CI. My recomputed BEB min AP is 1.38, the fifth follow-up says 1.37 (cause not found; aggregates and Jain match). Independent was run only at the default reward and settings.
