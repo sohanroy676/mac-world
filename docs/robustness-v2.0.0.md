@@ -199,7 +199,12 @@ Saturating load, 20,40 at 150 Mbps per STA: BEB 27.30 ± 0.63, global 36.29 ± 7
 - Non-interference: all three `--check` PASS and `trace.csv` is byte-identical to the F.2 seed-0 runs (`multi-ap-20261018-131142`, `-132505`, `-133903`).
 - Result: BEB, global and independent all show AP1 19/20 and AP2 39/40 at every one of the 15 readbacks (t = 2..16 s, sim time including the 1 s warm-up), i.e. the same 2 sinks never receive a packet in every mode.
 - Reading: with this seed, inactive STAs do not differ between BEB and the agent modes, so they cannot explain the agents' gain over BEB here. The earlier counts (global 20/20 and 35/40, seed not recorded) differ from these; I did not investigate why.
-- Limits: n=1, one topology and load. "rx>0 ever" misses STAs that go quiet later. Which 2 STAs are inactive, and why (association, starvation), was not checked.
+- Limits: n=1, one topology and load. "rx>0 ever" misses STAs that go quiet later.
+
+#### F.5b Which STAs are inactive (2026-10-20, fact; n=1, BEB only)
+- Setup: same as F.5 (BEB, 20,40, 150 Mbps, seed 0, `--cwReadbackEvery 1`, `--check`), after adding a log line to the readback path in `cw.cc` that names each sink with no packet received. Gated by `--cwReadbackEvery`, so default runs are unchanged. Run `results/multi-ap-20261020-120654` (local only): `--check` PASS, `trace.csv` byte-identical to the F.2 BEB seed-0 run `multi-ap-20261018-131142`. Sinks are installed in STA order, so sink k is BSS node k+1 (`scenario.h`, `BasicScenario::installScenario`).
+- Result: the same two STAs are inactive at all 15 readbacks: **AP1 STA index 17 (nodeId 17, position (2.5, 5))** and **AP2 STA index 1 (nodeId 21, position (46.5, 3))**. Both associated early (first association 0.51 s and 0.45 s) with their own AP and never deassociated. Their positions are not unusual (same 3 to 5 m offset band as the other STAs; no distance effect in this model).
+- Reading: not an association problem and not geometry (fact). They are associated but never deliver a packet in the whole run, so the likely cause is starvation under saturation (inference; MAC-level cause not examined). Whether the agent modes starve the same two STAs was not checked, only the count (19/20, 39/40) is known there (F.5).
 
 ## G. Batch D: association and deassociation at large N
 
