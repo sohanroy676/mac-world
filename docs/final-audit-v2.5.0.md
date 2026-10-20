@@ -75,7 +75,7 @@ bc6f12c is the **root commit** (3946 files); it imports ns-3.29 and opengym and 
 2. Central-critic N=10 collapse cause: untested.
 3. Traffic starts at t=0 in all benchmarks; association failures at large N are linked to it (v2.0.0 D, n=1).
 4. Active-sink count for BEB: not measured.
-5. W&B online sync of the final runs: deferred.
+5. W&B online sync of the final runs: deferred at audit time. Done 2026-10-20 (81 runs in `contention_window`, tag `final-v2.2.0`; `docs/final-results-v2.2.0.md` §5). The audit table row above is left as written.
 6. Fixed after the audit: project README multi-AP section, `AGENTS.md` root path, ADR-0003 status.
 7. Raw data for the final 81 runs is local only.
 
