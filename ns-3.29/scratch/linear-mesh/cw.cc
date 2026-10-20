@@ -274,6 +274,9 @@ void checkApCw(std::string label, bool recordResult = true)
         g_apCwOk = false;
 }
 
+extern std::map<uint32_t, double> g_staFirstAssoc;
+extern std::map<uint32_t, uint32_t> g_staDeAssocCount;
+
 // Log-only: sample STA CWs during the run (does not affect the CW check result).
 void periodicCwReadback()
 {
@@ -291,6 +294,17 @@ void periodicCwReadback()
             ++sinks;
             if (server->GetReceived() > 0)
                 ++active;
+            else
+            {
+                // Sinks are installed in STA order, so sink k belongs to BSS node k + 1 (node 0 is the AP).
+                Ptr<Node> sta = g_apBss.at(ap).Get(sinks);
+                Vector pos = sta->GetObject<MobilityModel>()->GetPosition();
+                std::map<uint32_t, double>::const_iterator f = g_staFirstAssoc.find(sta->GetId());
+                NS_LOG_UNCOND("  AP" << ap + 1 << " inactive sink " << sinks - 1 << " STA nodeId=" << sta->GetId() << " pos=(" << pos.x
+                                     << "," << pos.y << ") firstAssoc="
+                                     << (f == g_staFirstAssoc.end() ? -1.0 : f->second) << " deassoc="
+                                     << (g_staDeAssocCount.count(sta->GetId()) ? g_staDeAssocCount[sta->GetId()] : 0));
+            }
         }
         NS_LOG_UNCOND("  AP" << ap + 1 << " sinks with rx>0: " << active << "/" << sinks);
     }

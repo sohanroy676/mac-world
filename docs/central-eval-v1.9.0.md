@@ -139,3 +139,27 @@ Central vs independent (paired): +15.06 ± 10.37 Mbps, +99.4 ± 48.4 %, above in
 - **Fact:** all three modes start level at 19-20 Mbps in steps 1-299 (BEB 16.8, global 20.9) and independent loses throughput after the warm-up.
 - **Inference:** central x100 seeds 0 and 1 (38.0, 36.5) beat independent at this topology; seed 2 (11.8) is in the independent range. Central x1 (0.6) is far below independent. Not tested with a paired CI.
 - **Caveats:** BEB and global are still a single seed (seed 0), so the BEB comparison has no CI. My recomputed BEB min AP is 1.38, the fifth follow-up says 1.37 (cause not found; aggregates and Jain match). Independent was run only at the default reward and settings.
+
+### Seventh follow-up: BEB/global seeds 1-2 and central reward scales x10, x30 at 22 x 10 (2026-10-20)
+
+- Runs (all `--check` PASS, fixed binary, traffic from t=0, raw run dirs local only): `benchmark_v1_1_0.py --topos 22,22,22,22,22,22,22,22,22,22 --modes beb global --seeds 1 2` in `bench-ref-22x10-s12` (3117 / 3129 s BEB, 3400 / 3463 s global); `--modes central --seeds 0 --trainerArgs "--rewardScale S"` for S = 10 (`bench-central-22x10-rs10`, 3481 s) and S = 30 (`bench-central-22x10-rs30`, 3495 s). Same metric definitions as the fifth follow-up; recomputed with a throwaway script that reproduces the BEB s0 and global s0 rows exactly. The binary now also carries the gated inactive-sink log line (robustness §F.5b); the BEB 20,40 trace was byte-identical with it.
+
+| 22 x 10 | steps 1-299 | 300-599 | 1200-1500 | min AP | Jain |
+|---|---|---|---|---|---|
+| BEB s0 | 16.8 | 17.6 | 18.0 | 1.37 | 0.98 |
+| BEB s1 | 19.2 | 19.4 | 19.8 | 0.92 | 0.93 |
+| BEB s2 | 18.3 | 19.2 | 19.3 | 1.24 | 0.91 |
+| global s0 | 20.9 | 12.1 | 10.8 | 0.60 | 0.94 |
+| global s1 | 22.4 | 32.5 | 35.1 | 1.77 | 0.92 |
+| global s2 | 21.4 | 13.3 | 23.3 | 1.35 | 0.95 |
+| central x10 s0 | 19.6 | 18.3 | 22.9 | 0.56 | 0.36 |
+| central x30 s0 | 19.6 | 19.7 | 38.0 | 2.73 | 0.93 |
+
+- Summary over seeds 0-2, steps 1200-1500 (mean ± sample SD, n=3): BEB 19.0 ± 0.9; global 23.1 ± 12.2 (10.8 / 35.1 / 23.3); independent 10.5 ± 2.3 (8.2 / 12.7 / 10.5); central x100 28.8 ± 14.7 (38.0 / 36.5 / 11.8).
+- Central reward-scale curve at seed 0 (n=1 per scale): x1 0.6, x3.67 3.1, x10 22.9, x30 38.0, x100 38.0 Mbps.
+- **Fact (n=3):** BEB is stable (18.0-19.8). Global is not: seed 0 ended at 10.8, seed 1 at 35.1 (about 1.8x BEB, the best run of any mode), seed 2 at 23.3. So the earlier single global seed (10.8) was the low end, not typical. Independent is below BEB in all three paired seeds (-9.8, -7.1, -8.8 Mbps).
+- **Fact (n=1 per scale):** central goes from collapsed (x1, x3.67) to 22.9 at x10 (Jain 0.36, min AP 0.56) to 38.0 at x30 (Jain 0.93), the same aggregate as x100 seed 0.
+- **Inference:** the collapse threshold lies between x3.67 and x10, and x30 is already enough at seed 0; the x10 run is in transition (unfair, still rising). One seed per scale, so the threshold is not located and seed variance (as at x100 seed 2, 11.8) is not excluded.
+- **Inference:** with n=3 the spread of global and central x100 (SD about 12 to 15 Mbps) is too large for any claim against BEB; no paired CI was computed. Only independent is consistently below BEB.
+- **Note:** recomputed BEB s0 min AP is 1.37 over steps 1200-1500 inclusive (301 steps), matching the fifth follow-up. The 1.38 noted in the sixth follow-up probably came from a 300-step window (not verified).
+- **Caveats:** central x10 / x30 are seed 0 only. CWs of the central runs were not examined here, so a high-CW regime (see fifth follow-up) is not ruled out for x30. Decision unchanged: central stays optional / negative for v1.

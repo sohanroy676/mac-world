@@ -7,6 +7,7 @@
 
 ## Done
 
+- **Optional follow-ups (2026-10-20, branch `feature/optional-followups`, committed, NOT merged/tagged)** — inactive STAs at 20,40 identified (robustness §F.5b), opengym provenance resolved (final-audit §3), BEB/global seeds 1-2 and central x10/x30 at 22x10 all PASS (central-eval seventh follow-up: BEB mean 19.0, global 23.1 ± 12, central x30 38.0 s0). CHANGELOG blocked (git-cliff via Windows rejects the WSL repo).
 - **Independent mode at 22x10 (2026-10-20, branch `feature/independent-22x10`, committed, NOT merged/tagged)** — seeds 0-2, 3/3 `--check` PASS (3498-3635 s): last-300-step Mbps 8.2 / 12.7 / 10.5 (mean 10.5), Jain 0.55-0.65, min AP 0.09-0.28; below BEB s0 18.0 in all seeds, about level with global s0 10.8. BEB/global still n=1. Docs `docs/central-eval-v1.9.0.md` sixth follow-up. Raw dirs local `results/bench-indep-22x10`, `-s12`. Docs only, no code/binary change.
 - **Central reward-scale ablation (2026-10-20, merged to main + pushed, TAGGED `v2.6.0`; no CI)** — 22x10 s0: x3.67 still collapses (3.1 Mbps), x100 does not (38.0, Jain 0.98); n=1; x100 seeds 1-2, BEB/global refs at 22x10 and x100 at 4..40 added (fifth follow-up in central-eval doc).
 - **Traffic-start + central-collapse session CLOSED (2026-10-19, merged to main + pushed, TAGGED `v2.5.2`; no CI)** — see activeContext HANDOFF.
