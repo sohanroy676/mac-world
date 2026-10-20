@@ -43,7 +43,7 @@ A full 15 s run takes 842–1054 s (`docs/figures/v2.2.0/fixed60-scaling/scaling
 3. Rehearsal 2026-10-19: wall time 32.7 s, `RESULT: PASS | steps: 30`, W&B check 30 rows × 19 keys, offline run written.
    AP1 and AP2 chose different CWs on every logged step (step 20: 66 vs 285; step 30: 105 vs 161), with per-AP reward and loss.
 4. Show from committed files: `main-20-40/cw_traces.png`, `per_ap_throughput.png`, results tables.
-5. W&B: offline run only (`wandb sync <run_dir>` is deferred); show the local run summary printed at the end.
+5. W&B: the demo run is offline only (syncing it needs the workaround in `docs/final-results-v2.2.0.md` §5); show the local run summary printed at the end. The 81 final runs are online in project `contention_window` (tag `final-v2.2.0`).
 6. If the live run fails: continue with slides and committed figures.
 
 Note: 3 s of simulated time shows mechanics only (per-AP CW, isolation, W&B logging), not the benchmark result.

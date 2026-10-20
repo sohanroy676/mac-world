@@ -140,7 +140,7 @@ Project code, all under `ns-3.29/scratch/linear-mesh/` ([Upstream] ns-3.29 and `
 
 ## 17. W&B Experiment Tracking
 
-Each run logs per-AP and global metrics (names from design §7) to Weights & Biases, offline by default. Since v2.1.0 runs are named `<topology> <mode> s<seed>` with mode and git-revision tags. Fact: the 81 final runs were produced before this naming and are stored as local offline `.wandb` files; syncing them (`wandb sync <run_dir>/run-*.wandb`) has been deferred. The committed record is the aggregated tables, CSVs and plots under `docs/figures/v2.2.0/`.
+Each run logs per-AP and global metrics (names from design §7) to Weights & Biases, offline by default. Since v2.1.0 runs are named `<topology> <mode> s<seed>` with mode and git-revision tags. Fact: the 81 final runs were produced before this naming and are stored as local offline `.wandb` files. Update 2026-10-20: all 81 were synced online to project `contention_window` (private) and renamed `<topology> <mode> s<seed>` with tags `multi-ap`, `final-v2.2.0`, `bench-<set>`, `mode-<mode>` (`docs/final-results-v2.2.0.md` §5). The committed record is the aggregated tables, CSVs and plots under `docs/figures/v2.2.0/`.
 
 ## 18. Experimental Setup
 
