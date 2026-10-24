@@ -1,7 +1,7 @@
 # ADR-0004: Optional shared-parameter agent (`--mode shared`)
 
 ## Status
-Proposed (experimental, user-approved 2026-10-25). Not part of the core; accepted or rejected after the dev and confirmation runs in `docs/coop-v2.8.0.md`.
+Accepted as an optional experiment with a negative evaluation result (user-approved 2026-10-25). Confirmation on fresh seeds 10-14 (15,15,15,15): shared 27.76 ± 19.04 Mbps vs global 32.94 ± 11.01, paired -5.18 ± 25.04, above global in 1 of 5 seeds; the decision rule was not met (`docs/coop-v2.8.0.md`). Not part of the core.
 
 ## Date
 2026-10-25

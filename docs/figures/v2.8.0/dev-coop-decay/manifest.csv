@@ -1,0 +1,4 @@
+topo,mode,seed,run_dir,result,returncode,seconds
+"15,15,15,15",coop,0,results/multi-ap-20261024-224751,PASS,0,1047
+"15,15,15,15",coop,1,results/multi-ap-20261024-230518,PASS,0,987
+"15,15,15,15",coop,2,results/multi-ap-20261024-232145,PASS,0,1085

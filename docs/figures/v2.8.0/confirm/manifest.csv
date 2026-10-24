@@ -1,0 +1,16 @@
+topo,mode,seed,run_dir,result,returncode,seconds
+"15,15,15,15",beb,10,results/multi-ap-20261025-012827,PASS,0,1049
+"15,15,15,15",global,10,results/multi-ap-20261025-014555,PASS,0,1107
+"15,15,15,15",shared,10,results/multi-ap-20261025-020423,PASS,0,1123
+"15,15,15,15",beb,11,results/multi-ap-20261025-022313,PASS,0,973
+"15,15,15,15",global,11,results/multi-ap-20261025-023921,PASS,0,871
+"15,15,15,15",shared,11,results/multi-ap-20261025-025351,PASS,0,883
+"15,15,15,15",beb,12,results/multi-ap-20261025-030834,PASS,0,845
+"15,15,15,15",global,12,results/multi-ap-20261025-032240,PASS,0,883
+"15,15,15,15",shared,12,results/multi-ap-20261025-033724,PASS,0,871
+"15,15,15,15",beb,13,results/multi-ap-20261025-035155,PASS,0,849
+"15,15,15,15",global,13,results/multi-ap-20261025-040604,PASS,0,876
+"15,15,15,15",shared,13,results/multi-ap-20261025-042041,PASS,0,878
+"15,15,15,15",beb,14,results/multi-ap-20261025-043519,PASS,0,865
+"15,15,15,15",global,14,results/multi-ap-20261025-044945,PASS,0,870
+"15,15,15,15",shared,14,results/multi-ap-20261025-050415,PASS,0,888
