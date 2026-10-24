@@ -32,6 +32,7 @@ parser.add_argument("--episodes", type=int, default=1)
 parser.add_argument("--start_timesteps", type=int, default=300)
 parser.add_argument("--batch_size", type=int, default=32)
 parser.add_argument("--expl_noise", type=float, default=0.1)
+parser.add_argument("--explNoiseEnd", type=float, default=-1.0, help="if >= 0, exploration noise decays linearly from --expl_noise to this value over the post-warm-up steps (-1 = constant)")
 parser.add_argument("--discount", type=float, default=0.7)
 parser.add_argument("--tau", type=float, default=1e-3)
 parser.add_argument("--seed", type=int, default=0)
@@ -72,6 +73,7 @@ steps_per_ep = int(args.simTime / args.stepTime)
 state_dim = action_dim = 1
 max_action = 1
 real_max_action = 6
+total_steps = steps_per_ep * args.episodes
 OFFERED_MBPS = args.offeredLoad  # per-STA offered load, cw.cc offeredLoad
 
 torch.manual_seed(args.seed)
@@ -118,6 +120,14 @@ preprocess = Preprocessor(False).preprocess
 
 def scalar(x):
     return float(x.detach().cpu().item()) if hasattr(x, "detach") else float(x)
+
+
+def noise_std(t):
+    """Exploration noise std at global step t (constant unless --explNoiseEnd >= 0)."""
+    if args.explNoiseEnd < 0:
+        return max_action * args.expl_noise
+    frac = min(1.0, max(0.0, (t - args.start_timesteps) / max(1, total_steps - args.start_timesteps)))
+    return max_action * (args.expl_noise + frac * (args.explNoiseEnd - args.expl_noise))
 
 
 def agent_loss(i, name):
@@ -198,7 +208,7 @@ try:
                     else:
                         sel = agents[i] if args.mode in ("independent", "coop") else None
                         a = (sel.select_action(S[i, :state_dim]) if sel else central.select_action(i, S[i, :state_dim])) \
-                            + np.random.normal(0, max_action * args.expl_noise)
+                            + np.random.normal(0, noise_std(time_step))
                         acts[i] = np.clip(a, -max_action, max_action)[0]
                 if args.mode == "central" and args.check:
                     exec_probe["expect"] = None
@@ -206,7 +216,7 @@ try:
                 if time_step < args.start_timesteps:
                     acts[:] = np.random.uniform(-max_action, max_action)
                 else:
-                    a = agents[0].select_action(S_g) + np.random.normal(0, max_action * args.expl_noise)
+                    a = agents[0].select_action(S_g) + np.random.normal(0, noise_std(time_step))
                     acts[:] = np.clip(a, -max_action, max_action)[0]
             real = (real_max_action * (acts + 1) / 2).astype(np.float32)  # beb: ignored by cw.cc (dryRun)
 
