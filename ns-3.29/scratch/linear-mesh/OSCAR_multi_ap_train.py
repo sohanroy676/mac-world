@@ -11,6 +11,8 @@ through the same stepping loop, no agent: standard 802.11 measured in the same p
 v1.8.0: --mode central (CTDE): N local actors (each sees only its own loss) + ONE shared critic Q(s_joint, a_joint)
 trained on the global goodput reward, joint replay, MADDPG-style actor update (agents/our_ddpg/central.py).
 v2.8.0: --mode coop = independent (N agents, own-loss obs only) but each replay stores r' = (1-L)*r_i + L*r_global (--rewardMix L, default 1).
+v2.8.0: --mode shared = ONE actor-critic shared by all APs (parameter sharing, ADR-0004); input = [own loss, AP id/(N-1)]
+(--sharedApId 0 drops the id); every AP's transition goes into one replay; same coop reward mix; one update per env step.
 Run from this directory: ../../venv/bin/python OSCAR_multi_ap_train.py --apStaCounts 2,3 --check
 """
 import argparse
@@ -42,10 +44,11 @@ parser.add_argument("--staMaxMissedBeacons", type=int, default=0, help="diagnost
 parser.add_argument("--offeredLoad", type=float, default=150.0, help="per-STA offered load in Mbps (cw.cc offeredLoad)")
 parser.add_argument("--rewardScale", type=float, default=1.0, help="ablation: central mode multiplies the global reward by this before the joint replay (1 = unchanged)")
 parser.add_argument("--rewardMix", type=float, default=1.0, help="coop mode: replay reward = (1-L)*own + L*global (L=0 equals independent)")
+parser.add_argument("--sharedApId", type=int, choices=[0, 1], default=1, help="shared mode: 1 = append AP id/(N-1) to the actor/critic input")
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "coop", "global", "beb", "central"], default="independent")
+parser.add_argument("--mode", choices=["independent", "coop", "shared", "global", "beb", "central"], default="independent")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 args = parser.parse_args()
 
@@ -90,7 +93,7 @@ if args.staMaxMissedBeacons > 0:
     sim_args["staMaxMissedBeacons"] = args.staMaxMissedBeacons
 if args.mode == "beb":
     sim_args["dryRun"] = "true"  # cw.cc skips setApCw; every AP keeps BEB CW 16..1024
-n_agents = {"independent": n, "coop": n, "global": 1, "beb": 0, "central": 0}[args.mode]  # central: one CentralDDPG object
+n_agents = {"independent": n, "coop": n, "shared": 1, "global": 1, "beb": 0, "central": 0}[args.mode]  # central: one CentralDDPG object
 
 try:
     git_rev = subprocess.check_output(["git", "describe", "--tags", "--always", "--dirty"], stderr=subprocess.DEVNULL,
@@ -111,8 +114,9 @@ run = wandb.init(name="%s %s s%d" % (args.apStaCounts, args.mode, args.seed), en
                  project=args.wandb_project, tags=["multi-ap", "mode-" + args.mode, git_rev], reinit=True,
                  config=dict(vars(args), AP_Count=n, Stations_Per_AP=counts))
 
-agents = [DDPG(state_dim, action_dim, max_action, args.discount, args.tau) for _ in range(n_agents)]
-replays = [ReplayBuffer(state_dim, action_dim) for _ in range(n_agents)]
+sh_dim = state_dim + (1 if args.mode == "shared" and args.sharedApId else 0)  # shared: [own loss, AP id]
+agents = [DDPG(sh_dim, action_dim, max_action, args.discount, args.tau) for _ in range(n_agents)]
+replays = [ReplayBuffer(sh_dim, action_dim) for _ in range(n_agents)]
 central = CentralDDPG(n, max_action, args.discount, args.tau) if args.mode == "central" else None
 joint = JointReplayBuffer(n) if args.mode == "central" else None
 preprocess = Preprocessor(False).preprocess
@@ -120,6 +124,11 @@ preprocess = Preprocessor(False).preprocess
 
 def scalar(x):
     return float(x.detach().cpu().item()) if hasattr(x, "detach") else float(x)
+
+
+def sh_state(S_row, i):
+    """shared mode actor/critic input for AP i: its own loss (+ its own id); nothing from other APs."""
+    return np.array([S_row[0], i / (n - 1)][:sh_dim], dtype=np.float32)
 
 
 def noise_std(t):
@@ -162,10 +171,18 @@ if args.check:
             check(not (param_ids[i] & param_ids[j]), "agents %d,%d share parameters" % (i, j))
     check(len({id(r) for r in replays}) == n_agents, "replay buffers are not distinct")
 
+exec_probe = {"expect": None}  # set per step to the [N, sh_dim] rows each AP's actor may see (central: its loss only)
+if args.mode == "shared" and args.check:
+    # Execution isolation: the shared actor is only ever called with one [1, sh_dim] row = that AP's own (loss, id).
+    def shared_hook(module, inp):
+        x = inp[0]
+        if exec_probe["expect"] is not None:
+            check(tuple(x.shape) == (1, sh_dim) and np.allclose(x.cpu().numpy()[0], exec_probe["expect"][exec_probe["i"]]),
+                  "shared actor execution input %s is not AP %d's own row" % (x.cpu().numpy().tolist(), exec_probe["i"]))
+    agents[0].actor.register_forward_pre_hook(shared_hook)
+
 if args.mode == "central" and args.check:
     # Execution isolation: an actor only ever receives a [B, 1] tensor; during execution B == 1 and the value is s_i.
-    exec_probe = {"expect": None}
-
     def make_hook(i):
         def hook(module, inp):
             x = inp[0]
@@ -199,18 +216,22 @@ try:
         ep_reward = np.zeros(n)
         for step in range(1, steps_per_ep + 1):
             acts = np.zeros(n, dtype=np.float32)
-            if args.mode in ("independent", "coop", "central"):
+            if args.mode in ("independent", "coop", "shared", "central"):
                 if args.mode == "central" and args.check:
                     exec_probe["expect"] = S[:, 0]
+                if args.mode == "shared" and args.check:
+                    exec_probe["expect"] = np.array([sh_state(S[i], i) for i in range(n)])
                 for i in range(n):
+                    exec_probe["i"] = i
                     if time_step < args.start_timesteps:
                         acts[i] = np.random.uniform(-max_action, max_action)
                     else:
-                        sel = agents[i] if args.mode in ("independent", "coop") else None
-                        a = (sel.select_action(S[i, :state_dim]) if sel else central.select_action(i, S[i, :state_dim])) \
+                        sel = agents[i] if args.mode in ("independent", "coop") else agents[0] if args.mode == "shared" else None
+                        a = (sel.select_action(sh_state(S[i], i) if args.mode == "shared" else S[i, :state_dim]) if sel
+                             else central.select_action(i, S[i, :state_dim])) \
                             + np.random.normal(0, noise_std(time_step))
                         acts[i] = np.clip(a, -max_action, max_action)[0]
-                if args.mode == "central" and args.check:
+                if args.mode in ("central", "shared") and args.check:
                     exec_probe["expect"] = None
             elif args.mode == "global":
                 if time_step < args.start_timesteps:
@@ -224,14 +245,21 @@ try:
             S2 = reshape_obs(obs[0], n)
             recs = parse_ap_info(info[0], n)
 
-            r_g_step = global_reward(recs) if args.mode == "coop" else 0.0
+            r_g_step = global_reward(recs) if args.mode in ("coop", "shared") else 0.0
             for i in range(n):
                 r = recs[i]["reward"]
-                r_rep = (1 - args.rewardMix) * r + args.rewardMix * r_g_step if args.mode == "coop" else r  # stored in replay
+                r_rep = (1 - args.rewardMix) * r + args.rewardMix * r_g_step if args.mode in ("coop", "shared") else r  # stored in replay
                 s_i, s2_i = S[i, :state_dim], S2[i, :state_dim]
                 if args.mode in ("independent", "coop"):
                     replays[i].add(s_i, acts[i], s2_i, r_rep, done[0])
+                if args.mode == "shared":
+                    replays[0].add(sh_state(S[i], i), acts[i], sh_state(S2[i], i), r_rep, done[0])  # N rows per step, one buffer
                 if args.check:
+                    if args.mode == "shared":
+                        k = (replays[0].ptr - 1) % replays[0].max_size
+                        check(np.allclose(replays[0].state[k], sh_state(S[i], i)) and np.allclose(replays[0].next_state[k], sh_state(S2[i], i))
+                              and np.isclose(replays[0].reward[k, 0], r_rep) and np.isclose(replays[0].action[k, 0], acts[i]),
+                              "shared replay row for AP %d mismatch at t=%d" % (i + 1, time_step))
                     if args.mode in ("independent", "coop"):
                         k = (replays[i].ptr - 1) % replays[i].max_size
                         check(np.allclose(replays[i].state[k], s_i) and np.allclose(replays[i].next_state[k], s2_i)
@@ -258,6 +286,11 @@ try:
                                 float(pp[0]), float(pp[1]), agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")])
                 if args.mode in ("independent", "coop") and time_step >= args.start_timesteps:
                     agents[i].train(replays[i], args.batch_size)
+            if args.mode == "shared" and time_step >= args.start_timesteps:
+                agents[0].train(replays[0], args.batch_size)  # one update per env step, like global
+                if args.check:
+                    check(np.isfinite([scalar(agents[0].actor_loss), scalar(agents[0].critic_loss)]).all(),
+                          "non-finite shared loss at t=%d" % time_step)
             if args.mode == "global":
                 # one agent: network-wide loss as state, network goodput (normalized by all STAs) as reward
                 tx_g = sum(r["tx"] for r in recs)
@@ -338,7 +371,8 @@ if args.check:
         print("central: critic_loss %.5f  Q_mean %.4f  actor_losses %s" % (
             scalar(central.critic_loss), scalar(central.q_mean), [round(scalar(x), 4) for x in central.actor_losses]))
     for i in range(n_agents):
-        check(replays[i].size == time_step, "replay %d size %d != steps %d" % (i, replays[i].size, time_step))
+        want_rows = time_step * (n if args.mode == "shared" else 1)  # shared: one buffer, N rows (one per AP) per step
+        check(replays[i].size == want_rows, "replay %d size %d != %d" % (i, replays[i].size, want_rows))
         check(all(np.isfinite([scalar(agents[i].actor_loss), scalar(agents[i].critic_loss)])), "agent %d non-finite loss" % (i + 1))
     # v0.8.0: read the logged history back from the run's .wandb file
     from wandb.proto import wandb_internal_pb2 as pb

@@ -19,10 +19,10 @@ from summarize_run import summarize  # noqa: E402
 
 # two-sided 95% Student t critical values, df = 1..10 (no scipy in the venv)
 T95 = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228}
-MODES = ["beb", "global", "independent", "coop", "central"]
-LABEL = {"beb": "BEB (802.11)", "global": "Global-CW OSCAR", "independent": "Independent per-AP", "coop": "Cooperative per-AP", "central": "Central critic"}
-SHORT = {"beb": "BEB", "global": "Global", "independent": "Indep.", "coop": "Coop.", "central": "Central"}
-COLOR = {"beb": "#888888", "global": "#d95f02", "independent": "#1b9e77", "coop": "#e7298a", "central": "#7570b3"}
+MODES = ["beb", "global", "independent", "coop", "shared", "central"]
+LABEL = {"beb": "BEB (802.11)", "global": "Global-CW OSCAR", "independent": "Independent per-AP", "coop": "Cooperative per-AP", "shared": "Shared-parameter agent", "central": "Central critic"}
+SHORT = {"beb": "BEB", "global": "Global", "independent": "Indep.", "coop": "Coop.", "shared": "Shared", "central": "Central"}
+COLOR = {"beb": "#888888", "global": "#d95f02", "independent": "#1b9e77", "coop": "#e7298a", "shared": "#66a61e", "central": "#7570b3"}
 
 parser = argparse.ArgumentParser()
 parser.add_argument("bench_dirs", nargs="+")
@@ -109,13 +109,14 @@ for topo in topos:
         p = [100 * x / runs[topo]["independent"][s]["tot_policy"] for x, s in zip(d, seeds)]
         md += ["| %d | %s | %s | %d/%d |" % (len(seeds), fmt(d), fmt(p, 1), sum(x > 0 for x in d), len(d)), ""]
 
-    if "coop" in runs[topo] and "global" in runs[topo]:
-        md += ["Paired difference of Cooperative per-AP vs Global-CW OSCAR (same ns-3 seed), aggregate throughput:", "",
-               "| n pairs | Δ Mbps | Δ % | above Global |", "|---|---|---|---|"]
-        seeds = sorted(set(runs[topo]["coop"]) & set(runs[topo]["global"]))
-        d = [runs[topo]["coop"][s]["tot_policy"] - runs[topo]["global"][s]["tot_policy"] for s in seeds]
-        p = [100 * x / runs[topo]["global"][s]["tot_policy"] for x, s in zip(d, seeds)]
-        md += ["| %d | %s | %s | %d/%d |" % (len(seeds), fmt(d), fmt(p, 1), sum(x > 0 for x in d), len(d)), ""]
+    for cm in ("coop", "shared"):
+        if cm in runs[topo] and "global" in runs[topo]:
+            md += ["Paired difference of %s vs Global-CW OSCAR (same ns-3 seed), aggregate throughput:" % LABEL[cm], "",
+                   "| n pairs | Δ Mbps | Δ % | above Global |", "|---|---|---|---|"]
+            seeds = sorted(set(runs[topo][cm]) & set(runs[topo]["global"]))
+            d = [runs[topo][cm][s]["tot_policy"] - runs[topo]["global"][s]["tot_policy"] for s in seeds]
+            p = [100 * x / runs[topo]["global"][s]["tot_policy"] for x, s in zip(d, seeds)]
+            md += ["| %d | %s | %s | %d/%d |" % (len(seeds), fmt(d), fmt(p, 1), sum(x > 0 for x in d), len(d)), ""]
 
 with open(os.path.join(args.out, "tables.md"), "w") as f:
     f.write("\n".join(md) + "\n")
@@ -165,7 +166,7 @@ for ax, t in zip(axes[:, 0], topos):
 axes[-1, 0].set_xlabel("step"); axes[0, 0].legend(fontsize=8)
 fig.tight_layout(); fig.savefig(os.path.join(args.out, "convergence.png"), dpi=150); plt.close(fig)
 
-CW_MODES = ["global", "independent", "central"] + (["coop"] if any("coop" in runs[t] for t in topos) else [])
+CW_MODES = ["global", "independent", "central"] + [m for m in ("coop", "shared") if any(m in runs[t] for t in topos)]
 fig, axes = plt.subplots(len(topos), len(CW_MODES), figsize=(5 * len(CW_MODES), 2.8 * len(topos)), squeeze=False)
 for row, t in zip(axes, topos):
     for ax, m in zip(row, CW_MODES):
