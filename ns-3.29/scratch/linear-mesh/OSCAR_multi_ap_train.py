@@ -10,6 +10,7 @@ loss (sum tx - sum rx)/sum tx, reward = network goodput / (offered load x all ST
 through the same stepping loop, no agent: standard 802.11 measured in the same per-step window).
 v1.8.0: --mode central (CTDE): N local actors (each sees only its own loss) + ONE shared critic Q(s_joint, a_joint)
 trained on the global goodput reward, joint replay, MADDPG-style actor update (agents/our_ddpg/central.py).
+v2.8.0: --mode coop = independent (N agents, own-loss obs only) but each replay stores r' = (1-L)*r_i + L*r_global (--rewardMix L, default 1).
 Run from this directory: ../../venv/bin/python OSCAR_multi_ap_train.py --apStaCounts 2,3 --check
 """
 import argparse
@@ -39,10 +40,11 @@ parser.add_argument("--trafficStart", type=float, default=0.0, help="diagnostic:
 parser.add_argument("--staMaxMissedBeacons", type=int, default=0, help="diagnostic: StaWifiMac MaxMissedBeacons (0 = ns-3 default 10)")
 parser.add_argument("--offeredLoad", type=float, default=150.0, help="per-STA offered load in Mbps (cw.cc offeredLoad)")
 parser.add_argument("--rewardScale", type=float, default=1.0, help="ablation: central mode multiplies the global reward by this before the joint replay (1 = unchanged)")
+parser.add_argument("--rewardMix", type=float, default=1.0, help="coop mode: replay reward = (1-L)*own + L*global (L=0 equals independent)")
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "global", "beb", "central"], default="independent")
+parser.add_argument("--mode", choices=["independent", "coop", "global", "beb", "central"], default="independent")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 args = parser.parse_args()
 
@@ -86,7 +88,7 @@ if args.staMaxMissedBeacons > 0:
     sim_args["staMaxMissedBeacons"] = args.staMaxMissedBeacons
 if args.mode == "beb":
     sim_args["dryRun"] = "true"  # cw.cc skips setApCw; every AP keeps BEB CW 16..1024
-n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0}[args.mode]  # central: one CentralDDPG object
+n_agents = {"independent": n, "coop": n, "global": 1, "beb": 0, "central": 0}[args.mode]  # central: one CentralDDPG object
 
 try:
     git_rev = subprocess.check_output(["git", "describe", "--tags", "--always", "--dirty"], stderr=subprocess.DEVNULL,
@@ -119,12 +121,12 @@ def scalar(x):
 
 
 def agent_loss(i, name):
-    """Loss of the agent that acts for AP i (independent: own; global: the shared one; beb: none -> 0)."""
+    """Loss of the agent that acts for AP i (independent/coop: own; global: the shared one; beb: none -> 0)."""
     if args.mode == "beb":
         return 0.0
     if args.mode == "central":
         return scalar(central.actor_losses[i] if name == "actor_loss" else central.critic_loss)
-    return scalar(getattr(agents[i if args.mode == "independent" else 0], name))
+    return scalar(getattr(agents[i if args.mode in ("independent", "coop") else 0], name))
 
 
 def global_reward(recs):
@@ -187,14 +189,14 @@ try:
         ep_reward = np.zeros(n)
         for step in range(1, steps_per_ep + 1):
             acts = np.zeros(n, dtype=np.float32)
-            if args.mode in ("independent", "central"):
+            if args.mode in ("independent", "coop", "central"):
                 if args.mode == "central" and args.check:
                     exec_probe["expect"] = S[:, 0]
                 for i in range(n):
                     if time_step < args.start_timesteps:
                         acts[i] = np.random.uniform(-max_action, max_action)
                     else:
-                        sel = agents[i] if args.mode == "independent" else None
+                        sel = agents[i] if args.mode in ("independent", "coop") else None
                         a = (sel.select_action(S[i, :state_dim]) if sel else central.select_action(i, S[i, :state_dim])) \
                             + np.random.normal(0, max_action * args.expl_noise)
                         acts[i] = np.clip(a, -max_action, max_action)[0]
@@ -212,16 +214,18 @@ try:
             S2 = reshape_obs(obs[0], n)
             recs = parse_ap_info(info[0], n)
 
+            r_g_step = global_reward(recs) if args.mode == "coop" else 0.0
             for i in range(n):
                 r = recs[i]["reward"]
+                r_rep = (1 - args.rewardMix) * r + args.rewardMix * r_g_step if args.mode == "coop" else r  # stored in replay
                 s_i, s2_i = S[i, :state_dim], S2[i, :state_dim]
-                if args.mode == "independent":
-                    replays[i].add(s_i, acts[i], s2_i, r, done[0])
+                if args.mode in ("independent", "coop"):
+                    replays[i].add(s_i, acts[i], s2_i, r_rep, done[0])
                 if args.check:
-                    if args.mode == "independent":
+                    if args.mode in ("independent", "coop"):
                         k = (replays[i].ptr - 1) % replays[i].max_size
                         check(np.allclose(replays[i].state[k], s_i) and np.allclose(replays[i].next_state[k], s2_i)
-                              and np.isclose(replays[i].reward[k, 0], r) and np.isclose(replays[i].action[k, 0], acts[i]),
+                              and np.isclose(replays[i].reward[k, 0], r_rep) and np.isclose(replays[i].action[k, 0], acts[i]),
                               "replay %d row mismatch at t=%d" % (i, time_step))
                     # cw.cc computes pow(2, 4 + a) with a float, so 4 + a is rounded to float32 before pow.
                     want_cw = 16 if args.mode == "beb" else int(min(1024, max(
@@ -242,7 +246,7 @@ try:
                 trace.writerow([episode, step, i + 1, float(s_i[0]), float(acts[i]), float(real[i]), r, float(s2_i[0]),
                                 recs[i]["cw_set"], recs[i]["cw_ap"], recs[i]["loss"], recs[i]["rx"], recs[i]["tx"],
                                 float(pp[0]), float(pp[1]), agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")])
-                if args.mode == "independent" and time_step >= args.start_timesteps:
+                if args.mode in ("independent", "coop") and time_step >= args.start_timesteps:
                     agents[i].train(replays[i], args.batch_size)
             if args.mode == "global":
                 # one agent: network-wide loss as state, network goodput (normalized by all STAs) as reward
