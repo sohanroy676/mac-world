@@ -119,6 +119,10 @@
 - Final project audit.
 - Status: ✅ CLOSED 2026-10-19 (merged to main + pushed, TAGGED `v2.5.0`; no CI configured). `docs/final-audit-v2.5.0.md`: 26 items, short reruns PASS, src identical to ns-3.29, opengym core identical to ns3-gym db016f8b3. FAIL: references (21 placeholders). PARTIAL: W&B online sync, README, report/deck review, raw-data reproducibility.
 
+### v2.8.0 / v2.8.1 (improvement attempt and pre-registered confirmation)
+
+- Status: 🔄 branch `feature/v2.8.0-coop-reward`, NOT merged/pushed/tagged. v2.8.0: coop reward, noise decay, shared-parameter agent; no gain over the centralized baseline `global` (`docs/coop-v2.8.0.md`). v2.8.1 (`docs/claim-prereg-v2.8.1.md`): pre-registered, seeds 10-14: shared − independent +7.62 ± 15.84 (no), coop − independent +8.10 ± 8.61 (no), central − independent at 6x10 +9.29 ± 7.73 (yes, suggestive). No variant beats BEB or global. `global` is a centralized baseline, not original OSCAR; per-AP OSCAR is `independent`.
+
 ## Not Planned for v1
 
 - Mobility
