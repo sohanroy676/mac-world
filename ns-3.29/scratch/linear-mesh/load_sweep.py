@@ -13,7 +13,7 @@ import numpy as np  # noqa: E402
 
 T95 = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228}
 MODES = ["beb", "global", "independent"]
-LABEL = {"beb": "BEB (802.11)", "global": "Global-CW OSCAR", "independent": "Independent per-AP"}
+LABEL = {"beb": "BEB (802.11)", "global": "Centralized single-agent", "independent": "Independent per-AP"}
 COLOR = {"beb": "#888888", "global": "#d95f02", "independent": "#1b9e77"}
 
 parser = argparse.ArgumentParser()

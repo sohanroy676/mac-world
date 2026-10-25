@@ -20,7 +20,7 @@ from summarize_run import summarize  # noqa: E402
 # two-sided 95% Student t critical values, df = 1..10 (no scipy in the venv)
 T95 = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228}
 MODES = ["beb", "global", "independent", "coop", "shared", "central"]
-LABEL = {"beb": "BEB (802.11)", "global": "Global-CW OSCAR", "independent": "Independent per-AP", "coop": "Cooperative per-AP", "shared": "Shared-parameter agent", "central": "Central critic"}
+LABEL = {"beb": "BEB (802.11)", "global": "Centralized single-agent", "independent": "Independent per-AP", "coop": "Cooperative per-AP", "shared": "Shared-parameter agent", "central": "Central critic"}
 SHORT = {"beb": "BEB", "global": "Global", "independent": "Indep.", "coop": "Coop.", "shared": "Shared", "central": "Central"}
 COLOR = {"beb": "#888888", "global": "#d95f02", "independent": "#1b9e77", "coop": "#e7298a", "shared": "#66a61e", "central": "#7570b3"}
 
@@ -111,7 +111,7 @@ for topo in topos:
 
     for cm in ("coop", "shared"):
         if cm in runs[topo] and "global" in runs[topo]:
-            md += ["Paired difference of %s vs Global-CW OSCAR (same ns-3 seed), aggregate throughput:" % LABEL[cm], "",
+            md += ["Paired difference of %s vs Centralized single-agent (same ns-3 seed), aggregate throughput:" % LABEL[cm], "",
                    "| n pairs | Δ Mbps | Δ % | above Global |", "|---|---|---|---|"]
             seeds = sorted(set(runs[topo][cm]) & set(runs[topo]["global"]))
             d = [runs[topo][cm][s]["tot_policy"] - runs[topo]["global"][s]["tot_policy"] for s in seeds]
