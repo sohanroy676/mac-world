@@ -493,7 +493,7 @@ Standard IEEE 802.11.
 
 ### Baseline B
 
-Single/global-CW OSCAR-style baseline.
+Single-agent global-CW baseline (centralized; not original OSCAR, whose per-AP deployment is the independent mode).
 
 ### Proposed
 
@@ -896,7 +896,7 @@ Before submission, verify:
 ## Evaluation
 
 - [ ] Standard baseline.
-- [ ] OSCAR/global-CW baseline.
+- [ ] Global-CW (centralized single-agent) baseline.
 - [ ] Proposed method.
 - [ ] 2 AP evaluation.
 - [ ] 10 AP evaluation.

@@ -2,7 +2,7 @@
 
 Aggregate Mbps, policy window, mean ± 95% CI over seeds.
 
-| Load per STA (Mbps) | BEB (802.11) | Global-CW OSCAR | Independent per-AP | Global vs BEB (paired %) | Independent vs BEB (paired %) |
+| Load per STA (Mbps) | BEB (802.11) | Centralized single-agent | Independent per-AP | Global vs BEB (paired %) | Independent vs BEB (paired %) |
 |---|---|---|---|---|---|
 | 0.5 | 27.90 ± 0.85 | 29.64 ± 1.36 | 28.86 ± 2.84 | +6.3 ± 8.0 | +3.5 ± 13.3 |
 | 1 | 27.86 ± 1.60 | 38.96 ± 0.40 | 11.43 ± 13.75 | +39.9 ± 8.3 | -58.8 ± 50.3 |

@@ -33,7 +33,7 @@ Method: **C** = checked in committed files/code, **R** = re-run today on the cur
 | Item | Status | Evidence |
 |---|---|---|
 | Standard baseline (BEB) | PASS | `baseline_beb.py`, `--mode beb`, all tables |
-| OSCAR/global-CW baseline | PASS | `--mode global`, tables from v1.1.0 |
+| Global-CW (centralized single-agent) baseline | PASS | `--mode global`, tables from v1.1.0 |
 | Proposed method | PASS | `--mode independent` (negative result at N>=4: that is the finding) |
 | 2 AP evaluation | PASS | `benchmark-v1.1.0.md`, n=5 at 20,40 |
 | 10 AP evaluation | PASS | `scaling-v1.5.0.md`, n=3 |

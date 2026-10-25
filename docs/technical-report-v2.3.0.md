@@ -165,7 +165,7 @@ Experiments:
 ## 19. Baselines
 
 - **BEB (802.11):** ns-3 default DCF, CW 16..1024, no agent.
-- **Global-CW baseline (centralized single agent; older tables label it "Global-CW OSCAR"):** one DDPG agent, one CW for all APs (§16).
+- **Global-CW baseline (centralized single agent; earlier drafts and tables called it "Global-CW OSCAR", a mislabel):** one DDPG agent, one CW for all APs (§16).
 - **Independent per-AP DDPG:** the proposed core method.
 
 ## 20. Results

@@ -7,14 +7,14 @@ Policy window = steps >= 300 (3.00 s of stepping); mean ± 95% CI (Student t) ov
 | Mode | n | Aggregate | AP1 | AP2 | Phy loss | Jain | CW AP1 last-100 | CW AP2 last-100 | Convergence step |
 |---|---|---|---|---|---|---|---|---|---|
 | BEB (802.11) | 3 | 30.10 ± 0.20 | 14.87 ± 1.07 | 15.23 ± 0.92 | 0.712 ± 0.003 | 0.999 ± 0.001 | 16 ± 0 | 16 ± 0 | 0 ± 0 |
-| Global-CW OSCAR | 3 | 37.93 ± 4.17 | 23.11 ± 24.57 | 14.82 ± 21.29 | 0.572 ± 0.050 | 0.877 ± 0.510 | 250 ± 251 | 250 ± 251 | 351 ± 15 |
+| Centralized single-agent | 3 | 37.93 ± 4.17 | 23.11 ± 24.57 | 14.82 ± 21.29 | 0.572 ± 0.050 | 0.877 ± 0.510 | 250 ± 251 | 250 ± 251 | 351 ± 15 |
 | Independent per-AP | 3 | 30.19 ± 21.60 | 16.68 ± 28.88 | 13.51 ± 7.44 | 0.705 ± 0.282 | 0.870 ± 0.271 | 50 ± 59 | 60 ± 153 | 1273 ± 977 |
 
 Paired difference vs BEB (same ns-3 seed), aggregate throughput:
 
 | Mode | n pairs | Δ Mbps | Δ % |
 |---|---|---|---|
-| Global-CW OSCAR | 3 | 7.83 ± 3.99 | 26.0 ± 13.1 |
+| Centralized single-agent | 3 | 7.83 ± 3.99 | 26.0 ± 13.1 |
 | Independent per-AP | 3 | 0.09 ± 21.41 | 0.2 ± 71.1 |
 
 ## 20,40 STAs per AP
@@ -22,13 +22,13 @@ Paired difference vs BEB (same ns-3 seed), aggregate throughput:
 | Mode | n | Aggregate | AP1 | AP2 | Phy loss | Jain | CW AP1 last-100 | CW AP2 last-100 | Convergence step |
 |---|---|---|---|---|---|---|---|---|---|
 | BEB (802.11) | 3 | 27.30 ± 0.63 | 9.48 ± 2.06 | 17.82 ± 1.55 | 0.747 ± 0.009 | 0.913 ± 0.068 | 16 ± 0 | 16 ± 0 | 0 ± 0 |
-| Global-CW OSCAR | 3 | 35.61 ± 8.13 | 11.68 ± 0.18 | 23.94 ± 7.98 | 0.631 ± 0.147 | 0.895 ± 0.076 | 224 ± 304 | 224 ± 304 | 537 ± 923 |
+| Centralized single-agent | 3 | 35.61 ± 8.13 | 11.68 ± 0.18 | 23.94 ± 7.98 | 0.631 ± 0.147 | 0.895 ± 0.076 | 224 ± 304 | 224 ± 304 | 537 ± 923 |
 | Independent per-AP | 3 | 28.57 ± 9.37 | 8.89 ± 9.52 | 19.68 ± 6.34 | 0.732 ± 0.124 | 0.859 ± 0.271 | 116 ± 196 | 119 ± 43 | 1179 ± 231 |
 
 Paired difference vs BEB (same ns-3 seed), aggregate throughput:
 
 | Mode | n pairs | Δ Mbps | Δ % |
 |---|---|---|---|
-| Global-CW OSCAR | 3 | 8.31 ± 8.64 | 30.5 ± 32.3 |
+| Centralized single-agent | 3 | 8.31 ± 8.64 | 30.5 ± 32.3 |
 | Independent per-AP | 3 | 1.27 ± 9.20 | 4.6 ± 33.8 |
 

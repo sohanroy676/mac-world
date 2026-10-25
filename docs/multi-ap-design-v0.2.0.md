@@ -180,7 +180,7 @@ Validation order for later milestones:
 Later comparisons must use matched topology and parameters where scientifically appropriate:
 
 - standard IEEE 802.11 BEB behavior;
-- single/global-CW OSCAR-style control adapted to the same two-AP topology;
+- single-agent global-CW control (centralized; not original OSCAR) adapted to the same two-AP topology;
 - independent per-AP OSCAR agents.
 
 The v0.1.0 single-AP baseline remains the historical reference, but multi-AP claims should be evaluated against multi-AP baselines.

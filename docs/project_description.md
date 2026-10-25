@@ -512,7 +512,7 @@ Statistics validation must happen before RL training.
 At minimum compare:
 
 1. Standard IEEE 802.11 behavior.
-2. Original/single-global-CW OSCAR-style baseline.
+2. Single-agent global-CW baseline (centralized; not original OSCAR, whose per-AP deployment is the independent mode).
 3. Proposed multi-AP OSCAR with independent AP-level agents.
 
 If implemented, additionally compare:

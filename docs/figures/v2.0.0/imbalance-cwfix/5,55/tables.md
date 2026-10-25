@@ -7,13 +7,13 @@ Policy window = steps >= 300 (3.00 s of stepping); mean ± 95% CI (Student t) ov
 | Mode | n | Aggregate | AP1 | AP2 | Phy loss | Jain | CW AP1 last-100 | CW AP2 last-100 | Convergence step |
 |---|---|---|---|---|---|---|---|---|---|
 | BEB (802.11) | 3 | 28.64 ± 3.03 | 3.20 ± 1.27 | 25.44 ± 1.79 | 0.730 ± 0.037 | 0.623 ± 0.039 | 16 ± 0 | 16 ± 0 | 0 ± 0 |
-| Global-CW OSCAR | 3 | 37.07 ± 5.45 | 3.89 ± 1.37 | 33.18 ± 5.92 | 0.612 ± 0.113 | 0.616 ± 0.051 | 256 ± 475 | 256 ± 475 | 385 ± 24 |
+| Centralized single-agent | 3 | 37.07 ± 5.45 | 3.89 ± 1.37 | 33.18 ± 5.92 | 0.612 ± 0.113 | 0.616 ± 0.051 | 256 ± 475 | 256 ± 475 | 385 ± 24 |
 | Independent per-AP | 3 | 27.14 ± 11.62 | 11.36 ± 7.65 | 15.78 ± 4.92 | 0.752 ± 0.148 | 0.965 ± 0.091 | 17 ± 0 | 100 ± 81 | 898 ± 1365 |
 
 Paired difference vs BEB (same ns-3 seed), aggregate throughput:
 
 | Mode | n pairs | Δ Mbps | Δ % |
 |---|---|---|---|
-| Global-CW OSCAR | 3 | 8.43 ± 7.57 | 29.7 ± 29.5 |
+| Centralized single-agent | 3 | 8.43 ± 7.57 | 29.7 ± 29.5 |
 | Independent per-AP | 3 | -1.50 ± 10.06 | -5.4 ± 36.2 |
 

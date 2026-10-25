@@ -8,7 +8,7 @@ Status: Batches A (fixed-total-STA), B (AP imbalance) and C (traffic load) done,
 ### A.1 Setup (fact)
 - Purpose: separate AP count from load. In v1.6.0 the total STA count changed with N (60/50/105/180/220), so the two were confounded (`docs/scaling-v1.6.0.md`).
 - Topologies: 30,30 (N=2) · 15 x 4 (N=4) · 10 x 6 (N=6) · 6 x 10 (N=10). Total 60 STAs in every case, equal split.
-- Modes: BEB, global-CW OSCAR, independent per-AP. Seeds 0-2. Default config (simTime 15, step 0.01, 1500 steps, 150 Mbps per STA). Policy window = steps >= 300. n=3 per cell.
+- Modes: BEB, centralized single-agent (global), independent per-AP. Seeds 0-2. Default config (simTime 15, step 0.01, 1500 steps, 150 Mbps per STA). Policy window = steps >= 300. n=3 per cell.
 - 36/36 runs PASS `--check`. One ns-3 job at a time. Run times 902-1340 s, no trend with N at fixed STAs.
 - Command: `benchmark_v1_1_0.py --topos 30,30 15,15,15,15 10,10,10,10,10,10 6,6,6,6,6,6,6,6,6,6 --benchDir results/bench-v2.0.0-fixed60`.
 - Code under test: branch `feature/v2.0.0-robustness` (adds `--offeredLoad`, default 150, so behavior at default is the same as v1.x).

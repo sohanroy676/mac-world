@@ -113,7 +113,7 @@ Smoke cumulative reward 10.59458; `--nWifi=5` dry seed 1 simTime 2 -> 10533 pkts
 ## 5. Open / deferred
 - Reward scale: policy-phase reward is ~0.003-0.07 per step (0.003-0.005 at 60 STAs). It follows design §3 (goodput / (150 Mbps x STAs x step)); because the offered load saturates the channel, the [0,1] range is barely used. Inference (untested): a weak learning signal may contribute to the modest or uneven gains. Not changed in v1.0.0.
 - 20,20 and 20,40 long runs: DONE 2026-10-08 (§3; ~15-20 min each, not hours). Tag `v1.0.0` awaits user approval.
-- Global-CW OSCAR baseline (Baseline B) and multi-seed statistics — v1.1.
+- Centralized single-agent baseline (Baseline B) and multi-seed statistics — v1.1.
 - AP2 deassociation at 20,40 (t=1.144 s; STA nodeId=42 in one run, six STAs in the 2026-10-08 trained run, §3) — cause unproven.
 - W&B online sync untested; multi-AP gym supports `basic` scenario only; warm-up actions stored in [-1,1].
 - Baseline reward formula differs from the multi-AP one; throughput unit (Mibit/s vs Mbps) differs from the v0.1 report.

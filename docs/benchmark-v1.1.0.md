@@ -5,7 +5,7 @@ Status: tooling done; batch 1 (2,3 and 5,15) done; batch 2 (20,20) DONE (3 modes
 ## 1. Method
 Three systems on the same topology, traffic, PHY, duration (15 s, step 0.01 s) and seeds (python seed 0,1,2 -> ns-3 seed 1,2,3):
 - **BEB**: standard 802.11 (`OSCAR_multi_ap_train.py --mode beb` = ns-3 `--dryRun` driven through the same stepping loop, CW 16..1024).
-- **Global-CW OSCAR**: `--mode global`, ONE DDPG agent, one CW broadcast to every AP. State = network loss (sum tx - sum rx)/sum tx; reward = network goodput / (150 Mbps x all STAs x step), clamped to [0,1].
+- **Centralized single-agent**: `--mode global`, ONE DDPG agent, one CW broadcast to every AP. State = network loss (sum tx - sum rx)/sum tx; reward = network goodput / (150 Mbps x all STAs x step), clamped to [0,1].
 - **Independent per-AP**: `--mode independent` (the v1.0.0 system, trace byte-identical to before this change).
 
 All modes are measured identically from `trace.csv` (per-step rx), over the same policy window (steps >= 300). This removes the v1.0.0 window mismatch (core-v1.0.0 §3). Statistics: mean ± 95% CI (Student t) over seeds; paired difference vs BEB per seed. Reward is not compared across modes.
@@ -60,7 +60,7 @@ Data: `docs/figures/v1.1.0-b5/` (n=5; tables, 4 figures inspected). Seeds 3,4 ad
 | Mode (policy window, Mbps) | n | Aggregate | AP1 | AP2 | Jain | CW last-100 AP1/AP2 |
 |---|---|---|---|---|---|---|
 | BEB | 5 | 27.96 ± 1.26 | 10.52 | 17.44 | 0.933 | 16 / 16 |
-| Global-CW OSCAR | 5 | 36.89 ± 3.62 | 11.97 | 24.92 | 0.890 | 280 / 280 |
+| Centralized single-agent | 5 | 36.89 ± 3.62 | 11.97 | 24.92 | 0.890 | 280 / 280 |
 | Independent per-AP | 5 | 25.27 ± 8.21 | 6.96 | 18.31 | 0.814 | 160 / 108 |
 
 Paired vs BEB (same ns-3 seed, n=5): global +8.93 ± 3.24 Mbps (+31.9 ± 11.8 %), CI excludes 0; independent -2.69 ± 8.70 Mbps (-9.3 ± 31.0 %), CI includes 0. (n=3 earlier: global +30.5 ± 32.3 %, independent +4.6 ± 33.8 %.)

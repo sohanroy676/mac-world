@@ -7,7 +7,7 @@ Status: experiment closed 2026-10-25 on branch `feature/v2.8.0-coop-reward`. **N
 - **`independent`**: one OSCAR agent per AP = vanilla OSCAR deployed per AP, the literal multi-AP generalization and the fair OSCAR baseline here.
 - **`global`**: ONE agent, one CW broadcast to all APs, network-wide loss and reward. A centralized, privileged baseline (not decentralized, not original OSCAR). Never call it "OSCAR".
 - **`central`**: per-AP actors with a central critic (CTDE). **BEB**: standard 802.11.
-- Older tables in `docs/figures/` and older docs label `global` as "Global-CW OSCAR"; that label is a known mislabel and means this centralized baseline.
+- Until 2026-10-25 tables and docs called `global` "Global-CW OSCAR". That was a mislabel; table text and docs were relabeled "Centralized single-agent" in that commit. PNG figures made earlier still show the old legend text because they were not regenerated.
 
 ## 1. Question and rule (fixed before the runs)
 Can a per-AP design beat `global` (the centralized single-agent baseline: one agent, one CW for all APs) on aggregate throughput? Claim only if the paired (same ns-3 seed) shared − global delta has a 95 % CI above 0 on seeds not used for tuning.

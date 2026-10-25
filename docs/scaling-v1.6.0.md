@@ -72,7 +72,7 @@ Mean deassociation events per run (from logs; every one re-associated in all per
 
 ## 6. Summary
 1. Aggregate throughput of every policy falls as N (and total STAs) grows; per-STA throughput falls much faster (BEB 466 -> 88 kbps).
-2. Global-CW OSCAR beats BEB in direction at every N (+30 to +41 %), with CI support only at N=2 and N=4.
+2. Centralized single-agent beats BEB in direction at every N (+30 to +41 %), with CI support only at N=2 and N=4.
 3. Independent per-AP agents get progressively worse than BEB (-9 -> -54 %) and are the least fair; CI support only at N=10. This is the motivation for the optional central critic (v1.7+), but v1.6.0 provides no test that a central critic fixes it.
 4. Cost grows about linearly with total STAs (~15 s per STA per 1500-step run); agents add roughly 10-20 %.
 
