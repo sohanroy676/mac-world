@@ -42,7 +42,7 @@ parser.add_argument("--cwReadbackEvery", type=float, default=0.0, help="diagnost
 parser.add_argument("--trafficStart", type=float, default=0.0, help="diagnostic: time (s) the data sources start (0 = cw.cc default)")
 parser.add_argument("--staMaxMissedBeacons", type=int, default=0, help="diagnostic: StaWifiMac MaxMissedBeacons (0 = ns-3 default 10)")
 parser.add_argument("--offeredLoad", type=float, default=150.0, help="per-STA offered load in Mbps (cw.cc offeredLoad)")
-parser.add_argument("--rewardScale", type=float, default=1.0, help="ablation: central mode multiplies the global reward by this before the joint replay (1 = unchanged)")
+parser.add_argument("--rewardScale", type=float, default=1.0, help="ablation: central mode multiplies the global reward by this before the joint replay; coop/shared multiply the replay reward (1 = unchanged)")
 parser.add_argument("--rewardMix", type=float, default=1.0, help="coop mode: replay reward = (1-L)*own + L*global (L=0 equals independent)")
 parser.add_argument("--sharedApId", type=int, choices=[0, 1], default=1, help="shared mode: 1 = append AP id/(N-1) to the actor/critic input")
 parser.add_argument("--print_every", type=int, default=10)
@@ -248,7 +248,7 @@ try:
             r_g_step = global_reward(recs) if args.mode in ("coop", "shared") else 0.0
             for i in range(n):
                 r = recs[i]["reward"]
-                r_rep = (1 - args.rewardMix) * r + args.rewardMix * r_g_step if args.mode in ("coop", "shared") else r  # stored in replay
+                r_rep = ((1 - args.rewardMix) * r + args.rewardMix * r_g_step) * args.rewardScale if args.mode in ("coop", "shared") else r  # stored in replay
                 s_i, s2_i = S[i, :state_dim], S2[i, :state_dim]
                 if args.mode in ("independent", "coop"):
                     replays[i].add(s_i, acts[i], s2_i, r_rep, done[0])

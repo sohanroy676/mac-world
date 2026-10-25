@@ -83,3 +83,21 @@ Collapses (< 10 Mbps aggregate): shared 1/5 at 15x4 (seed 10, 3.28 Mbps); none i
 
 ## Limits
 Two topologies; n = 5; central only at 6x10 (central collapsed at 4..40 and 22x10 in earlier runs); the 15x4 independent mean of 20.14 is the same as the dev-seed mean by coincidence; one run per cell; 15 s simulated; single channel.
+
+---
+
+# Addendum A: stabiliser test for shared (written 2026-10-25 BEFORE the runs below)
+
+Hypothesis (inference, untested): replay rewards are about 0.004, so Q differences are about 0.01 while a fresh critic's output varies by about 0.1; early actor gradients are then dominated by critic initialisation, which would explain why the first actor drift goes up or down depending on the seed (shared seed 10 locked at CW 17). Test: scale the replay reward by 100 (`--mode shared --rewardScale 100`; one value fixed now, no sweep; the same value stopped the central collapse at 22x10 in n=1..3).
+
+Code: `--rewardScale` now also multiplies the replay reward of coop/shared (default 1: shared short-run trace byte-identical to before, `--check` PASS with 100).
+
+## Runs now (15,15,15,15, 4 runs, about 1 h)
+- **Dev, seeds 0-2** (tuning seeds). Reference: shared x1 dev 37.9 / 27.6 / 38.4 (34.62 ± 15.12).
+- **Mechanism check, seed 10, one run.** Seed 10 was already inspected, so this is a diagnostic only and never counts as confirmation. Reported either way: does the actor avoid the CW-17 lock-in (last-300 mean action above −0.9 and aggregate above 10 Mbps)?
+
+## Rule to go on to confirmation
+Proceed only if no dev run is below 10 Mbps AND the dev mean is at least 30 Mbps. Otherwise stop and record a negative result.
+
+## Confirmation (needs the user's go-ahead, not started)
+Fresh seeds 20-24, 15,15,15,15: shared x100, independent, beb, global (20 runs, about 5 h). Primary: shared x100 − independent, paired 95 % t-interval, n = 5, claim only if the lower bound is above 0. Secondary (no claim unless CI > 0): vs beb and vs global. Nothing else may be changed after seeing seeds 20-24.
