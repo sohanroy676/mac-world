@@ -26,7 +26,7 @@ Given N APs on one shared channel, each serving its own stations, choose each AP
 
 1. Build one ns-3 simulation containing N APs, with per-AP statistics, per-AP CW control and a multi-AP ns3-gym interface. [New]
 2. Train one DDPG agent per AP with strict isolation of observations, rewards, actions and statistics. [New]
-3. Provide baselines: BEB and a global-CW OSCAR agent. [New]
+3. Provide baselines: BEB and a centralized single-agent baseline (`global`). Per-AP OSCAR is the `independent` mode. [New]
 4. Evaluate from 2 to 10 APs and under load and imbalance changes, with multiple seeds and confidence intervals. [New]
 5. Specify, prototype and evaluate an optional central critic without letting it block the core. [New]
 
@@ -136,7 +136,7 @@ Project code, all under `ns-3.29/scratch/linear-mesh/` ([Upstream] ns-3.29 and `
 | `independent` | N (one per AP) | own AP loss | own CW | own AP goodput | core [New] |
 | `central` | N actors + 1 shared critic (CTDE) | own AP loss (actors); joint (critic) | own CW | global goodput | optional, appendix A |
 
-`global` mode is the OSCAR-style single controller applied to a multi-AP network; it uses global information and is therefore not an isolated-AP method. It is the reference for how much a shared signal helps.
+`global` mode is a centralized single-agent baseline (one agent, one CW broadcast to all APs; not original OSCAR, whose per-AP deployment is `independent`); it uses global information and is therefore not an isolated-AP method. It is the reference for how much a shared signal helps.
 
 ## 17. W&B Experiment Tracking
 
@@ -165,7 +165,7 @@ Experiments:
 ## 19. Baselines
 
 - **BEB (802.11):** ns-3 default DCF, CW 16..1024, no agent.
-- **Global-CW OSCAR:** one DDPG agent, one CW for all APs (§16).
+- **Global-CW baseline (centralized single agent; older tables label it "Global-CW OSCAR"):** one DDPG agent, one CW for all APs (§16).
 - **Independent per-AP DDPG:** the proposed core method.
 
 ## 20. Results

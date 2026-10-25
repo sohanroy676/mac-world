@@ -1,9 +1,16 @@
-# v2.8.0: attempt to beat OSCAR-style global CW with cooperative per-AP agents (negative result)
+# v2.8.0: attempt to beat the centralized single-agent baseline with cooperative per-AP agents (negative result)
 
-Status: experiment closed 2026-10-25 on branch `feature/v2.8.0-coop-reward`. **No improvement over global-CW OSCAR was found.** Code is optional and off by default (existing modes give byte-identical traces). Not merged, pushed or tagged.
+Status: experiment closed 2026-10-25 on branch `feature/v2.8.0-coop-reward`. **No improvement over the centralized single-agent baseline (`global`) was found.** Code is optional and off by default (existing modes give byte-identical traces). Not merged, pushed or tagged.
+
+## 0. Definitions (corrected 2026-10-25)
+- **Original OSCAR** (Grasso, Raftopoulos, Schembra, ICC 2023; code `OSCAR_train.py`): ONE DDPG agent (one actor, one critic, state_dim 1, action_dim 1) setting ONE CW for every node of a single BSS.
+- **`independent`**: one OSCAR agent per AP = vanilla OSCAR deployed per AP, the literal multi-AP generalization and the fair OSCAR baseline here.
+- **`global`**: ONE agent, one CW broadcast to all APs, network-wide loss and reward. A centralized, privileged baseline (not decentralized, not original OSCAR). Never call it "OSCAR".
+- **`central`**: per-AP actors with a central critic (CTDE). **BEB**: standard 802.11.
+- Older tables in `docs/figures/` and older docs label `global` as "Global-CW OSCAR"; that label is a known mislabel and means this centralized baseline.
 
 ## 1. Question and rule (fixed before the runs)
-Can a per-AP design beat `global` (one OSCAR-style agent, one CW for all APs) on aggregate throughput? Claim only if the paired (same ns-3 seed) shared − global delta has a 95 % CI above 0 on seeds not used for tuning.
+Can a per-AP design beat `global` (the centralized single-agent baseline: one agent, one CW for all APs) on aggregate throughput? Claim only if the paired (same ns-3 seed) shared − global delta has a 95 % CI above 0 on seeds not used for tuning.
 
 ## 2. Diagnosis that motivated it (fact, existing fixed-binary traces, 15,15,15,15 and larger)
 `global` puts all APs on one CW (157–459) and reaches 34–39.5 Mbps. `independent` agents each settle on a different near-constant CW (some at 16, others 500–1000), 8–28 Mbps. Per-step rewards are about 0.004. All APs share one Yans channel, so the network is probably one collision domain (inference), which limits headroom over a good common CW.
@@ -50,4 +57,4 @@ Reading (dev seeds only): a team reward and less exploration noise did not fix t
 - Raw run dirs are local only (`ns-3.29/scratch/linear-mesh/results/bench-coop-dev-*`, `bench-shared-dev`, `bench-shared-confirm`). Tables, per-seed CSVs and manifests are in `docs/figures/v2.8.0/`.
 
 ## 7. Conclusion
-Within this experiment no per-AP variant beat global-CW OSCAR. The honest summary for the report: cooperative reward and exploration changes do not help; parameter sharing recovers global-level performance in some seeds but is unstable, and the confirmation does not support a gain (-5.2 ± 25.0 Mbps vs global, 1 of 5 seeds above).
+Within this experiment no per-AP variant beat the centralized single-agent baseline (`global`). The honest summary for the report: cooperative reward and exploration changes do not help; parameter sharing recovers global-level performance in some seeds but is unstable, and the confirmation does not support a gain (-5.2 ± 25.0 Mbps vs global, 1 of 5 seeds above).
