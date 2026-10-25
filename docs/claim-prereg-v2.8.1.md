@@ -101,3 +101,20 @@ Proceed only if no dev run is below 10 Mbps AND the dev mean is at least 30 Mbps
 
 ## Confirmation (needs the user's go-ahead, not started)
 Fresh seeds 20-24, 15,15,15,15: shared x100, independent, beb, global (20 runs, about 5 h). Primary: shared x100 − independent, paired 95 % t-interval, n = 5, claim only if the lower bound is above 0. Secondary (no claim unless CI > 0): vs beb and vs global. Nothing else may be changed after seeing seeds 20-24.
+
+## Addendum A results (added 2026-10-25 after the 4 runs; all PASS `--check`, 839-864 s)
+Tables and manifest: `docs/figures/v2.8.1/dev-shared-rs100/` (seed 10 is the diagnostic row, not part of the dev mean).
+
+| Run | Shared, `--rewardScale 100` | Shared, scale 1 (earlier) |
+|---|---|---|
+| Dev seed 0 | 38.97 | 37.9 |
+| Dev seed 1 | 38.13 | 27.6 |
+| Dev seed 2 | 38.41 | 38.4 |
+| Dev mean ± 95 % CI | **38.50 ± 1.06** | 34.62 ± 15.12 |
+| Seed 10 (diagnostic) | **35.77** | 3.28 |
+
+- Rule to go on to confirmation: met (no dev run below 10 Mbps, dev mean 38.5 ≥ 30).
+- Seed 10 did not collapse. The actor again saturated, but on the other side: mean action +0.96, CW about 945 on all four APs, reward 0.0040, loss 0.55 (before: action −0.96, CW 17, reward 0.0003, loss 0.99).
+- What this does and does not show: scaling changed the side the actor settled on in this one seed, which fits the hypothesis (critic initialisation, not reward, set the early drift), but it is one run and the unscaled baseline collapsed in only 1 of 8 seeds (10; seeds 0-2 and 11-14 did not), so n=1 is weak evidence that the stabiliser works. The scaled actor is still saturated at the CW bound (CW 480-950 in dev seeds), so the lock-in mechanism itself is not removed; whether CW near 1000 is a good operating point for other topologies is untested.
+- Dev mean 38.5 vs the unscaled dev 34.6 and global 35.6 (n=3 each, tuning seeds): no claim. The dev spread (0.9 Mbps) is much smaller than unscaled (10.8 Mbps), but this is n=3.
+- Status: confirmation on seeds 20-24 not started; it needs the user's go-ahead.
