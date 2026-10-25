@@ -31,6 +31,7 @@ parser.add_argument("--topo", default=None, help="only this apStaCounts value")
 parser.add_argument("--title", default="v1.1.0", help="version label used in the tables.md heading")
 parser.add_argument("--stepTime", type=float, default=0.01)
 parser.add_argument("--warmup", type=int, default=300)
+parser.add_argument("--vsIndependent", action="store_true", help="also print paired coop/shared vs independent (per-AP OSCAR) tables")
 args = parser.parse_args()
 
 
@@ -108,6 +109,16 @@ for topo in topos:
         d = [runs[topo]["central"][s]["tot_policy"] - runs[topo]["independent"][s]["tot_policy"] for s in seeds]
         p = [100 * x / runs[topo]["independent"][s]["tot_policy"] for x, s in zip(d, seeds)]
         md += ["| %d | %s | %s | %d/%d |" % (len(seeds), fmt(d), fmt(p, 1), sum(x > 0 for x in d), len(d)), ""]
+
+    if args.vsIndependent:
+        for cm in ("coop", "shared"):
+            if cm in runs[topo] and "independent" in runs[topo]:
+                md += ["Paired difference of %s vs Independent per-AP (same ns-3 seed), aggregate throughput:" % LABEL[cm], "",
+                       "| n pairs | Δ Mbps | Δ % | above Independent |", "|---|---|---|---|"]
+                seeds = sorted(set(runs[topo][cm]) & set(runs[topo]["independent"]))
+                d = [runs[topo][cm][s]["tot_policy"] - runs[topo]["independent"][s]["tot_policy"] for s in seeds]
+                p = [100 * x / runs[topo]["independent"][s]["tot_policy"] for x, s in zip(d, seeds)]
+                md += ["| %d | %s | %s | %d/%d |" % (len(seeds), fmt(d), fmt(p, 1), sum(x > 0 for x in d), len(d)), ""]
 
     for cm in ("coop", "shared"):
         if cm in runs[topo] and "global" in runs[topo]:
