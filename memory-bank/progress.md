@@ -7,6 +7,8 @@
 
 ## Done
 
+- **OSCAR improvement-claim report + shared x100 confirmation (2026-10-27, branch `docs/oscar-improvement-claim`, committed, NOT merged/pushed/tagged)** — seeds 20-24 at 15,15,15,15, 20/20 PASS: shared x100 - independent +19.67 ± 1.31 (5/5, pre-registered rule met), - BEB +9.85 ± 0.67, - global +13.64 ± 22.01 (no claim). Static-CW baseline not run. `docs/oscar-improvement-claim.md`, `docs/figures/v2.8.2/`.
+
 - **v2.8.1 pre-registered confirmation (2026-10-25, branch `feature/v2.8.0-coop-reward`, committed, NOT merged/pushed/tagged)** — relabel global as centralized baseline, pre-registration, 30 runs PASS (independent/coop at 15x4, beb/global/independent/central at 6x10, seeds 10-14). Only P3 (central - independent, 6x10: +9.29 ± 7.73, 5/5) has CI > 0 = suggestive; P1 +7.62 ± 15.84, P2 +8.10 ± 8.61 do not. No variant beats BEB/global. Shared seed-10 collapse inspected (actor stuck at CW 17). `docs/claim-prereg-v2.8.1.md`, `docs/figures/v2.8.1/`.
 
 - **v2.8.0 improvement attempt (2026-10-25, branch `feature/v2.8.0-coop-reward`, committed, NOT merged/pushed/tagged)** — `coop` mode, `--explNoiseEnd`, `shared` mode (ADR-0004); dev runs 15 PASS + confirmation seeds 10-14 15/15 PASS. Result negative: shared vs global -5.18 ± 25.04 Mbps, above 1/5; cooperative reward and noise decay did not help. `docs/coop-v2.8.0.md`, `docs/figures/v2.8.0/`.

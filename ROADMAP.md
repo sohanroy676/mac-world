@@ -121,7 +121,7 @@
 
 ### v2.8.0 / v2.8.1 (improvement attempt and pre-registered confirmation)
 
-- Status: 🔄 branch `feature/v2.8.0-coop-reward`, NOT merged/pushed/tagged. v2.8.0: coop reward, noise decay, shared-parameter agent; no gain over the centralized baseline `global` (`docs/coop-v2.8.0.md`). v2.8.1 (`docs/claim-prereg-v2.8.1.md`): pre-registered, seeds 10-14: shared − independent +7.62 ± 15.84 (no), coop − independent +8.10 ± 8.61 (no), central − independent at 6x10 +9.29 ± 7.73 (yes, suggestive). No variant beats BEB or global. `global` is a centralized baseline, not original OSCAR; per-AP OSCAR is `independent`.
+- Status: 🔄 branch `feature/v2.8.0-coop-reward`, NOT merged/pushed/tagged. v2.8.0: coop reward, noise decay, shared-parameter agent; no gain over the centralized baseline `global` (`docs/coop-v2.8.0.md`). v2.8.1 (`docs/claim-prereg-v2.8.1.md`): pre-registered, seeds 10-14: shared − independent +7.62 ± 15.84 (no), coop − independent +8.10 ± 8.61 (no), central − independent at 6x10 +9.29 ± 7.73 (yes, suggestive). No variant beats BEB or global. `global` is a centralized baseline, not original OSCAR; per-AP OSCAR is `independent`. Addendum A confirmation (seeds 20-24, 15,15,15,15, 20/20 PASS): shared with `--rewardScale 100` − independent +19.67 ± 1.31 (5/5, rule met), also +9.85 ± 0.67 over BEB, not shown vs `global` (+13.64 ± 22.01). Report: `docs/oscar-improvement-claim.md` (branch `docs/oscar-improvement-claim`).
 
 ## Not Planned for v1
 
