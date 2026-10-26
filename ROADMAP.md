@@ -121,7 +121,7 @@
 
 ### v3.0.0
 - Beat Global-CW OSCAR with per-AP-CW agents (trainer-only: `--mode shared`, `--obs hist`, `--alpha`, `--rewardScale`, `--tag`).
-- Status: 🔄 experiments DONE 2026-10-26 on branch `feature/beat-oscar` (not merged/pushed/tagged). Best variant V5 is Global-level with much lower seed variance (20,40: 37.08 ± 0.85 vs 36.17 ± 6.95), not a proven gain; stress runs seed 0: +10.1 % (5,55), +4.6 % (5,5,5,45), -0.9 % (6x10) vs Global, n=1. Per-AP CWs do not separate. `docs/improvement-v3.0.0.md`, `docs/adr/0004-relaxed-isolation.md`.
+- Status: 🔄 experiments DONE 2026-10-26, merged to main (not pushed/tagged). Best variant V5 is Global-level with lower seed variance at 20,40 and 5,55, not a proven gain: 20,40 +2.8 ± 16.9 %; imbalance 3 seeds +5.0 ± 13.6 % (5,55), +3.8 ± 10.8 % (5,5,5,45) vs Global; 6x10 seed 0 -0.9 %. Ablations (seed 0): shared mode needs neither hist obs nor x100 (A1 39.09, A2 37.38). Per-AP CWs do not separate. `docs/improvement-v3.0.0.md`, `docs/adr/0004-relaxed-isolation.md`.
 
 ## Not Planned for v1
 
