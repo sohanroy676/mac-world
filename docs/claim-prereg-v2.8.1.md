@@ -118,3 +118,24 @@ Tables and manifest: `docs/figures/v2.8.1/dev-shared-rs100/` (seed 10 is the dia
 - What this does and does not show: scaling changed the side the actor settled on in this one seed, which fits the hypothesis (critic initialisation, not reward, set the early drift), but it is one run and the unscaled baseline collapsed in only 1 of 8 seeds (10; seeds 0-2 and 11-14 did not), so n=1 is weak evidence that the stabiliser works. The scaled actor is still saturated at the CW bound (CW 480-950 in dev seeds), so the lock-in mechanism itself is not removed; whether CW near 1000 is a good operating point for other topologies is untested.
 - Dev mean 38.5 vs the unscaled dev 34.6 and global 35.6 (n=3 each, tuning seeds): no claim. The dev spread (0.9 Mbps) is much smaller than unscaled (10.8 Mbps), but this is n=3.
 - Status: confirmation on seeds 20-24 not started; it needs the user's go-ahead.
+
+## Addendum A confirmation results (added 2026-10-27, seeds 20-24, 15,15,15,15; the rule above was not changed)
+All 20 runs PASS `--check` (shared ×100 5/5, independent/beb/global 15/15; 860-1103 s). Tables: `docs/figures/v2.8.2/confirm-shared-rs100/`. Raw dirs local only (`results/bench-shared-rs100-confirm`, `bench-ref-confirm-s20`). Paired 95 % t-interval, n = 5; recomputed independently from `per_seed.csv` (same values).
+
+| Mode | Aggregate Mbps (last 300 steps), seeds 20-24 | Mean ± 95 % CI |
+|---|---|---|
+| BEB | 26.98 / 27.35 / 28.40 / 27.53 / 27.55 | 27.56 ± 0.65 |
+| Global (centralized) | 39.37 / 29.17 / 5.46 / 5.59 / 39.25 | 23.77 ± 21.30 |
+| Independent (per-AP OSCAR) | 16.14 / 17.80 / 18.84 / 17.21 / 18.74 | 17.74 ± 1.40 |
+| Shared ×100 | 37.11 / 36.86 / 39.07 / 37.05 / 36.97 | 37.41 ± 1.15 |
+
+| Comparison | Δ Mbps | Seeds above | CI lower bound > 0? |
+|---|---|---|---|
+| **Primary: shared ×100 − independent** | **+19.67 ± 1.31** (+111 %) | 5/5 | **Yes** |
+| shared ×100 − BEB (secondary) | +9.85 ± 0.67 (+35.7 %) | 5/5 | Yes |
+| shared ×100 − global (secondary) | +13.64 ± 22.01 | 3/5 | No |
+
+- Fact: the primary rule is met; shared ×100 also exceeds BEB with CI > 0 on these seeds. It is not shown to beat `global`.
+- Fact: `global` collapsed to about 5.5 Mbps on seeds 22 and 23 (2/5); shared ×100 had no collapse (min 36.86). Jain 0.994 (shared), 0.991 (BEB).
+- Fact: shared ×100 settles at CW about 850 on all four APs (last-100 mean), BEB at 16. Inference, untested: much of the gain may come from a high, fixed CW rather than from learned adaptation; a static-CW baseline (e.g. CW 850 for all APs) was not run, so "learns better than OSCAR" is not shown, only "higher throughput than per-AP OSCAR".
+- Limit: one topology (15,15,15,15), n = 5, one `--rewardScale` value chosen on dev seeds 0-2 and the seed-10 diagnostic.
