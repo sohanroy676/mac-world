@@ -119,6 +119,10 @@
 - Final project audit.
 - Status: ✅ CLOSED 2026-10-19 (merged to main + pushed, TAGGED `v2.5.0`; no CI configured). `docs/final-audit-v2.5.0.md`: 26 items, short reruns PASS, src identical to ns-3.29, opengym core identical to ns3-gym db016f8b3. FAIL: references (21 placeholders). PARTIAL: W&B online sync, README, report/deck review, raw-data reproducibility.
 
+### v3.0.0
+- Beat Global-CW OSCAR with per-AP-CW agents (trainer-only: `--mode shared`, `--obs hist`, `--alpha`, `--rewardScale`, `--tag`).
+- Status: 🔄 experiments DONE 2026-10-26 on branch `feature/beat-oscar` (not merged/pushed/tagged). Best variant V5 is Global-level with much lower seed variance (20,40: 37.08 ± 0.85 vs 36.17 ± 6.95), not a proven gain; stress runs seed 0: +10.1 % (5,55), +4.6 % (5,5,5,45), -0.9 % (6x10) vs Global, n=1. Per-AP CWs do not separate. `docs/improvement-v3.0.0.md`, `docs/adr/0004-relaxed-isolation.md`.
+
 ## Not Planned for v1
 
 - Mobility
