@@ -19,10 +19,10 @@ from summarize_run import summarize  # noqa: E402
 
 # two-sided 95% Student t critical values, df = 1..10 (no scipy in the venv)
 T95 = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228}
-MODES = ["beb", "global", "independent", "coop", "shared", "central"]
-LABEL = {"beb": "BEB (802.11)", "global": "Centralized single-agent", "independent": "Independent per-AP", "coop": "Cooperative per-AP", "shared": "Shared-parameter agent", "central": "Central critic"}
-SHORT = {"beb": "BEB", "global": "Global", "independent": "Indep.", "coop": "Coop.", "shared": "Shared", "central": "Central"}
-COLOR = {"beb": "#888888", "global": "#d95f02", "independent": "#1b9e77", "coop": "#e7298a", "shared": "#66a61e", "central": "#7570b3"}
+MODES = ["beb", "global", "independent", "coop", "shared", "central", "static"]
+LABEL = {"beb": "BEB (802.11)", "global": "Centralized single-agent", "independent": "Independent per-AP", "coop": "Cooperative per-AP", "shared": "Shared-parameter agent", "central": "Central critic", "static": "Static CW (no agent)"}
+SHORT = {"beb": "BEB", "global": "Global", "independent": "Indep.", "coop": "Coop.", "shared": "Shared", "central": "Central", "static": "Static"}
+COLOR = {"beb": "#888888", "global": "#d95f02", "independent": "#1b9e77", "coop": "#e7298a", "shared": "#66a61e", "central": "#7570b3", "static": "#a6761d"}
 
 parser = argparse.ArgumentParser()
 parser.add_argument("bench_dirs", nargs="+")
@@ -111,7 +111,7 @@ for topo in topos:
         md += ["| %d | %s | %s | %d/%d |" % (len(seeds), fmt(d), fmt(p, 1), sum(x > 0 for x in d), len(d)), ""]
 
     if args.vsIndependent:
-        for cm in ("coop", "shared"):
+        for cm in ("coop", "shared", "static"):
             if cm in runs[topo] and "independent" in runs[topo]:
                 md += ["Paired difference of %s vs Independent per-AP (same ns-3 seed), aggregate throughput:" % LABEL[cm], "",
                        "| n pairs | Δ Mbps | Δ % | above Independent |", "|---|---|---|---|"]
@@ -119,6 +119,14 @@ for topo in topos:
                 d = [runs[topo][cm][s]["tot_policy"] - runs[topo]["independent"][s]["tot_policy"] for s in seeds]
                 p = [100 * x / runs[topo]["independent"][s]["tot_policy"] for x, s in zip(d, seeds)]
                 md += ["| %d | %s | %s | %d/%d |" % (len(seeds), fmt(d), fmt(p, 1), sum(x > 0 for x in d), len(d)), ""]
+
+    if "shared" in runs[topo] and "static" in runs[topo]:
+        md += ["Paired difference of Shared-parameter agent vs Static CW (same ns-3 seed), aggregate throughput:", "",
+               "| n pairs | Δ Mbps | Δ % | above Static |", "|---|---|---|---|"]
+        seeds = sorted(set(runs[topo]["shared"]) & set(runs[topo]["static"]))
+        d = [runs[topo]["shared"][s]["tot_policy"] - runs[topo]["static"][s]["tot_policy"] for s in seeds]
+        p = [100 * x / runs[topo]["static"][s]["tot_policy"] for x, s in zip(d, seeds)]
+        md += ["| %d | %s | %s | %d/%d |" % (len(seeds), fmt(d), fmt(p, 1), sum(x > 0 for x in d), len(d)), ""]
 
     for cm in ("coop", "shared"):
         if cm in runs[topo] and "global" in runs[topo]:

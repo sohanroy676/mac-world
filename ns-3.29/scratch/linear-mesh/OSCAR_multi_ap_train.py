@@ -8,6 +8,7 @@ v0.9.0: --check also recomputes obs (Test A) and reward (Test D) per AP and chec
 v1.1.0: --mode independent (default, above) | global (ONE agent, one CW broadcast to every AP; state = network
 loss (sum tx - sum rx)/sum tx, reward = network goodput / (offered load x all STAs x step)) | beb (ns-3 --dryRun
 through the same stepping loop, no agent: standard 802.11 measured in the same per-step window).
+v2.8.2: --mode static --staticCw N = no agent, every AP gets cwMin = cwMax = N from step 1 (control for "is the learned CW better than a fixed one").
 v1.8.0: --mode central (CTDE): N local actors (each sees only its own loss) + ONE shared critic Q(s_joint, a_joint)
 trained on the global goodput reward, joint replay, MADDPG-style actor update (agents/our_ddpg/central.py).
 v2.8.0: --mode coop = independent (N agents, own-loss obs only) but each replay stores r' = (1-L)*r_i + L*r_global (--rewardMix L, default 1).
@@ -48,7 +49,8 @@ parser.add_argument("--sharedApId", type=int, choices=[0, 1], default=1, help="s
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "coop", "shared", "global", "beb", "central"], default="independent")
+parser.add_argument("--mode", choices=["independent", "coop", "shared", "global", "beb", "central", "static"], default="independent")
+parser.add_argument("--staticCw", type=int, default=850, help="static mode: fixed CW (cwMin = cwMax) for every AP from step 1, no agent")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 args = parser.parse_args()
 
@@ -93,7 +95,7 @@ if args.staMaxMissedBeacons > 0:
     sim_args["staMaxMissedBeacons"] = args.staMaxMissedBeacons
 if args.mode == "beb":
     sim_args["dryRun"] = "true"  # cw.cc skips setApCw; every AP keeps BEB CW 16..1024
-n_agents = {"independent": n, "coop": n, "shared": 1, "global": 1, "beb": 0, "central": 0}[args.mode]  # central: one CentralDDPG object
+n_agents = {"independent": n, "coop": n, "shared": 1, "global": 1, "beb": 0, "central": 0, "static": 0}[args.mode]  # central: one CentralDDPG object
 
 try:
     git_rev = subprocess.check_output(["git", "describe", "--tags", "--always", "--dirty"], stderr=subprocess.DEVNULL,
@@ -141,7 +143,7 @@ def noise_std(t):
 
 def agent_loss(i, name):
     """Loss of the agent that acts for AP i (independent/coop: own; global: the shared one; beb: none -> 0)."""
-    if args.mode == "beb":
+    if args.mode in ("beb", "static"):
         return 0.0
     if args.mode == "central":
         return scalar(central.actor_losses[i] if name == "actor_loss" else central.critic_loss)
@@ -239,6 +241,8 @@ try:
                 else:
                     a = agents[0].select_action(S_g) + np.random.normal(0, noise_std(time_step))
                     acts[:] = np.clip(a, -max_action, max_action)[0]
+            if args.mode == "static":
+                acts[:] = 2 * (np.log2(args.staticCw) - 4) / real_max_action - 1  # CW = 2^(4 + real), no agent
             real = (real_max_action * (acts + 1) / 2).astype(np.float32)  # beb: ignored by cw.cc (dryRun)
 
             obs, _, done, info = env.step(np.array([real], dtype=np.float32))

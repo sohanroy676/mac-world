@@ -139,3 +139,18 @@ All 20 runs PASS `--check` (shared ×100 5/5, independent/beb/global 15/15; 860-
 - Fact: `global` collapsed to about 5.5 Mbps on seeds 22 and 23 (2/5); shared ×100 had no collapse (min 36.86). Jain 0.994 (shared), 0.991 (BEB).
 - Fact: shared ×100 settles at CW about 850 on all four APs (last-100 mean), BEB at 16. Inference, untested: much of the gain may come from a high, fixed CW rather than from learned adaptation; a static-CW baseline (e.g. CW 850 for all APs) was not run, so "learns better than OSCAR" is not shown, only "higher throughput than per-AP OSCAR".
 - Limit: one topology (15,15,15,15), n = 5, one `--rewardScale` value chosen on dev seeds 0-2 and the seed-10 diagnostic.
+
+---
+
+# Addendum B: static-CW control for shared ×100 (written 2026-10-27 BEFORE the runs below)
+
+Question: is shared ×100's gain over per-AP OSCAR just a high fixed CW, or does the learned policy add something? Context (fact, from the Addendum A confirmation): shared ×100's last-100-step mean CW is 940-960 on seeds 20, 21, 23, 24 and about 470 on seed 22 (grand mean about 850), versus 16 for BEB.
+
+Runs: new mode `--mode static --staticCw 850` (no agent; every AP gets cwMin = cwMax = 850 from step 1; `--check` on), 15,15,15,15, seeds 20-24, same settings as Addendum A. 5 runs. One CW value, fixed now (the grand mean); no sweep, no second value. Smoke (2 s, seed 20, PASS) shows cw_set = cw_ap = 850 on all APs.
+
+Comparisons (paired by seed against the existing Addendum A runs, 95 % t-interval, n = 5):
+- S1 shared ×100 − static850. Claim "the learned policy beats a fixed CW 850" only if the lower bound > 0.
+- S2 static850 − independent, S3 static850 − BEB: reported; a claim only if the lower bound > 0.
+- Reading rule, fixed now: if S1's CI includes 0 or is below 0, the Addendum A gain over per-AP OSCAR is not shown to need learning (a fixed CW does as well); the gain statement stays "higher throughput than per-AP OSCAR", not "better learned adaptation". If S1 > 0 with the lower bound > 0, learning adds something beyond a fixed CW 850 on this topology.
+
+Not allowed after seeing results: other CW values presented as the baseline, dropping seeds, changing the metric. A failed `--check` may be rerun once with identical settings only for an infrastructure fault. A different static CW (e.g. 470 or 950) would be a new addendum and a new, separately reported run set.
