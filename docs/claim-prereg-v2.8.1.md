@@ -188,3 +188,22 @@ Comparisons (paired by seed with the existing shared ×100 and BEB runs, 95 % t-
 Four C1 comparisons, no multiplicity correction; all reported whatever the outcome. The best fixed CW is picked after seeing seeds 20-24, so its advantage is optimistic (selection on the same seeds); the sweep only characterizes the throughput-vs-CW curve on this topology and is not a confirmation of a tuned fixed CW. A confirmation of any best value would need fresh seeds.
 
 Not allowed after seeing results: dropping CWs or seeds, relabeling the metric, adding CW values to this addendum. A failed `--check` may be rerun once, same settings, only for an infrastructure fault.
+
+## Addendum C results (added 2026-10-27, seeds 20-24, 15,15,15,15; the rule above was not changed)
+All 15 new runs PASS `--check` (821-957 s). CW 850 is the Addendum B set. Each CW's tables (paired against the Addendum A shared ×100 and BEB runs): `docs/figures/v2.8.2/confirm-static{470,650,850,1024}/`. Raw dirs local only (`results/bench-static{470,650,1024}-confirm`). Intervals recomputed from `per_seed.csv` (same values).
+
+| Fixed CW | Aggregate Mbps (mean ± 95 % CI) | C1: static − shared ×100 | Seeds above shared | C2: static − BEB |
+|---|---|---|---|---|
+| 470 | 39.76 ± 0.09 | **+2.35 ± 1.22** | 5/5 | +12.20 ± 0.72 |
+| 650 | 38.98 ± 0.27 | +1.57 ± 1.41 | 4/5 | +11.42 ± 0.91 |
+| 850 | 37.68 ± 0.47 | +0.27 ± 1.61 | 4/5 | +10.12 ± 1.10 |
+| 1024 | 36.28 ± 0.51 | −1.13 ± 1.66 | 0/5 | +8.72 ± 1.13 |
+
+(Shared ×100: 37.41 ± 1.15; BEB 27.56 ± 0.65; per-AP OSCAR 17.74 ± 1.40. Addendum B printed shared − static850 as −0.27 ± 1.61 with 1/5 seeds above; the 4/5 here is the same comparison with the sign flipped, static − shared.)
+
+- Fact: throughput falls monotonically with the fixed CW over 470-1024 (39.76 → 36.28), and every tested fixed CW beats BEB on all seeds (lower bound > 0) and per-AP OSCAR by a wide margin.
+- Fact: the rule's threshold is met for one value: fixed CW 470 beats shared ×100 (+2.35 ± 1.22, 5/5, lower bound > 0). Fixed 650 and 850 are indistinguishable from shared; fixed 1024 is below it on 0/5 seeds (CI includes 0).
+- Fact: no tested CW is shown to be worse than shared ×100 (the upper bound of C1 is above 0 everywhere).
+- Fact: static 470 has the narrowest spread (±0.09) of any mode tested.
+- Caveat: 470 is the lowest value tested, so the curve's optimum could lie below 470 (between 16 and 470); the sweep says nothing there. The best-of-four selection is on the same seeds, so +2.35 is optimistic and is not a confirmed result for tuned CW; confirming "fixed 470 > shared ×100" would need fresh seeds.
+- Reading: on this topology a well-chosen fixed CW does at least as well as shared ×100 and beats it at CW 470, so the learned policy is not shown to add anything and its seed-to-seed CW (470-960) was not an optimized operating point. One topology, n = 5.

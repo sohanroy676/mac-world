@@ -30,6 +30,7 @@ All values are Δ aggregate Mbps versus `independent` unless stated; mean ± 95 
 | 10-14 (confirmation) | 6x10 | central (P3) | +9.29 ± 7.73 | 5/5 | suggestive, not confirmed |
 | 20-24 (confirmation) | 15,15,15,15 | shared ×100 (pre-registered, Addendum A) | **+19.67 ± 1.31** (+111 %) | 5/5 | confirmed on this topology |
 | 20-24 (control) | 15,15,15,15 | static CW 850, no agent (pre-registered, Addendum B) | **+19.94 ± 1.73** (+113 %) | 5/5 | same gain with no learning |
+| 20-24 (control) | 15,15,15,15 | static CW 470 / 650 / 1024, no agent (Addendum C) | +22.0 / +21.2 / +18.5 (see below) | 5/5 each | all beat per-AP OSCAR |
 
 Context rows (same seeds 10-14, from claim-prereg-v2.8.1):
 - `independent` is below BEB at 6x10 by −13.19 ± 2.53 Mbps (0/5 seeds above), and 20.14 vs 27.85 Mbps at 15x4.
@@ -47,17 +48,25 @@ Seeds 20-24, 15,15,15,15 (source: claim-prereg-v2.8.1 Addendum A confirmation; t
 | `shared` ×100 | 37.41 ± 1.15 | 0.994 |
 | static CW 850 (no agent) | 37.68 ± 0.47 | 0.995 |
 
-Control (Addendum B): shared ×100 − static850 = −0.27 ± 1.61 (1/5); static850 − BEB = +10.12 ± 1.10 (5/5).
+Fixed-CW sweep (Addendum B + C, no agent, seeds 20-24; paired against shared ×100 and BEB):
+
+| Fixed CW | Aggregate Mbps | static − shared ×100 | static − BEB |
+|---|---|---|---|
+| 470 | 39.76 ± 0.09 | **+2.35 ± 1.22** (5/5) | +12.20 ± 0.72 |
+| 650 | 38.98 ± 0.27 | +1.57 ± 1.41 (4/5) | +11.42 ± 0.91 |
+| 850 | 37.68 ± 0.47 | +0.27 ± 1.61 (4/5) | +10.12 ± 1.10 |
+| 1024 | 36.28 ± 0.51 | −1.13 ± 1.66 (0/5) | +8.72 ± 1.13 |
 
 Secondary: shared ×100 − BEB +9.85 ± 0.67 (5/5, CI > 0); shared ×100 − `global` +13.64 ± 22.01 (3/5, no claim). `global` collapsed to about 5.5 Mbps in 2 of 5 seeds; shared ×100 never did (minimum 36.86).
 
 ## 5. Verdict
 - **Confirmed, but not as learning (one topology):** `shared` with `--rewardScale 100` has higher throughput than per-AP OSCAR at 15,15,15,15 on fresh seeds 20-24: +19.67 ± 1.31 Mbps, 5/5, under the rule fixed before the runs (also +9.85 ± 0.67 over BEB).
-- **The learning is not shown to matter:** a fixed CW 850 with no agent gets the same throughput (37.68 ± 0.47 vs 37.41 ± 1.15; shared − static −0.27 ± 1.61, 1/5), so by the pre-registered reading rule (Addendum B) the gain over per-AP OSCAR is not shown to need a learned policy. The honest statement is: per-AP OSCAR is far from a good operating point here (CW stays low, 17.74 Mbps), and any policy that reaches CW of several hundred does much better.
+- **A fixed CW does as well or better:** the pre-registered sweep (Addendum B/C) shows fixed CW 650 and 850 are indistinguishable from `shared` ×100, 1024 is not shown different, and fixed CW 470 beats it (+2.35 ± 1.22, 5/5; best-of-four picked on the same seeds, so optimistic). Throughput falls steadily from CW 470 to 1024 (39.76 → 36.28). So the gain over per-AP OSCAR is not a result of the learned policy: it comes from operating at a CW of a few hundred instead of per-AP OSCAR's low CW (17.74 Mbps).
+- **What can honestly be claimed:** (1) per-AP OSCAR is far below a simple fixed CW on this topology; (2) a shared-parameter DDPG agent finds a CW in the good range and beats BEB; (3) it does not beat a well-chosen fixed CW. "Our method improves on OSCAR by learning" is not supported.
 - **Suggestive, not confirmed:** `central` over per-AP OSCAR at 6x10 (P3, +9.29 ± 7.73). No static-CW control was run at 6x10.
 - **Not shown:** `coop` and `shared` ×1 over per-AP OSCAR (CIs include 0).
-- **Not claimed:** beating `global` (+13.64 ± 22.01, 3/5; `global` collapsed in 2/5 seeds); beating a well-chosen fixed CW; generalizing to other topologies; beating the paper's single-AP OSCAR.
-- **Open:** only CW 850 was tried as the fixed baseline; the best fixed CW is unknown and might beat shared ×100. Shared ×100's own CW varied by seed (about 470 to 960).
+- **Not claimed:** beating `global` (+13.64 ± 22.01, 3/5; `global` collapsed in 2/5 seeds); beating a well-chosen fixed CW; generalizing to other topologies or loads; beating the paper's single-AP OSCAR.
+- **Open:** 470 is the lowest fixed CW tested, so the best fixed CW is unknown (anywhere from 16 to 470 is untested); a confirmation of "fixed 470 > shared ×100" would need fresh seeds. Whether an adaptive policy helps under changing load or topology (where one fixed CW cannot fit) is untested here and is the case where learning could matter.
 
 ## 6. Limits
 n = 5 per comparison; two topologies; one run per cell; 15 s simulated, single channel; `central` collapsed at 4..40 and 22x10 in earlier runs; shared ×100 sits at a high CW (about 940-960 in four seeds, about 470 in seed 22, grand mean about 850; the lock-in is not removed, only its side changed in the seed-10 diagnostic), and `--rewardScale 100` was chosen on dev seeds 0-2 plus that diagnostic; the 15x4 independent seed 0-2 and 10-14 means are equal by coincidence; no paper reproduction; `global` mislabelled as OSCAR in older docs and legends (PNG figures made before 2026-10-25 still show the old text).

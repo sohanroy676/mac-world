@@ -7,6 +7,8 @@
 
 ## Done
 
+- **Fixed-CW sweep (2026-10-27, branch `feature/static-cw-baseline`, committed, NOT merged/pushed/tagged)** — Addendum C, CW 470/650/1024 seeds 20-24, 15/15 PASS: 39.76/38.98/(850: 37.68)/36.28 Mbps; fixed 470 beats shared x100 by +2.35 ± 1.22 (5/5); no learning advantage shown. `docs/figures/v2.8.2/confirm-static*`.
+
 - **Static-CW control (2026-10-27, branch `feature/static-cw-baseline`, committed, NOT merged/pushed/tagged)** — `--mode static`, Addendum B, seeds 20-24 5/5 PASS: static CW 850 = 37.68 ± 0.47 vs shared x100 37.41 ± 1.15 (diff -0.27 ± 1.61); gain over per-AP OSCAR not shown to need learning.
 
 - **OSCAR improvement-claim report + shared x100 confirmation (2026-10-27, branch `docs/oscar-improvement-claim`, committed, NOT merged/pushed/tagged)** — seeds 20-24 at 15,15,15,15, 20/20 PASS: shared x100 - independent +19.67 ± 1.31 (5/5, pre-registered rule met), - BEB +9.85 ± 0.67, - global +13.64 ± 22.01 (no claim). Static-CW baseline not run. `docs/oscar-improvement-claim.md`, `docs/figures/v2.8.2/`.
