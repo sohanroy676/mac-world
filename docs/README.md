@@ -37,6 +37,7 @@ Files are grouped by purpose. Version numbers in file names match the roadmap (`
 - `robustness-v2.0.0.md`: robustness experiments.
 - `final-results-v2.2.0.md`: final result set (81 runs, n=3).
 - `improvement-v3.0.0.md`: attempt to beat Global-CW OSCAR (neutral result).
+- (v3.1.0+ reports follow here; the plan behind them is `../research-beat-oscar.md`.)
 
 ## reports/
 - `technical-report-v2.3.0.md`: full write-up.

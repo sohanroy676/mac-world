@@ -123,6 +123,26 @@
 - Beat Global-CW OSCAR with per-AP-CW agents (trainer-only: `--mode shared`, `--obs hist`, `--alpha`, `--rewardScale`, `--tag`).
 - Status: ✅ experiments DONE 2026-10-26, merged to main, pushed, tagged `v3.0.0`. A1 3-seed follow-up (2026-10-27, branch `docs/a1-seeds`): +6.9 ± 26.7 % vs Global, CI spans 0. Best variant V5 is Global-level with lower seed variance at 20,40 and 5,55, not a proven gain: 20,40 +2.8 ± 16.9 %; imbalance 3 seeds +5.0 ± 13.6 % (5,55), +3.8 ± 10.8 % (5,5,5,45) vs Global; 6x10 seed 0 -0.9 %. Ablations (seed 0): shared mode needs neither hist obs nor x100 (A1 39.09, A2 37.38). Per-AP CWs do not separate. `docs/results/improvement-v3.0.0.md`, `docs/adr/0004-relaxed-isolation.md`.
 
+### v3.1.0
+- Ceiling: static CW sweep (`--mode static --apCws`), D1 payoff matrix, 20,40 and 6x10. Research idea #1.
+- Status: 🔄 IN PROGRESS (started 2026-10-27, branch `feature/v3.1.0-ceiling`). Decision pending: is headroom over Global larger than the CI width?
+
+### v3.2.0
+- Fair protocol: multi-episode training, save/load actor, frozen noise-free eval, n >= 8 paired seeds, `--alpha 0` independent, CWmin-only flag, TD3 option (ideas #2, #3, #8, #9).
+- Status: ⏳ planned.
+
+### v3.3.0
+- Sensing + heuristics: idle-slot/busy-fraction and MacTxDataFailed observations, IdleSense (and optionally Bianchi) mode, residual RL (ideas #4, #5, #6).
+- Status: ⏳ planned.
+
+### v3.4.0
+- Per-AP scenario: partial-overlap loss matrix + fairness reward (ideas #7, #14). Needs user approval first (touches "detailed interference modelling" out-of-scope line).
+- Status: ⏳ planned, blocked on user approval.
+
+### v3.5.0
+- Optional: #11, then #10, then #13, only on user request.
+- Status: ⏳ optional.
+
 ## Not Planned for v1
 
 - Mobility
