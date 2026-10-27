@@ -1,5 +1,5 @@
 """v1.8.0: CTDE central critic. N local actors mu_i(s_i), ONE shared critic Q(s_joint, a_joint) on the global reward.
-Spec: docs/central-critic-v1.7.0.md. Actor/Critic classes are reused unchanged from Our_DDPG.py.
+Spec: docs/design/central-critic-v1.7.0.md. Actor/Critic classes are reused unchanged from Our_DDPG.py.
 """
 import copy
 

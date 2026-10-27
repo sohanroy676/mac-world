@@ -57,7 +57,7 @@ The PHY/MAC scenario matches closely; the agent settings do not, because mac-wor
 
 ## Comparison-ready table
 
-The metric OSCAR reports is throughput gain over standard 802.11, so the comparable mac-world figure is each mode's paired gain over BEB in the same simulator. mac-world's `global` mode is OSCAR applied to many APs (one agent, one CW for every AP); `independent` is this project's per-AP method. mac-world values are from [final-results-v2.2.0](https://github.com/sohanroy676/mac-world/blob/main/docs/final-results-v2.2.0.md) (mean over 3 seeds, 95 % CI) and [baseline-v0.1.0](https://github.com/sohanroy676/mac-world/blob/main/docs/baseline-v0.1.0.md).
+The metric OSCAR reports is throughput gain over standard 802.11, so the comparable mac-world figure is each mode's paired gain over BEB in the same simulator. mac-world's `global` mode is OSCAR applied to many APs (one agent, one CW for every AP); `independent` is this project's per-AP method. mac-world values are from [final-results-v2.2.0](https://github.com/sohanroy676/mac-world/blob/main/docs/results/final-results-v2.2.0.md) (mean over 3 seeds, 95 % CI) and [baseline-v0.1.0](https://github.com/sohanroy676/mac-world/blob/main/docs/results/baseline-v0.1.0.md).
 
 | Metric | OSCAR paper (1 AP) | mac-world measured | Comparable now? |
 | --- | --- | --- | --- |
@@ -76,9 +76,9 @@ The metric OSCAR reports is throughput gain over standard 802.11, so the compara
 | Delay | not reported | not measured | No |
 | vs CCOD | +30 % (15 STAs), +15 % (50 STAs) | CCOD never run | Needs run (B) |
 
-Note on seeds and binaries: the Global and BEB rows come from the committed v2.2.0 tables (fixed-binary runs of 2026-10-18). The v3.0.0 V5 rows were measured against Global and BEB re-run on the current binary, because the old raw run directories are not on this machine. BEB reproduces exactly (27.30 ± 0.63); Global differs slightly (36.17 ± 6.95 here vs 36.29 ± 7.16, and +32.6 ± 28.2 % vs BEB vs +33.0 ± 29.0 %). V5 deltas are paired within the v3.0.0 runs, so compare V5 to Global from `improvement-v3.0.0.md`, not across the two sources.
+Note on seeds and binaries: the Global and BEB rows come from the committed v2.2.0 tables (fixed-binary runs of 2026-10-18). The v3.0.0 V5 rows were measured against Global and BEB re-run on the current binary, because the old raw run directories are not on this machine. BEB reproduces exactly (27.30 ± 0.63); Global differs slightly (36.17 ± 6.95 here vs 36.29 ± 7.16, and +32.6 ± 28.2 % vs BEB vs +33.0 ± 29.0 %). V5 deltas are paired within the v3.0.0 runs, so compare V5 to Global from `docs/results/improvement-v3.0.0.md`, not across the two sources.
 
-Important for the goal: the per-AP independent agents do not beat OSCAR-style global CW; they are at or below BEB from 4 APs on. v3.0.0 (`docs/improvement-v3.0.0.md`) added a parameter-shared per-AP variant (V5) that reaches Global level but does not beat it: every paired V5 minus Global CI spans 0 (20,40, 5,55, 5,5,5,45; n=3 each). No mode has yet beaten `global`, so "better than OSCAR" is not supported. It would need a paired CI above 0.
+Important for the goal: the per-AP independent agents do not beat OSCAR-style global CW; they are at or below BEB from 4 APs on. v3.0.0 (`docs/results/improvement-v3.0.0.md`) added a parameter-shared per-AP variant (V5) that reaches Global level but does not beat it: every paired V5 minus Global CI spans 0 (20,40, 5,55, 5,5,5,45; n=3 each). No mode has yet beaten `global`, so "better than OSCAR" is not supported. It would need a paired CI above 0.
 
 Runs that would make the comparison fair (not started, each needs your go-ahead):
 
@@ -101,4 +101,4 @@ Runs that would make the comparison fair (not started, each needs your go-ahead)
 - [UNICT IRIS record](https://www.iris.unict.it/handle/20.500.11769/677573)
 - [raoulraft/OSCAR-contention-window-RL](https://github.com/raoulraft/OSCAR-contention-window-RL)
 - [CCOD paper, arXiv 2003.01492](https://arxiv.org/pdf/2003.01492v4.pdf)
-- mac-world: [final-results-v2.2.0](https://github.com/sohanroy676/mac-world/blob/main/docs/final-results-v2.2.0.md), [baseline-v0.1.0](https://github.com/sohanroy676/mac-world/blob/main/docs/baseline-v0.1.0.md), project review `reviews/mac-world-repo-review-2026-10-07.md`
+- mac-world: [final-results-v2.2.0](https://github.com/sohanroy676/mac-world/blob/main/docs/results/final-results-v2.2.0.md), [baseline-v0.1.0](https://github.com/sohanroy676/mac-world/blob/main/docs/results/baseline-v0.1.0.md), project review `reviews/mac-world-repo-review-2026-10-07.md`

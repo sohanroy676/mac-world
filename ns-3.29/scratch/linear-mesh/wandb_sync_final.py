@@ -11,7 +11,7 @@ Why a patch: wandb 0.18.7 `wandb sync` printed "done" and wrote `.synced`, but c
 the server answers the GraphQL introspection probes with null and the client crashed in `upsert_run`
 ('NoneType' object has no attribute 'get'). The patch below only acts when a probe fails and sets the
 client's own no-introspection fallback; no package file or pin is changed. A run only counts as synced
-when the API finds it afterwards. See docs/final-results-v2.2.0.md section 5.
+when the API finds it afterwards. See docs/results/final-results-v2.2.0.md section 5.
 """
 import argparse
 import csv

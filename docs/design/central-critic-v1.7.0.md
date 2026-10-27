@@ -4,7 +4,7 @@ Status: design. No code and no ns-3 run in v1.7.0. Decision record: `docs/adr/00
 Values below were read from `OSCAR_multi_ap_train.py` and `agents/our_ddpg/` (facts). Anything marked *inference* or *unknown* is not verified.
 
 ## 0. Why, scope, timebox
-- Motivation (fact, `docs/scaling-v1.6.0.md`): independent agents are below BEB at every N (-9 % -> -54 %, CI excludes 0 only at N=10); global-CW is above BEB at 17/17 seed pairs. Whether a central critic fixes the independent deficit is **untested** (unknown).
+- Motivation (fact, `docs/results/scaling-v1.6.0.md`): independent agents are below BEB at every N (-9 % -> -54 %, CI excludes 0 only at N=10); global-CW is above BEB at 17/17 seed pairs. Whether a central critic fixes the independent deficit is **untested** (unknown).
 - Scheme: CTDE. Centralized training critic, decentralized execution actors. One **shared** critic, trained on the **global** reward (user decision 2026-10-16).
 - Optional. It must never block core completion. Timebox: v1.8 prototype <= 1 session; v1.9 small evaluation. If the timebox runs out or v1.9 shows no benefit (rule in §10), document as an optional/negative result and continue to v2.x.
 - Existing modes (`independent`, `global`, `beb`) are untouched; the new one is `--mode central`.

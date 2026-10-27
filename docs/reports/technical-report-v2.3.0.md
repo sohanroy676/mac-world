@@ -42,7 +42,7 @@ Under BEB the CW starts at 16 (`CWmin`) and doubles per failed attempt up to 102
 
 ## 7. Original OSCAR [Inherited]
 
-OSCAR is an AP-level DDPG agent that sets one CW for the AP's stations, from a loss-based observation, with a throughput-oriented reward and 10 ms decision epochs [REF:oscar]. The v0.1.0 baseline freeze (`docs/baseline-v0.1.0.md`) records what the code does, which differs from the paper in places. Differences measured in the code (code is authoritative over the paper):
+OSCAR is an AP-level DDPG agent that sets one CW for the AP's stations, from a loss-based observation, with a throughput-oriented reward and 10 ms decision epochs [REF:oscar]. The v0.1.0 baseline freeze (`docs/results/baseline-v0.1.0.md`) records what the code does, which differs from the paper in places. Differences measured in the code (code is authoritative over the paper):
 
 | Item | This codebase | Note |
 |---|---|---|
@@ -52,13 +52,13 @@ OSCAR is an AP-level DDPG agent that sets one CW for the AP's stations, from a l
 | Discount / soft-update τ | 0.7 / 1e-3 | |
 | State actually used | 1 scalar of the 300-value loss history | largest modelling gap versus the paper |
 | Single-AP reward normalization | hard-coded `5 · 150` | not N-generic |
-| Known quirks | uninitialized `jain_index()` in `cw.cc`; CW 0/0 until the first action | `baseline-v0.1.0.md` §7 |
+| Known quirks | uninitialized `jain_index()` in `cw.cc`; CW 0/0 until the first action | `docs/results/baseline-v0.1.0.md` §7 |
 
 Both the single-AP path and the original agent classes (`agents/our_ddpg/Our_DDPG.py`) are reused unchanged by the multi-AP trainer. [Inherited]
 
 ## 8. Related Work
 
-Supporting literature on DRL/MARL-based CW optimization (not this project's architecture; `docs/project_description.md` §15):
+Supporting literature on DRL/MARL-based CW optimization (not this project's architecture; `docs/planning/project_description.md` §15):
 
 - OSCAR [REF:oscar]: the project baseline (AP-level DDPG, loss observation, throughput reward).
 - SETL-DQN(MA) [REF:setl]: cooperative multi-agent CW optimization with station-level agents and local observations, common throughput reward, Dec-POMDP framing.
@@ -84,7 +84,7 @@ One ns-3 process contains N APs and all their stations. A Python trainer owns on
  +-----------------------------------+
 ```
 
-Design contract: ADR-0002 and `docs/multi-ap-design-v0.2.0.md`. Invariants: per-AP isolation (no agent sees another AP's observation), local critics only in the core, sequential joint stepping, central critic optional and never blocking.
+Design contract: ADR-0002 and `docs/design/multi-ap-design-v0.2.0.md`. Invariants: per-AP isolation (no agent sees another AP's observation), local critics only in the core, sequential joint stepping, central critic optional and never blocking.
 
 ## 10. System Design
 
@@ -115,7 +115,7 @@ The actor outputs `a ∈ [−1, 1]` (Gaussian exploration noise added, then clip
 
 ## 14. Reward
 
-[New in this form] Per AP: `reward_i = clamp(goodput_i / (offered_load · stas_i · step), 0, 1)`, i.e. received payload bits of AP *i*'s sink normalized by what its stations offer. In `global` mode the reward is the network goodput normalized by the offered load of all stations. Because the offered load saturates the channel, the policy-phase reward is small (about 0.003–0.004 at 60 STAs); this is a known scale (`docs/core-v1.0.0.md` §5), and the effect on learning is *inference* (untested). Reward plots (`reward.png`) are comparable within a figure only.
+[New in this form] Per AP: `reward_i = clamp(goodput_i / (offered_load · stas_i · step), 0, 1)`, i.e. received payload bits of AP *i*'s sink normalized by what its stations offer. In `global` mode the reward is the network goodput normalized by the offered load of all stations. Because the offered load saturates the channel, the policy-phase reward is small (about 0.003–0.004 at 60 STAs); this is a known scale (`docs/results/core-v1.0.0.md` §5), and the effect on learning is *inference* (untested). Reward plots (`reward.png`) are comparable within a figure only.
 
 ## 15. ns-3 Implementation
 
@@ -125,7 +125,7 @@ Project code, all under `ns-3.29/scratch/linear-mesh/` ([Upstream] ns-3.29 and `
 - PHY/MAC: 802.11ax 5 GHz, HE MCS 11, 20 MHz channel width, 800 ns guard interval, constant-rate station manager. [Inherited baseline settings, unchanged]
 - Seeds: ns-3 seed = Python seed + 1; a bug where `--seed` did not affect ns-3 was fixed in v1.1.0 (commit 0e71414).
 - **Bug found and fixed (v2.0.0, commit 1306e37):** agent modes began with CW 0/0, which starved most stations during warm-up. Multi-AP agent runs now begin at 16/1024. All v1.1.0–v1.9.0 agent results were produced before this fix and are treated as pre-fix (appendix only). Only the 81 v2.0.0 `*-cwfix` runs are used for conclusions.
-- Association: with traffic starting at t = 0, large-N runs show late association and deassociation bursts; `--trafficStart=2` removed them in a diagnostic run (`docs/robustness-v2.0.0.md` §G). The final set keeps the inherited t = 0 start; dry BEB checks of its topologies (20,40, 6 x 10, 5,5,5,45) show every STA associated by 1.12 s, before the policy window (`docs/robustness-v2.0.0.md` §G.5).
+- Association: with traffic starting at t = 0, large-N runs show late association and deassociation bursts; `--trafficStart=2` removed them in a diagnostic run (`docs/results/robustness-v2.0.0.md` §G). The final set keeps the inherited t = 0 start; dry BEB checks of its topologies (20,40, 6 x 10, 5,5,5,45) show every STA associated by 1.12 s, before the policy window (`docs/results/robustness-v2.0.0.md` §G.5).
 
 ## 16. Multi-Agent Architecture
 
@@ -140,7 +140,7 @@ Project code, all under `ns-3.29/scratch/linear-mesh/` ([Upstream] ns-3.29 and `
 
 ## 17. W&B Experiment Tracking
 
-Each run logs per-AP and global metrics (names from design §7) to Weights & Biases, offline by default. Since v2.1.0 runs are named `<topology> <mode> s<seed>` with mode and git-revision tags. Fact: the 81 final runs were produced before this naming and are stored as local offline `.wandb` files. Update 2026-10-20: all 81 were synced online to project `contention_window` (private) and renamed `<topology> <mode> s<seed>` with tags `multi-ap`, `final-v2.2.0`, `bench-<set>`, `mode-<mode>` (`docs/final-results-v2.2.0.md` §5). The committed record is the aggregated tables, CSVs and plots under `docs/figures/v2.2.0/`.
+Each run logs per-AP and global metrics (names from design §7) to Weights & Biases, offline by default. Since v2.1.0 runs are named `<topology> <mode> s<seed>` with mode and git-revision tags. Fact: the 81 final runs were produced before this naming and are stored as local offline `.wandb` files. Update 2026-10-20: all 81 were synced online to project `contention_window` (private) and renamed `<topology> <mode> s<seed>` with tags `multi-ap`, `final-v2.2.0`, `bench-<set>`, `mode-<mode>` (`docs/results/final-results-v2.2.0.md` §5). The committed record is the aggregated tables, CSVs and plots under `docs/figures/v2.2.0/`.
 
 ## 18. Experimental Setup
 
@@ -180,9 +180,9 @@ Aggregate throughput in Mbps, mean ± 95 % CI over 3 seeds. Source: `docs/figure
 | Global-CW | 36.29 ± 7.16 | 12.49 / 23.81 | 0.911 | 0.624 | +33.0 ± 29.0 % |
 | Independent | 25.78 ± 20.80 | 9.26 / 16.52 | 0.837 | 0.765 | −5.6 ± 76.0 % |
 
-![Aggregate throughput, 20,40](figures/v2.2.0/main-20-40/aggregate_throughput.png)
-![Per-AP throughput, 20,40](figures/v2.2.0/main-20-40/per_ap_throughput.png)
-![CW traces, 20,40](figures/v2.2.0/main-20-40/cw_traces.png)
+![Aggregate throughput, 20,40](../figures/v2.2.0/main-20-40/aggregate_throughput.png)
+![Per-AP throughput, 20,40](../figures/v2.2.0/main-20-40/per_ap_throughput.png)
+![CW traces, 20,40](../figures/v2.2.0/main-20-40/cw_traces.png)
 
 ### 20.2 Imbalance
 
@@ -191,7 +191,7 @@ Aggregate throughput in Mbps, mean ± 95 % CI over 3 seeds. Source: `docs/figure
 | 5,55 | 28.64 ± 3.03 | 37.07 ± 5.45 | +29.7 ± 29.5 % | 27.14 ± 11.62 | −5.4 ± 36.2 % |
 | 5,5,5,45 | 27.25 ± 1.47 | 36.28 ± 8.05 | +33.2 ± 29.3 % | 22.81 ± 3.55 | −16.2 ± 17.3 % |
 
-![Aggregate throughput, imbalance](figures/v2.2.0/imbalance/aggregate_throughput.png)
+![Aggregate throughput, imbalance](../figures/v2.2.0/imbalance/aggregate_throughput.png)
 
 ### 20.3 Offered load, 20,40
 
@@ -201,7 +201,7 @@ Aggregate throughput in Mbps, mean ± 95 % CI over 3 seeds. Source: `docs/figure
 | 1 | 27.86 ± 1.60 | 38.96 ± 0.40 | 11.43 ± 13.75 | +39.9 ± 8.3 % | −58.8 ± 50.3 % |
 | 150 | 27.30 ± 0.63 | 36.29 ± 7.16 | 25.78 ± 20.80 | +33.0 ± 29.0 % | −5.6 ± 76.0 % |
 
-![Load sweep](figures/v2.2.0/load-sweep/load_sweep.png)
+![Load sweep](../figures/v2.2.0/load-sweep/load_sweep.png)
 
 ## 21. Scaling Analysis
 
@@ -214,10 +214,10 @@ Total stations fixed at 60, equal split, N = 2, 4, 6, 10 (removes the confound o
 | 6 | 28.06 | 36.92 | +31.5 ± 18.9 % (3/3) | 18.07 | −35.8 ± 109.7 % |
 | 10 | 27.89 | 36.87 | +32.2 ± 23.9 % (3/3) | 14.99 | −46.2 ± 12.2 % |
 
-![Aggregate vs N](figures/v2.2.0/fixed60-scaling/aggregate_vs_n.png)
-![Paired delta vs N](figures/v2.2.0/fixed60-scaling/paired_delta_vs_n.png)
-![Min per-AP throughput vs N](figures/v2.2.0/fixed60-scaling/min_ap_vs_n.png)
-![Jain index vs N](figures/v2.2.0/fixed60-scaling/jain_vs_n.png)
+![Aggregate vs N](../figures/v2.2.0/fixed60-scaling/aggregate_vs_n.png)
+![Paired delta vs N](../figures/v2.2.0/fixed60-scaling/paired_delta_vs_n.png)
+![Min per-AP throughput vs N](../figures/v2.2.0/fixed60-scaling/min_ap_vs_n.png)
+![Jain index vs N](../figures/v2.2.0/fixed60-scaling/jain_vs_n.png)
 
 Full table (per-station, per-AP, minimum per-AP, Jain, convergence step, run time, deassociation counts): `docs/figures/v2.2.0/fixed60-scaling/scaling_table.md`. Run time is about linear in the number of stations, not APs.
 
@@ -237,7 +237,7 @@ Inference (not tested):
 ## 23. Limitations
 
 - n = 3 per cell; most agent-versus-BEB intervals are wide and several include 0.
-- Active sinks were measured only at 20,40 / 150 Mbps, seed 0: 19/20 and 39/40 in BEB, global and independent alike, so inactive stations do not explain the agent gain there (`robustness-v2.0.0.md` §F.5, n = 1). Other topologies were not measured.
+- Active sinks were measured only at 20,40 / 150 Mbps, seed 0: 19/20 and 39/40 in BEB, global and independent alike, so inactive stations do not explain the agent gain there (`docs/results/robustness-v2.0.0.md` §F.5, n = 1). Other topologies were not measured.
 - Traffic starts at t = 0 (inherited), which causes late association at 220 STAs (not seen in the final-set topologies, §G.5 of the robustness doc, dry BEB, n=1); the final set was not rerun with `--trafficStart`.
 - Observation is one loss scalar; the 300-value history is unused.
 - Reward scale is small in saturation.
@@ -277,11 +277,11 @@ Fill in (user to supply full entries):
 
 ## Appendix A. Central critic (negative, pre-fix)
 
-Spec: `docs/central-critic-v1.7.0.md`, ADR-0003. Prototype: `--mode central` (N local actors, one shared critic on the global reward, joint replay). Evaluation (`docs/central-eval-v1.9.0.md`, n = 3, on the pre-fix binary): at N = 4 central 38.96 ± 5.11 vs independent 23.27 ± 13.19 (paired +72.5 ± 82.4 %, interval includes 0); at N = 10 central 3.20 ± 4.91 vs independent 9.00 ± 6.16 (paired −59.4 ± 71.5 %, interval includes 0), and −83 % against BEB. At N = 10 it collapsed after step ~300 (cause untested). The pre-agreed rule (beneficial only if the paired interval excludes 0 at N = 10) was not met; it stays optional and was excluded from the final set. Because the numbers predate the CW-start fix, they are not directly comparable to §20–21.
+Spec: `docs/design/central-critic-v1.7.0.md`, ADR-0003. Prototype: `--mode central` (N local actors, one shared critic on the global reward, joint replay). Evaluation (`docs/results/central-eval-v1.9.0.md`, n = 3, on the pre-fix binary): at N = 4 central 38.96 ± 5.11 vs independent 23.27 ± 13.19 (paired +72.5 ± 82.4 %, interval includes 0); at N = 10 central 3.20 ± 4.91 vs independent 9.00 ± 6.16 (paired −59.4 ± 71.5 %, interval includes 0), and −83 % against BEB. At N = 10 it collapsed after step ~300 (cause untested). The pre-agreed rule (beneficial only if the paired interval excludes 0 at N = 10) was not met; it stays optional and was excluded from the final set. Because the numbers predate the CW-start fix, they are not directly comparable to §20–21.
 
 ## Appendix B. Reproducing the results
 
-From `ns-3.29/scratch/linear-mesh`, with `../../venv/bin/python` and the local run directories; commands are in `docs/final-results-v2.2.0.md` §4 (`aggregate_bench.py`, `scaling_analysis.py --preset fixed60`, `load_sweep.py`). Reproducibility checks (identical traces across repeated runs, seed sensitivity) are in `docs/reproducibility-v2.1.0.md`. Build and run: `cd ns-3.29 && ./waf build --target=linear-mesh`; training entry point `OSCAR_multi_ap_train.py --apStaCounts 20,40 --mode {beb,global,independent}`.
+From `ns-3.29/scratch/linear-mesh`, with `../../venv/bin/python` and the local run directories; commands are in `docs/results/final-results-v2.2.0.md` §4 (`aggregate_bench.py`, `scaling_analysis.py --preset fixed60`, `load_sweep.py`). Reproducibility checks (identical traces across repeated runs, seed sensitivity) are in `docs/reference/reproducibility-v2.1.0.md`. Build and run: `cd ns-3.29 && ./waf build --target=linear-mesh`; training entry point `OSCAR_multi_ap_train.py --apStaCounts 20,40 --mode {beb,global,independent}`.
 
 ## Appendix C. Version history
 

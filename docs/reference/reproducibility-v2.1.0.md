@@ -34,7 +34,7 @@ Run target is `scratch/linear-mesh/linear-mesh`. Run one ns-3 job at a time (`pg
 ## 3. Seeds and defaults
 
 - Python seed S seeds torch and numpy. The ns-3 seed is S + 1 (ns-3 rejects 0). Every mode of a benchmark uses the same S, so runs are paired by seed.
-- Default traffic starts at t = 0 (inherited). Every number in v1.1.0 to v2.0.0 uses this. Large-N association failure comes from it (`docs/robustness-v2.0.0.md` section G). `--trafficStart` is available but off by default; this was a deliberate choice to keep results comparable.
+- Default traffic starts at t = 0 (inherited). Every number in v1.1.0 to v2.0.0 uses this. Large-N association failure comes from it (`docs/results/robustness-v2.0.0.md` section G). `--trafficStart` is available but off by default; this was a deliberate choice to keep results comparable.
 - Each trainer run writes `results/multi-ap-<ts>/config.json` with all arguments, `ns3_seed`, and `git_rev` (`git describe --tags --always --dirty`, `unknown` if git is unavailable). A `-dirty` suffix means uncommitted changes.
 
 ## 4. Knobs
@@ -58,7 +58,7 @@ The new trainer and runner options are forwarded only when set, so default runs 
 ## 6. Remaining hard-coded assumptions (kept on purpose)
 
 - Trainer default `--apStaCounts 20,40` (design default, ADR-0002).
-- Single-AP reward constant `5*150` in `cw.cc` (baseline quirk, `docs/baseline-v0.1.0.md` section 7). Changing it would change the single-AP baseline.
+- Single-AP reward constant `5*150` in `cw.cc` (baseline quirk, `docs/results/baseline-v0.1.0.md` section 7). Changing it would change the single-AP baseline.
 - Multi-AP gym supports only `scenario=basic` (per-AP reward fixes the STA count).
 - One /24 subnet limits the topology to about 253 nodes (10 APs with 220 STAs fits).
 - Debug output: per-step prints in `cw.cc` are already behind `--verbose` (default off). The remaining output lines are end-of-run checks that the tools parse, so none were removed. No `cw.cc` change, so no rebuild.

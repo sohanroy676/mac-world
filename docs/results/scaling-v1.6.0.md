@@ -7,11 +7,11 @@ Recomputed from the raw per-run `trace.csv` of v1.1.0..v1.5.0 (local `results/be
 
 | N APs | Split (STAs/AP) | Total STAs | Seeds | Source |
 |---|---|---|---|---|
-| 2 | 20,40 | 60 | 0-4 (n=5) | `benchmark-v1.1.0.md` §4c, figures `v1.1.0-b5` |
-| 4 | 5,10,15,20 | 50 | 0-2 | `scaling-v1.2.0.md`, `v1.2.0-b2` |
-| 6 | 5..30 step 5 | 105 | 0-2 | `scaling-v1.3.0.md`, `v1.3.0-b2` |
-| 8 | 5..40 step 5 | 180 | 0-2 | `scaling-v1.4.0.md`, `v1.4.0` |
-| 10 | 4,8,..,40 | 220 | 0-2 | `scaling-v1.5.0.md`, `v1.5.0` |
+| 2 | 20,40 | 60 | 0-4 (n=5) | `docs/results/benchmark-v1.1.0.md` §4c, figures `v1.1.0-b5` |
+| 4 | 5,10,15,20 | 50 | 0-2 | `docs/results/scaling-v1.2.0.md`, `v1.2.0-b2` |
+| 6 | 5..30 step 5 | 105 | 0-2 | `docs/results/scaling-v1.3.0.md`, `v1.3.0-b2` |
+| 8 | 5..40 step 5 | 180 | 0-2 | `docs/results/scaling-v1.4.0.md`, `v1.4.0` |
+| 10 | 4,8,..,40 | 220 | 0-2 | `docs/results/scaling-v1.5.0.md`, `v1.5.0` |
 
 Fact (verified): the script's recomputed aggregate mean and n match the committed per-version `tables.md` for all 15 N x mode cells (`CROSS-CHECK PASS`).
 
@@ -61,13 +61,13 @@ Wall time per 1500-step run (`runtime_vs_n.png`, means over modes' seeds):
 - Fact: for N>=4, BEB run time is roughly 14.5-15.9 s per STA, i.e. about linear in total STAs; N=4 (50 STAs) is faster than N=2 (60 STAs). Run time tracks STAs, not AP count. N=2 timings are not comparable (the v1.1.0 batches ran on two laptops/sessions; progress notes record ~42 min vs 16-21 min for 20,40 BEB; BEB 1333 ± 867 s here).
 - Fact: the trained modes add little over BEB: independent minus BEB is +80 s (N=4) to +717 s (N=10), about +11 to +20 %.
 - Inference: cost is dominated by ns-3 simulating the STAs, not by DDPG updates (10 actor-critic pairs at N=10 add ~20 %).
-- Fact (from per-version docs §4): trainer `--check` full size 6:19 (N=6), 11:56 (N=8), 13:41 (N=10); peak RSS 365, 367, 478 MB. The N=2/4 equivalents are in `validation-v0.9.0.md` / `scaling-v1.2.0.md`, not re-extracted here. No ZMQ stalls at any N. Memory is not a constraint; time is (about 1 h per run at 10 APs, 9 runs about 9 h).
+- Fact (from per-version docs §4): trainer `--check` full size 6:19 (N=6), 11:56 (N=8), 13:41 (N=10); peak RSS 365, 367, 478 MB. The N=2/4 equivalents are in `docs/results/validation-v0.9.0.md` / `docs/results/scaling-v1.2.0.md`, not re-extracted here. No ZMQ stalls at any N. Memory is not a constraint; time is (about 1 h per run at 10 APs, 9 runs about 9 h).
 - Fact: node budget caps the current subnet at 10 APs / 244 STAs (`cw.cc:822`, 230 of 254 addresses used at N=10).
 
 ## 5. Association / deassociation vs N (limitation)
 Mean deassociation events per run (from logs; every one re-associated in all per-version checks): BEB 0.2, 0.0, 1.7, 2.7, 6.0; global 6.6, 10.3, 1.7, 7.3, 16.7; independent 7.2, 10.7, 1.7, 7.3, 21.3 (N=2..10; CIs are wider than the means, see `scaling_table.md`, `deassoc_vs_n.png`).
 - Fact: events appear in BEB too (so not trained-mode-only), are larger on average in trained modes at N=2, 4, 10, and grow with N for all modes in the mean. Not monotone (N=6 is lowest).
-- Fact: the full-size 10-AP dry run fails the end-of-run association check (`scaling-v1.5.0.md` §3); the long runs' end-of-run association state was never recorded.
+- Fact: the full-size 10-AP dry run fails the end-of-run association check (`docs/results/scaling-v1.5.0.md` §3); the long runs' end-of-run association state was never recorded.
 - Unknown: the cause. Deferred by decision (user, 2026-10-16) to a later robustness item (v2.x). Throughput numbers for large N should be read with this caveat: some STAs may be unassociated for part of the run, in every mode.
 
 ## 6. Summary

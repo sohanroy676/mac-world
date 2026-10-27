@@ -23,7 +23,7 @@ PyTorch 1.13.1+cu117 (GTX 1650 Ti 4 GB) · Gym 0.26.2 · NumPy 1.21.6 · protobu
 - Baseline smoke: `../../venv/bin/python baseline_v0_1_0.py --smoke` (full run: no flag).
 - A stale binary is not validation. Confirm it was rebuilt.
 
-## Architecture invariants (ADR-0002, docs/multi-ap-design-v0.2.0.md)
+## Architecture invariants (ADR-0002, docs/design/multi-ap-design-v0.2.0.md)
 - One ns-3 process, N APs. Start with 2 (default STA split 20/40), scale to 10 only after 2-AP works.
 - One DDPG Actor-Critic agent per AP. Actor + Critic = ONE agent, never "two agents".
 - Strict per-AP isolation: observations, rewards, actions, statistics, CWs. No AP sees another AP's local obs.
@@ -33,12 +33,12 @@ PyTorch 1.13.1+cu117 (GTX 1650 Ti 4 GB) · Gym 0.26.2 · NumPy 1.21.6 · protobu
 - Out of scope for v1: mobility, dynamic STAs, detailed interference modeling, per-station actors, PHY/MAC changes.
 - Distinguish project changes from upstream ns-3/ns3-gym code. Touch upstream only when necessary, and say so.
 
-## Roadmap (ROADMAP.md, details in docs/detailed_roadmap.md)
+## Roadmap (ROADMAP.md, details in docs/planning/detailed_roadmap.md)
 v0.1–v1.0 ✅ (baseline, design, two-AP topology, per-AP stats, per-AP CW, multi-AP ns3-gym, independent agents, W&B,
 validation, core) · **v1.1 benchmarks (NEXT)** · v1.2–1.6 scale 4→10 APs + analysis · v1.7–1.9 central critic · v2.x robustness/results/report/demo/audit.
 - Priority: Tier 1 (v0.1–v1.0) → Tier 2 (v1.1–v1.6) → central critic → rest.
 - When v1.0 works: tag it, run baselines, collect 2-AP results, THEN scale, THEN central critic.
-- Each version has completion criteria in docs/detailed_roadmap.md. Meet them before closing.
+- Each version has completion criteria in docs/planning/detailed_roadmap.md. Meet them before closing.
 
 ## Workflow per milestone
 1. Plan first: read only the relevant code, restate acceptance criteria, list assumptions/unknowns, ask if unclear.
@@ -70,6 +70,6 @@ validation, core) · **v1.1 benchmarks (NEXT)** · v1.2–1.6 scale 4→10 APs +
 - Avoid long builds/training runs without asking. Use the smallest run that proves the point.
 
 ## Reference files
-- `docs/project_description.md` (full spec, terminology) · `docs/detailed_roadmap.md` (per-version criteria)
-- `docs/multi-ap-design-v0.2.0.md` + `docs/adr/` (design contract) · `docs/baseline-v0.1.0.md` (baseline numbers, known quirks §7)
+- `docs/planning/project_description.md` (full spec, terminology) · `docs/planning/detailed_roadmap.md` (per-version criteria)
+- `docs/design/multi-ap-design-v0.2.0.md` + `docs/adr/` (design contract) · `docs/results/baseline-v0.1.0.md` (baseline numbers, known quirks §7)
 - `.clinerules/` (detailed rules/workflows) · `memory-bank/` (current state) · `AGENTS.md`

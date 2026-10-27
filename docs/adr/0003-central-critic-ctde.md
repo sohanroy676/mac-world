@@ -1,7 +1,7 @@
 # ADR-0003: Optional central critic (CTDE, shared global-reward critic)
 
 ## Status
-Accepted as an optional prototype with a negative evaluation result. v1.8.0 implemented `--mode central` (`docs/central-critic-v1.8.0.md`); v1.9.0 evaluation (N=4, 10, seeds 0-2) did not meet the decision rule: at N=10 central vs independent was -5.80 ± 10.48 Mbps (CI includes 0, 0/3 seeds above), central about 3.2 Mbps (`docs/central-eval-v1.9.0.md`). Not part of the core; the N=10 collapse cause is untested.
+Accepted as an optional prototype with a negative evaluation result. v1.8.0 implemented `--mode central` (`docs/design/central-critic-v1.8.0.md`); v1.9.0 evaluation (N=4, 10, seeds 0-2) did not meet the decision rule: at N=10 central vs independent was -5.80 ± 10.48 Mbps (CI includes 0, 0/3 seeds above), central about 3.2 Mbps (`docs/results/central-eval-v1.9.0.md`). Not part of the core; the N=10 collapse cause is untested.
 
 ## Date
 2026-10-16
@@ -10,7 +10,7 @@ Accepted as an optional prototype with a negative evaluation result. v1.8.0 impl
 v1.6.0 showed independent per-AP DDPG agents degrade relative to BEB as the AP count grows, while global-CW stays above BEB. ADR-0002 deferred the central critic to an optional later phase that must never block core completion. v1.7.0 requires the design to be fixed before coding.
 
 ## Decision
-Add an optional `--mode central`: N local actors (execution sees only the AP's own loss scalar) and ONE shared central critic Q(s_joint, a_joint) trained on the global goodput reward, MADDPG-style actor updates, joint replay, target networks, tau 1e-3, gamma 0.7. Full spec: `docs/central-critic-v1.7.0.md`. Timeboxed: v1.8 prototype <= 1 session, v1.9 small evaluation; if no benefit or out of time, document as optional/negative and move on.
+Add an optional `--mode central`: N local actors (execution sees only the AP's own loss scalar) and ONE shared central critic Q(s_joint, a_joint) trained on the global goodput reward, MADDPG-style actor updates, joint replay, target networks, tau 1e-3, gamma 0.7. Full spec: `docs/design/central-critic-v1.7.0.md`. Timeboxed: v1.8 prototype <= 1 session, v1.9 small evaluation; if no benefit or out of time, document as optional/negative and move on.
 
 ## Alternatives considered
 - N central critics, each on its local reward: keeps per-AP rewards but costs N critics and agents may still compete.
