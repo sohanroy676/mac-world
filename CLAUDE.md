@@ -54,7 +54,7 @@ validation, core) · **v1.1 benchmarks (NEXT)** · v1.2–1.6 scale 4→10 APs +
 6. Commit: Conventional Commits `type(scope): summary` (<50 chars, imperative) + 1–3 line "why" body.
    Stage specific files (no blind `git add .`). Never push, merge, force-push, rebase, reset --hard,
    or delete branches/tags without explicit approval.
-7. CHANGELOG.md: regenerate via git-cliff/conventional-changelog only if installed. Never hand-write it.
+7. CHANGELOG.md: regenerate with `~/.venvs/changelog/bin/git-cliff -o CHANGELOG.md` (config `cliff.toml`; pip-installed outside the repo). Never hand-write it.
 8. Tag each closed milestone (`vX.Y.Z`) only when the user approves. Pre-existing tag references in older docs are obsolete.
 9. Update `memory-bank/activeContext.md` + `progress.md` and ROADMAP.md status. Then suggest a fresh session.
 
@@ -72,4 +72,4 @@ validation, core) · **v1.1 benchmarks (NEXT)** · v1.2–1.6 scale 4→10 APs +
 ## Reference files
 - `docs/planning/project_description.md` (full spec, terminology) · `docs/planning/detailed_roadmap.md` (per-version criteria)
 - `docs/design/multi-ap-design-v0.2.0.md` + `docs/adr/` (design contract) · `docs/results/baseline-v0.1.0.md` (baseline numbers, known quirks §7)
-- `.clinerules/` (detailed rules/workflows) · `memory-bank/` (current state) · `AGENTS.md`
+- `docs/README.md` (index of the docs/ folders) · `.clinerules/` (detailed rules/workflows) · `memory-bank/` (current state) · `AGENTS.md`
