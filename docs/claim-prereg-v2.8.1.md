@@ -225,3 +225,21 @@ Six primary-style comparisons (D1, D2 for three CWs) with no multiplicity correc
 Reading rule, fixed now: the sweep (100, 200, 300, 470, 650, 850, 1024) characterizes the throughput-vs-CW curve on this topology and seeds. The best value is picked on the same seeds, so its advantage is optimistic; any "tuned fixed CW beats shared ×100" statement needs a new, separately pre-registered confirmation on fresh seeds (not started, needs the user's go-ahead). If throughput keeps rising as CW falls to 100, the optimum is below 100 and is untested; no claim is made about CW values below the lowest one run.
 
 Not allowed after seeing results: dropping CWs or seeds, changing the metric, adding CW values to this addendum. A failed `--check` may be rerun once, same settings, only for an infrastructure fault.
+
+## Addendum D results (added 2026-10-27, seeds 20-24, 15,15,15,15; the rule above was not changed)
+All 15 new runs PASS `--check` (866-1029 s). Tables: `docs/figures/v2.8.2/confirm-static{100,200,300}/` (each includes the shared ×100 and BEB runs for pairing; 470 from Addendum C). Raw dirs local only (`results/bench-static{100,200,300}-confirm`). Intervals computed from `per_seed.csv`, mean ± 95 % t-interval, n = 5, "k/5" = seeds where the static run is above the comparator.
+
+| Fixed CW | Aggregate Mbps | D1: − static 470 | D2: − shared ×100 | D3: − BEB |
+|---|---|---|---|---|
+| 100 | 27.81 ± 1.17 | −11.95 ± 1.24 (0/5) | −9.60 ± 0.15 (0/5) | +0.25 ± 0.63 (2/5) |
+| 200 | 36.68 ± 0.55 | −3.09 ± 0.62 (0/5) | −0.73 ± 0.61 (0/5) | +9.11 ± 0.28 (5/5) |
+| 300 | 39.20 ± 0.22 | −0.56 ± 0.30 (0/5) | +1.79 ± 0.96 (5/5) | +11.64 ± 0.46 (5/5) |
+| 470 (Add. C) | 39.76 ± 0.09 | 0 | +2.35 ± 1.22 (5/5) | +12.20 ± 0.72 (5/5) |
+
+Full seven-value curve (aggregate Mbps): 100 → 27.81, 200 → 36.68, 300 → 39.20, **470 → 39.76**, 650 → 38.98, 850 → 37.68, 1024 → 36.28 (BEB 27.56, shared ×100 37.41, per-AP OSCAR 17.74).
+
+- Fact: the curve is an interior peak, not monotone. Throughput rises steeply from CW 100 to 300, is highest at 470, and falls toward 1024. The optimum on this topology lies near 300-650; resolution within that range is not claimed (D1 for 300 vs 470 is −0.56 ± 0.30, 0/5; 650 − 470 was not given a CI).
+- Fact: fixed CW 100 gives BEB-level throughput (+0.25 ± 0.63, no gain) and is far below shared ×100; fixed CW 200 is slightly below shared ×100 (−0.73 ± 0.61, upper bound < 0, 0/5); fixed CW 300 and 470 beat shared ×100 (lower bounds > 0).
+- Fact: fixed CW 470 is better than CW 300 (upper bound of D1(300) < 0) and than 200 and 100.
+- The Addendum C statement "the optimum could lie below 470" is resolved: values below 470 are not better, the optimum is not below 300.
+- Reading rule applied: 470 was picked after seeing seeds 20-24, so its margin over shared ×100 (+2.35) is optimistic; no "tuned fixed CW beats shared" claim without a fresh-seed confirmation (not started, needs the user's go-ahead). One topology, n = 5; the curve says nothing about other loads or topologies.

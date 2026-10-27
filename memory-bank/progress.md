@@ -7,6 +7,8 @@
 
 ## Done
 
+- **Sweep below 470 (2026-10-27, branch `feature/static-cw-baseline`, committed, NOT merged/pushed/tagged)** — Addendum D, CW 100/200/300 seeds 20-24, 15/15 PASS: 27.81 / 36.68 / 39.20 Mbps; peak near 300-650; fixed 300 and 470 beat shared x100, fixed 100 is BEB-level. `docs/figures/v2.8.2/confirm-static{100,200,300}/`.
+
 - **Fixed-CW sweep (2026-10-27, branch `feature/static-cw-baseline`, committed, NOT merged/pushed/tagged)** — Addendum C, CW 470/650/1024 seeds 20-24, 15/15 PASS: 39.76/38.98/(850: 37.68)/36.28 Mbps; fixed 470 beats shared x100 by +2.35 ± 1.22 (5/5); no learning advantage shown. `docs/figures/v2.8.2/confirm-static*`.
 
 - **Static-CW control (2026-10-27, branch `feature/static-cw-baseline`, committed, NOT merged/pushed/tagged)** — `--mode static`, Addendum B, seeds 20-24 5/5 PASS: static CW 850 = 37.68 ± 0.47 vs shared x100 37.41 ± 1.15 (diff -0.27 ± 1.61); gain over per-AP OSCAR not shown to need learning.
