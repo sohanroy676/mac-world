@@ -34,15 +34,16 @@ PyTorch 1.13.1+cu117 (GTX 1650 Ti 4 GB) · Gym 0.26.2 · NumPy 1.21.6 · protobu
 - Distinguish project changes from upstream ns-3/ns3-gym code. Touch upstream only when necessary, and say so.
 
 ## Roadmap (ROADMAP.md, details in docs/planning/detailed_roadmap.md)
-v0.1–v1.0 ✅ (baseline, design, two-AP topology, per-AP stats, per-AP CW, multi-AP ns3-gym, independent agents, W&B,
-validation, core) · **v1.1 benchmarks (NEXT)** · v1.2–1.6 scale 4→10 APs + analysis · v1.7–1.9 central critic · v2.x robustness/results/report/demo/audit.
+v0.1–v3.0 ✅ (core, benchmarks, scaling, central critic, robustness, report, audit, beat-Global attempt) ·
+**v3.1 ceiling (IN PROGRESS)** → v3.2 fair protocol → v3.3 sensing+heuristics → v3.4 per-AP scenario (ask user first) → v3.5 optional.
+Plan: `docs/research-beat-oscar.md` §6.
 - Priority: Tier 1 (v0.1–v1.0) → Tier 2 (v1.1–v1.6) → central critic → rest.
 - When v1.0 works: tag it, run baselines, collect 2-AP results, THEN scale, THEN central critic.
 - Each version has completion criteria in docs/planning/detailed_roadmap.md. Meet them before closing.
 
 ## Workflow per milestone
 1. Plan first: read only the relevant code, restate acceptance criteria, list assumptions/unknowns, ask if unclear.
-2. Work on a feature branch (`feature/…`, `fix/…`). Never commit to `main`.
+2. `main` is frozen: never commit to, merge into, or push it. Integration branch is `dev` (long-lived). Branch each piece of work from `dev` (`feature/…`, `fix/…`, `docs/…`).
 3. Minimal, targeted edits. No unrelated refactors.
 4. Validate (there is no test framework, so do not add one):
    - `./waf build` succeeds. Then a short run, e.g.
@@ -52,8 +53,9 @@ validation, core) · **v1.1 benchmarks (NEXT)** · v1.2–1.6 scale 4→10 APs +
    - Never claim something works without a run that shows it. Report failures honestly.
 5. Self-review the diff: secrets, dead code/debug prints, duplication, consistency, error handling.
 6. Commit: Conventional Commits `type(scope): summary` (<50 chars, imperative) + 1–3 line "why" body.
-   Stage specific files (no blind `git add .`). Never push, merge, force-push, rebase, reset --hard,
-   or delete branches/tags without explicit approval.
+   Stage specific files (no blind `git add .`). When validated: `git merge --no-ff` into `dev`, then push the feature
+   branch and `dev` (standing approval, do not wait to be asked). Still ask before: force-push, rebase of pushed history,
+   reset --hard, deleting branches/tags, creating tags, anything touching `main`.
 7. CHANGELOG.md: regenerate with `~/.venvs/changelog/bin/git-cliff -o CHANGELOG.md` (config `cliff.toml`; pip-installed outside the repo). Never hand-write it.
 8. Tag each closed milestone (`vX.Y.Z`) only when the user approves. Pre-existing tag references in older docs are obsolete.
 9. Update `memory-bank/activeContext.md` + `progress.md` and ROADMAP.md status. Then suggest a fresh session.
