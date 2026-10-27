@@ -7,6 +7,7 @@
 
 ## Done
 
+- **A1 seeds 1-2 (2026-10-27, branch `docs/a1-seeds`, committed, NOT merged/pushed)** — A1 at 20,40 n=3 all `--check` PASS: 38.48 ± 2.64 Mbps, vs Global +6.9 ± 26.7 % (CI spans 0). No code change, no rebuild. `docs/improvement-v3.0.0.md` §5/§8/§9 and `docs/figures/v3.0.0/ablation-20-40/` updated. v3.0.0 itself is pushed + tagged.
 - **Beat Global-CW (2026-10-26, merged to main b32e296, NOT pushed/tagged; ablation/3-seed follow-up on `docs/v3-ablations`)** — trainer flags `--mode shared/--obs hist/--alpha/--rewardScale/--tag`; V1-V5 screen, 3 seeds at 20,40, stress 5,55 and 5,5,5,45 (3 seeds Global/V5), 6x10 seed 0, ablations A1/A2 (seed 0). V5 = Global-level, no proven gain, CWs do not separate. `docs/improvement-v3.0.0.md`, ADR-0004 (ADR-0003 is the central critic). Open: 3 seeds of A1.
 - **W&B sync + root README (2026-10-20, branch `docs/wandb-sync`, committed, NOT merged/pushed/tagged)** — 81 final runs online in `contention_window` (renamed + tagged), introspection workaround for wandb 0.18.7 documented in final-results §5; new root `README.md`. Open: references, report/deck review, title slide.
 - **Optional follow-ups (2026-10-20, merged to main + pushed, TAGGED `v2.7.0`; no CI)** — inactive STAs at 20,40 identified (robustness §F.5b), opengym provenance resolved (final-audit §3), BEB/global seeds 1-2 and central x10/x30 at 22x10 all PASS (central-eval seventh follow-up: BEB mean 19.0, global 23.1 ± 12, central x30 38.0 s0). CHANGELOG blocked (git-cliff via Windows rejects the WSL repo).

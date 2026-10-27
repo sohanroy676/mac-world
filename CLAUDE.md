@@ -15,7 +15,7 @@ ns-3.29 (C++, GCC 11.4) · ns3-gym 1.0.0 / py 0.1.0 · Python 3.7.16 (venv: `ns-
 PyTorch 1.13.1+cu117 (GTX 1650 Ti 4 GB) · Gym 0.26.2 · NumPy 1.21.6 · protobuf 3.20.3 · pyzmq 26.2.1 · W&B 0.18.7 · Ubuntu 22.04 WSL2
 
 ## Layout & commands
-- Root: `~/mac-world` (git repo). Project code: `ns-3.29/scratch/linear-mesh/`
+- Root: `~/college/major/ns-allinone-3.29` (git repo). Project code: `ns-3.29/scratch/linear-mesh/`
   (`cw.cc`, `scenario.h`, `OSCAR_train.py`, `agents/our_ddpg/`, `baseline_v0_1_0.py`). ns3-gym: `ns-3.29/contrib/opengym/`.
 - Build: `cd ns-3.29 && ./waf build` (slow, can take minutes; prefer `--target=linear-mesh`).
 - Run target name is `scratch/linear-mesh/linear-mesh`, NOT `.../cw`.

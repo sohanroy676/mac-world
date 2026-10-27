@@ -25,15 +25,15 @@ Fixed-binary raw dirs from 2026-10-18 are not on this machine, so BEB and Global
 
 3 seeds (0-2): BEB 27.30 ± 0.63, Global 36.17 ± 6.95, V5 37.08 ± 0.85. V5 vs Global +2.8 ± 16.9 % (CI spans 0; above Global in 2/3 seeds); V5 vs BEB +35.8 ± 6.2 %. Phy loss V5 0.533 ± 0.002, Global 0.626 ± 0.123.
 
-## 5. Shared-mode ablations (20,40, seed 0, n=1 each)
+## 5. Shared-mode ablations (20,40; A2 seed 0 n=1, A1 and V5 n=3)
 | Variant | Settings | Aggregate | Phy loss | Jain | CW AP1 / AP2 |
 |---|---|---|---|---|---|
-| A1 | shared, `--obs loss`, x100, alpha 0 | 39.09 | 0.572 | 0.893 | 448 / 463 |
+| A1 | shared, `--obs loss`, x100, alpha 0 | 38.48 ± 2.64 (n=3; seed 0 39.09) | 0.563 ± 0.065 | 0.911 ± 0.047 | 585 / 584 (±~800 across seeds) |
 | A2 | shared, `--obs hist`, x1, alpha 0 | 37.38 | 0.537 | 0.893 | 929 / 936 |
 | V5 | shared, `--obs hist`, x100, alpha 0 | 37.09 (3-seed 37.08 ± 0.85) | 0.533 | 0.909 | 946 / 940 |
 | Global | seed 0 | 35.07 | | | |
 
-Run times 1300 s (A1), 1266 s (A2). Tables: `docs/figures/v3.0.0/ablation-20-40/`.
+A1 per seed (aggregate Mbps): 39.09, 37.25, 39.08; Global 35.07, 39.35, 34.09. A1 vs Global (paired, n=3): +2.30 ± 9.56 Mbps, +6.9 ± 26.7 %, above Global in 2/3 seeds (below at seed 1), min-AP +0.78 ± 3.37 Mbps; CI spans 0. A1 final CW differs by seed (448/463, 950/951, 358/339). Run times 1300-2020 s (A1), 1266 s (A2). Tables: `docs/figures/v3.0.0/ablation-20-40/`.
 
 ## 6. Stress test
 ### 6.1 Imbalance, 3 seeds (0-2); BEB seed 0 only
@@ -54,11 +54,11 @@ Final CW (last 100 steps), V5: 421/415 (5,55, 3-seed mean), 585-599 (5,5,5,45, m
 - Fact: V5 seed variance is lower at 20,40 (±0.85 vs ±6.95) and at 5,55 (±0.58 vs ±5.35); weaker at 5,5,5,45 (±4.88 vs ±8.06).
 - Fact: V5's per-AP CWs do not separate under 5 vs 55 or 5 vs 45 imbalance.
 - Inference: V5 acts as a global CW with shared weights; per-AP CW is not what drives its results. Cause of the variance reduction is untested (candidate: N transitions per step into one agent).
-- Inference (one seed each): with independent agents, hist obs (V1), then x100 (V2) lowered throughput, and alpha 0.5 (V3) recovered part of it; only parameter sharing (V4, V5) reached Global level. In shared mode, neither hist obs nor x100 is needed (A1 39.09, A2 37.38 vs V5 37.09 seed 0). Hist obs changes the CW level (~940 vs ~450) and not throughput. A1 is ~2 Mbps above V5, larger than V5's seed spread, but it is n=1.
+- Inference (one seed each): with independent agents, hist obs (V1), then x100 (V2) lowered throughput, and alpha 0.5 (V3) recovered part of it; only parameter sharing (V4, V5) reached Global level. In shared mode, neither hist obs nor x100 is needed (A1 39.09, A2 37.38 vs V5 37.09 seed 0). Hist obs changes the CW level (~940 vs ~450) and not throughput. With 3 seeds A1 (38.48 ± 2.64) and V5 (37.08 ± 0.85) overlap, and A1 vs Global has a CI spanning 0 (fact), so the seed-0 A1 lead was mostly seed noise. A1 seed spread is larger than V5's; the CW level of A1 is not stable across seeds (inference: loss-only obs does not pin the CW as hist obs does).
 - Inference: lower phy loss at higher CW did not give extra throughput at 6x10.
 
 ## 8. Limitations
-n=1 for V1-V4, A1, A2 and 6x10; n=3 elsewhere; one load (150 Mbps/STA); 15 s runs; BEB at seed 0 only in the stress topologies; A1 not repeated across seeds; CWs near 940 may be close to the upper clip.
+n=1 for V1-V4, A2 and 6x10; n=3 elsewhere (A1 n=3); one load (150 Mbps/STA); 15 s runs; BEB at seed 0 only in the stress topologies; CWs near 940 may be close to the upper clip.
 
 ## 9. Conclusion
-A reliable Global-level controller with lower seed variance in some topologies, not a proven throughput gain over Global-CW. Parameter sharing appears to be the useful ingredient; per-AP CWs do not differentiate. Open if pursued: 3 seeds of A1 (simplest shared variant), a test of why variance drops, and a setting where the optimal CWs truly differ per AP.
+A reliable Global-level controller with lower seed variance in some topologies, not a proven throughput gain over Global-CW. Parameter sharing appears to be the useful ingredient; per-AP CWs do not differentiate. The simplest shared variant (A1, 3 seeds) is also Global-level (+6.9 ± 26.7 %, CI spans 0). Open if pursued: a test of why variance drops, and a setting where the optimal CWs truly differ per AP.
