@@ -207,3 +207,21 @@ All 15 new runs PASS `--check` (821-957 s). CW 850 is the Addendum B set. Each C
 - Fact: static 470 has the narrowest spread (±0.09) of any mode tested.
 - Caveat: 470 is the lowest value tested, so the curve's optimum could lie below 470 (between 16 and 470); the sweep says nothing there. The best-of-four selection is on the same seeds, so +2.35 is optimistic and is not a confirmed result for tuned CW; confirming "fixed 470 > shared ×100" would need fresh seeds.
 - Reading: on this topology a well-chosen fixed CW does at least as well as shared ×100 and beats it at CW 470, so the learned policy is not shown to add anything and its seed-to-seed CW (470-960) was not an optimized operating point. One topology, n = 5.
+
+---
+
+# Addendum D: fixed-CW sweep below 470 (written 2026-10-27 BEFORE the runs below)
+
+Question: Addendum C found throughput rising as the fixed CW falls from 1024 to 470 (36.28 → 39.76 Mbps), with 470 the lowest value tested. Where is the optimum, and is it clearly above 470?
+
+Runs: `--mode static --staticCw` in {100, 200, 300}, 15,15,15,15, seeds 20-24, same settings and `--check` as Addenda B/C; 15 new runs, about 3.5 h. Values fixed now; no other values and no second round inside this addendum.
+
+Comparisons (paired by seed with the existing runs, 95 % t-interval, n = 5), for c ∈ {100, 200, 300}:
+- D1(c) static c − static 470 (Addendum C). "A lower CW is better than 470" only if the lower bound > 0; "worse" only if the upper bound < 0.
+- D2(c) static c − shared ×100. A fixed CW "beats the learned agent" only if the lower bound > 0 (as in Addendum C).
+- D3(c) static c − BEB, reported.
+Six primary-style comparisons (D1, D2 for three CWs) with no multiplicity correction; all are reported whatever the outcome.
+
+Reading rule, fixed now: the sweep (100, 200, 300, 470, 650, 850, 1024) characterizes the throughput-vs-CW curve on this topology and seeds. The best value is picked on the same seeds, so its advantage is optimistic; any "tuned fixed CW beats shared ×100" statement needs a new, separately pre-registered confirmation on fresh seeds (not started, needs the user's go-ahead). If throughput keeps rising as CW falls to 100, the optimum is below 100 and is untested; no claim is made about CW values below the lowest one run.
+
+Not allowed after seeing results: dropping CWs or seeds, changing the metric, adding CW values to this addendum. A failed `--check` may be rerun once, same settings, only for an infrastructure fault.
