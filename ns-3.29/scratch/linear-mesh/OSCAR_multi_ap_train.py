@@ -46,7 +46,8 @@ parser.add_argument("--tag", default="", help="variant label stored in config.js
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared"], default="independent")
+parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static"], default="independent")
+parser.add_argument("--apCws", default="", help="static mode only: fixed CW per AP, e.g. 64,512 (no agent; cw.cc applies it from t=0)")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 args = parser.parse_args()
 
@@ -88,9 +89,14 @@ if args.trafficStart > 0:
     sim_args["trafficStart"] = args.trafficStart
 if args.staMaxMissedBeacons > 0:
     sim_args["staMaxMissedBeacons"] = args.staMaxMissedBeacons
+static_cws = [int(c) for c in args.apCws.split(",")] if args.apCws else []
+assert (args.mode == "static") == bool(static_cws), "--mode static needs --apCws (and only static takes it)"
+assert not static_cws or (len(static_cws) == n and all(16 <= c <= 1024 for c in static_cws)), "--apCws: one CW in 16..1024 per AP"
+if static_cws:
+    sim_args["apCws"] = args.apCws
 if args.mode == "beb":
     sim_args["dryRun"] = "true"  # cw.cc skips setApCw; every AP keeps BEB CW 16..1024
-n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
+n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
 LOCAL_MODES = ("independent", "shared")
 assert args.obs == "loss" or args.mode in LOCAL_MODES, "--obs hist only for independent/shared"
 assert args.alpha == 1.0 or args.mode in LOCAL_MODES, "--alpha only for independent/shared"
@@ -137,7 +143,7 @@ def scalar(x):
 
 def agent_loss(i, name):
     """Loss of the agent that acts for AP i (independent: own; global: the shared one; beb: none -> 0)."""
-    if args.mode == "beb":
+    if args.mode in ("beb", "static"):
         return 0.0
     if args.mode == "central":
         return scalar(central.actor_losses[i] if name == "actor_loss" else central.critic_loss)
@@ -247,7 +253,7 @@ try:
                               and np.isclose(replays[ri].reward[k, 0], r_rep) and np.isclose(replays[ri].action[k, 0], acts[i]),
                               "replay %d row mismatch at t=%d" % (i, time_step))
                     # cw.cc computes pow(2, 4 + a) with a float, so 4 + a is rounded to float32 before pow.
-                    want_cw = 16 if args.mode == "beb" else int(min(1024, max(
+                    want_cw = static_cws[i] if args.mode == "static" else 16 if args.mode == "beb" else int(min(1024, max(
                         16, 2 ** float(np.float32(4) + np.float32(real[i])))))
                     check(recs[i]["cw_set"] == want_cw and recs[i]["cw_ap"] == want_cw,
                           "AP%d cw %s/%s != %d at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], want_cw, time_step))

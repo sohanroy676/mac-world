@@ -346,9 +346,10 @@ bool MyExecuteActions(Ptr<OpenGymDataContainer> action)
                 exit(0);
             }
             cw = min(1024u, max(cw, 16u));
-            outfile << "," << cw;
-            if (!dry_run)
+            // v3.1.0: with --apCws the static CW set in set_phy stays; agent actions must not overwrite it.
+            if (!dry_run && g_apCwOverride.empty())
                 setApCw(ap, cw, cw);
+            outfile << "," << (dry_run ? cw : g_apCwMin.at(ap));
         }
         outfile << endl;
         CW = g_apCwMin.at(0);

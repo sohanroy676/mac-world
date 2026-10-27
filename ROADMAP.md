@@ -125,7 +125,7 @@
 
 ### v3.1.0
 - Ceiling: static CW sweep (`--mode static --apCws`), D1 payoff matrix, 20,40 and 6x10. Research idea #1.
-- Status: 🔄 IN PROGRESS (started 2026-10-27, branch `feature/v3.1.0-ceiling`). Decision pending: is headroom over Global larger than the CI width?
+- Status: 🔄 IN PROGRESS, pilot 4/10 done, handed off via `sessionPrompt.md` (branch `feature/v3.1.0-ceiling`, report `docs/results/ceiling-v3.1.0.md`). Decision pending: is headroom over Global larger than the CI width?
 
 ### v3.2.0
 - Fair protocol: multi-episode training, save/load actor, frozen noise-free eval, n >= 8 paired seeds, `--alpha 0` independent, CWmin-only flag, TD3 option (ideas #2, #3, #8, #9).

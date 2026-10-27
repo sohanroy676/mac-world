@@ -1,0 +1,8 @@
+topo,cws,seed,run_dir,result,returncode,seconds
+"20,40","32,32",0,results/multi-ap-20261027-172204,PASS,0,1242
+"20,40","64,64",0,,FAIL,-15,34
+"20,40","128,128",0,,FAIL,0,4
+"20,40","256,256",0,,FAIL,0,4
+"20,40","64,64",0,results/multi-ap-20261027-174507,PASS,0,1201
+"20,40","128,128",0,results/multi-ap-20261027-180513,PASS,0,1211
+"20,40","256,256",0,results/multi-ap-20261027-182532,PASS,0,1530
