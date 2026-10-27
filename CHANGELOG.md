@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **scratch**: Drop two unused names
+- **changelog**: Add git-cliff config and generate
+
 ### Documentation
 
 - **baseline**: Add OSCAR baseline metrics note
@@ -15,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **memory**: Mark a1-seeds merged and pushed
 - Group docs/ into topic folders
 - Add v3.0.0 report section, fill refs, fix stale status
+- **memory**: Record restructure and cleanup state
 
 ## [3.0.0] - 2026-10-26
 
