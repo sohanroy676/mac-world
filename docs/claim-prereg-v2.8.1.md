@@ -173,3 +173,18 @@ All 5 static runs PASS `--check` (814-839 s); CW exactly 850 on every AP. Tables
 - By the reading rule fixed above: S1's CI includes 0, so the Addendum A gain over per-AP OSCAR is **not shown to need learning**. The learned shared policy did not beat a fixed CW on this topology.
 - Fact: shared ×100 settled on a per-seed CW of 940-960 (seeds 20, 21, 23, 24) and about 470 (seed 22); seed 22 was shared's best run (39.07) and the only seed where it beat static850 (+2.05 Mbps, single seed, not a claim).
 - Limits: one topology, n = 5, one static value (850, the grand mean); other fixed CWs were not run, so the best fixed CW is unknown and could be higher or lower than 850. This addendum does not test whether a better-chosen fixed CW would beat shared.
+
+---
+
+# Addendum C: fixed-CW sweep (written 2026-10-27 BEFORE the runs below)
+
+Question: after Addendum B (static 850 = shared ×100), is there a fixed CW that does better, i.e. is shared ×100 even near the best fixed operating point?
+
+Runs: `--mode static` with `--staticCw` in {470, 650, 1024} (850 already run in Addendum B), 15,15,15,15, seeds 20-24, same settings and `--check`; 15 new runs, about 3.5 h. Values are fixed now: 470 ≈ shared's seed-22 CW, 650 and 1024 bracket the range (1024 is the trainer's upper clamp). No other values, no second round inside this addendum.
+
+Comparisons (paired by seed with the existing shared ×100 and BEB runs, 95 % t-interval, n = 5), each static CW c ∈ {470, 650, 850, 1024}:
+- C1(c) static c − shared ×100. "A fixed CW beats shared" only if a lower bound > 0. "Shared ×100 beats fixed CW c" only if an upper bound < 0.
+- C2(c) static c − BEB, reported.
+Four C1 comparisons, no multiplicity correction; all reported whatever the outcome. The best fixed CW is picked after seeing seeds 20-24, so its advantage is optimistic (selection on the same seeds); the sweep only characterizes the throughput-vs-CW curve on this topology and is not a confirmation of a tuned fixed CW. A confirmation of any best value would need fresh seeds.
+
+Not allowed after seeing results: dropping CWs or seeds, relabeling the metric, adding CW values to this addendum. A failed `--check` may be rerun once, same settings, only for an infrastructure fault.
