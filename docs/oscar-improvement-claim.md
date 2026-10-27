@@ -1,6 +1,6 @@
 # Does a coordinated design improve on OSCAR? Claim report
 
-Status: draft, 2026-10-27, branch `docs/oscar-improvement-claim`. The seeds 20-24 confirmation is in (20/20 PASS). Remaining `TBD` cells are dev-seed (0-2) details that need a lookup in the source tables; nothing else is open. Not merged, pushed or tagged.
+Status: draft, 2026-10-27. Seeds 20-24 confirmation (20/20 PASS) and static-CW control (5/5 PASS) are in; the static-CW code lives on branch `feature/static-cw-baseline`. Remaining `TBD` cells are dev-seed (0-2) details that need a lookup in the source tables; nothing else is open. Not merged, pushed or tagged.
 
 ## 1. Question and definitions
 Question: does a coordinated multi-AP variant give higher aggregate throughput than OSCAR deployed per AP?
@@ -28,7 +28,8 @@ All values are Δ aggregate Mbps versus `independent` unless stated; mean ± 95 
 | 10-14 (confirmation) | 15,15,15,15 | shared (P1) | +7.62 ± 15.84 | 4/5 | not shown |
 | 10-14 (confirmation) | 15,15,15,15 | coop L=1 (P2) | +8.10 ± 8.61 | 5/5 | not shown (lower bound ≈ −0.5) |
 | 10-14 (confirmation) | 6x10 | central (P3) | +9.29 ± 7.73 | 5/5 | suggestive, not confirmed |
-| 20-24 (confirmation) | 15,15,15,15 | shared ×100 (pre-registered, Addendum A) | **+19.67 ± 1.31** (+111 %) | 5/5 | **confirmed on this topology** |
+| 20-24 (confirmation) | 15,15,15,15 | shared ×100 (pre-registered, Addendum A) | **+19.67 ± 1.31** (+111 %) | 5/5 | confirmed on this topology |
+| 20-24 (control) | 15,15,15,15 | static CW 850, no agent (pre-registered, Addendum B) | **+19.94 ± 1.73** (+113 %) | 5/5 | same gain with no learning |
 
 Context rows (same seeds 10-14, from claim-prereg-v2.8.1):
 - `independent` is below BEB at 6x10 by −13.19 ± 2.53 Mbps (0/5 seeds above), and 20.14 vs 27.85 Mbps at 15x4.
@@ -44,18 +45,22 @@ Seeds 20-24, 15,15,15,15 (source: claim-prereg-v2.8.1 Addendum A confirmation; t
 | `independent` (per-AP OSCAR) | 17.74 ± 1.40 | 0.725 |
 | `global` (centralized) | 23.77 ± 21.30 | 0.992 |
 | `shared` ×100 | 37.41 ± 1.15 | 0.994 |
+| static CW 850 (no agent) | 37.68 ± 0.47 | 0.995 |
+
+Control (Addendum B): shared ×100 − static850 = −0.27 ± 1.61 (1/5); static850 − BEB = +10.12 ± 1.10 (5/5).
 
 Secondary: shared ×100 − BEB +9.85 ± 0.67 (5/5, CI > 0); shared ×100 − `global` +13.64 ± 22.01 (3/5, no claim). `global` collapsed to about 5.5 Mbps in 2 of 5 seeds; shared ×100 never did (minimum 36.86).
 
 ## 5. Verdict
-- **Confirmed (one topology):** `shared` with `--rewardScale 100` beats per-AP OSCAR at 15,15,15,15 on fresh seeds 20-24: +19.67 ± 1.31 Mbps, 5/5, under the rule fixed before the runs. It also beats BEB there (+9.85 ± 0.67).
-- **Suggestive, not confirmed:** `central` over per-AP OSCAR at 6x10 (P3, +9.29 ± 7.73).
+- **Confirmed, but not as learning (one topology):** `shared` with `--rewardScale 100` has higher throughput than per-AP OSCAR at 15,15,15,15 on fresh seeds 20-24: +19.67 ± 1.31 Mbps, 5/5, under the rule fixed before the runs (also +9.85 ± 0.67 over BEB).
+- **The learning is not shown to matter:** a fixed CW 850 with no agent gets the same throughput (37.68 ± 0.47 vs 37.41 ± 1.15; shared − static −0.27 ± 1.61, 1/5), so by the pre-registered reading rule (Addendum B) the gain over per-AP OSCAR is not shown to need a learned policy. The honest statement is: per-AP OSCAR is far from a good operating point here (CW stays low, 17.74 Mbps), and any policy that reaches CW of several hundred does much better.
+- **Suggestive, not confirmed:** `central` over per-AP OSCAR at 6x10 (P3, +9.29 ± 7.73). No static-CW control was run at 6x10.
 - **Not shown:** `coop` and `shared` ×1 over per-AP OSCAR (CIs include 0).
-- **Not claimed:** beating `global` (+13.64 ± 22.01, 3/5; `global` is unstable, 2/5 collapses); generalizing to other topologies; beating the paper's single-AP OSCAR.
-- **Caveat on mechanism (inference, untested):** shared ×100 sits at CW about 850 on all APs versus 16 for BEB. A static high-CW baseline was not run, so the gain over per-AP OSCAR is shown, but "learned adaptation" as the cause is not. That baseline is the cheapest next check.
+- **Not claimed:** beating `global` (+13.64 ± 22.01, 3/5; `global` collapsed in 2/5 seeds); beating a well-chosen fixed CW; generalizing to other topologies; beating the paper's single-AP OSCAR.
+- **Open:** only CW 850 was tried as the fixed baseline; the best fixed CW is unknown and might beat shared ×100. Shared ×100's own CW varied by seed (about 470 to 960).
 
 ## 6. Limits
-n = 5 per comparison; two topologies; one run per cell; 15 s simulated, single channel; `central` collapsed at 4..40 and 22x10 in earlier runs; shared ×100 sits near the CW bound (CW about 850; the lock-in is not removed, only its side changed in the seed-10 diagnostic), and `--rewardScale 100` was chosen on dev seeds 0-2 plus that diagnostic; the 15x4 independent seed 0-2 and 10-14 means are equal by coincidence; no paper reproduction; `global` mislabelled as OSCAR in older docs and legends (PNG figures made before 2026-10-25 still show the old text).
+n = 5 per comparison; two topologies; one run per cell; 15 s simulated, single channel; `central` collapsed at 4..40 and 22x10 in earlier runs; shared ×100 sits at a high CW (about 940-960 in four seeds, about 470 in seed 22, grand mean about 850; the lock-in is not removed, only its side changed in the seed-10 diagnostic), and `--rewardScale 100` was chosen on dev seeds 0-2 plus that diagnostic; the 15x4 independent seed 0-2 and 10-14 means are equal by coincidence; no paper reproduction; `global` mislabelled as OSCAR in older docs and legends (PNG figures made before 2026-10-25 still show the old text).
 
 ## 7. Sources
-[claim-prereg-v2.8.1](claim-prereg-v2.8.1.md), [coop-v2.8.0](coop-v2.8.0.md), [final-results-v2.2.0](final-results-v2.2.0.md), [oscar-baseline-metrics](oscar-baseline-metrics.md); tables in `docs/figures/v2.8.0/`, `docs/figures/v2.8.1/`, `docs/figures/v2.8.2/`.
+[claim-prereg-v2.8.1](claim-prereg-v2.8.1.md), [coop-v2.8.0](coop-v2.8.0.md), [final-results-v2.2.0](final-results-v2.2.0.md), [oscar-baseline-metrics](oscar-baseline-metrics.md); tables in `docs/figures/v2.8.0/`, `docs/figures/v2.8.1/`, `docs/figures/v2.8.2/` (`confirm-shared-rs100/`, `confirm-static850/`).

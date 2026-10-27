@@ -154,3 +154,22 @@ Comparisons (paired by seed against the existing Addendum A runs, 95 % t-interva
 - Reading rule, fixed now: if S1's CI includes 0 or is below 0, the Addendum A gain over per-AP OSCAR is not shown to need learning (a fixed CW does as well); the gain statement stays "higher throughput than per-AP OSCAR", not "better learned adaptation". If S1 > 0 with the lower bound > 0, learning adds something beyond a fixed CW 850 on this topology.
 
 Not allowed after seeing results: other CW values presented as the baseline, dropping seeds, changing the metric. A failed `--check` may be rerun once with identical settings only for an infrastructure fault. A different static CW (e.g. 470 or 950) would be a new addendum and a new, separately reported run set.
+
+## Addendum B results (added 2026-10-27, seeds 20-24, 15,15,15,15; the rule above was not changed)
+All 5 static runs PASS `--check` (814-839 s); CW exactly 850 on every AP. Tables: `docs/figures/v2.8.2/confirm-static850/` (includes the Addendum A runs for pairing). Raw dir local only (`results/bench-static850-confirm`).
+
+| Mode | Aggregate Mbps, seeds 20-24 | Mean ± 95 % CI |
+|---|---|---|
+| Static CW 850 (no agent) | 37.95 / 37.90 / 37.02 / 37.75 / 37.79 | 37.68 ± 0.47 |
+| Shared ×100 (Addendum A) | 37.11 / 36.86 / 39.07 / 37.05 / 36.97 | 37.41 ± 1.15 |
+
+| Comparison | Δ Mbps | Seeds above | CI lower bound > 0? |
+|---|---|---|---|
+| S1 shared ×100 − static850 | −0.27 ± 1.61 | 1/5 | No (CI includes 0) |
+| S2 static850 − independent | +19.94 ± 1.73 | 5/5 | Yes |
+| S3 static850 − BEB | +10.12 ± 1.10 | 5/5 | Yes |
+
+- Fact: a fixed CW 850 with no agent matches shared ×100 (difference −0.27 ± 1.61) and also beats per-AP OSCAR and BEB on every seed. Static850 Jain 0.995, phy loss 0.533 (shared 0.994, 0.539).
+- By the reading rule fixed above: S1's CI includes 0, so the Addendum A gain over per-AP OSCAR is **not shown to need learning**. The learned shared policy did not beat a fixed CW on this topology.
+- Fact: shared ×100 settled on a per-seed CW of 940-960 (seeds 20, 21, 23, 24) and about 470 (seed 22); seed 22 was shared's best run (39.07) and the only seed where it beat static850 (+2.05 Mbps, single seed, not a claim).
+- Limits: one topology, n = 5, one static value (850, the grand mean); other fixed CWs were not run, so the best fixed CW is unknown and could be higher or lower than 850. This addendum does not test whether a better-chosen fixed CW would beat shared.
