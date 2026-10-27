@@ -56,7 +56,7 @@
 
 ### v1.1.0
 - Benchmark against relevant baseline configurations.
-- Status: 🔄 ALL RUNS DONE 2026-10-15, awaiting close/tag approval. 42/42 benchmark runs PASS (20,40 extended to n=5). CI-supported gains: global-CW +26.0 ± 13.1 % vs BEB at 20,20 and +31.9 ± 11.8 % at 20,40 (n=5); independent per-AP -9.3 ± 31.0 % at 20,40 (CI includes 0). See `docs/results/benchmark-v1.1.0.md` §4c, §5.
+- Status: ✅ CLOSED 2026-10-15, tagged `v1.1.0` + pushed, in main. 42/42 benchmark runs PASS (20,40 extended to n=5). CI-supported gains: global-CW +26.0 ± 13.1 % vs BEB at 20,20 and +31.9 ± 11.8 % at 20,40 (n=5); independent per-AP -9.3 ± 31.0 % at 20,40 (CI includes 0). See `docs/results/benchmark-v1.1.0.md` §4c, §5.
 
 ### v1.2.0
 - Scale to 4 APs.
@@ -76,7 +76,7 @@
 
 ### v1.6.0
 - Analyze scaling behavior and performance.
-- Status: 🔄 analysis done on branch `feature/v1.6.0-scaling-analysis` (merged to main + pushed 2026-10-16, tagged `v1.6.0` + pushed 2026-10-16): recomputed from raw traces v1.1.0..v1.5.0, no new runs. See `docs/results/scaling-v1.6.0.md`, `docs/figures/v1.6.0/`.
+- Status: ✅ analysis done on branch `feature/v1.6.0-scaling-analysis` (merged to main + pushed 2026-10-16, tagged `v1.6.0` + pushed 2026-10-16): recomputed from raw traces v1.1.0..v1.5.0, no new runs. See `docs/results/scaling-v1.6.0.md`, `docs/figures/v1.6.0/`.
 
 ## Later — Central Critic
 
@@ -86,11 +86,11 @@
 
 ### v1.8.0
 - Implement centralized critic prototype.
-- Status: 🔄 prototype on branch `feature/v1.8.0-central-critic-prototype` (code 3a292d0, merged to main + pushed; TAGGED `v1.8.0` + pushed 2026-10-16): `--mode central` passes `--check` at 2,3 (short + full) and 20,40 (short). See `docs/design/central-critic-v1.8.0.md`.
+- Status: ✅ prototype on branch `feature/v1.8.0-central-critic-prototype` (code 3a292d0, merged to main + pushed; TAGGED `v1.8.0` + pushed 2026-10-16): `--mode central` passes `--check` at 2,3 (short + full) and 20,40 (short). See `docs/design/central-critic-v1.8.0.md`.
 
 ### v1.9.0
 - Evaluate centralized critic against independent AP agents.
-- Status: 🔄 evaluation DONE 2026-10-17 on branch `feature/v1.9.0-central-eval` (not merged/tagged): 6/6 runs PASS. Rule NOT met: N=10 central vs independent -5.80 ± 10.48 Mbps (CI includes 0, 0/3 above; central ~3.2 Mbps, below BEB). Optional/negative result; next v2.x. See `docs/results/central-eval-v1.9.0.md`.
+- Status: ✅ evaluation DONE 2026-10-17 on branch `feature/v1.9.0-central-eval` (in main, tagged `v1.9.0` + pushed): 6/6 runs PASS. Rule NOT met: N=10 central vs independent -5.80 ± 10.48 Mbps (CI includes 0, 0/3 above; central ~3.2 Mbps, below BEB). Optional/negative result; next v2.x. See `docs/results/central-eval-v1.9.0.md`.
 
 ## Later — Finalization
 

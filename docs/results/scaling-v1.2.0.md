@@ -61,4 +61,4 @@ t=1.144 s deassociation (fact, from run logs; deassoc count == re-assoc count in
 | 2 | 0 | 17 | 17 |
 
 Fact: BEB has 0 events at all 3 seeds here; the trained modes have events at every seed, and the count varies by seed (global and independent match exactly at seeds 1, 2). Same pattern as 20,20 / 20,40 in v1.1.0 (where BEB showed 1 event at 20,40); cause still unproven.
-Next options: v1.3.0 (6 APs), or tag v1.2.0 (user deferred the tag; not tagged).
+Next options at the time: v1.3.0 (6 APs), or tag v1.2.0. Update: `v1.2.0` was tagged 2026-10-15.

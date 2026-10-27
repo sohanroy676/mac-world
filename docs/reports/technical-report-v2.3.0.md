@@ -1,6 +1,6 @@
 # Multi-AP OSCAR: Contention-Window Optimization with Per-AP DDPG Agents in a Shared ns-3 Simulation
 
-Technical report, v2.3.0. Status: draft for review. Citations are placeholders written `[REF:key]`; see §26.
+Technical report, v2.3.0, updated 2026-10-27 with the v3.0.0 results (§20.4). Status: draft for review. Five citations are filled (§26); the remaining placeholders are written `[REF:key]` and wait for the author's reference list.
 
 Labels used throughout: **[Inherited]** = comes from the original OSCAR design or code; **[New]** = added by this project; **[Upstream]** = ns-3 / ns3-gym code used unchanged. Statements are fact unless marked *inference* (reasoned, untested).
 
@@ -10,11 +10,11 @@ Labels used throughout: **[Inherited]** = comes from the original OSCAR design o
 
 OSCAR optimizes the IEEE 802.11 contention window (CW) of one access point (AP) with a DDPG actor-critic agent. This project extends it to N APs in one shared ns-3 simulation, each AP with its own independent DDPG agent and its own CW. We compare three controllers against standard 802.11 binary exponential backoff (BEB): independent per-AP agents, one shared "global-CW" agent whose CW is broadcast to every AP, and (as an appendix, negative result) a central-critic variant.
 
-On the final, fixed-binary set (n = 3 seeds, 95 % confidence intervals), the global-CW agent gains +29.5 % to +33.2 % aggregate throughput over BEB in every saturated topology, from 2 to 10 APs at a fixed 60 stations. The independent per-AP agents do not scale: they are on par with BEB at N = 2 (+3.8 ± 27.2 %), then fall below it from N = 4 (−27.0 ± 21.8 %) to N = 10 (−46.2 ± 12.2 %). At a light load of 0.5 Mbps per station the global gain shrinks to +6.3 ± 8.0 %. The central critic did not help and is reported as a negative result. Results have wide intervals at n = 3, and several effects are explained only by inference.
+On the final, fixed-binary set (n = 3 seeds, 95 % confidence intervals), the global-CW agent gains +29.5 % to +33.2 % aggregate throughput over BEB in every saturated topology, from 2 to 10 APs at a fixed 60 stations. The independent per-AP agents do not scale: they are on par with BEB at N = 2 (+3.8 ± 27.2 %), then fall below it from N = 4 (−27.0 ± 21.8 %) to N = 10 (−46.2 ± 12.2 %). At a light load of 0.5 Mbps per station the global gain shrinks to +6.3 ± 8.0 %. The central critic did not help and is reported as a negative result. A later attempt (v3.0.0, §20.4) to beat the global-CW agent with per-AP controllers that share weights reached global level (paired intervals span 0) and lowered seed variance in two topologies; it did not prove a gain. Results have wide intervals at n = 3, and several effects are explained only by inference.
 
 ## 2. Introduction
 
-In 802.11 DCF, stations pick a random backoff in a window [0, CW]. A small CW wastes airtime in collisions when many stations contend; a large CW wastes airtime idling. BEB doubles CW after a loss and resets it after a success, which is not throughput-optimal in dense networks. OSCAR [REF:oscar] learns a CW with deep reinforcement learning to raise throughput.
+In 802.11 DCF, stations pick a random backoff in a window [0, CW]. A small CW wastes airtime in collisions when many stations contend; a large CW wastes airtime idling. BEB doubles CW after a loss and resets it after a success, which is not throughput-optimal in dense networks. OSCAR [OSCAR] learns a CW with deep reinforcement learning to raise throughput.
 
 The original design controls one AP's BSS. Real deployments have many neighbouring APs sharing a channel. This project asks whether per-AP learners, each seeing only local information, can coordinate implicitly, and how that behaviour changes as APs are added.
 
@@ -34,7 +34,7 @@ Out of scope (design contract, ADR-0002): mobility, dynamic stations, detailed i
 
 ## 5. Background
 
-An 802.11ax (HE) network in a single 5 GHz channel is simulated in ns-3.29 [REF:ns3]. Stations send UDP uplink traffic to their associated AP. A frame lost to collision is retransmitted with a larger CW. The learning loop is a Gym interface to ns-3 (ns3-gym [REF:ns3gym]): every `stepTime` of simulated time the simulator pauses, sends an observation and reward to Python, and applies the returned action.
+An 802.11ax (HE) network in a single 5 GHz channel is simulated in ns-3.29 [ns-3]. Stations send UDP uplink traffic to their associated AP. A frame lost to collision is retransmitted with a larger CW. The learning loop is a Gym interface to ns-3 (ns3-gym [ns3-gym]): every `stepTime` of simulated time the simulator pauses, sends an observation and reward to Python, and applies the returned action.
 
 ## 6. IEEE 802.11 Contention Window
 
@@ -42,7 +42,7 @@ Under BEB the CW starts at 16 (`CWmin`) and doubles per failed attempt up to 102
 
 ## 7. Original OSCAR [Inherited]
 
-OSCAR is an AP-level DDPG agent that sets one CW for the AP's stations, from a loss-based observation, with a throughput-oriented reward and 10 ms decision epochs [REF:oscar]. The v0.1.0 baseline freeze (`docs/results/baseline-v0.1.0.md`) records what the code does, which differs from the paper in places. Differences measured in the code (code is authoritative over the paper):
+OSCAR is an AP-level DDPG agent that sets one CW for the AP's stations, from a loss-based observation, with a throughput-oriented reward and 10 ms decision epochs [OSCAR]. The v0.1.0 baseline freeze (`docs/results/baseline-v0.1.0.md`) records what the code does, which differs from the paper in places. Differences measured in the code (code is authoritative over the paper):
 
 | Item | This codebase | Note |
 |---|---|---|
@@ -60,7 +60,7 @@ Both the single-AP path and the original agent classes (`agents/our_ddpg/Our_DDP
 
 Supporting literature on DRL/MARL-based CW optimization (not this project's architecture; `docs/planning/project_description.md` §15):
 
-- OSCAR [REF:oscar]: the project baseline (AP-level DDPG, loss observation, throughput reward).
+- OSCAR [OSCAR]: the project baseline (AP-level DDPG, loss observation, throughput reward).
 - SETL-DQN(MA) [REF:setl]: cooperative multi-agent CW optimization with station-level agents and local observations, common throughput reward, Dec-POMDP framing.
 - Adaptive Throughput Optimization [REF:ato]: distributed CW optimization with independent node-level agents.
 - LILD-DQN [REF:lild]: collision/loss information as an RL observation.
@@ -99,7 +99,7 @@ Design contract: ADR-0002 and `docs/design/multi-ap-design-v0.2.0.md`. Invariant
 
 ## 11. RL Formulation
 
-Per AP *i* (mode `independent`): a single-agent MDP with state = AP *i*'s latest loss ratio, action = a scalar in [−1, 1] mapped to AP *i*'s CW, reward = AP *i*'s normalized goodput. The joint problem is a multi-agent game in which each agent treats the others as part of the environment. Algorithm: DDPG [REF:ddpg] with actor/critic of 128-128 hidden units [Inherited]. Hyper-parameters (code defaults of `OSCAR_multi_ap_train.py`): batch 32, discount 0.7, τ = 1e-3, exploration noise σ = 0.1, 300 random-action warm-up steps, actor/critic lr 4e-4 / 4e-3.
+Per AP *i* (mode `independent`): a single-agent MDP with state = AP *i*'s latest loss ratio, action = a scalar in [−1, 1] mapped to AP *i*'s CW, reward = AP *i*'s normalized goodput. The joint problem is a multi-agent game in which each agent treats the others as part of the environment. Algorithm: DDPG [DDPG] with actor/critic of 128-128 hidden units [Inherited]. Hyper-parameters (code defaults of `OSCAR_multi_ap_train.py`): batch 32, discount 0.7, τ = 1e-3, exploration noise σ = 0.1, 300 random-action warm-up steps, actor/critic lr 4e-4 / 4e-3.
 
 ## 12. Observation
 
@@ -203,6 +203,23 @@ Aggregate throughput in Mbps, mean ± 95 % CI over 3 seeds. Source: `docs/figure
 
 ![Load sweep](../figures/v2.2.0/load-sweep/load_sweep.png)
 
+### 20.4 Attempt to beat Global-CW OSCAR (v3.0.0)
+
+Question: can a per-AP-CW method match or beat the global-CW agent, not just BEB? v3.0.0 added trainer options only (`--mode shared`, `--obs hist`, `--alpha`, `--rewardScale`; `cw.cc` unchanged). `shared` uses one set of actor and critic weights for all APs, each AP still sets its own CW from its own observation, so per-AP isolation is relaxed (ADR-0004). V5 = shared + windowed-loss observation + reward x100 + alpha 0. Full tables: `docs/results/improvement-v3.0.0.md`.
+
+20,40 at 150 Mbps, aggregate Mbps, n = 3 seeds:
+
+| Controller | Aggregate | vs Global (paired) |
+|---|---|---|
+| BEB | 27.30 ± 0.63 | |
+| Global-CW | 36.17 ± 6.95 | |
+| V5 | 37.08 ± 0.85 | +2.8 ± 16.9 % |
+| A1 (shared, loss-only observation, x100) | 38.48 ± 2.64 | +6.9 ± 26.7 % |
+
+V5 vs BEB is +35.8 ± 6.2 %. Imbalance, V5 minus Global, n = 3: 5,55 +5.0 ± 13.6 %; 5,5,5,45 +3.8 ± 10.8 %. 6x10, seed 0 only: −0.9 %.
+
+Facts: every paired interval against Global includes 0, so no gain over Global is shown. V5's seed spread is lower at 20,40 (±0.85 vs ±6.95) and at 5,55. In the independent-agent screen (n = 1 each) the added observation and reward changes lowered throughput; only parameter sharing reached Global level. Per-AP CWs end nearly equal even under imbalance. Inference (untested): V5 behaves like a global CW with shared weights, and the variance reduction may come from the N transitions per step feeding one agent.
+
 ## 21. Scaling Analysis
 
 Total stations fixed at 60, equal split, N = 2, 4, 6, 10 (removes the confound of growing station count in the earlier v1.x sweep).
@@ -242,6 +259,7 @@ Inference (not tested):
 - Observation is one loss scalar; the 300-value history is unused.
 - Reward scale is small in saturation.
 - Pre-fix (CW 0/0) results for v1.x and the central critic are not comparable to the final set.
+- The v3.0.0 ablations V1–V4 and A2 are single-seed, 6x10 is single-seed, and all of v3.0.0 uses one load (150 Mbps per station) and 15 s runs.
 - Raw traces and `.wandb` files are local only, so regeneration needs the local run directories.
 - A single channel, fixed positions, uplink UDP only; no mobility and no dynamic stations.
 
@@ -250,28 +268,28 @@ Inference (not tested):
 1. Find why the central critic collapsed at N = 10 (cause untested); rerun it on the fixed binary.
 2. Rerun the final set with traffic started after association.
 3. Measure active-sink counts for other topologies and seeds (only 20,40 seed 0 is done).
-4. Richer state (windowed statistics), reward shaping that uses more of [0, 1], and more seeds.
-5. Sync the final W&B runs.
+4. Reward shaping that uses more of [0, 1], and more seeds. (Windowed-statistics observation was tried in v3.0.0, §20.4, with no throughput gain.)
+5. Find a setting where per-AP CWs should differ (asymmetric load, mixed traffic) and test why shared weights lower seed variance. Check single-AP OSCAR against BEB at 15 and 50 stations to compare with the published gain (`docs/reference/oscar-baseline-metrics.md`).
 6. Neighbourhood information sharing between APs as a middle point between independent and global.
 
 ## 25. Conclusion
 
-The project delivers a working multi-AP OSCAR in one ns-3 process with strictly isolated per-AP DDPG agents, per-AP statistics and CW control, baselines, and a reproducible benchmark pipeline. Under saturation a single shared CW agent beats BEB by about 30 % at every tested size, while isolated per-AP agents match BEB at two APs and degrade as APs are added. Learning to coordinate through local loss alone is therefore not sufficient in this setup. The central critic prototype did not change that conclusion, and the open causes are listed in §23–24.
+The project delivers a working multi-AP OSCAR in one ns-3 process with strictly isolated per-AP DDPG agents, per-AP statistics and CW control, baselines, and a reproducible benchmark pipeline. Under saturation a single shared CW agent beats BEB by about 30 % at every tested size, while isolated per-AP agents match BEB at two APs and degrade as APs are added. Learning to coordinate through local loss alone is therefore not sufficient in this setup. The central critic prototype did not change that conclusion, and the open causes are listed in §23–24. Relaxing isolation with shared weights (v3.0.0) brings per-AP controllers to the global agent's level, not past it (§20.4).
 
 ## 26. References
 
 Fill in (user to supply full entries):
 
-- [REF:oscar] OSCAR paper.
+- [OSCAR] Grasso, Raftopoulos and Schembra, "OSCAR: A Contention Window Optimization Approach Using Deep Reinforcement Learning," IEEE ICC 2023, doi:10.1109/ICC45041.2023.10279663.
 - [REF:setl] SETL-DQN(MA) paper.
 - [REF:ato] Adaptive Throughput Optimization paper.
 - [REF:lild] LILD-DQN paper.
 - [REF:pdcf] PDCF-DRL paper.
-- [REF:ddpg] DDPG (Lillicrap et al.).
-- [REF:ns3] ns-3 simulator, version 3.29.
-- [REF:ns3gym] ns3-gym.
+- [DDPG] T. P. Lillicrap et al., "Continuous control with deep reinforcement learning," ICLR 2016, arXiv:1509.02971.
+- [ns-3] ns-3 network simulator, version 3.29, https://www.nsnam.org.
+- [ns3-gym] P. Gawłowicz and A. Zubow, "ns-3 meets OpenAI Gym: The Playground for Machine Learning in Networking Research," ACM MSWiM 2019; code https://github.com/tkn-tub/ns3-gym.
 - [REF:ieee80211] IEEE 802.11 standard.
-- [REF:wandb] Weights & Biases.
+- [W&B] L. Biewald, "Experiment Tracking with Weights and Biases," 2020, https://www.wandb.com.
 
 ---
 
@@ -285,4 +303,4 @@ From `ns-3.29/scratch/linear-mesh`, with `../../venv/bin/python` and the local r
 
 ## Appendix C. Version history
 
-v0.1 baseline freeze → v0.2 design → v0.3 two-AP topology → v0.4 per-AP statistics → v0.5 per-AP CW → v0.6 multi-AP ns3-gym → v0.7 independent agents → v0.8 W&B → v0.9 validation → v1.0 core → v1.1–v1.6 benchmarks and 2→10 AP scaling (pre-fix) → v1.7–v1.9 central critic (spec, prototype, evaluation) → v2.0 robustness and CW-start fix → v2.1 reproducibility → v2.2 final results → v2.3 this report.
+v0.1 baseline freeze → v0.2 design → v0.3 two-AP topology → v0.4 per-AP statistics → v0.5 per-AP CW → v0.6 multi-AP ns3-gym → v0.7 independent agents → v0.8 W&B → v0.9 validation → v1.0 core → v1.1–v1.6 benchmarks and 2→10 AP scaling (pre-fix) → v1.7–v1.9 central critic (spec, prototype, evaluation) → v2.0 robustness and CW-start fix → v2.1 reproducibility → v2.2 final results → v2.3 this report → v2.4 presentation → v2.5 final audit → v2.7 W&B sync of the final runs → v3.0 attempt to beat Global-CW (§20.4).
