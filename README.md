@@ -10,15 +10,15 @@ Out of scope: mobility, dynamic STAs, detailed interference modelling, per-stati
 | `independent` | one DDPG agent per AP (default) |
 | `global` | one shared CW agent |
 | `beb` | standard 802.11 binary exponential backoff (baseline) |
-| `central` | optional shared critic (negative result, see `docs/central-eval-v1.9.0.md`) |
+| `central` | optional shared critic (negative result, see `docs/results/central-eval-v1.9.0.md`) |
 
 ## Stack (pinned)
-ns-3.29 (C++, GCC 11.4) · ns3-gym 1.0.0 / py 0.1.0 · Python 3.7.16 (venv `ns-3.29/venv`) · PyTorch 1.13.1+cu117 · Gym 0.26.2 · NumPy 1.21.6 · protobuf 3.20.3 · pyzmq 26.2.1 · W&B 0.18.7 · Ubuntu 22.04 (WSL2). Setup and seed behaviour: `docs/reproducibility-v2.1.0.md`.
+ns-3.29 (C++, GCC 11.4) · ns3-gym 1.0.0 / py 0.1.0 · Python 3.7.16 (venv `ns-3.29/venv`) · PyTorch 1.13.1+cu117 · Gym 0.26.2 · NumPy 1.21.6 · protobuf 3.20.3 · pyzmq 26.2.1 · W&B 0.18.7 · Ubuntu 22.04 (WSL2). Setup and seed behaviour: `docs/reference/reproducibility-v2.1.0.md`.
 
 ## Layout
 - `ns-3.29/scratch/linear-mesh/`: project code (`cw.cc`, `scenario.h`, `OSCAR_multi_ap_train.py`, `benchmark_v1_1_0.py`, `agents/our_ddpg/`, analysis scripts). Its own `README.md` has the original OSCAR usage plus the multi-AP commands.
-- `ns-3.29/contrib/opengym/`: ns3-gym (upstream, unmodified; see `docs/final-audit-v2.5.0.md` §3).
-- `docs/`: design, per-version reports, results, audit. `memory-bank/`: current project state. `ROADMAP.md`: version status.
+- `ns-3.29/contrib/opengym/`: ns3-gym (upstream, unmodified; see `docs/reports/final-audit-v2.5.0.md` §3).
+- `docs/`: index in `docs/README.md` (planning, design, adr, results, reports, reference, figures). `memory-bank/`: current project state. `ROADMAP.md`: version status.
 - `README`, `bake/`, `netanim-3.108/`, `pybindgen-*`, `build.py`, `constants.py`, `util.py`: upstream ns-3-allinone.
 
 ## Quickstart
@@ -40,13 +40,13 @@ Run one ns-3 job at a time. W&B runs offline unless `--online` is given.
 | Global-CW | 36.29 ± 7.16 | +33.0 ± 29.0 % |
 | Independent | 25.78 ± 20.80 | -5.6 ± 76.0 % |
 
-Scaling, imbalance, load sweep and limits (n=3, wide CIs): `docs/final-results-v2.2.0.md`. Full write-up: `docs/technical-report-v2.3.0.md`.
+Scaling, imbalance, load sweep and limits (n=3, wide CIs): `docs/results/final-results-v2.2.0.md`. Full write-up: `docs/reports/technical-report-v2.3.0.md`.
 
 ## Docs index
-- Spec and design: `docs/project_description.md`, `docs/multi-ap-design-v0.2.0.md`, `docs/adr/`
-- Plan: `ROADMAP.md`, `docs/detailed_roadmap.md`
-- Results: `docs/final-results-v2.2.0.md`, `docs/robustness-v2.0.0.md`, `docs/central-eval-v1.9.0.md`
-- Report, demo, audit: `docs/technical-report-v2.3.0.md`, `docs/presentation-v2.4.0.md`, `docs/final-audit-v2.5.0.md`
+- Spec and design: `docs/planning/project_description.md`, `docs/design/multi-ap-design-v0.2.0.md`, `docs/adr/`
+- Plan: `ROADMAP.md`, `docs/planning/detailed_roadmap.md`
+- Results: `docs/results/final-results-v2.2.0.md`, `docs/results/robustness-v2.0.0.md`, `docs/results/central-eval-v1.9.0.md`
+- Report, demo, audit: `docs/reports/technical-report-v2.3.0.md`, `docs/reports/presentation-v2.4.0.md`, `docs/reports/final-audit-v2.5.0.md`
 
 Raw run directories (traces, `.wandb`) are local only and not committed.
 

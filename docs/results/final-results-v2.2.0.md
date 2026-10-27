@@ -4,7 +4,7 @@ Status: analysis only. No new ns-3 runs, no `cw.cc` change, no rebuild. Everythi
 
 ## 1. Selected set and why
 
-Fact: every v1.1.0–v1.9.0 agent run used the CW 0/0 start bug (`docs/robustness-v2.0.0.md` §E). Only the v2.0.0 `*-cwfix` runs (81, all PASS, n=3, seeds 0-2) ran on the fixed binary. The final set therefore uses only those. Default config: 15 s, step 0.01, 1500 steps, policy window = steps >= 300.
+Fact: every v1.1.0–v1.9.0 agent run used the CW 0/0 start bug (`docs/results/robustness-v2.0.0.md` §E). Only the v2.0.0 `*-cwfix` runs (81, all PASS, n=3, seeds 0-2) ran on the fixed binary. The final set therefore uses only those. Default config: 15 s, step 0.01, 1500 steps, policy window = steps >= 300.
 
 | # | Experiment | Source (local) | Runs | Figures |
 |---|---|---|---|---|
@@ -13,7 +13,7 @@ Fact: every v1.1.0–v1.9.0 agent run used the CW 0/0 start bug (`docs/robustnes
 | 3 | AP imbalance 5,55 and 5,5,5,45 | `bench-v2.0.0-imbalance-cwfix` | 18 | `imbalance` |
 | 4 | Offered load 0.5 / 1 / 150 Mbps at 20,40 | `bench-v2.0.0-load0.5-cwfix`, `-load1-cwfix` (+ #1) | 18 (+9) | `load0.5`, `load1`, `load-sweep` |
 
-Not regenerated, cited only, and labelled pre-fix (CW 0/0 start): v1.6.0 growing-STA scaling (`docs/scaling-v1.6.0.md`), v1.9.0 central critic (`docs/central-eval-v1.9.0.md`, negative result), v1.1.0 20,40 n=5 anchor.
+Not regenerated, cited only, and labelled pre-fix (CW 0/0 start): v1.6.0 growing-STA scaling (`docs/results/scaling-v1.6.0.md`), v1.9.0 central critic (`docs/results/central-eval-v1.9.0.md`, negative result), v1.1.0 20,40 n=5 anchor.
 
 ## 2. Results (mean ± 95 % CI over 3 seeds; aggregate Mbps; paired vs BEB, same ns-3 seed)
 
@@ -47,14 +47,14 @@ Full table (per-STA, per-AP, min per-AP, Jain, convergence): `fixed60-scaling/sc
 | 1 | 27.86 ± 1.60 | 38.96 ± 0.40 | 11.43 ± 13.75 | +39.9 ± 8.3 % | -58.8 ± 50.3 % |
 | 150 | 27.30 ± 0.63 | 36.29 ± 7.16 | 25.78 ± 20.80 | +33.0 ± 29.0 % | -5.6 ± 76.0 % |
 
-All numbers equal `docs/robustness-v2.0.0.md` §C and §F.2 (checked).
+All numbers equal `docs/results/robustness-v2.0.0.md` §C and §F.2 (checked).
 
 ## 3. Observations (fact unless marked)
 - Global-CW is +29.5 to +33.2 % over BEB in every fixed-binary topology at saturation, above BEB in all 3 seeds at N=2-10; the paired CI lower bounds are close to 0.
 - Independent per-AP is negative from N=4 on (CI excludes 0 at N=4 and N=10); under imbalance its CI includes 0; at 1 Mbps it is much worse than BEB (-58.8 ± 50.3 %, CI excludes 0 by a small margin).
 - BEB is flat in N at fixed total load (27.4-28.1 Mbps).
 - Global-CW gain is neutral at 0.5 Mbps (+6 %).
-- Reward (`reward.png`) is each mode's own per-AP normalized goodput and is small (~0.003-0.004), a known scale (`docs/core-v1.0.0.md` §5). Compare it within a figure, not as an absolute.
+- Reward (`reward.png`) is each mode's own per-AP normalized goodput and is small (~0.003-0.004), a known scale (`docs/results/core-v1.0.0.md` §5). Compare it within a figure, not as an absolute.
 - Independent per-AP throughput and reward drift down late in the 20,40 run (`reward.png`, `convergence.png`); cause untested (inference only: non-stationarity of independent learners).
 
 ## 4. Artifacts per experiment (`docs/figures/v2.2.0/<exp>/`)
@@ -83,7 +83,7 @@ Checks run: `aggregate_bench.py` reproduces `docs/figures/v2.0.0/load/load150/ta
 
 ## 6. Limits
 - n=3 per cell; most agent-vs-BEB CIs are wide and some include 0.
-- Active sinks measured only at 20,40 / 150 Mbps, seed 0 (`docs/robustness-v2.0.0.md` §F.5): 19/20 and 39/40 in BEB, global and independent alike, so inactive STAs do not explain the agent gain there. Other topologies not measured.
+- Active sinks measured only at 20,40 / 150 Mbps, seed 0 (`docs/results/robustness-v2.0.0.md` §F.5): 19/20 and 39/40 in BEB, global and independent alike, so inactive STAs do not explain the agent gain there. Other topologies not measured.
 - Traffic starts at t=0 (inherited); large-N association failures come from this (§G of the robustness doc) but were not seen in the final-set topologies (dry BEB check, §G.5, n=1); the final set was not rerun with `--trafficStart`.
 - Central critic: excluded (negative, pre-fix binary, N=10 collapse cause untested).
 - Raw data is not in git, so regeneration needs the local run dirs.

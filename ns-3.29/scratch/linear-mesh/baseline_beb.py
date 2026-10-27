@@ -1,7 +1,7 @@
 """v1.0.0: standard 802.11 BEB baseline on the multi-AP topology (ns-3 --dryRun, no agent).
 Usage: ../../venv/bin/python baseline_beb.py --apStaCounts 2,3 [--simTime 15] [--stepTime 0.01] [--seed 1]
 Throughput = received * PAYLOAD_BITS / simTime (dry-run counters cover the whole run incl. the 1 s warm-up,
-so this is an approximation of the trainer's per-step mean; see docs/core-v1.0.0.md).
+so this is an approximation of the trainer's per-step mean; see docs/results/core-v1.0.0.md).
 --seed is the ns-3 seed (>=1); the trainer uses ns-3 seed = python seed + 1.
 """
 import argparse

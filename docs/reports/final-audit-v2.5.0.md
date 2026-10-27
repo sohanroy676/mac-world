@@ -18,15 +18,15 @@ Method: **C** = checked in committed files/code, **R** = re-run today on the cur
 ### Implementation
 | Item | Status | Evidence |
 |---|---|---|
-| 2 AP works | PASS | R: demo check above. C: `docs/validation-v0.9.0.md`, `docs/core-v1.0.0.md` |
-| 10 AP works | PASS (caveat) | R: 10-AP small check. C: `docs/scaling-v1.5.0.md` 9/9 long runs. Caveat: full-size dry association check FAILS (late association, deassoc bursts); cause traced in v2.0.0 batch D to traffic starting at t=0 plus MaxMissedBeacons (n=1), benchmarks still start at t=0 |
+| 2 AP works | PASS | R: demo check above. C: `docs/results/validation-v0.9.0.md`, `docs/results/core-v1.0.0.md` |
+| 10 AP works | PASS (caveat) | R: 10-AP small check. C: `docs/results/scaling-v1.5.0.md` 9/9 long runs. Caveat: full-size dry association check FAILS (late association, deassoc bursts); cause traced in v2.0.0 batch D to traffic starting at t=0 plus MaxMissedBeacons (n=1), benchmarks still start at t=0 |
 | AP-specific CW | PASS | R: different CW per AP in demo. C: v0.5.0 per-node `Config::Set`, CW readback; STAs round CW to 2^k-1 via beacon (documented, accepted) |
-| Per-AP observations | PASS | C: `--check` Test A (`validation-v0.9.0.md`); trainer reshapes obs per AP (`OSCAR_multi_ap_train.py` `reshape_obs`) |
+| Per-AP observations | PASS | C: `--check` Test A (`docs/results/validation-v0.9.0.md`); trainer reshapes obs per AP (`OSCAR_multi_ap_train.py` `reshape_obs`) |
 | Per-AP rewards | PASS | C: Test D; per-AP rewards and a checked `Global/CumulativeReward` sum (`OSCAR_multi_ap_train.py:352-367`) |
 | Agents decentralized | PASS | C: independent mode builds one `DDPG` and one `ReplayBuffer` per AP (`:109-110`), distinct-replay check (`:150`). Central mode is a separate, optional `--mode` |
 | No cross-AP leakage | PASS | C: per-agent replay row checks (`:221-224`), actor-input isolation check in `--check`. Not claimed: radio-level coupling between APs, which is real and intended |
-| Reset works | PASS | C: `reproducibility-v2.1.0.md` (`--episodes 2` PASS, seed and reset checks) |
-| Seeds/config documented | PASS | C: `reproducibility-v2.1.0.md`, `config.json` with `git_rev`; seed bug fixed in v1.1.0 |
+| Reset works | PASS | C: `docs/reference/reproducibility-v2.1.0.md` (`--episodes 2` PASS, seed and reset checks) |
+| Seeds/config documented | PASS | C: `docs/reference/reproducibility-v2.1.0.md`, `config.json` with `git_rev`; seed bug fixed in v1.1.0 |
 | W&B works | PARTIAL | R: offline runs written, key counts checked. NOT done: online sync of the final runs (deferred, `wandb sync <run_dir>/run-*.wandb`). The 9 tracked `.wandb` files are offline copies |
 
 ### Evaluation
@@ -35,25 +35,25 @@ Method: **C** = checked in committed files/code, **R** = re-run today on the cur
 | Standard baseline (BEB) | PASS | `baseline_beb.py`, `--mode beb`, all tables |
 | OSCAR/global-CW baseline | PASS | `--mode global`, tables from v1.1.0 |
 | Proposed method | PASS | `--mode independent` (negative result at N>=4: that is the finding) |
-| 2 AP evaluation | PASS | `benchmark-v1.1.0.md`, n=5 at 20,40 |
-| 10 AP evaluation | PASS | `scaling-v1.5.0.md`, n=3 |
-| Scaling analysis | PASS | `scaling-v1.6.0.md`, recomputed from raw traces, cross-check PASS |
+| 2 AP evaluation | PASS | `docs/results/benchmark-v1.1.0.md`, n=5 at 20,40 |
+| 10 AP evaluation | PASS | `docs/results/scaling-v1.5.0.md`, n=3 |
+| Scaling analysis | PASS | `docs/results/scaling-v1.6.0.md`, recomputed from raw traces, cross-check PASS |
 | Important metrics recorded | PASS | throughput, Jain, per-AP, reward, association events (v2.2.0 plots and CSVs) |
 | Results reproducible | PARTIAL | Short runs byte-identical (v2.1.0). Long runs: 205 files of raw traces/logs for v1.1-v1.5 and early multi-ap dirs are tracked; the final 81 fixed-binary runs (v2.0.0+) exist only locally under `results/`, so a reader gets the tables and figures but not the raw traces for those. Rerun is possible from the documented commands. |
 
-Cross-check: the load-sweep rows (0.5 / 1 / 150 Mbps) in the report (`technical-report-v2.3.0.md:200-202`) equal `final-results-v2.2.0.md:46-48` and `robustness-v2.0.0.md`. Wording nuance: the report headline "+29.5 % to +33.2 %" covers the saturated topologies at 150 Mbps; at 1 Mbps global is +39.9 %.
+Cross-check: the load-sweep rows (0.5 / 1 / 150 Mbps) in the report (`docs/reports/technical-report-v2.3.0.md:200-202`) equal `docs/results/final-results-v2.2.0.md:46-48` and `docs/results/robustness-v2.0.0.md`. Wording nuance: the report headline "+29.5 % to +33.2 %" covers the saturated topologies at 150 Mbps; at 1 Mbps global is +39.9 %.
 
 ### Documentation
 | Item | Status | Evidence / gap |
 |---|---|---|
-| README | PARTIAL | Root `README` is the stock ns-3-allinone text. `ns-3.29/scratch/linear-mesh/README.md` is the OSCAR original plus a "Multi-AP (v1.0.0)" section that predates `--mode`, the benchmark runner, results docs and `reproducibility-v2.1.0.md`. Fixed after the audit: the multi-AP section now covers `--mode`, the runner and the docs (root `README` is still the stock ns-3 text) |
-| Setup instructions | PASS | `reproducibility-v2.1.0.md` (pinned versions, no machine paths). `AGENTS.md` root path fixed after the audit |
-| Architecture documentation | PASS | `multi-ap-design-v0.2.0.md`, ADR-0001..0003 (ADR-0003 status updated after the audit to accepted-optional, negative result) |
-| Experiment configuration | PASS | `reproducibility-v2.1.0.md`, per-doc command tables |
-| Final report | PARTIAL | `technical-report-v2.3.0.md` complete; waiting for user review |
-| References | **FAIL** | 21 `[REF:key]` placeholders (`grep -c REF: docs/technical-report-v2.3.0.md` = 21) until you supply them |
-| Presentation | PARTIAL | `presentation-v2.4.0.md` + 14-slide artifact; title slide placeholder `[Team names · course · date]`; layout not reviewed by you or by me |
-| Demo instructions | PASS | `presentation-v2.4.0.md` line ~40, rerun today: 32 s, PASS |
+| README | PARTIAL | Root `README` is the stock ns-3-allinone text. `ns-3.29/scratch/linear-mesh/README.md` is the OSCAR original plus a "Multi-AP (v1.0.0)" section that predates `--mode`, the benchmark runner, results docs and `docs/reference/reproducibility-v2.1.0.md`. Fixed after the audit: the multi-AP section now covers `--mode`, the runner and the docs (root `README` is still the stock ns-3 text) |
+| Setup instructions | PASS | `docs/reference/reproducibility-v2.1.0.md` (pinned versions, no machine paths). `AGENTS.md` root path fixed after the audit |
+| Architecture documentation | PASS | `docs/design/multi-ap-design-v0.2.0.md`, ADR-0001..0003 (ADR-0003 status updated after the audit to accepted-optional, negative result) |
+| Experiment configuration | PASS | `docs/reference/reproducibility-v2.1.0.md`, per-doc command tables |
+| Final report | PARTIAL | `docs/reports/technical-report-v2.3.0.md` complete; waiting for user review |
+| References | **FAIL** | 21 `[REF:key]` placeholders (`grep -c REF: docs/reports/technical-report-v2.3.0.md` = 21) until you supply them |
+| Presentation | PARTIAL | `docs/reports/presentation-v2.4.0.md` + 14-slide artifact; title slide placeholder `[Team names · course · date]`; layout not reviewed by you or by me |
+| Demo instructions | PASS | `docs/reports/presentation-v2.4.0.md` line ~40, rerun today: 32 s, PASS |
 
 ## 3. Upstream provenance of the import (bc6f12c)
 
@@ -75,7 +75,7 @@ bc6f12c is the **root commit** (3946 files); it imports ns-3.29 and opengym and 
 2. Central-critic N=10 collapse cause: untested.
 3. Traffic starts at t=0 in all benchmarks; association failures at large N are linked to it (v2.0.0 D, n=1).
 4. Active-sink count for BEB: not measured.
-5. W&B online sync of the final runs: deferred at audit time. Done 2026-10-20 (81 runs in `contention_window`, tag `final-v2.2.0`; `docs/final-results-v2.2.0.md` §5). The audit table row above is left as written.
+5. W&B online sync of the final runs: deferred at audit time. Done 2026-10-20 (81 runs in `contention_window`, tag `final-v2.2.0`; `docs/results/final-results-v2.2.0.md` §5). The audit table row above is left as written.
 6. Fixed after the audit: project README multi-AP section, `AGENTS.md` root path, ADR-0003 status.
 7. Raw data for the final 81 runs is local only.
 

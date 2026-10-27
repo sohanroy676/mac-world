@@ -43,7 +43,7 @@ def main():
     args = parser.parse_args()
 
     s = summarize(args.run_dir, args.stepTime, args.warmup)
-    aps, thr, tot, pol = s["aps"], s["thr"], s["tot"], slice(args.warmup, None)
+    aps, thr, pol = s["aps"], s["thr"], slice(args.warmup, None)
     f = lambda a, k: s[k][a]
 
     print("| Metric | " + " | ".join("AP%d" % a for a in aps) + " | Global |")

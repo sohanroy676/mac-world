@@ -1,6 +1,6 @@
 # v3.0.0 Beating Global-CW OSCAR: results
 
-Status: experiment report. Branch `feature/beat-oscar`; not merged, not tagged. Trainer-only change (`OSCAR_multi_ap_train.py`, `aggregate_bench.py`); `cw.cc` unchanged, `linear-mesh` rebuilt 2026-10-25 12:45. Design decision: `docs/adr/0004-relaxed-isolation.md`. Tables: `docs/figures/v3.0.0/` (raw `results/` not committed).
+Status: experiment report. Branch `feature/beat-oscar` merged to main; tagged `v3.0.0` and pushed; A1 seeds 1-2 added afterwards (branch `docs/a1-seeds`, merged to main). Trainer-only change (`OSCAR_multi_ap_train.py`, `aggregate_bench.py`); `cw.cc` unchanged, `linear-mesh` rebuilt 2026-10-25 12:45. Design decision: `docs/adr/0004-relaxed-isolation.md`. Tables: `docs/figures/v3.0.0/` (raw `results/` not committed).
 
 ## 1. Question
 Can a per-AP-CW method match or beat Global-CW OSCAR (one shared CW), not just BEB?

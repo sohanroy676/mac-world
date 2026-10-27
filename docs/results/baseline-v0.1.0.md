@@ -35,7 +35,7 @@ functionality. It adds only:
 A `v0.1.0` tag will be added only after the full reproduction run completes
 (§8), so the tag certifies code + evidence together.
 
-## 2. Environment (verified, see `docs/next-actions-results-2026-09-15.md`)
+## 2. Environment (verified, see `docs/reference/pre_v0.1.0_audit/next-actions-results-2026-09-15.md`)
 
 | Component | Version |
 |---|---|
@@ -226,7 +226,7 @@ verified on both runs: clean tree, `git_dirty: false`.
 
 ## 10. References
 
-- `docs/OSCAR-forensic-audit-2026-09-15.md` — full code audit (evidence for §7)
-- `docs/next-actions-results-2026-09-15.md` — environment verification, mentor decision brief D1–D6 (input to v0.2.0)
-- `docs/detailed_roadmap.md` §v0.1.0 — this milestone's requirements
+- `docs/reference/pre_v0.1.0_audit/OSCAR-forensic-audit-2026-09-15.md` — full code audit (evidence for §7)
+- `docs/reference/pre_v0.1.0_audit/next-actions-results-2026-09-15.md` — environment verification, mentor decision brief D1–D6 (input to v0.2.0)
+- `docs/planning/detailed_roadmap.md` §v0.1.0 — this milestone's requirements
 - `memory-bank/architecture.md` — target multi-AP architecture

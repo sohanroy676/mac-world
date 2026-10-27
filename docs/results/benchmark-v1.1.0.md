@@ -1,6 +1,6 @@
 # v1.1.0 — Baseline benchmarking (CLOSED, tagged v1.1.0, 2026-10-15)
 
-Status: tooling done; batch 1 (2,3 and 5,15) done; batch 2 (20,20) DONE (3 modes x 3 seeds, 9/9 PASS); batch 3 (20,40) PARTIAL (1/9 run: beb seed 0). v1.1.0 is not closed and not tagged.
+Status: CLOSED, tagged `v1.1.0` (2026-10-15). 42/42 benchmark runs PASS: batch 1 (2,3 and 5,15), batch 2 (20,20), batch 3 (20,40, extended to n=5); results in §3, §4b, §4c, conclusion in §5. Older progress wording below is the working log.
 
 ## 1. Method
 Three systems on the same topology, traffic, PHY, duration (15 s, step 0.01 s) and seeds (python seed 0,1,2 -> ns-3 seed 1,2,3):
@@ -81,8 +81,8 @@ Paired vs BEB (same ns-3 seed, n=5): global +8.93 ± 3.24 Mbps (+31.9 ± 11.8 %)
   At 20,20 (earlier): BEB 0, trained 4-14. So it occurs in BEB too but much more often in trained modes (runs with at least one event at 20,40: BEB 1/5, global 5/5, independent 4/5; independent s2 shows 0 even though trained). Cause still unproven.
 - Inference, untested: 1.144 s is a fixed simulation time (warm-up/first action boundary, when trained modes first change CW and STAs pick up a new EDCA set from beacons, §v0.5 rounding), so it is a transient at the start of policy control; BEB's single event and independent s2's zero argue the trigger is not simply "CW changed". To test: log CW + beacon events around t=1.1-1.2 s in one trained (global s1, 14 events) and one BEB (beb s0) run.
 
-## 5. Conclusion and remaining for v1.1.0
-All 18 + 9 + 15 benchmark runs (2,3; 5,15; 20,20 at n=3; 20,40 at n=5; 3 modes) are PASS. Remaining before close: user approval and tag only.
+## 5. Conclusion for v1.1.0
+All 18 + 9 + 15 benchmark runs (2,3; 5,15; 20,20 at n=3; 20,40 at n=5; 3 modes) are PASS. Closed and tagged `v1.1.0` on 2026-10-15.
 
 Conclusion across topologies (n = 3 seeds; 20,40 n = 5; policy window; paired vs BEB):
 - 2,3 and 5,15: all paired CIs include 0 (section 3).
@@ -90,4 +90,4 @@ Conclusion across topologies (n = 3 seeds; 20,40 n = 5; policy window; paired vs
 - 20,40 (n=5): global-CW +31.9 ± 11.8 % (CI excludes 0); independent -9.3 ± 31.0 % (CI includes 0).
 - Supported claim: a single global CW beats BEB at 20,20 (+26 %) and at 20,40 (+32 %, n=5); at 2,3 and 5,15 no difference. Independent per-AP agents show no reliable gain over BEB or over global-CW at any topology, have very large seed variance, converge slowly (step ~1000-1300), and their throughput trends down late in the run at 20,20.
 - Not tested: longer training, reward/obs changes. The unproven t=1.144 s deassociation cause remains open.
-Close and tag only with user approval.
+(Closed and tagged `v1.1.0`.)

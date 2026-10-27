@@ -7,7 +7,7 @@ Accepted as an optional trainer variant (not the default). Default flags reprodu
 2026-10-26
 
 ## Context
-ADR-0002 fixed strict per-AP isolation: one raw local loss scalar per AP, per-AP normalized goodput reward, one agent and replay buffer per AP. Independent agents fall below BEB as N grows (`docs/final-results-v2.2.0.md`), while Global-CW OSCAR stays about +30 % over BEB. The v3.0.0 work (`docs/improvement-v3.0.0.md`) asked whether per-AP agents can reach Global-CW performance. Candidate causes (inference, only partly tested): noisy one-sample observation, tiny reward scale, selfish rewards, one transition per step per agent.
+ADR-0002 fixed strict per-AP isolation: one raw local loss scalar per AP, per-AP normalized goodput reward, one agent and replay buffer per AP. Independent agents fall below BEB as N grows (`docs/results/final-results-v2.2.0.md`), while Global-CW OSCAR stays about +30 % over BEB. The v3.0.0 work (`docs/results/improvement-v3.0.0.md`) asked whether per-AP agents can reach Global-CW performance. Candidate causes (inference, only partly tested): noisy one-sample observation, tiny reward scale, selfish rewards, one transition per step per agent.
 
 ## Decision
 Add opt-in trainer flags in `OSCAR_multi_ap_train.py`; no `cw.cc` change:
