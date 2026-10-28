@@ -125,7 +125,7 @@
 
 ### v3.1.0
 - Ceiling: static CW sweep (`--mode static --apCws`), D1 payoff matrix, 20,40 and 6x10. Research idea #1.
-- Status: ✅ experiments DONE 2026-10-28 (50 static jobs PASS, branch `feature/v3.1.0-ceiling-results`; not tagged). 20,40 n=3: best static common CW 512,512 = 39.62 ± 0.21 Mbps, +12.32 ± 0.84 vs BEB, +3.45 ± 6.77 vs Global (CI spans 0). Rule NOT met: headroom over Global is smaller than the CI width. No per-AP split beat the best common CW (off-diagonal grid seed 0 n=1; D1 n=3 below it). 6x10 diagonal seed 0 plateaus at 512-768 (about 39.7, unpaired). `docs/results/ceiling-v3.1.0.md`.
+- Status: ✅ experiments DONE 2026-10-28 (50 static jobs PASS, branches `feature/v3.1.0-ceiling-results`, `docs/v3.1.0-handoff`; merged to dev, pushed, TAGGED `v3.1.0`; no CI configured; run dirs force-added with user approval). 20,40 n=3: best static common CW 512,512 = 39.62 ± 0.21 Mbps, +12.32 ± 0.84 vs BEB, +3.45 ± 6.77 vs Global (CI spans 0). Rule NOT met: headroom over Global is smaller than the CI width. No per-AP split beat the best common CW (off-diagonal grid seed 0 n=1; D1 n=3 below it). 6x10 diagonal seed 0 plateaus at 512-768 (about 39.7, unpaired). `docs/results/ceiling-v3.1.0.md`.
 
 ### v3.2.0
 - Fair protocol: multi-episode training, save/load actor, frozen noise-free eval, n >= 8 paired seeds, `--alpha 0` independent, CWmin-only flag, TD3 option (ideas #2, #3, #8, #9).
