@@ -39,6 +39,8 @@ def grid(name):
         return d6
     if name == "chain3":  # common CW on the diagonal plus edge APs (1, 3) higher than the middle AP
         return [(T3, (c, c, c)) for c in DIAG3] + [(T3, (e, m, e)) for e in EDGE3 for m in MID3 if e != m]
+    if name == "custom":  # --cws "512,128,512[;c1,c2,c3...]" on --topo
+        return [(CLI_TOPO, tuple(int(c) for c in one.split(","))) for one in CLI_CWS.split(";")]
     if name == "all":
         return d2 + off + d1 + d6
     raise SystemExit("unknown grid " + name)
@@ -223,7 +225,9 @@ def table(a):
 p = argparse.ArgumentParser()
 sub = p.add_subparsers(dest="cmd", required=True)
 r = sub.add_parser("run")
-r.add_argument("--grid", choices=["pilot", "full2", "diag6", "chain3", "all"], required=True)
+r.add_argument("--grid", choices=["pilot", "full2", "diag6", "chain3", "custom", "all"], required=True)
+r.add_argument("--topo", default="", help="topology for --grid custom, e.g. 10,10,10")
+r.add_argument("--cws", default="", help="for --grid custom: ';'-separated per-AP CW lists, e.g. 512,128,512")
 r.add_argument("--extraArgs", default="", help="extra trainer args for every job, e.g. '--apHidden 1-3'")
 r.add_argument("--seeds", nargs="+", type=int, default=[0])
 r.add_argument("--lanes", type=int, default=1)
@@ -236,4 +240,6 @@ t.add_argument("--out", default="../../../docs/figures/v3.1.0")
 t.add_argument("--refs", nargs="+", default=[])
 t.add_argument("--pf", action="store_true", help="add PF utility (sum log per-AP Mbps) and min-AP columns, and the v3.4.0 gate comparison for 10,10,10")
 args = p.parse_args()
+CLI_TOPO, CLI_CWS = getattr(args, "topo", ""), getattr(args, "cws", "")
+assert args.cmd != "run" or args.grid != "custom" or (CLI_TOPO and CLI_CWS), "--grid custom needs --topo and --cws"
 run(args) if args.cmd == "run" else table(args)

@@ -31,13 +31,14 @@ parser.add_argument("--stepTime", type=float, default=0.01)
 parser.add_argument("--benchDir", default="results/fair-%s" % time.strftime("%Y%m%d-%H%M%S"))
 parser.add_argument("--trainerArgs", default="", help="extra trainer args for EVERY job incl. BEB, e.g. '--historyLength 20 --obsWindow 20'")
 parser.add_argument("--learnerArgs", default="", help="extra trainer args for learned modes only (train and eval, not BEB), e.g. '--alpha 0 --rewardScale 100 --cwMinOnly'")
+parser.add_argument("--variant", default="", help="v3.4.0: label appended to run tags, log names and the actor dir (e.g. '-pf'), so variants of one mode can share an aggregate")
 parser.add_argument("--no-beb", action="store_true")
 parser.add_argument("--no-check", action="store_true")
 args = parser.parse_args()
 
 FIELDS = ["topo", "mode", "seed", "run_dir", "result", "returncode", "seconds"]
 os.makedirs(args.benchDir, exist_ok=True)
-suffix = "-td3" if args.algo == "td3" else ""
+suffix = ("-td3" if args.algo == "td3" else "") + args.variant
 
 
 def load(path):
