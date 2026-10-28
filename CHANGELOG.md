@@ -7,12 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **sweep**: Add static CW mode and ceiling sweep pilot
+
 ### Changed
 
 - **scratch**: Drop two unused names
 - **changelog**: Add git-cliff config and generate
 - **changelog**: Regenerate
 - Remove unused pre-deploy checklist
+- **changelog**: Regenerate
 
 ### Documentation
 
@@ -23,6 +28,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Group docs/ into topic folders
 - Add v3.0.0 report section, fill refs, fix stale status
 - **memory**: Record restructure and cleanup state
+- **memory**: Mark restructure merged and pushed
+- **research**: Add plan to beat OSCAR and BEB
+- **workflow**: Adopt dev branch and push rule
+- **ceiling**: Add v3.1.0 static CW sweep results
 
 ## [3.0.0] - 2026-10-26
 
