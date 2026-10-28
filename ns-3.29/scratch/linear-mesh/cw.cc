@@ -55,6 +55,7 @@ std::vector<NodeContainer> g_apBss;
 std::vector<uint32_t> g_apCwMin;
 std::vector<uint32_t> g_apCwMax;
 std::vector<uint32_t> g_apCwOverride; // --apCws (empty = every AP uses CW)
+bool g_cwMinOnly = false; // --cwMinOnly: agent action sets MinCw only, MaxCw stays 1023 (BEB doubling kept); multi-AP only
 bool g_apCwOk = true;                 // cleared by any failing readback
 
 
@@ -348,7 +349,7 @@ bool MyExecuteActions(Ptr<OpenGymDataContainer> action)
             cw = min(1024u, max(cw, 16u));
             // v3.1.0: with --apCws the static CW set in set_phy stays; agent actions must not overwrite it.
             if (!dry_run && g_apCwOverride.empty())
-                setApCw(ap, cw, cw);
+                setApCw(ap, cw, g_cwMinOnly ? max(cw, 1023u) : cw);
             outfile << "," << (dry_run ? cw : g_apCwMin.at(ap));
         }
         outfile << endl;
@@ -1067,6 +1068,7 @@ int main(int argc, char *argv[])
     cmd.AddValue("dryRun", "Execute scenario with BEB and no agent interaction", dry_run);
     cmd.AddValue("disableGym", "Run ns-3 without OpenGym/ZMQ interaction", disable_gym);
     cmd.AddValue("apStaCounts", "Comma-separated station counts per AP, e.g. 20,40. Default: empty = single AP with nWifi stations", apStaCountsArg);
+    cmd.AddValue("cwMinOnly", "Multi-AP agent actions set MinCw only; MaxCw stays 1023 so BEB doubling is kept. Default: false (MinCw = MaxCw = action)", g_cwMinOnly);
     cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);
     cmd.AddValue("seed", "Random seed", simSeed);
     cmd.AddValue("trafficStart", "Diagnostic: time (s) at which the data sources start. Default: 0", g_trafficStartTime);
@@ -1088,6 +1090,7 @@ int main(int argc, char *argv[])
     NS_LOG_UNCOND("--nWifi: " << nWifi);
     NS_LOG_UNCOND("--apStaCounts: " << (apStaCountsArg.empty() ? "(single AP, nWifi stations)" : apStaCountsArg));
     NS_LOG_UNCOND("--apCws: " << (apCwsArg.empty() ? "(none, every AP uses CW)" : apCwsArg) << (dry_run && !apCwsArg.empty() ? " (ignored: dryRun)" : ""));
+    NS_LOG_UNCOND("--cwMinOnly: " << g_cwMinOnly);
     NS_LOG_UNCOND("--simulationTime: " << simulationTime);
     NS_LOG_UNCOND("--openGymPort: " << openGymPort);
     NS_LOG_UNCOND("--envStepTime: " << envStepTime);
