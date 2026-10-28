@@ -69,6 +69,8 @@ def min_ap(rs, seeds):
 
 def gate_chain3(by_cw):
     """v3.4.0 gate: best asymmetric (edge != middle) minus best common CW, paired by seed, for PF utility and min-AP."""
+    nmax = max(len(v) for v in by_cw.values())
+    by_cw = {k: v for k, v in by_cw.items() if len(v) == nmax}  # only settings run on every seed (seed-0-only settings would give an n=1 gate)
     common = {k: v for k, v in by_cw.items() if len(set(k.split(","))) == 1}
     asym = {k: v for k, v in by_cw.items() if len(set(k.split(","))) > 1}
     md = ["### Gate: best asymmetric vs best common CW (paired by seed)", ""]

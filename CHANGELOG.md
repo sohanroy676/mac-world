@@ -13,10 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **agents**: Add TD3 learner
 - **trainer**: Add fair-protocol flags
 - **runner**: Add v3.2.0 fair-protocol runner
+- **cw**: Opt-in hidden BSS pairs and per-AP loads
+- **trainer**: Scenario flags and proportional-fair reward
+- **bench**: Chain3 grid, PF/min-AP and Wilcoxon tables
+- **bench**: Runner --variant, custom static grid, ADR-0005
 
 ### Documentation
 
 - **ceiling**: Add paired 6x10 BEB/Global refs
+- **results**: Add 6x10 refs and 20,40 fair-protocol pilot runs
+- **v3.2.0**: Add fair-protocol report and handoff
+
+### Fixed
+
+- **runner**: Keep learner flags away from BEB jobs
 
 ## [3.1.0] - 2026-10-28
 
