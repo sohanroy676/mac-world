@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **cw**: Add --cwMinOnly for agent actions
+- **agents**: Add TD3 learner
+- **trainer**: Add fair-protocol flags
+- **runner**: Add v3.2.0 fair-protocol runner
+
+### Documentation
+
+- **ceiling**: Add paired 6x10 BEB/Global refs
+
+## [3.1.0] - 2026-10-28
+
+### Added
+
 - **sweep**: Add static CW mode and ceiling sweep pilot
 
 ### Changed
@@ -32,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **research**: Add plan to beat OSCAR and BEB
 - **workflow**: Adopt dev branch and push rule
 - **ceiling**: Add v3.1.0 static CW sweep results
+- **handoff**: Commit v3.1.0 runs and next-session prompt
 
 ## [3.0.0] - 2026-10-26
 
@@ -388,7 +402,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **design**: Define multi-ap v0.2.0
 - Add CLAUDE.md and close v0.3.0 handoff
 
-[unreleased]: https://github.com///compare/v3.0.0..HEAD
+[unreleased]: https://github.com///compare/v3.1.0..HEAD
+[3.1.0]: https://github.com///compare/v3.0.0..v3.1.0
 [3.0.0]: https://github.com///compare/v2.7.2..v3.0.0
 [2.7.2]: https://github.com///compare/v2.7.1..v2.7.2
 [2.7.1]: https://github.com///compare/v2.7.0..v2.7.1

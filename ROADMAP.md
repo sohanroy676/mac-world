@@ -129,7 +129,7 @@
 
 ### v3.2.0
 - Fair protocol: multi-episode training, save/load actor, frozen noise-free eval, n >= 8 paired seeds, `--alpha 0` independent, CWmin-only flag, TD3 option (ideas #2, #3, #8, #9).
-- Status: ⏳ planned.
+- Status: ✅ tooling DONE 2026-10-28 on `feature/v3.2.0-fair-protocol` (merged to dev, pushed; not tagged): `--varySeeds`, `--saveActor/--loadActor --eval`, `--algo td3`, `--cwMinOnly` (cw.cc, rebuilt), `fair_protocol_v3_2_0.py`; defaults byte-identical, short-run checks PASS, 20,40 pilot (n=1): frozen shared 39.74 vs BEB 27.33 Mbps. NOT done: the n >= 8 batch (spent on v3.4.0 by user choice), Wilcoxon test. `docs/results/fair-protocol-v3.2.0.md`.
 
 ### v3.3.0
 - Sensing + heuristics: idle-slot/busy-fraction and MacTxDataFailed observations, IdleSense (and optionally Bianchi) mode, residual RL (ideas #4, #5, #6).
