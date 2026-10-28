@@ -59,7 +59,7 @@ Aggregate Mbps; rows = AP1 CW, columns = AP2 CW; diagonal = n=3 mean.
 
 Fact (n=1): the best asymmetric cell is (128,1023) at 39.52, 0.10 below (512,512). (128,512) 39.19 and (1023,512) 39.15 are within 0.5. These plateau cells are very unequal: (128,1023) gives 37.14 / 2.38 Mbps, (1023,512) 7.81 / 31.34. Any cell with an AP at CW 32 is below 28 Mbps.
 
-## 6. Diagonal at 6x10 (seed 0 only, n=1, unpaired)
+## 6. Diagonal at 6x10 (seed 0 only, n=1, paired with BEB and Global at seed 0)
 | CW (all 6 APs) | Aggregate | Jain | phy loss |
 |---|---|---|---|
 | 32 | 14.55 | 0.96 | 0.892 |
@@ -72,7 +72,8 @@ Fact (n=1): the best asymmetric cell is (128,1023) at 39.52, 0.10 below (512,512
 | 1023 | 36.62 | 1.00 | 0.528 |
 
 Fact: same shape as 20,40: plateau at 512-768 (about 39.7), drop at 1023. Per-AP throughput is equal (about 6.6 Mbps each at 512, Jain 1.00).
-Unknown: no BEB or Global reference with this exact 6x10 split is in this clone, so the paired columns are `n/a` and no headroom statement is made for 6x10. The v2.0.0 fixed-60 N=6 runs may match (inference), not checked.
+Paired references added 2026-10-28 (same split `10,10,10,10,10,10`, simTime 15, stepTime 0.01, load 150, seed 0, current binary; both `--check` PASS, 836 s / 872 s; run dirs `results/bench-ref-6x10-v3.1.0`, local): BEB 27.78 Mbps, Global 36.11 Mbps (policy window, n=1 each).
+Fact (n=1, no CI possible): best static 768 (39.72) is +11.94 vs BEB and +3.61 vs Global; 512 is +11.92 / +3.59. The older 2026-10-17/18 local 6x10 runs were not used: they predate the 2026-10-19 CW-start fix for agent modes.
 
 ## 7. Decision
 Rule (research plan §6): is the total-throughput headroom of the best static setting over Global larger than the CI width?
@@ -80,7 +81,8 @@ Rule (research plan §6): is the total-throughput headroom of the best static se
 - Fact: no per-AP split beat (512,512) at 20,40 (n=1 grid, best 39.52 vs 39.62; D1 n=3 below it).
 - Inference: Global-CW OSCAR is already at the level of the best fixed common CW at this load and topology (36.17 vs 39.62, difference inside Global's seed spread). Static CW 512 is at least as good with much lower variance, so a learning method has little room above Global here and the remaining gain over Global would be seed-variance reduction.
 - Inference: at 20,40 the unequal STA split does not create a per-AP-CW advantage in aggregate; per-AP CWs trade fairness for no aggregate gain. v3.4.0 (per-AP scenario) therefore needs a topology where APs differ in more than STA count.
-- Unknown: 6x10 headroom (no paired references); behavior at other loads.
+- Fact (6x10, seed 0, n=1): best static minus Global = +3.61 Mbps, same sign and size as at 20,40 (+3.45 ± 6.77). One seed gives no CI, so this does not change the decision; Global's seed spread at 20,40 (±6.95) suggests it would not be distinguishable (inference).
+- Unknown: behavior at other loads.
 
 ## 8. Limits and bookkeeping
 - Off-diagonal grid and 6x10 are n=1 (seed 0). Plateau differences of 0.1-0.5 Mbps there are not distinguishable.
