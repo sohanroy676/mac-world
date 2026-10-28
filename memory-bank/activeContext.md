@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**UPDATE 2026-10-28 (v3.1.0 Ceiling DONE, branch `feature/v3.1.0-ceiling-results`, merged to dev + pushed, no tag):** 20,40 n=3 best static CW 512 = 39.62 ± 0.21 Mbps; vs Global +3.45 ± 6.77 (CI spans 0) -> headroom NOT larger than CI width; no per-AP split beats the common CW (off-diagonal seed 0 n=1; D1 n=3 below). 6x10 diag seed 0 plateau about 39.7 (no paired refs). Parallel-lane failure cause still unknown; run one job at a time. Open: force-add new run dirs (ask), CHANGELOG (git-cliff missing at `~/.venvs/changelog`), stashed old `--staticCws` diff (`git stash list`). Next: v3.2.0 Fair protocol, needs user go-ahead.
+
 **HANDOFF 2026-10-27 (v3.1.0 partial):** work continues on a friend's laptop from `sessionPrompt.md` (repo root). Pilot done 4/10; next: CW 384/512/768/1023 + D1 at seed 0 (serial, ~2.5 h, ask before >2 h), then approval for the rest. Committed run dirs (force-added, trace.csv + config.json only): 4 static pilot runs + 6 BEB/Global 20,40 reference runs.
 
 **UPDATE 2026-10-27 (session 3, GIT RULES CHANGED):** `main` is FROZEN (no commit/merge/push). Use `dev` (from main, pushed). Branch from `dev`, commit (Conventional, specific files), `git merge --no-ff` into `dev`, push feature branch + `dev` without asking. Ask before force-push, rebase of pushed history, reset --hard, deleting branches/tags, tags, anything on main. Research program per `docs/research-beat-oscar.md` §6: v3.1.0 ceiling (static sweep via new `--mode static`, staged budget, ask before > 2 h batches) -> v3.2.0 -> v3.3.0 -> v3.4.0 (ask user first) -> v3.5.0 optional. Reports in `docs/results/`, tables in `docs/figures/vX.Y.Z/`.
