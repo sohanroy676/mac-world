@@ -19,6 +19,9 @@ DIAG = [32, 64, 128, 256, 384, 512, 768, 1023]
 OFF = [32, 128, 512, 1023]
 T95 = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228}
 T2, T6 = "20,40", "10,10,10,10,10,10"
+T3 = "10,10,10"  # v3.4.0 chain: run with --extraArgs "--apHidden 1-3" in its own --benchDir
+DIAG3 = [64, 128, 256, 512, 768, 1023]
+EDGE3, MID3 = [256, 512, 1023], [64, 128, 256]
 FIELDS = ["topo", "cws", "seed", "run_dir", "result", "returncode", "seconds"]
 
 
@@ -34,6 +37,8 @@ def grid(name):
         return d2 + off + d1
     if name == "diag6":
         return d6
+    if name == "chain3":  # common CW on the diagonal plus edge APs (1, 3) higher than the middle AP
+        return [(T3, (c, c, c)) for c in DIAG3] + [(T3, (e, m, e)) for e in EDGE3 for m in MID3 if e != m]
     if name == "all":
         return d2 + off + d1 + d6
     raise SystemExit("unknown grid " + name)
@@ -49,6 +54,34 @@ def ci(x):
 def fmt(x, d=2):
     m, h = ci(x)
     return "%.*f ± %.*f" % (d, m, d, h) if np.isfinite(h) else "%.*f (n=1)" % (d, m)
+
+
+def pf_util(rs, seeds):
+    """Per seed: sum over APs of log(policy-window Mbps); a starved AP is floored at 0.01 Mbps."""
+    return [sum(np.log(max(0.01, rs[s]["thr_policy"][ap])) for ap in rs[s]["aps"]) for s in seeds]
+
+
+def min_ap(rs, seeds):
+    return [min(rs[s]["thr_policy"][ap] for ap in rs[s]["aps"]) for s in seeds]
+
+
+def gate_chain3(by_cw):
+    """v3.4.0 gate: best asymmetric (edge != middle) minus best common CW, paired by seed, for PF utility and min-AP."""
+    common = {k: v for k, v in by_cw.items() if len(set(k.split(","))) == 1}
+    asym = {k: v for k, v in by_cw.items() if len(set(k.split(","))) > 1}
+    md = ["### Gate: best asymmetric vs best common CW (paired by seed)", ""]
+    if not common or not asym:
+        return md + ["n/a (need both common and asymmetric runs)", ""]
+    for name, metric in (("PF utility", pf_util), ("min-AP Mbps", min_ap)):
+        bc = max(common, key=lambda k: np.mean(metric(common[k], sorted(common[k]))))
+        ba = max(asym, key=lambda k: np.mean(metric(asym[k], sorted(asym[k]))))
+        ss = sorted(set(common[bc]) & set(asym[ba]))
+        pc = dict(zip(sorted(common[bc]), metric(common[bc], sorted(common[bc]))))
+        pa = dict(zip(sorted(asym[ba]), metric(asym[ba], sorted(asym[ba]))))
+        d = [pa[x] - pc[x] for x in ss]
+        md.append("- %s: best common cw=%s, best asymmetric cw=%s, difference %s (n=%d seeds)" % (name, bc, ba, fmt(d), len(ss)))
+    md.append("")
+    return md
 
 
 def run(a):
@@ -79,6 +112,7 @@ def run(a):
             log = os.path.join(a.benchDir, "%s-cw%s-s%d.log" % (topo, key.replace(",", "_"), seed))
             cmd = [sys.executable, "OSCAR_multi_ap_train.py", "--apStaCounts", topo, "--mode", "static", "--apCws", key,
                    "--seed", str(seed), "--simTime", str(a.simTime), "--stepTime", "0.01", "--tag", "cw" + key.replace(",", "-")]
+            cmd += a.extraArgs.split()
             if not a.no_check:
                 cmd.append("--check")
             t0 = time.time()
@@ -129,7 +163,7 @@ def table(a):
     md = ["# v3.1.0 static CW sweep tables", "",
           "Policy window = steps >= 300 (3 s of 15 s); mean ± 95% CI (Student t) over seeds; Mbps. Paired = same ns-3 seed.", ""]
     rows = []
-    for topo in (T2, T6):
+    for topo in (T2, T6, T3):
         keys = sorted([k for k in runs if k[0] == topo], key=lambda k: [int(c) for c in k[1].split(",")])
         if not keys:
             continue
@@ -138,7 +172,8 @@ def table(a):
             if (topo, mode) in refs:
                 v = [s["tot_policy"] for s in refs[(topo, mode)].values()]
                 md.append("- %s reference (n=%d): %s" % (mode, len(v), fmt(v)))
-        md += ["", "| CW per AP | n | aggregate | per-AP | Jain | phy loss | vs BEB (paired) | vs Global (paired) |", "|---|---|---|---|---|---|---|---|"]
+        pfh, pfd = (" PF utility | min-AP |", "---|---|") if a.pf else ("", "")
+        md += ["", "| CW per AP | n | aggregate | per-AP | Jain | phy loss |%s vs BEB (paired) | vs Global (paired) |" % pfh, "|---|---|---|---|---|---|%s---|---|" % pfd]
         for k in keys:
             rs = runs[k]
             seeds = sorted(rs)
@@ -154,14 +189,17 @@ def table(a):
                     cells.append(fmt(d) if len(ss) == 1 else "%s (n=%d)" % (fmt(d), len(ss)))
                 else:
                     cells.append("n/a")
-            md.append("| %s | %d | %s | %s | %.2f | %.3f | %s | %s |" % (
+            pfc = " %s | %s |" % (fmt(pf_util(rs, seeds)), fmt(min_ap(rs, seeds))) if a.pf else ""
+            md.append("| %s | %d | %s | %s | %.2f | %.3f |%s %s | %s |" % (
                 k[1], len(seeds), fmt(tot), per, np.mean([rs[s]["jain_policy"] for s in seeds]),
-                np.mean([rs[s]["loss_policy"] for s in seeds]), cells[0], cells[1]))
+                np.mean([rs[s]["loss_policy"] for s in seeds]), pfc, cells[0], cells[1]))
             rows.append([topo, k[1], len(seeds), "%.4f" % np.mean(tot)])
         md.append("")
         best = max(keys, key=lambda k: np.mean([s["tot_policy"] for s in runs[k].values()]))
         md.append("Best by mean aggregate: cw=%s (%s)." % (best[1], fmt([s["tot_policy"] for s in runs[best].values()])))
         md.append("")
+        if a.pf and topo == T3:
+            md += gate_chain3({k[1]: runs[k] for k in keys})
     # D1 payoff matrix at 20,40 (per-AP throughput)
     pay = {k[1]: v for k, v in runs.items() if k[0] == T2 and k[1] in ("64,64", "64,512", "512,64", "512,512")}
     if len(pay) == 4:
@@ -185,7 +223,8 @@ def table(a):
 p = argparse.ArgumentParser()
 sub = p.add_subparsers(dest="cmd", required=True)
 r = sub.add_parser("run")
-r.add_argument("--grid", choices=["pilot", "full2", "diag6", "all"], required=True)
+r.add_argument("--grid", choices=["pilot", "full2", "diag6", "chain3", "all"], required=True)
+r.add_argument("--extraArgs", default="", help="extra trainer args for every job, e.g. '--apHidden 1-3'")
 r.add_argument("--seeds", nargs="+", type=int, default=[0])
 r.add_argument("--lanes", type=int, default=1)
 r.add_argument("--simTime", type=float, default=15)
@@ -195,5 +234,6 @@ t = sub.add_parser("table")
 t.add_argument("--benchDir", default="results/ceiling-v3.1.0")
 t.add_argument("--out", default="../../../docs/figures/v3.1.0")
 t.add_argument("--refs", nargs="+", default=[])
+t.add_argument("--pf", action="store_true", help="add PF utility (sum log per-AP Mbps) and min-AP columns, and the v3.4.0 gate comparison for 10,10,10")
 args = p.parse_args()
 run(args) if args.cmd == "run" else table(args)

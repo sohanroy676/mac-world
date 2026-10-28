@@ -32,6 +32,7 @@ parser.add_argument("--topo", default=None, help="only this apStaCounts value")
 parser.add_argument("--title", default="v1.1.0", help="version label used in the tables.md heading")
 parser.add_argument("--stepTime", type=float, default=0.01)
 parser.add_argument("--warmup", type=int, default=300)
+parser.add_argument("--pf", action="store_true", help="v3.4.0: append paired tables with PF utility, min-AP, Jain and an exact Wilcoxon signed-rank p-value per comparison")
 args = parser.parse_args()
 
 
@@ -47,6 +48,39 @@ def ci(x):
 def fmt(x, d=2):
     m, h = ci(x)
     return "%.*f ± %.*f" % (d, m, d, h) if np.isfinite(h) else "%.*f (n=1)" % (d, m)
+
+
+def pf_util(s):
+    """Sum over APs of log(policy-window Mbps); a starved AP is floored at 0.01 Mbps."""
+    return float(sum(np.log(max(0.01, v)) for v in s["thr_policy"].values()))
+
+
+def wilcoxon_p(d):
+    """Exact two-sided Wilcoxon signed-rank p-value (zeros dropped, tied |d| get average ranks); nan for n < 1 or n > 16."""
+    d = np.asarray([x for x in d if x != 0.0], dtype=float)
+    n = len(d)
+    if n < 1 or n > 16:
+        return float("nan")
+    a = np.abs(d)
+    order = a.argsort(kind="mergesort")
+    ranks = np.empty(n)
+    i = 0
+    while i < n:
+        j = i
+        while j + 1 < n and a[order[j + 1]] == a[order[i]]:
+            j += 1
+        ranks[order[i:j + 1]] = (i + j) / 2 + 1
+        i = j + 1
+    w_obs = ranks[d > 0].sum()
+    signs = (np.arange(2 ** n)[:, None] >> np.arange(n)) & 1
+    w_all = signs @ ranks
+    mid = ranks.sum() / 2
+    return float(np.mean(np.abs(w_all - mid) >= abs(w_obs - mid) - 1e-9))
+
+
+def fmt_p(d, dec=2):
+    p = wilcoxon_p(d)
+    return "%s, p=%.3f" % (fmt(d, dec), p) if np.isfinite(p) else fmt(d, dec)
 
 
 def convergence_step(tot, win=100, tol=0.05, tail=300):
@@ -132,6 +166,28 @@ for topo in topos:
         d = [runs[topo]["central"][s]["tot_policy"] - runs[topo]["independent"][s]["tot_policy"] for s in seeds]
         p = [100 * x / runs[topo]["independent"][s]["tot_policy"] for x, s in zip(d, seeds)]
         md += ["| %d | %s | %s | %d/%d |" % (len(seeds), fmt(d), fmt(p, 1), sum(x > 0 for x in d), len(d)), ""]
+    if args.pf:
+        md += ["| Mode | n | PF utility | min-AP Mbps |", "|---|---|---|---|"]
+        for m in modes:
+            S = list(runs[topo][m].values())
+            md.append("| %s | %d | %s | %s |" % (LABEL[m], len(S), fmt([pf_util(s) for s in S]), fmt([min(s["thr_policy"].values()) for s in S])))
+        md.append("")
+        for ref in ("beb", "global"):
+            if ref not in runs[topo]:
+                continue
+            md += ["Paired difference vs %s (same ns-3 seed): mean ± 95%% CI (Student t), exact Wilcoxon p (two-sided):" % LABEL[ref], "",
+                   "| Mode | n pairs | Δ PF utility | Δ min-AP Mbps | Δ aggregate Mbps | Δ Jain |", "|---|---|---|---|---|---|"]
+            for m in modes:
+                seeds = sorted(set(runs[topo][m]) & set(runs[topo][ref])) if m != ref else []
+                if not seeds:
+                    continue
+                M, R = runs[topo][m], runs[topo][ref]
+                md.append("| %s | %d | %s | %s | %s | %s |" % (
+                    LABEL[m], len(seeds), fmt_p([pf_util(M[x]) - pf_util(R[x]) for x in seeds]),
+                    fmt_p([min(M[x]["thr_policy"].values()) - min(R[x]["thr_policy"].values()) for x in seeds]),
+                    fmt_p([M[x]["tot_policy"] - R[x]["tot_policy"] for x in seeds]),
+                    fmt_p([M[x]["jain_policy"] - R[x]["jain_policy"] for x in seeds], 3)))
+            md.append("")
 
 with open(os.path.join(args.out, "tables.md"), "w") as f:
     f.write("\n".join(md) + "\n")
