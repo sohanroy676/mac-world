@@ -49,6 +49,12 @@ parser.add_argument("--wandb_project", default="contention_window")
 parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static"], default="independent")
 parser.add_argument("--apCws", default="", help="static mode only: fixed CW per AP, e.g. 64,512 (no agent; cw.cc applies it from t=0)")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
+parser.add_argument("--algo", choices=["ddpg", "td3"], default="ddpg", help="learner for independent/global/shared (td3: twin critics, delayed actor, target smoothing)")
+parser.add_argument("--varySeeds", action="store_true", help="episode e uses ns-3 seed (seed+1)+1000*e instead of the same seed every episode")
+parser.add_argument("--saveActor", default="", help="after training save every agent to DIR/agent<i>_{actor,critic,...}")
+parser.add_argument("--loadActor", default="", help="load agents from DIR/agent<i>_* before the run (use with --eval)")
+parser.add_argument("--eval", action="store_true", help="frozen evaluation: needs --loadActor; no exploration noise, no warm-up, no replay, no training")
+parser.add_argument("--cwMinOnly", action="store_true", help="agent action sets CWmin only; CWmax stays 1023 so BEB doubling is kept (multi-AP agent modes)")
 args = parser.parse_args()
 
 # W&B mode must be decided before wandb is imported.
@@ -60,6 +66,7 @@ import torch  # noqa: E402
 import wandb  # noqa: E402
 
 from agents.our_ddpg.Our_DDPG import DDPG  # noqa: E402
+from agents.our_ddpg.TD3 import TD3  # noqa: E402
 from agents.our_ddpg.preprocessor import Preprocessor  # noqa: E402
 from agents.our_ddpg.central import CentralDDPG  # noqa: E402
 from agents.our_ddpg.utils import JointReplayBuffer, ReplayBuffer  # noqa: E402
@@ -102,6 +109,17 @@ assert args.obs == "loss" or args.mode in LOCAL_MODES, "--obs hist only for inde
 assert args.alpha == 1.0 or args.mode in LOCAL_MODES, "--alpha only for independent/shared"
 assert 0.0 <= args.alpha <= 1.0 and 1 <= args.obsWindow <= args.historyLength
 local_dim = 4 if args.obs == "hist" else 1
+AGENT_MODES = ("independent", "global", "shared")
+assert args.algo == "ddpg" or args.mode in AGENT_MODES, "--algo td3 only for independent/global/shared"
+assert not (args.saveActor or args.loadActor or args.eval) or args.mode in AGENT_MODES, "--saveActor/--loadActor/--eval only for independent/global/shared"
+assert args.eval == bool(args.loadActor), "--eval needs --loadActor (and --loadActor needs --eval)"
+assert not (args.eval and args.saveActor), "--eval does not train, so there is nothing to --saveActor"
+assert not args.cwMinOnly or args.mode in AGENT_MODES + ("central",), "--cwMinOnly only for agent modes"
+if args.cwMinOnly:
+    sim_args["cwMinOnly"] = "true"
+learning = not args.eval  # eval: frozen actors, no noise, no warm-up, no replay, no training
+expl_noise = 0.0 if args.eval else args.expl_noise
+ns3_seeds = [args.seed + 1 + (1000 * e if args.varySeeds else 0) for e in range(args.episodes)]
 
 
 def local_states(S_rows, prev_acts):
@@ -120,7 +138,7 @@ except (OSError, subprocess.CalledProcessError):
 out_dir = "results/multi-ap-%s" % time.strftime("%Y%m%d-%H%M%S")
 os.makedirs(out_dir)
 with open(os.path.join(out_dir, "config.json"), "w") as f:
-    json.dump(dict(vars(args), ns3_seed=args.seed + 1, counts=counts, git_rev=git_rev), f)
+    json.dump(dict(vars(args), ns3_seed=args.seed + 1, ns3_seeds=ns3_seeds, counts=counts, git_rev=git_rev), f)
 trace_f = open(os.path.join(out_dir, "trace.csv"), "w", newline="")
 trace = csv.writer(trace_f)
 trace.writerow(["episode", "step", "ap", "state", "action", "real_action", "reward", "next_state", "cw_set",
@@ -130,7 +148,11 @@ run = wandb.init(name="%s %s s%d" % (args.apStaCounts, args.mode, args.seed), en
                  project=args.wandb_project, tags=["multi-ap", "mode-" + args.mode, git_rev], reinit=True,
                  config=dict(vars(args), AP_Count=n, Stations_Per_AP=counts))
 
-agents = [DDPG(local_dim, action_dim, max_action, args.discount, args.tau) for _ in range(n_agents)]
+Learner = TD3 if args.algo == "td3" else DDPG
+agents = [Learner(local_dim, action_dim, max_action, args.discount, args.tau) for _ in range(n_agents)]
+if args.loadActor:
+    for i, a in enumerate(agents):
+        a.load(os.path.join(args.loadActor, "agent%d" % i))
 replays = [ReplayBuffer(local_dim, action_dim) for _ in range(n_agents)]
 central = CentralDDPG(n, max_action, args.discount, args.tau) if args.mode == "central" else None
 joint = JointReplayBuffer(n) if args.mode == "central" else None
@@ -201,6 +223,9 @@ reward_cols = [[] for _ in range(n)]
 logged = []
 try:
     for episode in range(args.episodes):
+        if args.varySeeds and episode > 0:
+            env.commands = env._craft_commands(dict(sim_args, seed=ns3_seeds[episode]))
+        print("episode %d ns-3 seed %d" % (episode, ns3_seeds[episode]), flush=True)
         try:
             env.run()
         except AlreadyRunningException:
@@ -216,20 +241,20 @@ try:
                 if args.mode == "central" and args.check:
                     exec_probe["expect"] = S[:, 0]
                 for i in range(n):
-                    if time_step < args.start_timesteps:
+                    if learning and time_step < args.start_timesteps:
                         acts[i] = np.random.uniform(-max_action, max_action)
                     else:
                         sel = agents[i] if args.mode == "independent" else agents[0] if args.mode == "shared" else None
                         a = (sel.select_action(L[i]) if sel else central.select_action(i, S[i, :state_dim])) \
-                            + np.random.normal(0, max_action * args.expl_noise)
+                            + np.random.normal(0, max_action * expl_noise)
                         acts[i] = np.clip(a, -max_action, max_action)[0]
                 if args.mode == "central" and args.check:
                     exec_probe["expect"] = None
             elif args.mode == "global":
-                if time_step < args.start_timesteps:
+                if learning and time_step < args.start_timesteps:
                     acts[:] = np.random.uniform(-max_action, max_action)
                 else:
-                    a = agents[0].select_action(S_g) + np.random.normal(0, max_action * args.expl_noise)
+                    a = agents[0].select_action(S_g) + np.random.normal(0, max_action * expl_noise)
                     acts[:] = np.clip(a, -max_action, max_action)[0]
             real = (real_max_action * (acts + 1) / 2).astype(np.float32)  # beb: ignored by cw.cc (dryRun)
 
@@ -242,12 +267,12 @@ try:
             for i in range(n):
                 r = recs[i]["reward"]
                 s_i, s2_i = L[i], L2[i]
-                if args.mode in LOCAL_MODES:
+                if args.mode in LOCAL_MODES and learning:
                     ri = i if args.mode == "independent" else 0
                     r_rep = args.rewardScale * (args.alpha * r + (1.0 - args.alpha) * r_net)
                     replays[ri].add(s_i, acts[i], s2_i, r_rep, done[0])
                 if args.check:
-                    if args.mode in LOCAL_MODES:
+                    if args.mode in LOCAL_MODES and learning:
                         k = (replays[ri].ptr - 1) % replays[ri].max_size
                         check(np.allclose(replays[ri].state[k], s_i) and np.allclose(replays[ri].next_state[k], s2_i)
                               and np.isclose(replays[ri].reward[k, 0], r_rep) and np.isclose(replays[ri].action[k, 0], acts[i]),
@@ -274,9 +299,9 @@ try:
                 trace.writerow([episode, step, i + 1, float(s_i[0]), float(acts[i]), float(real[i]), r, float(s2_i[0]),
                                 recs[i]["cw_set"], recs[i]["cw_ap"], recs[i]["loss"], recs[i]["rx"], recs[i]["tx"],
                                 float(pp[0]), float(pp[1]), agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")])
-                if args.mode == "independent" and time_step >= args.start_timesteps:
+                if args.mode == "independent" and learning and time_step >= args.start_timesteps:
                     agents[i].train(replays[i], args.batch_size)
-            if args.mode == "shared" and time_step >= args.start_timesteps:
+            if args.mode == "shared" and learning and time_step >= args.start_timesteps:
                 agents[0].train(replays[0], args.batch_size)  # one update per env step, same count as global
             if args.mode == "global":
                 # one agent: network-wide loss as state, network goodput (normalized by all STAs) as reward
@@ -284,16 +309,18 @@ try:
                 rx_g = sum(r["rx"] for r in recs)
                 s2_g = np.array([(tx_g - rx_g) / tx_g if tx_g else 0.0], dtype=np.float32)
                 r_g = global_reward(recs) * args.rewardScale
-                replays[0].add(S_g, acts[0], s2_g, r_g, done[0])
+                if learning:
+                    replays[0].add(S_g, acts[0], s2_g, r_g, done[0])
                 if args.check:
-                    k = (replays[0].ptr - 1) % replays[0].max_size
-                    check(np.allclose(replays[0].state[k], S_g) and np.allclose(replays[0].next_state[k], s2_g)
-                          and np.isclose(replays[0].reward[k, 0], r_g) and np.isclose(replays[0].action[k, 0], acts[0]),
-                          "global replay row mismatch at t=%d" % time_step)
+                    if learning:
+                        k = (replays[0].ptr - 1) % replays[0].max_size
+                        check(np.allclose(replays[0].state[k], S_g) and np.allclose(replays[0].next_state[k], s2_g)
+                              and np.isclose(replays[0].reward[k, 0], r_g) and np.isclose(replays[0].action[k, 0], acts[0]),
+                              "global replay row mismatch at t=%d" % time_step)
                     check(len({r["cw_set"] for r in recs}) == 1 and len({r["cw_ap"] for r in recs}) == 1,
                           "global mode: APs got different CWs at t=%d" % time_step)
                 S_g = s2_g
-                if time_step >= args.start_timesteps:
+                if learning and time_step >= args.start_timesteps:
                     agents[0].train(replays[0], args.batch_size)
             if args.mode == "central":
                 # joint row: (s, a, r_g, r_local, s'); one critic update then N actor updates
@@ -336,6 +363,11 @@ try:
                 break
         print("episode %d cumulative reward per AP: %s" % (episode, np.round(ep_reward, 3).tolist()))
         env.close()
+    if args.saveActor:
+        os.makedirs(args.saveActor, exist_ok=True)
+        for i, a in enumerate(agents):
+            a.save(os.path.join(args.saveActor, "agent%d" % i))
+        print("saved %d agent(s) to %s" % (len(agents), args.saveActor))
 finally:
     trace_f.close()
     wandb.finish()
@@ -360,7 +392,7 @@ if args.check:
         print("central: critic_loss %.5f  Q_mean %.4f  actor_losses %s" % (
             scalar(central.critic_loss), scalar(central.q_mean), [round(scalar(x), 4) for x in central.actor_losses]))
     for i in range(n_agents):
-        check(replays[i].size == time_step * (n if args.mode == "shared" else 1), "replay %d size %d != steps %d" % (i, replays[i].size, time_step))
+        check(replays[i].size == (time_step * (n if args.mode == "shared" else 1) if learning else 0), "replay %d size %d != steps %d" % (i, replays[i].size, time_step))
         check(all(np.isfinite([scalar(agents[i].actor_loss), scalar(agents[i].critic_loss)])), "agent %d non-finite loss" % (i + 1))
     # v0.8.0: read the logged history back from the run's .wandb file
     from wandb.proto import wandb_internal_pb2 as pb
