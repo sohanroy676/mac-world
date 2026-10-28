@@ -137,7 +137,7 @@
 
 ### v3.4.0
 - Per-AP scenario: partial-overlap loss matrix + fairness reward (ideas #7, #14). Needs user approval first (touches "detailed interference modelling" out-of-scope line).
-- Status: ⏳ planned, blocked on user approval.
+- Status: 🔄 IN PROGRESS 2026-10-28. Approved by user (ADR-0005). Scenario + tooling DONE and merged to dev (`--apHidden/--hiddenLoss/--apLoads`, `--reward pf`, `--pf` tables, Wilcoxon); static gate on `10,10,10 --apHidden 1-3` PASSED (asymmetric 256,128,256 beats best common on PF utility by +0.15 ± 0.02, 256,64,256 on min-AP by +7.62 ± 0.27 Mbps, n=3). NOT done: n >= 8 frozen-eval batch (awaits approval). `docs/results/per-ap-scenario-v3.4.0.md`.
 
 ### v3.5.0
 - Optional: #11, then #10, then #13, only on user request.
