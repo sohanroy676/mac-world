@@ -4,7 +4,7 @@ Phase 1 (train): per learned mode, one policy trained for --trainEpisodes episod
 Phase 2 (eval): each frozen policy (--loadActor --eval: no noise, no warm-up, no training) and BEB run on the same
   held-out python seeds --evalSeeds (ns-3 seed = seed + 1), so runs are paired by seed.
 Usage (from this directory):
-  ../../venv/bin/python fair_protocol_v3_2_0.py --topo 20,40 --modes independent global shared --benchDir results/fair-v3.2.0
+  ../../venv/bin/python fair_protocol_v3_2_0.py --topo 20,40 --modes independent global shared --learnerArgs "--alpha 0" --benchDir results/fair-v3.2.0
 Resume with the same --benchDir: PASS rows are skipped. manifest.csv (eval + BEB rows) has the columns
 aggregate_bench.py reads; eval runs carry --tag fz-<mode>[-td3]. Training rows go to train_manifest.csv.
 Aggregate: ../../venv/bin/python aggregate_bench.py <benchDir> --out <dir> --topo <topo> --title v3.2.0
@@ -29,7 +29,8 @@ parser.add_argument("--evalSeeds", nargs="+", type=int, default=list(range(100, 
 parser.add_argument("--simTime", type=float, default=15)
 parser.add_argument("--stepTime", type=float, default=0.01)
 parser.add_argument("--benchDir", default="results/fair-%s" % time.strftime("%Y%m%d-%H%M%S"))
-parser.add_argument("--trainerArgs", default="", help="extra trainer args for every job, e.g. '--alpha 0 --cwMinOnly --historyLength 20 --obsWindow 20'")
+parser.add_argument("--trainerArgs", default="", help="extra trainer args for EVERY job incl. BEB, e.g. '--historyLength 20 --obsWindow 20'")
+parser.add_argument("--learnerArgs", default="", help="extra trainer args for learned modes only (train and eval, not BEB), e.g. '--alpha 0 --rewardScale 100 --cwMinOnly'")
 parser.add_argument("--no-beb", action="store_true")
 parser.add_argument("--no-check", action="store_true")
 args = parser.parse_args()
@@ -47,12 +48,12 @@ def load(path):
     return {(r["mode"], int(r["seed"])) for r in csv.DictReader(open(path)) if r["result"] == "PASS"}
 
 
-def run(manifest, label, mode, seed, extra):
+def run(manifest, label, mode, seed, extra, learner=True):
     if subprocess.run(["pgrep", "-x", "linear-mesh"], capture_output=True).stdout.strip():
         sys.exit("an ns-3 linear-mesh process is already running; refusing to start another")
     log = os.path.join(args.benchDir, "%s-%s-s%d.log" % (args.topo, label, seed))
     cmd = [sys.executable, "OSCAR_multi_ap_train.py", "--apStaCounts", args.topo, "--mode", mode, "--seed", str(seed),
-           "--simTime", str(args.simTime), "--stepTime", str(args.stepTime)] + shlex.split(args.trainerArgs) + extra
+           "--simTime", str(args.simTime), "--stepTime", str(args.stepTime)] + shlex.split(args.trainerArgs) + (shlex.split(args.learnerArgs) if learner else []) + extra
     if not args.no_check:
         cmd.append("--check")
     print("%s seed=%d ..." % (label, seed), flush=True)
@@ -83,7 +84,7 @@ for mode in args.modes:
             ["--algo", args.algo, "--episodes", str(args.trainEpisodes), "--varySeeds", "--saveActor", actor_dir(mode)])
 for seed in args.evalSeeds:
     if not args.no_beb and ("beb", seed) not in evaled:
-        run(eval_manifest, "beb", "beb", seed, [])
+        run(eval_manifest, "beb", "beb", seed, [], learner=False)
     for mode in args.modes:
         if (mode, seed) not in evaled:
             run(eval_manifest, "fz-" + mode + suffix, mode, seed,
