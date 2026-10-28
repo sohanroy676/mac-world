@@ -38,6 +38,10 @@ parser.add_argument("--cwReadbackEvery", type=float, default=0.0, help="diagnost
 parser.add_argument("--trafficStart", type=float, default=0.0, help="diagnostic: time (s) the data sources start (0 = cw.cc default)")
 parser.add_argument("--staMaxMissedBeacons", type=int, default=0, help="diagnostic: StaWifiMac MaxMissedBeacons (0 = ns-3 default 10)")
 parser.add_argument("--offeredLoad", type=float, default=150.0, help="per-STA offered load in Mbps (cw.cc offeredLoad)")
+parser.add_argument("--apHidden", default="", help="v3.4.0 scenario: 1-based AP pairs whose BSSs cannot hear each other, e.g. 1-3 (cw.cc --apHidden)")
+parser.add_argument("--hiddenLoss", type=float, default=0.0, help="path loss in dB between hidden pairs (0 = cw.cc default 200)")
+parser.add_argument("--apLoads", default="", help="v3.4.0 scenario: per-STA offered load in Mbps per AP, e.g. 150,150,5 (cw.cc --apLoads; default every AP uses --offeredLoad)")
+parser.add_argument("--reward", choices=["local", "pf"], default="local", help="independent/shared replay reward: local = own goodput (alpha mixes in network goodput); pf = proportional fair, 1 + mean_i log(eps + r_i) / -log(eps), same value for every agent")
 parser.add_argument("--rewardScale", type=float, default=1.0, help="multiplies the reward stored in replay (central/global/independent/shared; 1 = unchanged)")
 parser.add_argument("--alpha", type=float, default=1.0, help="independent/shared: replay reward = alpha*own + (1-alpha)*network goodput reward (1 = strictly local)")
 parser.add_argument("--obs", choices=["loss", "hist"], default="loss", help="independent/shared state: loss = newest own loss; hist = [newest, mean, std over --obsWindow own steps, own previous action]")
@@ -83,6 +87,9 @@ state_dim = action_dim = 1
 max_action = 1
 real_max_action = 6
 OFFERED_MBPS = args.offeredLoad  # per-STA offered load, cw.cc offeredLoad
+LOADS = [float(x) for x in args.apLoads.split(",")] if args.apLoads else [OFFERED_MBPS] * len(args.apStaCounts.split(","))  # per-AP, per-STA load
+assert len(LOADS) == n and min(LOADS) > 0, "--apLoads: one positive load per AP"
+OFFERED_TOTAL = sum(c * l for c, l in zip(counts, LOADS))  # network offered load in Mbps (all STAs)
 
 torch.manual_seed(args.seed)
 np.random.seed(args.seed)
@@ -90,6 +97,12 @@ np.random.seed(args.seed)
 sim_args = {"simTime": args.simTime, "envStepTime": args.stepTime, "historyLength": args.historyLength,
             "agentType": "continuous", "scenario": "basic", "apStaCounts": args.apStaCounts,
             "seed": args.seed + 1, "offeredLoad": "%g" % args.offeredLoad}  # ns-3 rejects seed 0, so ns-3 seed = python seed + 1
+if args.apHidden:
+    sim_args["apHidden"] = args.apHidden
+if args.hiddenLoss > 0:
+    sim_args["hiddenLoss"] = args.hiddenLoss
+if args.apLoads:
+    sim_args["apLoads"] = args.apLoads
 if args.cwReadbackEvery > 0:
     sim_args["cwReadbackEvery"] = args.cwReadbackEvery
 if args.trafficStart > 0:
@@ -107,6 +120,7 @@ n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, 
 LOCAL_MODES = ("independent", "shared")
 assert args.obs == "loss" or args.mode in LOCAL_MODES, "--obs hist only for independent/shared"
 assert args.alpha == 1.0 or args.mode in LOCAL_MODES, "--alpha only for independent/shared"
+assert args.reward == "local" or (args.mode in LOCAL_MODES and args.alpha == 1.0), "--reward pf only for independent/shared with --alpha 1 (pf replaces the mix)"
 assert 0.0 <= args.alpha <= 1.0 and 1 <= args.obsWindow <= args.historyLength
 local_dim = 4 if args.obs == "hist" else 1
 AGENT_MODES = ("independent", "global", "shared")
@@ -175,7 +189,16 @@ def agent_loss(i, name):
 def global_reward(recs):
     """Network goodput normalized by offered load of all STAs (global and central modes)."""
     rx_g = sum(r["rx"] for r in recs)
-    return min(1.0, max(0.0, rx_g * PAYLOAD_BITS / 1e6 / (OFFERED_MBPS * sum(counts) * args.stepTime)))
+    return min(1.0, max(0.0, rx_g * PAYLOAD_BITS / 1e6 / (OFFERED_TOTAL * args.stepTime)))
+
+
+PF_EPS = 1e-3
+
+
+def pf_reward(r_own):
+    """Proportional-fair team reward from the per-AP normalized goodputs: 0 at zero goodput, about 1 at full load."""
+    r_own = np.asarray(r_own, dtype=np.float64)
+    return float(min(1.0, max(0.0, 1.0 + np.log(PF_EPS + r_own).mean() / -np.log(PF_EPS))))
 
 
 fails = []
@@ -263,13 +286,14 @@ try:
             recs = parse_ap_info(info[0], n)
             L2 = local_states(S2, acts)
             r_net = global_reward(recs) if args.mode in LOCAL_MODES and args.alpha < 1.0 else 0.0
+            r_pf = pf_reward([x["reward"] for x in recs]) if args.reward == "pf" else 0.0
 
             for i in range(n):
                 r = recs[i]["reward"]
                 s_i, s2_i = L[i], L2[i]
                 if args.mode in LOCAL_MODES and learning:
                     ri = i if args.mode == "independent" else 0
-                    r_rep = args.rewardScale * (args.alpha * r + (1.0 - args.alpha) * r_net)
+                    r_rep = args.rewardScale * (r_pf if args.reward == "pf" else args.alpha * r + (1.0 - args.alpha) * r_net)
                     replays[ri].add(s_i, acts[i], s2_i, r_rep, done[0])
                 if args.check:
                     if args.mode in LOCAL_MODES and learning:
@@ -291,8 +315,11 @@ try:
                     check(np.isclose(s2_i[0], own_loss, atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
                           "AP%d obs %s / loss %s != own (tx-rx)/tx %s at t=%d" % (i + 1, s2_i[0], recs[i]["loss"], own_loss, time_step))
                     # Test D: reward = own goodput / (offered load * own STAs * step), clamped to [0,1]
-                    want_r = min(1.0, max(0.0, recs[i]["rx"] * PAYLOAD_BITS / 1e6 / (OFFERED_MBPS * counts[i] * args.stepTime)))
+                    want_r = min(1.0, max(0.0, recs[i]["rx"] * PAYLOAD_BITS / 1e6 / (LOADS[i] * counts[i] * args.stepTime)))
                     check(abs(r - want_r) < 1e-4, "AP%d reward %s != recomputed %s at t=%d" % (i + 1, r, want_r, time_step))
+                    if args.reward == "pf" and i == 0:  # Test D2: pf reward recomputed from every AP's own rx counter
+                        want_pf = pf_reward([min(1.0, max(0.0, q["rx"] * PAYLOAD_BITS / 1e6 / (LOADS[j] * counts[j] * args.stepTime))) for j, q in enumerate(recs)])
+                        check(abs(r_pf - want_pf) < 1e-4 and 0.0 <= r_pf <= 1.0, "pf reward %s != recomputed %s at t=%d" % (r_pf, want_pf, time_step))
                 reward_cols[i].append(r)
                 ep_reward[i] += r
                 pp = preprocess(S2[i].reshape(-1, 1, 1))[0][0]  # this AP's history only; logging only

@@ -58,6 +58,14 @@ std::vector<uint32_t> g_apCwOverride; // --apCws (empty = every AP uses CW)
 bool g_cwMinOnly = false; // --cwMinOnly: agent action sets MinCw only, MaxCw stays 1023 (BEB doubling kept); multi-AP only
 bool g_apCwOk = true;                 // cleared by any failing readback
 
+// v3.4.0 opt-in scenario knobs (defaults = old behaviour, no SetLoss call, one load for every AP).
+Ptr<MatrixPropagationLossModel> g_lossModel;                  // set by set_phy
+std::vector<std::pair<uint32_t, uint32_t>> g_hiddenPairs;     // --apHidden: BSS pairs (0-based) that cannot hear each other
+double g_hiddenLossDb = 200.0;                                // --hiddenLoss (far below the -96 dBm ED threshold)
+std::vector<double> g_apLoadMbps;                             // --apLoads: per-STA offered load per AP (empty = offeredLoad)
+std::map<Mac48Address, uint32_t> g_macBss;                    // device address -> BSS index (hidden-pair diagnostic)
+std::vector<std::vector<uint64_t>> g_heard;                   // g_heard[rxBss][txBss]: frames decoded by rxBss devices sent by txBss devices
+
 
 uint32_t history_length = 20;
 deque<float> history;
@@ -518,7 +526,7 @@ void recordHistory()
             g_apLastTx[ap] = g_apPhyTxPkt[ap];
             g_apLoss[ap] = g_apTxDelta[ap] ? (float)((double)g_apTxDelta[ap] - (double)g_apRxDelta[ap]) / g_apTxDelta[ap] : 0.0f;
             double goodputMbit = g_apRxDelta[ap] * (1500 - 20 - 8 - 8) * 8.0 / 1e6;
-            double r = goodputMbit / (g_offeredLoadMbps * g_apStaCounts[ap] * envStepTime);
+            double r = goodputMbit / ((g_apLoadMbps.empty() ? g_offeredLoadMbps : g_apLoadMbps[ap]) * g_apStaCounts[ap] * envStepTime);
             g_apReward[ap] = (float)std::min(1.0, std::max(0.0, r));
             g_apHistory[ap].push_front(g_apLoss[ap]);
             if (g_apHistory[ap].size() > history_length)
@@ -615,6 +623,58 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
             }
         }
     }
+}
+
+// v3.4.0 diagnostic (only with --apHidden): successfully decoded frames per (receiving BSS, sending BSS),
+// sender taken from the MAC header addr2 (frames without addr2, e.g. ACK, are not counted).
+void snifferHeard(uint32_t rxBss, Ptr<const Packet> packet, uint16_t, WifiTxVector, MpduInfo, SignalNoiseDbm)
+{
+    WifiMacHeader hdr;
+    Ptr<Packet> copy = packet->Copy();
+    if (copy->GetSize() < hdr.GetSerializedSize() || copy->PeekHeader(hdr) == 0 || (!hdr.IsData() && !hdr.IsMgt()))
+        return;
+    std::map<Mac48Address, uint32_t>::const_iterator it = g_macBss.find(hdr.GetAddr2());
+    if (it != g_macBss.end())
+        g_heard[rxBss][it->second]++;
+}
+
+void connectHeardMatrix(NodeContainer wifiApNode, std::vector<NodeContainer> apStaNodes)
+{
+    uint32_t n = wifiApNode.GetN();
+    g_heard.assign(n, std::vector<uint64_t>(n, 0));
+    for (uint32_t b = 0; b < n; ++b)
+    {
+        NodeContainer bss(wifiApNode.Get(b));
+        bss.Add(apStaNodes.at(b));
+        for (uint32_t i = 0; i < bss.GetN(); ++i)
+            for (uint32_t d = 0; d < bss.Get(i)->GetNDevices(); ++d)
+            {
+                Ptr<WifiNetDevice> dev = DynamicCast<WifiNetDevice>(bss.Get(i)->GetDevice(d));
+                if (!dev)
+                    continue;
+                g_macBss[Mac48Address::ConvertFrom(dev->GetAddress())] = b;
+                dev->GetPhy()->TraceConnectWithoutContext("MonitorSnifferRx", MakeBoundCallback(&snifferHeard, b));
+            }
+    }
+}
+
+// PASS when no hidden pair decoded a frame from the other (either direction) and every other pair did.
+bool reportHeardMatrix()
+{
+    bool ok = true;
+    uint32_t n = g_heard.size();
+    for (uint32_t rx = 0; rx < n; ++rx)
+        for (uint32_t tx = 0; tx < n; ++tx)
+        {
+            if (rx == tx)
+                continue;
+            bool hidden = false;
+            for (const std::pair<uint32_t, uint32_t> &hp : g_hiddenPairs)
+                hidden = hidden || (hp.first == rx && hp.second == tx) || (hp.first == tx && hp.second == rx);
+            NS_LOG_UNCOND("Heard: BSS" << rx + 1 << " decoded " << g_heard[rx][tx] << " frames from BSS" << tx + 1 << (hidden ? " (hidden pair)" : ""));
+            ok = ok && (hidden ? g_heard[rx][tx] == 0 : g_heard[rx][tx] > 0);
+        }
+    return ok;
 }
 
 double jainFromValues(const std::vector<double> &values)
@@ -743,6 +803,59 @@ std::vector<uint32_t> parseApCws(std::string apCws, size_t apCount)
     return cws;
 }
 
+// --apHidden "1-3,2-4": 1-based BSS pairs that cannot hear each other (v3.4.0).
+std::vector<std::pair<uint32_t, uint32_t>> parseApHidden(std::string apHidden, size_t apCount)
+{
+    std::vector<std::pair<uint32_t, uint32_t>> pairs;
+    std::stringstream ss(apHidden);
+    std::string token;
+
+    while (std::getline(ss, token, ','))
+    {
+        size_t dash = token.find('-');
+        if (dash == std::string::npos || dash == 0 || dash + 1 >= token.size())
+        {
+            std::cout << "Invalid --apHidden: expected a-b pairs, e.g. 1-3." << endl;
+            exit(1);
+        }
+        int a = std::stoi(token.substr(0, dash));
+        int b = std::stoi(token.substr(dash + 1));
+        if (a < 1 || b < 1 || a == b || a > static_cast<int>(apCount) || b > static_cast<int>(apCount))
+        {
+            std::cout << "Invalid --apHidden: " << token << " is not two different APs in 1.." << apCount << "." << endl;
+            exit(1);
+        }
+        pairs.push_back(std::make_pair(static_cast<uint32_t>(a - 1), static_cast<uint32_t>(b - 1)));
+    }
+    return pairs;
+}
+
+// --apLoads: exactly one per-STA offered load (Mbps) per AP.
+std::vector<double> parseApLoads(std::string apLoads, size_t apCount)
+{
+    std::vector<double> loads;
+    std::stringstream ss(apLoads);
+    std::string token;
+
+    while (std::getline(ss, token, ','))
+    {
+        double load = token.empty() ? -1.0 : std::stod(token);
+        if (load <= 0.0)
+        {
+            std::cout << "Invalid --apLoads: loads must be positive numbers." << endl;
+            exit(1);
+        }
+        loads.push_back(load);
+    }
+
+    if (!loads.empty() && loads.size() != apCount)
+    {
+        std::cout << "Invalid --apLoads: got " << loads.size() << " values for " << apCount << " APs." << endl;
+        exit(1);
+    }
+    return loads;
+}
+
 void logTopology(NodeContainer wifiStaNode, NodeContainer wifiApNode, std::vector<NodeContainer> apStaNodes)
 {
     NS_LOG_UNCOND("Multi-AP topology:");
@@ -765,6 +878,7 @@ void set_phy(std::vector<uint32_t> apStaCounts, int guardInterval, NodeContainer
 {
     Ptr<MatrixPropagationLossModel> lossModel = CreateObject<MatrixPropagationLossModel>();
     lossModel->SetDefaultLoss(50);
+    g_lossModel = lossModel;
 
     uint32_t totalStaCount = 0;
     for (uint32_t count : apStaCounts)
@@ -857,6 +971,19 @@ void set_nodes(int channelWidth,
 
     mobility.Install(wifiApNode);
     mobility.Install(wifiStaNode);
+
+    // v3.4.0: hidden BSS pairs. SetLoss needs the mobility models, so it runs here, after Install.
+    // Default (no --apHidden): no SetLoss call, every pair keeps the 50 dB default.
+    for (const std::pair<uint32_t, uint32_t> &hp : g_hiddenPairs)
+    {
+        NodeContainer bssA(wifiApNode.Get(hp.first));
+        bssA.Add(apStaNodes.at(hp.first));
+        NodeContainer bssB(wifiApNode.Get(hp.second));
+        bssB.Add(apStaNodes.at(hp.second));
+        for (uint32_t i = 0; i < bssA.GetN(); ++i)
+            for (uint32_t j = 0; j < bssB.GetN(); ++j)
+                g_lossModel->SetLoss(bssA.Get(i)->GetObject<MobilityModel>(), bssB.Get(j)->GetObject<MobilityModel>(), g_hiddenLossDb, true);
+    }
     /* Internet stack*/
     InternetStackHelper stack;
     stack.Install(wifiApNode);
@@ -1041,6 +1168,8 @@ int main(int argc, char *argv[])
     string scenario = "basic";
     string apStaCountsArg = "";
     string apCwsArg = "";
+    string apHiddenArg = "";
+    string apLoadsArg = "";
     dry_run = false;
 
     int rng = 1;
@@ -1069,6 +1198,9 @@ int main(int argc, char *argv[])
     cmd.AddValue("disableGym", "Run ns-3 without OpenGym/ZMQ interaction", disable_gym);
     cmd.AddValue("apStaCounts", "Comma-separated station counts per AP, e.g. 20,40. Default: empty = single AP with nWifi stations", apStaCountsArg);
     cmd.AddValue("cwMinOnly", "Multi-AP agent actions set MinCw only; MaxCw stays 1023 so BEB doubling is kept. Default: false (MinCw = MaxCw = action)", g_cwMinOnly);
+    cmd.AddValue("apHidden", "Comma-separated 1-based AP pairs whose BSSs cannot hear each other, e.g. 1-3 (3-AP chain). Default: empty = one collision domain", apHiddenArg);
+    cmd.AddValue("hiddenLoss", "Path loss in dB between hidden BSS pairs. Default: 200", g_hiddenLossDb);
+    cmd.AddValue("apLoads", "Comma-separated per-STA offered load in Mbps per AP, e.g. 150,150,5 (one per AP). Default: empty = offeredLoad for every AP", apLoadsArg);
     cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);
     cmd.AddValue("seed", "Random seed", simSeed);
     cmd.AddValue("trafficStart", "Diagnostic: time (s) at which the data sources start. Default: 0", g_trafficStartTime);
@@ -1080,6 +1212,8 @@ int main(int argc, char *argv[])
 
     std::vector<uint32_t> apStaCounts = parseApStaCounts(apStaCountsArg, nWifi);
     g_apCwOverride = parseApCws(apCwsArg, apStaCounts.size());
+    g_hiddenPairs = parseApHidden(apHiddenArg, apStaCounts.size());
+    g_apLoadMbps = parseApLoads(apLoadsArg, apStaCounts.size());
     nWifi = 0;
     for (uint32_t count : apStaCounts)
     {
@@ -1091,6 +1225,8 @@ int main(int argc, char *argv[])
     NS_LOG_UNCOND("--apStaCounts: " << (apStaCountsArg.empty() ? "(single AP, nWifi stations)" : apStaCountsArg));
     NS_LOG_UNCOND("--apCws: " << (apCwsArg.empty() ? "(none, every AP uses CW)" : apCwsArg) << (dry_run && !apCwsArg.empty() ? " (ignored: dryRun)" : ""));
     NS_LOG_UNCOND("--cwMinOnly: " << g_cwMinOnly);
+    NS_LOG_UNCOND("--apHidden: " << (apHiddenArg.empty() ? "(none, one collision domain)" : apHiddenArg) << " hiddenLoss=" << g_hiddenLossDb);
+    NS_LOG_UNCOND("--apLoads: " << (apLoadsArg.empty() ? "(none, every AP uses offeredLoad)" : apLoadsArg));
     NS_LOG_UNCOND("--simulationTime: " << simulationTime);
     NS_LOG_UNCOND("--openGymPort: " << openGymPort);
     NS_LOG_UNCOND("--envStepTime: " << envStepTime);
@@ -1156,6 +1292,8 @@ int main(int argc, char *argv[])
     g_apStaCounts = apStaCounts;
     g_offeredLoadMbps = std::stod(offeredLoad);
     connectPerApStats(wifiApNode, apStaNodes);
+    if (!g_hiddenPairs.empty())
+        connectHeardMatrix(wifiApNode, apStaNodes);
     if (apStaCounts.size() > 1)
         for (uint32_t ap = 0; ap < apStaCounts.size(); ++ap)
             NS_LOG_UNCOND("Gym map: AP" << ap + 1 << " nodeId=" << wifiApNode.Get(ap)->GetId() << " stas=" << apStaCounts[ap]
@@ -1241,6 +1379,11 @@ int main(int argc, char *argv[])
     reportPerApStats(wifiApNode, apStaCounts, Simulator::Now().GetSeconds());
     checkApCw("end");
     NS_LOG_UNCOND("Per-AP CW check: " << (g_apCwOk ? "PASS" : "FAIL"));
+    if (!g_hiddenPairs.empty())
+    {
+        bool heardOk = reportHeardMatrix();
+        NS_LOG_UNCOND("Hidden-pair check: " << (heardOk ? "PASS" : "FAIL"));
+    }
 
     Simulator::Destroy();
     NS_LOG_UNCOND("Packets registered by handler: " << g_rxPktNum << " Packets" << endl);

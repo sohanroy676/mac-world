@@ -13,6 +13,7 @@
 using namespace std;
 using namespace ns3;
 
+extern std::vector<double> g_apLoadMbps; // per-STA load per AP (cw.cc --apLoads, empty = offeredLoad for every AP)
 extern double g_trafficStartTime; // seconds; data sources start here (cw.cc --trafficStart, default 0)
 
 class Scenario
@@ -250,7 +251,7 @@ void BasicScenario::installScenario(double simulationTime, double envStepTime, n
             installTrafficGenerator(this->apStaNodes.at(apIndex).Get(staIndex),
                                     this->wifiApNode.Get(apIndex),
                                     this->port++,
-                                    this->offeredLoad,
+                                    g_apLoadMbps.empty() ? this->offeredLoad : std::to_string(g_apLoadMbps.at(apIndex)),
                                     g_trafficStartTime,
                                     simulationTime + 2 + envStepTime*history_length,
                                     callback);
