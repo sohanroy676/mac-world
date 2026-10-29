@@ -1,0 +1,65 @@
+START seed=100 cws=256,128,256 at 10:02:11, 10669s left
+1 jobs to run, 0 already PASS, 1 lane(s)
+seed 100 10,10,10 cw=256,128,256 -> PASS (575 s) results/multi-ap-20261029-100219 | 0 left
+batch complete
+START seed=100 cws=256,64,256 at 10:11:50, 10090s left
+1 jobs to run, 1 already PASS, 1 lane(s)
+seed 100 10,10,10 cw=256,64,256 -> PASS (561 s) results/multi-ap-20261029-101157 | 0 left
+batch complete
+START seed=101 cws=256,128,256 at 10:21:15, 9525s left
+1 jobs to run, 2 already PASS, 1 lane(s)
+seed 101 10,10,10 cw=256,128,256 -> PASS (555 s) results/multi-ap-20261029-102122 | 0 left
+batch complete
+START seed=101 cws=256,64,256 at 10:30:33, 8967s left
+1 jobs to run, 3 already PASS, 1 lane(s)
+seed 101 10,10,10 cw=256,64,256 -> PASS (559 s) results/multi-ap-20261029-103039 | 0 left
+batch complete
+START seed=102 cws=256,128,256 at 10:39:56, 8404s left
+1 jobs to run, 4 already PASS, 1 lane(s)
+seed 102 10,10,10 cw=256,128,256 -> PASS (606 s) results/multi-ap-20261029-104003 | 0 left
+batch complete
+START seed=102 cws=256,64,256 at 10:50:06, 7794s left
+1 jobs to run, 5 already PASS, 1 lane(s)
+seed 102 10,10,10 cw=256,64,256 -> PASS (567 s) results/multi-ap-20261029-105013 | 0 left
+batch complete
+START seed=103 cws=256,128,256 at 10:59:37, 7223s left
+1 jobs to run, 6 already PASS, 1 lane(s)
+seed 103 10,10,10 cw=256,128,256 -> PASS (552 s) results/multi-ap-20261029-105944 | 0 left
+batch complete
+START seed=103 cws=256,64,256 at 11:08:53, 6667s left
+1 jobs to run, 7 already PASS, 1 lane(s)
+seed 103 10,10,10 cw=256,64,256 -> PASS (541 s) results/multi-ap-20261029-110859 | 0 left
+batch complete
+START seed=104 cws=256,128,256 at 11:17:58, 6122s left
+1 jobs to run, 8 already PASS, 1 lane(s)
+seed 104 10,10,10 cw=256,128,256 -> PASS (459 s) results/multi-ap-20261029-111803 | 0 left
+batch complete
+START seed=104 cws=256,64,256 at 11:25:40, 5660s left
+1 jobs to run, 9 already PASS, 1 lane(s)
+seed 104 10,10,10 cw=256,64,256 -> PASS (470 s) results/multi-ap-20261029-112545 | 0 left
+batch complete
+START seed=105 cws=256,128,256 at 11:33:34, 5186s left
+1 jobs to run, 10 already PASS, 1 lane(s)
+seed 105 10,10,10 cw=256,128,256 -> PASS (482 s) results/multi-ap-20261029-113339 | 0 left
+batch complete
+START seed=105 cws=256,64,256 at 11:41:40, 4700s left
+1 jobs to run, 11 already PASS, 1 lane(s)
+seed 105 10,10,10 cw=256,64,256 -> PASS (456 s) results/multi-ap-20261029-114144 | 0 left
+batch complete
+START seed=106 cws=256,128,256 at 11:49:19, 4241s left
+1 jobs to run, 12 already PASS, 1 lane(s)
+seed 106 10,10,10 cw=256,128,256 -> PASS (475 s) results/multi-ap-20261029-114924 | 0 left
+batch complete
+START seed=106 cws=256,64,256 at 11:57:18, 3762s left
+1 jobs to run, 13 already PASS, 1 lane(s)
+seed 106 10,10,10 cw=256,64,256 -> PASS (473 s) results/multi-ap-20261029-115723 | 0 left
+batch complete
+START seed=107 cws=256,128,256 at 12:05:15, 3285s left
+1 jobs to run, 14 already PASS, 1 lane(s)
+seed 107 10,10,10 cw=256,128,256 -> PASS (464 s) results/multi-ap-20261029-120519 | 0 left
+batch complete
+START seed=107 cws=256,64,256 at 12:13:02, 2818s left
+1 jobs to run, 15 already PASS, 1 lane(s)
+seed 107 10,10,10 cw=256,64,256 -> PASS (469 s) results/multi-ap-20261029-121307 | 0 left
+batch complete
+DONE at 12:20:55

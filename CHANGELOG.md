@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Documentation
+
+- **v3.4.0**: Mark milestone tagged
+- **v3.4.0**: Add paired static oracle at eval seeds
+
 ## [3.4.0] - 2026-10-29
 
 ### Added
@@ -417,6 +424,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **design**: Define multi-ap v0.2.0
 - Add CLAUDE.md and close v0.3.0 handoff
 
+[unreleased]: https://github.com///compare/v3.4.0..HEAD
 [3.4.0]: https://github.com///compare/v3.1.0..v3.4.0
 [3.1.0]: https://github.com///compare/v3.0.0..v3.1.0
 [3.0.0]: https://github.com///compare/v2.7.2..v3.0.0
