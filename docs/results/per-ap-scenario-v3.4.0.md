@@ -102,6 +102,32 @@ Reading (fact unless marked):
 - Inference: a PF reward gives per-AP learners an objective that the static asymmetric optimum also maximizes, so reaching about the oracle PF is expected. The best asymmetric static pair is an upper reference on PF only for this coarse grid (edges equal, 3 x 3 pairs, §3); it is not a proven global optimum, and a learned policy could in principle exceed it.
 - Limit: the frozen-policy CIs still contain only evaluation-seed variance (one `--trainSeed`, §4 Limits). The static CIs are narrow because static runs have low seed variance.
 
+## 4c. Second policy seed (`--trainSeed 1`) (fact)
+Independent and shared `--reward pf` were retrained with `--trainSeed 1` (2 episodes, ns-3 seeds 2 and 1002, otherwise identical to §4) and evaluated frozen on the same 8 seeds (100-107). Train + 8 eval jobs per arm, all `--check` PASS (arms E, F; train 1087 s / 1072 s, eval 484-609 s). Tables and figures for all arms: `docs/figures/v3.4.0-seeds/` (the §4 and §4b numbers regenerate unchanged). Mean ± 95 % CI over the 8 eval seeds, exact Wilcoxon p = 0.008 unless noted.
+
+| Arm | trainSeed | PF utility | min-AP | aggregate | final CW (AP1/2/3) |
+|---|---|---|---|---|---|
+| independent pf | 0 | 8.84 ± 0.01 | 9.99 ± 0.54 | 62.82 ± 1.18 | 208 / 41 / 77 |
+| independent pf | 1 | 8.89 ± 0.02 | 11.62 ± 0.82 | 61.78 ± 0.68 | 218 / 123 / 251 |
+| shared pf | 0 | 8.58 ± 0.06 | 4.49 ± 0.35 | 73.43 ± 0.47 | 126 / 130 / 126 |
+| shared pf | 1 | 8.69 ± 0.05 | 7.30 ± 0.59 | 64.48 ± 0.40 | 241 / 242 / 240 |
+
+Paired Δ (PF utility / min-AP Mbps) of trainSeed 1 against each reference:
+
+| Arm (trainSeed 1) | vs BEB | vs Global | vs static 256,128,256 |
+|---|---|---|---|
+| independent pf | +1.41 ± 0.04 / +10.18 ± 0.80 | +0.73 ± 0.06 / +9.04 ± 0.62 | +0.02 ± 0.02 (p = 0.078) / -1.63 ± 0.80 |
+| shared pf | +1.21 ± 0.05 / +5.86 ± 0.57 | +0.53 ± 0.03 / +4.71 ± 0.39 | -0.18 ± 0.05 / -5.96 ± 0.57 |
+
+Policy-seed difference (trainSeed 1 minus 0, paired by eval seed; ΔPF / Δmin-AP / Δaggregate): independent pf +0.05 ± 0.02 / +1.63 ± 0.30 / -1.04 ± 0.51; shared pf +0.11 ± 0.02 / +2.81 ± 0.28 / -8.95 ± 0.15.
+
+Reading:
+- Fact: the ordering from §4 holds for both policy seeds. Both seeds of both PF arms beat BEB and Global on PF and min-AP in all 8 eval seeds, and independent pf stays above shared pf.
+- Fact: the two policies differ. The final CWs are very different (independent: 208/41/77 vs 218/123/251; shared: 126 vs 241) and the policy-seed gaps (ΔPF, Δmin-AP) are larger than the eval-seed CIs. So the §4 CIs understate total uncertainty.
+- Fact: independent pf with trainSeed 1 is level with the 256,128,256 oracle on PF (+0.02, p = 0.078) and closer on min-AP (-1.6 vs -3.3 Mbps for seed 0). The seed-0 "slightly below the oracle on PF" is therefore not stable across policy seeds.
+- Fact: shared pf trainSeed 1 raised min-AP and PF but gave up 9 Mbps of aggregate versus seed 0 (it ends at about 241 on all three APs).
+- Limit: two policy seeds are not a policy-seed CI. No statistics across trainSeeds are claimed; the eval-seed CIs above condition on one policy per row. A third seed (`--trainSeed 2`) is still open.
+
 ## 5. Next
-- Policy-seed variance: repeat the independent-pf and shared-pf arms with other `--trainSeed` values (about 1.4 h each).
+- Policy-seed variance: `--trainSeed 2` for both PF arms (about 1.4 h each); seed 1 is done (§4c).
 - Optional: independent pf with `--algo td3` / `--cwMinOnly`; v3.3.0 sensing + heuristics (IdleSense) as a non-RL baseline; uneven loads (`--apLoads`).
