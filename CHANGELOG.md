@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ceiling**: Add paired 6x10 BEB/Global refs
 - **results**: Add 6x10 refs and 20,40 fair-protocol pilot runs
 - **v3.2.0**: Add fair-protocol report and handoff
+- **v3.4.0**: Add chain3 static gate result
 
 ### Fixed
 

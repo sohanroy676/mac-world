@@ -32,6 +32,7 @@ parser.add_argument("--topo", default=None, help="only this apStaCounts value")
 parser.add_argument("--title", default="v1.1.0", help="version label used in the tables.md heading")
 parser.add_argument("--stepTime", type=float, default=0.01)
 parser.add_argument("--warmup", type=int, default=300)
+parser.add_argument("--refs", nargs="+", default=["beb", "global"], help="with --pf: mode keys used as paired references (e.g. beb fz-global for frozen-eval runs)")
 parser.add_argument("--pf", action="store_true", help="v3.4.0: append paired tables with PF utility, min-AP, Jain and an exact Wilcoxon signed-rank p-value per comparison")
 args = parser.parse_args()
 
@@ -172,7 +173,7 @@ for topo in topos:
             S = list(runs[topo][m].values())
             md.append("| %s | %d | %s | %s |" % (LABEL[m], len(S), fmt([pf_util(s) for s in S]), fmt([min(s["thr_policy"].values()) for s in S])))
         md.append("")
-        for ref in ("beb", "global"):
+        for ref in args.refs:
             if ref not in runs[topo]:
                 continue
             md += ["Paired difference vs %s (same ns-3 seed): mean ± 95%% CI (Student t), exact Wilcoxon p (two-sided):" % LABEL[ref], "",
