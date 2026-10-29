@@ -20,13 +20,14 @@ Continue the mac-world project (Multi-AP OSCAR, ns-3.29). Done and merged into `
 - Static gate (n=3): 256,128,256 beats best common CW on PF utility by +0.15 ± 0.02; 256,64,256 beats it on min-AP by +7.62 ± 0.27 Mbps. Aggregate falls (62.9 common 256 -> 53.9-59.5).
 - Batch (frozen, 2 training episodes, eval seeds 100-107, paired with BEB, p = 0.008 for every row): independent `--reward pf` PF +1.36 ± 0.04 / min-AP +8.56 ± 0.52 vs BEB and +0.68 ± 0.08 / +7.41 ± 0.35 vs Global, aggregate -8.8 / -13.6 Mbps; shared pf PF +1.10 / min-AP +3.05 vs BEB, aggregate +1.8; Global PF +0.69 vs BEB (highest aggregate 76.5); independent `--alpha 0` below BEB on all four metrics.
 - Run dirs (`results/ceiling-v3.4.0`, `results/fair-v3.4.0-{A-shared-pf,B-indep-pf,C-global,D-indep-a0}` with logs, manifests and `actors/`) are committed (trace.csv + config.json only). Tables: `docs/figures/v3.4.0/` and `docs/figures/v3.4.0-gate/`.
-- NOT done: policy-seed variance (one `--trainSeed 0`, CIs cover only evaluation-seed variance), static oracle at eval seeds 100-107, TD3 / `--cwMinOnly` arms, `--apLoads` batch, v3.3.0, tagging.
+- Static oracle at eval seeds 100-107 DONE (`results/ceiling-v3.4.0-eval`, report §4b, `docs/figures/v3.4.0-oracle/`): independent pf is -0.03 ± 0.01 PF vs 256,128,256, min-AP -3.3 Mbps.
+- NOT done: policy-seed variance (one `--trainSeed 0`, CIs cover only evaluation-seed variance), TD3 / `--cwMinOnly` arms, `--apLoads` batch, v3.3.0, tagging.
 - Untracked leftovers to ignore: `docs/figures/v3.4.0-A`, `-AB`, `-ABC` (interim duplicates of `docs/figures/v3.4.0`; deleting needs my OK), `.python-version`, `netanim-3.108/*`, `ns-3.29/*.pcap`, `ns-3.29/scratch/linear-mesh/results_gate_*.out` (copies are in `docs/figures/v3.4.0-gate/`). A stash `old local --staticCws static mode` is obsolete; do not apply it.
 - Unknown: why 3 parallel sweep lanes failed earlier (run ONE ns-3 job at a time; the runner refuses if `linear-mesh` is running).
 
 ## Task (ask me which to do first)
 1. Policy-seed variance: repeat independent-pf and shared-pf with `--trainSeed 1` and `2` (separate `--benchDir`s, same eval seeds 100-107; about 1.4 h per arm; BEB already exists, use `--no-beb`). Then aggregate the arms together.
-2. Static oracle at eval seeds 100-107 (`ceiling_sweep_v3_1_0.py run --grid custom --topo 10,10,10 --cws "256,128,256;256,64,256" --seeds 100 .. 107 --extraArgs "--apHidden 1-3"`, about 1 h per setting) for a paired oracle gap.
+2. (DONE 2026-10-29) Static oracle at eval seeds 100-107.
 3. Optional: `--algo td3` / `--cwMinOnly` for independent pf; v3.3.0 sensing + heuristics (IdleSense/Bianchi, residual RL); `--apLoads` uneven-load check; write the v3.4.0 conclusion into the technical report; tag `v3.2.0` (only if I say "tag").
 
 ## Working rules

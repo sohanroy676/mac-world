@@ -1,6 +1,6 @@
 # v3.4.0 Per-AP scenario: hidden-chain scenario and static gate
 
-Status: scenario and tooling DONE and validated; static gate DONE (PASSED). The n >= 8 frozen-eval batch is NOT run yet (needs approval). Plan: `docs/research-beat-oscar.md` §5 #7, #14, §6. Decision record: `docs/adr/0005-coarse-loss-matrix.md`.
+Status: scenario and tooling DONE and validated; static gate DONE (PASSED); n = 8 frozen-eval batch DONE (§4); paired static oracle at eval seeds 100-107 DONE (§4b). Plan: `docs/research-beat-oscar.md` §5 #7, #14, §6. Decision record: `docs/adr/0005-coarse-loss-matrix.md`.
 
 Labels: **fact** = observed in a run or read from code; **inference** = reasoning, untested; **unknown** = needs a run.
 
@@ -63,7 +63,7 @@ Paired differences (same seed), all p = 0.008, n = 8:
 | shared `--reward pf` | +1.10 ± 0.05 / +3.05 ± 0.32 / +1.80 ± 0.67 | +0.41 ± 0.02 / +1.90 ± 0.16 / -3.03 ± 0.21 |
 
 Reading (fact unless marked):
-- Frozen independent and shared agents trained with the cooperative PF reward beat BEB and Global-CW on PF utility and on the weakest AP, in all 8 seeds. Independent `--reward pf` lifts the starved middle AP from 1.44 (BEB) to 9.99 Mbps and its PF utility (8.84) is at the static oracle level (8.87 for the best static pair at 256,128,256, different seeds, unpaired).
+- Frozen independent and shared agents trained with the cooperative PF reward beat BEB and Global-CW on PF utility and on the weakest AP, in all 8 seeds. Independent `--reward pf` lifts the starved middle AP from 1.44 (BEB) to 9.99 Mbps and its PF utility (8.84) is at the static oracle level (8.87 for the best static pair at 256,128,256; paired gap in §4b: -0.03 ± 0.01).
 - The price is aggregate throughput. Independent pf is -8.8 Mbps vs BEB and -13.6 vs Global; shared pf is +1.8 vs BEB and -3.0 vs Global. Global-CW has the highest aggregate (76.46, same level as the static common CW 64: 75.91, n=1) but leaves the middle AP at 2.6 Mbps. Which arm is "better" depends on the objective: aggregate favours Global, PF and min-AP favour independent pf.
 - Independent with the strictly local reward (`--alpha 0` here = network-goodput reward in this mode, as in the repo's earlier definition) is worse than BEB on all four metrics. A pure aggregate reward cannot see the starved AP (inference, consistent with the aggregate being highest at low CW).
 - The independent-pf CWs separate per AP (208 / 41 / 77): the middle AP gets the lowest CW and the edge APs back off, qualitatively like the static asymmetric optimum (edges high, middle low), but the learned values differ from 256,64,256 (fact) and the AP1/AP3 CWs are not equal (fact).
@@ -72,11 +72,36 @@ Reading (fact unless marked):
 Limits:
 - Fact: one trained policy per arm (one `--trainSeed`, 2 training episodes). Policy-seed variance is NOT in these CIs; the CIs measure only variance over evaluation seeds. The very small CIs on frozen policies partly reflect that.
 - Fact: `--reward pf` and the PF/min-AP metrics are aligned (the reward is a PF utility), so the PF advantage is expected; it is not a result about aggregate throughput. The reported claim is on fairness / PF, where per-AP agents with a cooperative reward beat the single common CW.
-- Fact: no hyper-parameter tuning, no `--rewardScale`, no TD3 or `--cwMinOnly` arm, and no static-oracle arm at eval seeds 100-107 were run (time budget). The oracle comparison uses seeds 0-2.
+- Fact: no hyper-parameter tuning, no `--rewardScale`, no TD3 or `--cwMinOnly` arm were run (time budget). The static oracle was added later at eval seeds 100-107 (§4b).
 - Fact: the scenario is one coarse topology (hidden edges, equal load); `--apLoads` was validated but not used in a batch.
 - The "Global" arm here is the repo's Global-CW OSCAR with OSCAR's own reward (not PF).
 
+## 4b. Paired static oracle at eval seeds 100-107 (fact)
+Static per-AP CWs (`--mode static`, no learning) on the same 8 ns-3 seeds (101-108) as §4, so every comparison is paired by seed. 16 jobs (2 settings x 8 seeds), all `--check` PASS, 456-606 s each. Tables, manifest, log: `docs/figures/v3.4.0-oracle/` (the §4 numbers regenerate unchanged). The two settings were picked from the seed 0-2 gate (§3), so they are not selected on the eval seeds. Mean ± 95 % CI (Student t), exact Wilcoxon p = 0.008 for every row (n=8).
+
+| Arm | aggregate | AP1 / AP2 / AP3 | Jain | PF utility | min-AP |
+|---|---|---|---|---|---|
+| static 256,128,256 | 59.58 ± 0.11 | 23.18 / 13.25 / 23.15 | 0.948 | 8.87 ± 0.00 | 13.25 ± 0.09 |
+| static 256,64,256 | 53.90 ± 0.09 | 17.39 / 19.12 / 17.39 | 0.998 | 8.66 ± 0.01 | 17.37 ± 0.05 |
+
+Paired gap, learned arm minus oracle (Δ PF utility / Δ min-AP Mbps / Δ aggregate Mbps):
+
+| Arm | vs static 256,128,256 | vs static 256,64,256 |
+|---|---|---|
+| BEB | -1.39 ± 0.04 / -11.82 ± 0.06 / +12.04 ± 0.62 | -1.18 ± 0.04 / -15.93 ± 0.09 / +17.72 ± 0.64 |
+| Global-CW | -0.71 ± 0.07 / -10.67 ± 0.20 / +16.88 ± 0.32 | -0.50 ± 0.07 / -14.78 ± 0.21 / +22.56 ± 0.37 |
+| independent `--reward pf` | **-0.03 ± 0.01** / -3.26 ± 0.51 / +3.23 ± 1.13 | **+0.18 ± 0.01** / -7.37 ± 0.53 / +8.92 ± 1.22 |
+| shared `--reward pf` | -0.29 ± 0.06 / -8.77 ± 0.32 / +13.85 ± 0.43 | -0.09 ± 0.06 / -12.88 ± 0.35 / +19.53 ± 0.52 |
+| independent `--alpha 0` | -1.62 ± 0.05 / -11.99 ± 0.10 / +9.19 ± 0.18 | -1.41 ± 0.05 / -16.11 ± 0.08 / +14.87 ± 0.20 |
+
+Reading (fact unless marked):
+- The static oracle holds under paired evaluation: both asymmetric settings beat BEB and Global-CW on PF utility and min-AP in all 8 seeds. 256,128,256 is +1.39 ± 0.04 PF and +11.82 ± 0.06 Mbps min-AP over BEB, and +0.71 ± 0.07 PF and +10.67 ± 0.20 min-AP over Global. The price is aggregate throughput (-12.0 vs BEB, -16.9 vs Global).
+- Independent `--reward pf` closes almost the whole PF gap: it is 0.03 ± 0.01 PF below 256,128,256 (small but nonzero, p = 0.008) and 0.18 ± 0.01 above 256,64,256. It does not reach the oracle's min-AP: -3.3 Mbps vs 256,128,256 and -7.4 vs 256,64,256. Its aggregate is higher than either oracle's (+3.2 / +8.9 Mbps), so it sits between the oracle and BEB on the fairness / throughput trade-off.
+- Shared `--reward pf` is below the 256,128,256 oracle on PF (-0.29) and about level with 256,64,256 (-0.09 ± 0.06) but far lower on min-AP (-8.8 / -12.9 Mbps).
+- Independent `--alpha 0` is far below both oracles on every fairness metric, consistent with §4.
+- Inference: a PF reward gives per-AP learners an objective that the static asymmetric optimum also maximizes, so reaching about the oracle PF is expected. The best asymmetric static pair is an upper reference on PF only for this coarse grid (edges equal, 3 x 3 pairs, §3); it is not a proven global optimum, and a learned policy could in principle exceed it.
+- Limit: the frozen-policy CIs still contain only evaluation-seed variance (one `--trainSeed`, §4 Limits). The static CIs are narrow because static runs have low seed variance.
+
 ## 5. Next
 - Policy-seed variance: repeat the independent-pf and shared-pf arms with other `--trainSeed` values (about 1.4 h each).
-- Static oracle at eval seeds 100-107 (256,128,256 and 256,64,256, about 1 h each) for a paired oracle gap.
 - Optional: independent pf with `--algo td3` / `--cwMinOnly`; v3.3.0 sensing + heuristics (IdleSense) as a non-RL baseline; uneven loads (`--apLoads`).
