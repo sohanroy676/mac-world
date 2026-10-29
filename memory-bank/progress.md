@@ -7,7 +7,7 @@
 
 ## Done
 
-- **v4 plan PROPOSED (2026-10-29, branch `claude/project-thread-p80xpo`)** — docs only, no runs. `docs/planning/mac-world-v4-plan-2026-10-29.html`; ROADMAP "Proposed v3.5.0 to v4.5.0". Not approved yet.
+- **v4 plan PROPOSED (2026-10-29, branch `claude/project-thread-p80xpo`)** — docs only, no runs. `docs/planning/mac-world-v4-plan-2026-10-29.html`; ROADMAP "Proposed v3.5.0 to v4.5.0". Revision 2 after review; decisions taken (user delegated). Plan accepted, P0 not started.
 
 - **v3.4.0 policy-seed variance (trainSeed 1) DONE (2026-10-29, branch `docs/v3.4.0-policy-seed`)** — independent and shared `--reward pf` retrained with `--trainSeed 1`, frozen eval on seeds 100-107, 18/18 jobs PASS (arms E, F in `results/fair-v3.4.0-{E-indep-pf-t1,F-shared-pf-t1}`, local, not committed). Independent pf t1: PF 8.89 ± 0.02, min-AP 11.62 ± 0.82, level with the 256,128,256 oracle on PF (+0.02, p = 0.078). Shared pf t1: PF 8.69, min-AP 7.30, aggregate 64.5. The ordering of §4 holds, but the policies differ (final CWs, policy-seed gaps larger than the eval CIs). Report §4c, tables `docs/figures/v3.4.0-seeds/`. `--trainSeed 2` not run.
 
