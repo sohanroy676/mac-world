@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **v3.4.0**: Add trainSeed 1 run dirs
 - **changelog**: Regenerate with git-cliff
 - **planning**: Add v4 plan to beat all baselines
+- **changelog**: Regenerate with git-cliff
+- **planning**: Revise v4 plan and take decisions
 
 ## [3.4.0] - 2026-10-29
 
