@@ -102,7 +102,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
   <div class="eyebrow">mac-world · research plan · 29 Oct 2026</div>
   <h1>mac-world v4 plan: the strongest contention window controller we can defend</h1>
   <p class="lede">How to continue the project from the v3.4.0 state so that the final method beats OSCAR, BEB and the strongest heuristic and learned baselines on every arena where beating them is physically possible, and matches the static optimum where it is not.</p>
-  <div class="meta"><span>Based on: dev branch 17c0615, results v3.1.0 to v3.4.0, the 27 Oct research note, the 29 Oct Contention Window Atlas, the OSCAR metrics note</span><span>Revision 2 (29 Oct, after review): statistics, budget and method fixes; decisions taken</span><span>No new runs were made for this plan</span></div>
+  <div class="meta"><span>Based on: dev branch 17c0615, results v3.1.0 to v3.4.0, the 27 Oct research note, the 29 Oct Contention Window Atlas, the OSCAR metrics note</span><span>Revision 3 (29 Oct, second review): no-harm floor, load and reward coupling, delay loads, feature gate, test families, seed reuse; decisions taken</span><span>No new runs were made for this plan</span></div>
   <div class="labels"><span class="tag fact">fact</span> read from code or committed results <span class="tag inf">inference</span> reasoning, untested <span class="tag lit">lit</span> reported by a paper <span class="tag dec">decision</span> proposed choice <span class="tag unk">unknown</span> needs a run</div>
 </header>
 
@@ -115,6 +115,22 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
     <li><b>Baselines must grow from 3 to about 12</b>, most of them cheap non-learning rules: static oracle, IdleSense, Bianchi/Kalman, Patras PI, Gawłowicz PF gradient search, BLADE-style HIMD, a per-AP UCB bandit, plus OSCAR (global and per AP), CCOD and a drlCW re-implementation. Kosek-Szott et al. 2021 showed a tuned heuristic can match DRL <span class="tag lit">lit</span>, so this is what reviewers will check first.</li>
     <li><b>Compute is the binding constraint.</b> One 15 s job takes about 430 to 880 s and jobs run one at a time because parallel runs failed <span class="tag fact">fact</span>, probably because lanes with the same seed pick the same port <span class="tag inf">inference</span>. Counted properly, the suite is about 260 serial hours <span class="tag inf">inference</span>. The plan cuts that with a two-stage evaluation, parallel lanes and a cheaper saturated load, and has a fixed order of what to drop if those fall short.</li>
   </ol>
+</section>
+
+<section>
+  <h2>What changed in revision 3</h2>
+  <p>A second review, checked against the code and the v3.4.0 per-AP numbers, found six more problems. Each is fixed in the sections below.</p>
+  <div class="table"><table>
+    <thead><tr><th>Issue in revision 2</th><th>Why it matters</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td><b>The no-harm rule would have blocked the main win.</b> "No AP below its BEB goodput."</td><td class="w">In the hidden chain, BEB gives the edge APs 34.95 and 35.24 Mbps and the middle AP 1.44. Every fair solution takes airtime from the edges. Independent-PF has AP1 at 24.76, and the 256,128,256 oracle has the edges at 23.2 <span class="tag fact">fact</span>. The constraint and the win criterion forbade exactly the v3.4.0 result.</td><td class="w">Fair floor: no AP may fall below the smaller of its BEB goodput and an equal share of BEB's aggregate. In S4 that floor is min(BEB_i, 71.63/3 = 23.9). An AP can lose only what it had above an equal split, and the starved AP can never lose.</td></tr>
+      <tr><td><b>A lower load would rescale every learned baseline's reward.</b></td><td class="w"><code>cw.cc</code> normalises the per-AP reward by offered load × STA count × step time (line 529) <span class="tag fact">fact</span>. Dropping 150 to 10 Mbps per STA makes OSCAR's reward 15× larger. v1.9.0 showed reward scale alone can make a learner collapse <span class="tag fact">fact</span>.</td><td class="w">The P0 load test adds an opt-in fixed normaliser (150 Mbps) and also checks one learned arm (Global-CW) under the lower load, not only BEB and static.</td></tr>
+      <tr><td><b>The latency scenario was still saturated.</b> S7 used 1 to 5 Mbps per STA at 20,40.</td><td class="w">At 60 STAs, 1 Mbps each is 60 Mbps offered against about 27 to 40 Mbps of capacity <span class="tag fact">fact</span>. Queues overflow, so delay measures buffer size, not access control.</td><td class="w">Loads set per topology at 50, 80 and 95 % of that topology's measured BEB saturation goodput. For 20,40 that is about 0.25 to 0.5 Mbps per STA.</td></tr>
+      <tr><td><b>Gate G0 was wrong for asymmetric topologies.</b> It required the features at the oracle to be the same in every scenario.</td><td class="w">In the hidden chain the edge APs cannot hear each other, so their idle-slot counts differ from the middle AP's by design. A constant target is what IdleSense assumes, and it is why IdleSense should fail there.</td><td class="w">G0 is split. G0a: in one-domain scenarios, features at the oracle CW are near-constant. G0b: in S4 and S5, the features separate edge and middle APs, which is what the shared actor needs to give them different CWs.</td></tr>
+      <tr><td><b>Multiplicity was only controlled across baselines.</b></td><td class="w">Each table reported 4 or more metrics in 5 or more scenarios, so some "wins" would be chance.</td><td class="w">One pre-registered primary metric per arena. Holm is applied per arena across baselines and α values, and secondary metrics are descriptive only. Paired t is primary, with Wilcoxon reported beside it.</td></tr>
+      <tr><td><b>Paid-for runs were thrown away.</b> Evaluation seeds 101 to 110.</td><td class="w">v3.4.0 evaluated on python seeds 100 to 107 (ns-3 101 to 108). New seeds would rerun BEB, Global, independent-PF and both oracles on S4 for nothing.</td><td class="w">Evaluation uses python seeds 100 to 109 (ns-3 101 to 110). For S4 those 8 seeds of v3.4.0 runs are reused, and only 2 seeds are added.</td></tr>
+    </tbody>
+  </table></div>
 </section>
 
 <section>
@@ -204,7 +220,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
       <text class="sm" x="734" y="114">own utility (optional)</text>
       <rect class="box" x="250" y="226" width="430" height="58" rx="8"></rect>
       <text x="264" y="250" font-weight="700" font-size="15">Training only: team reward</text>
-      <text class="mono" x="264" y="270">U_α(goodput_1..N) − λ·max(0, BEB_ref − goodput_i)</text>
+      <text class="mono" x="264" y="270">U_α(goodput_1..N) − λ·max(0, floor_i − goodput_i)</text>
       <path class="edge" d="M200 70 L250 54" marker-end="url(#ah)"></path>
       <path class="edge" d="M200 96 L250 148" marker-end="url(#ah)"></path>
       <path class="edge" d="M345 86 L345 110" marker-end="url(#ah)"></path>
@@ -223,7 +239,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
       <tr><td><b>C1 Sensing observation</b></td><td class="w">Per AP, from its own radio: mean idle slots between transmissions, busy-air fraction, fraction of received frames with the Retry bit set (ns-3.29 has <code>WifiMacHeader::IsRetry</code> <span class="tag fact">fact</span>), own normalised goodput, own STA count, own CW exponent. Rates are normalised per station so that APs of different sizes give comparable inputs. A real AP measures all of these.</td><td class="w">The loss scalar counts the AP's own ACKs and beacons and cannot attribute losses (D3). It also makes every AP look the same, which is why the shared actor cannot separate CWs.</td><td>Idle slots encode total contention (IdleSense) <span class="tag lit">lit</span>; busy time used by LSTM-SAC MLO 2026 and drlCW <span class="tag lit">lit</span>; shared PF CWs 126/130/126 <span class="tag fact">fact</span></td></tr>
       <tr><td><b>C2 Analytical prior + residual</b></td><td class="w">Actor outputs Δ in log2 CW around the IdleSense or Bianchi CW* computed from C1. Ablation chooses the prior.</td><td class="w">Destructive random warm-up, slow convergence, seed variance (D4, D5). In one domain the prior alone should already sit near the ceiling, so the agent only learns the correction.</td><td>Residual policy learning (Silver 2018; Johannink 2019) <span class="tag lit">lit</span>; PDCF-DRL learned offset on a rule <span class="tag lit">lit</span></td></tr>
       <tr><td><b>C3 α-fair team reward, α as input</b></td><td class="w">Reward U_α over per-AP goodputs (α=0 sum, α=1 proportional fair, large α near max-min), shared by all agents. α is fed to the actor and critic, so one policy covers the whole Pareto front. Replay stores per-AP goodputs, and every sampled batch gets the reward for a fresh random α (hindsight relabelling), so α coverage costs no extra simulation.</td><td class="w">Own-goodput reward causes the selfish race (D1). A fixed PF reward picks one point and is aligned with the PF metric, which looks circular. Conditioning on α lets us beat each baseline on each objective.</td><td>Čagalj 2005, Gawłowicz 2021 (local utility oscillates) <span class="tag lit">lit</span>; v3.4.0 PF reward result <span class="tag fact">fact</span></td></tr>
-      <tr><td><b>C4 No-harm constraint</b></td><td class="w">Training only: a Lagrangian penalty when any AP's goodput falls below its goodput in the paired BEB run on the same training seed. The dual variable is appended to the observation. At evaluation the rule is checked as a metric.</td><td class="w">Greedy learners can cost a neighbour up to 59 %; reviewers ask "who pays for the gain". Guarantees no AP is worse than under BEB.</td><td>drlCW gated reward, FC-MAPPO, QaSAL <span class="tag lit">lit</span>; Casasnovas et al. 59 % <span class="tag lit">lit</span></td></tr>
+      <tr><td><b>C4 No-harm constraint</b></td><td class="w">Training only: a Lagrangian penalty when any AP falls below its fair floor, floor_i = min(BEB goodput of AP i, BEB aggregate ÷ N), taken from the paired BEB run on the same training seed. The dual variable is appended to the observation. At evaluation the floor is checked as a metric.</td><td class="w">Greedy learners can cost a neighbour up to 59 %; reviewers ask "who pays for the gain". The floor guarantees that no AP below an equal share loses anything versus BEB, while still letting an over-served AP give airtime to a starved one.</td><td>drlCW gated reward, FC-MAPPO, QaSAL <span class="tag lit">lit</span>; Casasnovas et al. 59 % <span class="tag lit">lit</span></td></tr>
       <tr><td><b>C5 Neighbour summary</b></td><td class="w">Mean CW exponent and BSS size of neighbours heard in beacons (the EDCA Parameter Set already carries CW), optionally their utility. Mean-field, so the input size stays fixed from 2 to 10 APs.</td><td class="w">Lets an edge AP learn to back off for a starved middle AP without a central controller. Needs a new ADR (relaxes observation isolation).</td><td>drlCW beacon sharing <span class="tag lit">lit</span>; mean-field MARL (Yang 2018) <span class="tag lit">lit</span></td></tr>
       <tr><td><b>C6 Backoff mode action</b></td><td class="w">Second action output: pinned CW (CWmin = CWmax, OSCAR) or CWmin with BEB doubling (existing <code>--cwMinOnly</code>).</td><td class="w">Pinning removes BEB's safety net (D2), BEB doubling wastes airtime at high load. Let the agent pick per regime.</td><td>ECCOD 2026 <span class="tag lit">lit</span>; Learning to Wait (pinned beats BEB on hardware) <span class="tag lit">lit</span></td></tr>
       <tr><td><b>C7 TD3, parameter sharing</b></td><td class="w">Existing <code>--algo td3</code> and shared mode. One actor and critic, N transitions per step. Independent and centralised variants kept as ablations.</td><td class="w">DDPG over-estimation and variance; N separate learners are non-stationary and slow.</td><td>TD3 (Fujimoto 2018) <span class="tag lit">lit</span>; shared mode lower variance <span class="tag fact">fact</span></td></tr>
@@ -284,7 +300,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
       <tr><td class="num">S4</td><td>Hidden chain 10,10,10, AP1–AP3 deaf</td><td class="w">existing <code>--apHidden 1-3</code></td><td>A2</td><td>Core</td></tr>
       <tr><td class="num">S5</td><td>Hidden chain with uneven load, 150,50,5 and 5,150,5</td><td class="w">existing <code>--apLoads</code></td><td>A2</td><td>Core</td></tr>
       <tr><td class="num">S6</td><td>5-AP line or ring, several hidden pairs</td><td class="w">existing multi-pair <code>--apHidden</code></td><td>A2, scale</td><td>Extended</td></tr>
-      <tr><td class="num">S7</td><td>20,40 and S4 at 1 to 5 Mbps per STA</td><td class="w">existing <code>--offeredLoad</code>; new per-AP delay percentiles from FlowMonitor histograms</td><td>A4</td><td>Core</td></tr>
+      <tr><td class="num">S7</td><td>20,40 and S4 at 50, 80 and 95 % of each topology's BEB saturation goodput (about 0.25 to 0.5 Mbps per STA at 20,40)</td><td class="w">existing <code>--offeredLoad</code>; new per-AP delay percentiles from FlowMonitor histograms</td><td>A4</td><td>Core</td></tr>
       <tr><td class="num">S8</td><td>30 s run with a load step at 10 s and half the STAs going idle at 20 s</td><td class="w">new: per-STA application on/off schedule (no association changes, so it avoids the out-of-scope dynamic-STA code)</td><td>A3</td><td>Core</td></tr>
       <tr><td class="num">S9</td><td>Held-out: 4-AP chain, 10,10,10,10,10 and 5,55</td><td class="w">existing flags; never seen in training</td><td>A5</td><td>Extended</td></tr>
     </tbody>
@@ -308,10 +324,11 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
     </tbody>
   </table></div>
   <ul>
-    <li><b>Seeds</b> <span class="tag dec">decision</span>: selection seeds 0 to 2 for tuning and oracle choice; held-out evaluation seeds 101 to 110 (n=10) for every reported number; training seeds separate from both. Train, save, then evaluate frozen with no noise, every method on the same evaluation seeds.</li>
+    <li><b>Seeds</b> <span class="tag dec">decision</span>: selection seeds 0 to 2 for tuning and oracle choice; held-out evaluation python seeds 100 to 109, ns-3 seeds 101 to 110 (n=10), for every reported number, so the v3.4.0 S4 runs on seeds 100 to 107 are reused; training seeds separate from both. Train, save, then evaluate frozen with no noise, every method on the same evaluation seeds.</li>
     <li><b>Two-stage evaluation</b> <span class="tag dec">decision</span>: Stage 1 runs every method on 5 of the 10 evaluation seeds and ranks the baselines per scenario (reported in full, no significance claimed). Stage 2 adds the other 5 seeds for RAFA, BEB, OSCAR per AP and the top 3 other baselines (Global-CW OSCAR is in Stage 2 if it ranks in the top 3), so every claim is RAFA against at most 5 baselines at n=10. Stage-1 runs are reused, so nothing is run twice.</li>
     <li><b>Training seeds</b>: 3 for RAFA and for the strongest learned baseline, 1 for the other learned baselines. A claim also needs all 3 RAFA seeds to beat the baseline on their own (sign consistency), because 3 policies are too few for a policy-level test.</li>
-    <li><b>Tests</b>: exact Wilcoxon signed-rank and paired t-CI, Holm correction across the at most 5 baselines in each table (n=10 makes p = 0.002 reachable). "Matches the oracle" is an equivalence test (TOST) with a ±2 % margin, so a tie is a stated result rather than a missing one.</li>
+    <li><b>Primary metrics</b> <span class="tag dec">decision</span>: one per arena, fixed now. A1: aggregate goodput. A2: U_1 and U_2 (α = 1, 2), with U_0 as non-inferiority. A3: adaptation regret. A4: p99 delay. A5: oracle gap. Everything else is descriptive.</li>
+    <li><b>Tests</b>: paired t on per-seed differences is primary, with the exact Wilcoxon signed-rank reported beside it. Holm is applied per arena across baselines and α values: at most 10 comparisons in A2, so the first threshold is 0.005, which 10 of 10 or 9 of 10 seed wins can meet. "Matches the oracle" is an equivalence test (TOST) with a ±2 % margin, so a tie is a stated result rather than a missing one.</li>
     <li><b>Report</b>: a wins / ties / losses grid of RAFA against every baseline on every scenario and metric, plus Pareto plots (aggregate against min-AP) for S4 to S6.</li>
   </ul>
 </section>
@@ -327,7 +344,8 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
         <li>Add opt-in traces to <code>cw.cc</code> (project code, no upstream change): PHY State intervals for idle slots and busy fraction, Retry-bit counts on received data frames, <code>MacTxDataFailed</code> per AP, FlowMonitor delay histograms per AP. Export them through extraInfo.</li>
         <li>Add a per-STA application on/off schedule for S8.</li>
         <li>Extend <code>summarize_run.py</code> and <code>aggregate_bench.py</code> with U_α, oracle gap, convergence time, delay percentiles and Holm-corrected tables.</li>
-        <li>Speed test: time BEB and two static CWs at 150 Mbps against 10 Mbps per STA on S2 and S4 (both far above capacity, so still saturated). If the results match within the CI and the job is clearly faster, the new suite uses the lower load and old results stay as they are <span class="tag inf">inference</span>: the 150 Mbps sources generate many packets that are only dropped.</li>
+        <li>Speed test: time BEB, two static CWs and Global-CW at 150 Mbps against 10 Mbps per STA on S2 and S4 (both far above capacity, so still saturated). The per-AP reward is normalised by offered load (<code>cw.cc</code> line 529) <span class="tag fact">fact</span>, so the low-load runs use a new opt-in fixed normaliser of 150 Mbps; without it, learned rewards would be 15× larger. If the results match within the CI and the job is clearly faster, the new suite uses the lower load and old results stay as they are <span class="tag inf">inference</span>: the 150 Mbps sources generate many packets that are only dropped.</li>
+        <li>Measure each topology's BEB saturation goodput, which sets the S7 loads.</li>
         <li>Measure physical cores and set lanes = cores − 1.</li>
         <li>Optional, small: <code>--trainSeed 2</code> for the two v3.4.0 PF arms to close that milestone's open item.</li>
       </ul>
@@ -339,7 +357,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
         <li>Fine static sweeps on S2, S4, S5 and each S8 phase (per-AP grid plus local search, selection seeds 0 to 2) for each scenario's oracle and the static Pareto front.</li>
         <li>Implement IdleSense and Bianchi/Kalman (both are RAFA priors). Sanity tests: IdleSense reaches its idle-slot target; the Kalman estimate of n tracks the real station count.</li>
       </ul>
-      <p class="exit"><b>Gate G0:</b> on the static grids, the C1 features at the oracle CW are near-constant across scenarios (for example idle slots at the oracle within ±20 % of one target). If not, rethink C1 and C2 before any RL run. <b>Gate G1:</b> if a prior is within 2 % of the oracle on S2, the A1 claim becomes "RAFA ties the best heuristic" and effort moves to A2 to A5.</p>
+      <p class="exit"><b>Gate G0a:</b> in the one-domain scenarios (S2, and S1 or S3 if run), the C1 features at the oracle CW are near-constant (for example idle slots within ±20 % of one target). <b>Gate G0b:</b> in S4 and S5, the features separate edge APs from the middle AP at the oracle setting. If either fails, rethink C1 and C2 before any RL run. <b>Gate G1:</b> if a prior is within 2 % of the oracle on S2, the A1 claim becomes "RAFA ties the best heuristic" and effort moves to A2 to A5.</p>
     </div>
     <div class="phase core">
       <div class="head"><h3>P1b · Remaining baselines, coded while P3 runs</h3><span class="ver">v3.7.0 · effort M · compute counted in P4</span></div>
@@ -367,7 +385,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
         <li>+ C8 domain-randomised training, with surrogate warm start if P2 passed.</li>
       </ol>
       <p>Each step: screen on S4 and S5 with selection seeds 0 to 2, then evaluation seeds for the steps that pass. Write each result into a v4.0.0 results doc as it lands.</p>
-      <p class="exit"><b>Exit:</b> RAFA ≥ the strongest P1a baseline on the primary metric of S2, S4 and S5, and no AP below its BEB goodput. <b>Kill rule:</b> if steps 1 and 2 together do not beat v3.4.0 independent-PF on S4, stop adding components and debug the observation first.</p>
+      <p class="exit"><b>Exit:</b> RAFA ≥ the strongest P1a baseline on the primary metric of S2, S4 and S5, and no AP below its fair floor (C4). <b>Kill rule:</b> if steps 1 and 2 together do not beat v3.4.0 independent-PF on S4, stop adding components and debug the observation first.</p>
     </div>
     <div class="phase core">
       <div class="head"><h3>P4 · Full benchmark</h3><span class="ver">v4.1.0 · effort M · ~140 h compute serial</span></div>
@@ -431,7 +449,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
       <tr><td>A3 dynamic (S8)</td><td class="w">Lower regret and shorter re-convergence than OSCAR, drlCW and the best feedback controller.</td><td>Report regret ranking.</td></tr>
       <tr><td>A4 latency (S7)</td><td class="w">p99 delay significantly below BEB and not above BLADE-style, with aggregate goodput not lower.</td><td>Report delay CDFs.</td></tr>
       <tr><td>A5 unseen (S9)</td><td class="w">≥ 95 % of the oracle on every held-out topology with no retraining.</td><td>Report oracle gaps.</td></tr>
-      <tr><td>All</td><td class="w">No AP below its BEB goodput on any scenario (C4).</td><td>List violations.</td></tr>
+      <tr><td>All</td><td class="w">No AP below its fair floor, min(BEB goodput, BEB aggregate ÷ N), on any scenario (C4).</td><td>List violations.</td></tr>
     </tbody>
   </table></div>
 </section>
@@ -443,7 +461,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
     <tbody>
       <tr><td>A heuristic is as good as RAFA</td><td class="w">No A1 win (as in Kosek-Szott 2021)</td><td>Pre-registered tie claim; A2 to A5 carry the contribution; the prior alone is reported, so any gain or loss from the residual is visible.</td></tr>
       <tr><td>Parallel runs stay broken, or the lower load changes results</td><td class="w">About 260 serial hours</td><td>Trim order in the compute section; surrogate for screening; a bigger machine if one becomes available.</td></tr>
-      <tr><td>Sensing features do not track the best CW</td><td class="w">C1 and C2 fail</td><td>Gate G0 before any RL run.</td></tr>
+      <tr><td>Sensing features do not track the best CW</td><td class="w">C1 and C2 fail</td><td>Gates G0a and G0b before any RL run.</td></tr>
       <tr><td>Reward aligned with metric looks circular</td><td class="w">Reviewers discount PF wins</td><td>α conditioning, score all methods on all U_α, report aggregate and delay too.</td></tr>
       <tr><td>Policy-seed variance larger than eval-seed CIs</td><td class="w">Overstated significance (seen in v3.4.0 §4c)</td><td>3 training seeds and hierarchical bootstrap.</td></tr>
       <tr><td>Shared actor still cannot separate roles</td><td class="w">Shared RAFA stays below independent on min-AP</td><td>C1 and C5 are designed for this; fall back to independent actors with shared critic.</td></tr>
@@ -472,7 +490,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
     <li>Make the ns3-gym port independent of <code>--seed</code> (explicit <code>--port</code> or lane index), then check two parallel short <code>2,3</code> jobs with the same seed against serial traces.</li>
     <li>Add the PHY State, Retry-bit and delay-histogram traces behind one flag; check regressions are byte-identical.</li>
     <li>Implement IdleSense first (it doubles as the RAFA prior), then the Bianchi estimator and the PI controller.</li>
-    <li>Run the P0 load test, then the S2 and S4 static fine sweep and gate G0, while the other baselines are coded.</li>
+    <li>Run the P0 load test, then the S2 and S4 static fine sweep and gates G0a and G0b, while the other baselines are coded.</li>
   </ol>
 </section>
 
