@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.4.0] - 2026-10-29
 
 ### Added
 
@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **v3.4.0**: Add n=8 frozen-eval batch results
 - **handoff**: Rewrite session prompt for v3.4.0 follow-ups
 - **v3.4.0**: Add run dirs, logs, manifests and actors
+- **changelog**: Regenerate with git-cliff
 
 ### Fixed
 
@@ -416,7 +417,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **design**: Define multi-ap v0.2.0
 - Add CLAUDE.md and close v0.3.0 handoff
 
-[unreleased]: https://github.com///compare/v3.1.0..HEAD
+[3.4.0]: https://github.com///compare/v3.1.0..v3.4.0
 [3.1.0]: https://github.com///compare/v3.0.0..v3.1.0
 [3.0.0]: https://github.com///compare/v2.7.2..v3.0.0
 [2.7.2]: https://github.com///compare/v2.7.1..v2.7.2
