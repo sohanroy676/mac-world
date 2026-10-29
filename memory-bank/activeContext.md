@@ -4,7 +4,7 @@
 
 ## Current focus
 
-**UPDATE 2026-10-29 (v3.4.0 batch DONE; NOT tagged):** n=8 frozen eval on the hidden chain finished (see progress.md and `docs/results/per-ap-scenario-v3.4.0.md` §4). Next options: policy-seed variance (other `--trainSeed`), static oracle at seeds 100-107, TD3/cwMinOnly, v3.3.0, or tag. Run dirs `ns-3.29/scratch/linear-mesh/results/fair-v3.4.0-{A,B,C,D}-*` and `ceiling-v3.4.0` are local, uncommitted (ask).
+**UPDATE 2026-10-29 (v3.4.0 batch DONE; NOT tagged):** n=8 frozen eval on the hidden chain finished (see progress.md and `docs/results/per-ap-scenario-v3.4.0.md` §4). Next options: policy-seed variance (other `--trainSeed`), static oracle at seeds 100-107, TD3/cwMinOnly, v3.3.0, or tag. Run dirs (trace.csv + config.json), logs, manifests and saved actors for `results/fair-v3.4.0-{A,B,C,D}-*`, `results/ceiling-v3.4.0` and the BEB timing run are committed (force-added, user-approved 2026-10-29). Next session: `sessionPrompt.md`.
 
 **UPDATE 2026-10-28 (v3.4.0 gate PASSED; scenario merged to dev; NOT tagged):** hidden chain `10,10,10 --apHidden 1-3` (ADR-0005) validated; static gate n=3 met the rule on PF (+0.15 ± 0.02) and min-AP (+7.62 ± 0.27). Next: n>=8 frozen-eval batch via `fair_protocol_v3_2_0.py --topo 10,10,10 --trainerArgs "--apHidden 1-3"` (BEB, Global, independent --alpha 0, independent/shared `--reward pf` with `--variant`, static oracle); ask per arm, one ns-3 job at a time. Run dirs in `ns-3.29/scratch/linear-mesh/results/ceiling-v3.4.0` are local, not committed (ask).
 
