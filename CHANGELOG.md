@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **v3.4.0**: Mark milestone tagged
 - **v3.4.0**: Add paired static oracle at eval seeds
+- **changelog**: Regenerate with git-cliff
+- **v3.4.0**: Add oracle run dirs and handoff prompt
 
 ## [3.4.0] - 2026-10-29
 
