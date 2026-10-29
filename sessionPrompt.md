@@ -21,12 +21,13 @@ Continue the mac-world project (Multi-AP OSCAR, ns-3.29). Done and merged into `
 - Frozen-eval batch (eval seeds 100-107, 2 training episodes, `--trainSeed 0`): independent `--reward pf` PF +1.36 ± 0.04 / min-AP +8.56 ± 0.52 vs BEB, +0.68 ± 0.08 / +7.41 ± 0.35 vs Global (p = 0.008), aggregate -8.8 / -13.6 Mbps; shared pf in between; independent `--alpha 0` below BEB.
 - Paired static oracle (same 8 seeds, 16 jobs PASS): 256,128,256 PF 8.87, min-AP 13.25, aggregate 59.58; 256,64,256 PF 8.66, min-AP 17.37, aggregate 53.90. Independent pf vs 256,128,256: PF -0.03 ± 0.01, min-AP -3.26 ± 0.51, aggregate +3.23 ± 1.13; shared pf PF -0.29 ± 0.06; Global -0.71 ± 0.07; BEB -1.39 ± 0.04 (all p = 0.008). Tables: `docs/figures/v3.4.0-oracle/`.
 - Run dirs (trace.csv + config.json, logs, manifests, `actors/`) are committed: `results/ceiling-v3.4.0`, `results/ceiling-v3.4.0-eval` (oracle at seeds 100-107), `results/fair-v3.4.0-{A-shared-pf,B-indep-pf,C-global,D-indep-a0}`. Tables: `docs/figures/v3.4.0/`, `-gate/`, `-oracle/`.
-- NOT done: policy-seed variance (one `--trainSeed 0`, CIs cover only evaluation-seed variance), TD3 / `--cwMinOnly` arms, `--apLoads` batch, v3.3.0, tag `v3.2.0`.
+- Policy-seed variance: `--trainSeed 1` done for independent/shared pf (report §4c, `docs/figures/v3.4.0-seeds/`, run dirs `results/fair-v3.4.0-{E,F}-*` local); `--trainSeed 2` NOT done.
+- NOT done: TD3 / `--cwMinOnly` arms, `--apLoads` batch, v3.3.0, tag `v3.2.0`.
 - Untracked leftovers to ignore: `docs/figures/v3.4.0-A`, `-AB`, `-ABC` (interim duplicates of `docs/figures/v3.4.0`; deleting needs my OK), `.python-version`, `netanim-3.108/*`, `ns-3.29/*.pcap`, `ns-3.29/scratch/linear-mesh/results_gate_*.out`. A stash `old local --staticCws static mode` is obsolete; do not apply it.
 - Unknown: why 3 parallel sweep lanes failed earlier (run ONE ns-3 job at a time; the runner refuses if `linear-mesh` is running).
 
 ## Task (ask me which to do first, and the time budget before any batch)
-1. Policy-seed variance: repeat independent-pf and shared-pf with `--trainSeed 1` and `2` (separate `--benchDir`s, same eval seeds 100-107; about 1.4 h per arm; BEB already exists, use `--no-beb`). Then aggregate the arms together with the existing A/B/C/D and oracle dirs.
+1. Policy-seed variance: `--trainSeed 1` is done; repeat independent-pf and shared-pf with `--trainSeed 2` (separate `--benchDir`s, same eval seeds 100-107; about 1.4 h per arm; BEB already exists, use `--no-beb`). Then aggregate the arms together with the existing A/B/C/D and oracle dirs.
 2. Optional: `--algo td3` / `--cwMinOnly` for independent pf; v3.3.0 sensing + heuristics (IdleSense/Bianchi, residual RL); `--apLoads` uneven-load check; write the v3.4.0 conclusion into the technical report; tag `v3.2.0` (only if I say "tag").
 
 ## Working rules

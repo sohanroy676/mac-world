@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**UPDATE 2026-10-29 (policy-seed variance, trainSeed 1, DONE, branch `docs/v3.4.0-policy-seed`):** independent/shared `--reward pf` with `--trainSeed 1`, 16 eval + 2 train jobs PASS. Ordering of §4 holds; policies differ (see report §4c, `docs/figures/v3.4.0-seeds/`). Next options: `--trainSeed 2` (~1.4 h/arm), TD3/cwMinOnly, v3.3.0, tag v3.2.0 (only if user says tag). Run dirs E/F are local; committing them needs approval.
+
 **UPDATE 2026-10-29 (paired static oracle DONE, branch `docs/v3.4.0-oracle-eval`):** static 256,128,256 / 256,64,256 at eval seeds 100-107, 16/16 PASS. Independent `--reward pf` is within -0.03 ± 0.01 PF of the 256,128,256 oracle but 3.3 Mbps below on min-AP (n=8, p=0.008). Report §4b, `docs/figures/v3.4.0-oracle/`. Next options: policy-seed variance (`--trainSeed 1,2`, ~1.4 h/arm), TD3/cwMinOnly, v3.3.0, tag v3.2.0 (only if user says tag). `v3.4.0` is already tagged (66cf363), contrary to the older sessionPrompt wording.
 
 **UPDATE 2026-10-29 (v3.4.0 batch DONE; TAGGED `v3.4.0` at 66cf363, pushed; no CI):** n=8 frozen eval on the hidden chain finished (see progress.md and `docs/results/per-ap-scenario-v3.4.0.md` §4). Next options: policy-seed variance (other `--trainSeed`), static oracle at seeds 100-107, TD3/cwMinOnly, v3.3.0. Run dirs (trace.csv + config.json), logs, manifests and saved actors for `results/fair-v3.4.0-{A,B,C,D}-*`, `results/ceiling-v3.4.0` and the BEB timing run are committed (force-added, user-approved 2026-10-29). Next session: `sessionPrompt.md`.
