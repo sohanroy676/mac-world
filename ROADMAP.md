@@ -137,7 +137,7 @@
 
 ### v3.4.0
 - Per-AP scenario: partial-overlap loss matrix + fairness reward (ideas #7, #14). Needs user approval first (touches "detailed interference modelling" out-of-scope line).
-- Status: 🔄 IN PROGRESS 2026-10-28. Approved by user (ADR-0005). Scenario + tooling DONE and merged to dev (`--apHidden/--hiddenLoss/--apLoads`, `--reward pf`, `--pf` tables, Wilcoxon); static gate on `10,10,10 --apHidden 1-3` PASSED (asymmetric 256,128,256 beats best common on PF utility by +0.15 ± 0.02, 256,64,256 on min-AP by +7.62 ± 0.27 Mbps, n=3). Frozen-eval batch n=8 DONE (BEB, Global, independent --alpha 0, independent/shared --reward pf; 2 training episodes): independent pf beats BEB and Global on PF utility and min-AP (p=0.008, all 8 seeds) at lower aggregate throughput. NOT done: policy-seed variance, static oracle at eval seeds, TD3/cwMinOnly. Not tagged. `docs/results/per-ap-scenario-v3.4.0.md`.
+- Status: ✅ DONE 2026-10-29, TAGGED `v3.4.0` (66cf363, pushed; no CI). Approved by user (ADR-0005). Scenario + tooling DONE and merged to dev (`--apHidden/--hiddenLoss/--apLoads`, `--reward pf`, `--pf` tables, Wilcoxon); static gate on `10,10,10 --apHidden 1-3` PASSED (asymmetric 256,128,256 beats best common on PF utility by +0.15 ± 0.02, 256,64,256 on min-AP by +7.62 ± 0.27 Mbps, n=3). Frozen-eval batch n=8 DONE (BEB, Global, independent --alpha 0, independent/shared --reward pf; 2 training episodes): independent pf beats BEB and Global on PF utility and min-AP (p=0.008, all 8 seeds) at lower aggregate throughput. NOT done: policy-seed variance, static oracle at eval seeds, TD3/cwMinOnly. `docs/results/per-ap-scenario-v3.4.0.md`.
 
 ### v3.5.0
 - Optional: #11, then #10, then #13, only on user request.

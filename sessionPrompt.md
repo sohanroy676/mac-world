@@ -1,4 +1,4 @@
-Continue the mac-world project (Multi-AP OSCAR, ns-3.29). Done and merged into `dev` (pushed, not tagged): v3.1.0 ceiling, v3.2.0 fair-protocol tooling, **v3.4.0 hidden-chain scenario + static gate + n=8 frozen-eval batch**. Follow CLAUDE.md, except where this prompt changes the git rules.
+Continue the mac-world project (Multi-AP OSCAR, ns-3.29). Done and merged into `dev` (pushed): v3.1.0 ceiling (tagged), v3.2.0 fair-protocol tooling (not tagged), **v3.4.0 hidden-chain scenario + static gate + n=8 frozen-eval batch (TAGGED `v3.4.0`)**. Follow CLAUDE.md, except where this prompt changes the git rules.
 
 ## Start of session
 1. `git fetch origin && git checkout dev && git pull`. Read `memory-bank/activeContext.md` and `memory-bank/progress.md`, then `docs/results/per-ap-scenario-v3.4.0.md` (§3 gate, §4 batch, limits, §5 next), `docs/adr/0005-coarse-loss-matrix.md`, `docs/results/fair-protocol-v3.2.0.md` §2-3 if you touch the runner.
@@ -27,7 +27,7 @@ Continue the mac-world project (Multi-AP OSCAR, ns-3.29). Done and merged into `
 ## Task (ask me which to do first)
 1. Policy-seed variance: repeat independent-pf and shared-pf with `--trainSeed 1` and `2` (separate `--benchDir`s, same eval seeds 100-107; about 1.4 h per arm; BEB already exists, use `--no-beb`). Then aggregate the arms together.
 2. Static oracle at eval seeds 100-107 (`ceiling_sweep_v3_1_0.py run --grid custom --topo 10,10,10 --cws "256,128,256;256,64,256" --seeds 100 .. 107 --extraArgs "--apHidden 1-3"`, about 1 h per setting) for a paired oracle gap.
-3. Optional: `--algo td3` / `--cwMinOnly` for independent pf; v3.3.0 sensing + heuristics (IdleSense/Bianchi, residual RL); `--apLoads` uneven-load check; write the v3.4.0 conclusion into the technical report; tag `v3.4.0` (only if I say "tag").
+3. Optional: `--algo td3` / `--cwMinOnly` for independent pf; v3.3.0 sensing + heuristics (IdleSense/Bianchi, residual RL); `--apLoads` uneven-load check; write the v3.4.0 conclusion into the technical report; tag `v3.2.0` (only if I say "tag").
 
 ## Working rules
 - Never assume; label fact / inference / unknown. Never claim a result without a run. Smallest validation first, short answers.
