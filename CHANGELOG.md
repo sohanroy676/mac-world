@@ -24,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **results**: Add 6x10 refs and 20,40 fair-protocol pilot runs
 - **v3.2.0**: Add fair-protocol report and handoff
 - **v3.4.0**: Add chain3 static gate result
+- **v3.4.0**: Add n=8 frozen-eval batch results
+- **handoff**: Rewrite session prompt for v3.4.0 follow-ups
+- **v3.4.0**: Add run dirs, logs, manifests and actors
 
 ### Fixed
 
