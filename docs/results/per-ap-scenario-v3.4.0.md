@@ -42,5 +42,41 @@ Limits and caveats:
 - Inference: the best static asymmetric setting is an oracle upper reference for a per-AP learner on PF / min-AP. Global-CW cannot reach it with one CW (not yet measured here).
 - Unknown: whether learned per-AP agents (independent, shared) find an asymmetric setting; whether they beat BEB and Global at n >= 8.
 
-## 4. Next
-n >= 8 frozen-eval batch (`fair_protocol_v3_2_0.py --topo 10,10,10 --trainerArgs "--apHidden 1-3"`, eval seeds 100-107), split by arm: BEB, Global, independent `--alpha 0`, independent `--reward pf`, shared `--reward pf`, static oracle 256,64,256 / 256,128,256. Estimated about 7.5 h total (job time 430-545 s measured; training 3 episodes per learned arm). Needs approval per arm.
+## 4. Frozen-eval batch, n = 8 (fact)
+Protocol (`fair_protocol_v3_2_0.py`, `--topo 10,10,10 --trainerArgs "--apHidden 1-3"`): one policy per arm trained for **2** episodes (ns-3 seeds 1 and 1001, `--trainSeed 0`; 2 instead of 3 because of the time budget, the same as the 20,40 pilot), then evaluated frozen (noise 0, no training) on held-out python seeds 100-107 (ns-3 seeds 101-108). BEB ran on the same 8 seeds, so every comparison is paired by seed. Learner: DDPG, default settings, no `--rewardScale`. All 8 + 8 + 8 + 8 + 8 (BEB) eval jobs and 4 training jobs `--check` PASS. Policy window = steps >= 300. Tables, manifests, log: `docs/figures/v3.4.0/`. Mean ± 95 % CI (Student t); p = exact two-sided Wilcoxon signed-rank (n=8: the smallest possible p is 0.0078, reached when all 8 differences share a sign).
+
+| Arm (frozen) | aggregate | AP1 / AP2 / AP3 | Jain | PF utility | min-AP | final CW (AP1/2/3) |
+|---|---|---|---|---|---|---|
+| BEB | 71.63 ± 0.62 | 34.95 / 1.44 / 35.24 | 0.694 | 7.48 ± 0.04 | 1.44 ± 0.07 | 16 / 16 / 16 |
+| Global-CW | 76.46 ± 0.34 | 36.93 / 2.58 / 36.94 | 0.712 | 8.16 ± 0.07 | 2.58 ± 0.21 | 64 / 64 / 64 |
+| independent `--alpha 0` | 68.77 ± 0.15 | 38.50 / 1.26 / 29.01 | 0.678 | 7.25 ± 0.05 | 1.26 ± 0.07 | 75 / 110 / 16 |
+| independent `--reward pf` | 62.82 ± 1.18 | 24.76 / 9.99 / 28.07 | 0.877 | 8.84 ± 0.01 | 9.99 ± 0.54 | 208 / 41 / 77 |
+| shared `--reward pf` | 73.43 ± 0.47 | 34.46 / 4.49 / 34.48 | 0.750 | 8.58 ± 0.06 | 4.49 ± 0.35 | 126 / 130 / 126 |
+
+Paired differences (same seed), all p = 0.008, n = 8:
+
+| Arm | vs BEB: Δ PF / Δ min-AP / Δ aggregate | vs Global: Δ PF / Δ min-AP / Δ aggregate |
+|---|---|---|
+| Global-CW | +0.69 ± 0.06 / +1.15 ± 0.19 / +4.84 ± 0.70 | n/a |
+| independent `--alpha 0` | -0.23 ± 0.06 / -0.18 ± 0.08 / -2.86 ± 0.58 | -0.92 ± 0.05 / -1.32 ± 0.17 / -7.69 ± 0.24 |
+| independent `--reward pf` | **+1.36 ± 0.04 / +8.56 ± 0.52** / -8.81 ± 1.31 | **+0.68 ± 0.08 / +7.41 ± 0.35** / -13.64 ± 0.87 |
+| shared `--reward pf` | +1.10 ± 0.05 / +3.05 ± 0.32 / +1.80 ± 0.67 | +0.41 ± 0.02 / +1.90 ± 0.16 / -3.03 ± 0.21 |
+
+Reading (fact unless marked):
+- Frozen independent and shared agents trained with the cooperative PF reward beat BEB and Global-CW on PF utility and on the weakest AP, in all 8 seeds. Independent `--reward pf` lifts the starved middle AP from 1.44 (BEB) to 9.99 Mbps and its PF utility (8.84) is at the static oracle level (8.87 for the best static pair at 256,128,256, different seeds, unpaired).
+- The price is aggregate throughput. Independent pf is -8.8 Mbps vs BEB and -13.6 vs Global; shared pf is +1.8 vs BEB and -3.0 vs Global. Global-CW has the highest aggregate (76.46, same level as the static common CW 64: 75.91, n=1) but leaves the middle AP at 2.6 Mbps. Which arm is "better" depends on the objective: aggregate favours Global, PF and min-AP favour independent pf.
+- Independent with the strictly local reward (`--alpha 0` here = network-goodput reward in this mode, as in the repo's earlier definition) is worse than BEB on all four metrics. A pure aggregate reward cannot see the starved AP (inference, consistent with the aggregate being highest at low CW).
+- The independent-pf CWs separate per AP (208 / 41 / 77): the middle AP gets the lowest CW and the edge APs back off, qualitatively like the static asymmetric optimum (edges high, middle low), but the learned values differ from 256,64,256 (fact) and the AP1/AP3 CWs are not equal (fact).
+- Frozen CWs are constant per run (CI ± 0 on the last-100 CW): the actor output is a function of a state that stays near-constant, so the frozen policy behaves like a fixed per-AP CW choice (inference).
+
+Limits:
+- Fact: one trained policy per arm (one `--trainSeed`, 2 training episodes). Policy-seed variance is NOT in these CIs; the CIs measure only variance over evaluation seeds. The very small CIs on frozen policies partly reflect that.
+- Fact: `--reward pf` and the PF/min-AP metrics are aligned (the reward is a PF utility), so the PF advantage is expected; it is not a result about aggregate throughput. The reported claim is on fairness / PF, where per-AP agents with a cooperative reward beat the single common CW.
+- Fact: no hyper-parameter tuning, no `--rewardScale`, no TD3 or `--cwMinOnly` arm, and no static-oracle arm at eval seeds 100-107 were run (time budget). The oracle comparison uses seeds 0-2.
+- Fact: the scenario is one coarse topology (hidden edges, equal load); `--apLoads` was validated but not used in a batch.
+- The "Global" arm here is the repo's Global-CW OSCAR with OSCAR's own reward (not PF).
+
+## 5. Next
+- Policy-seed variance: repeat the independent-pf and shared-pf arms with other `--trainSeed` values (about 1.4 h each).
+- Static oracle at eval seeds 100-107 (256,128,256 and 256,64,256, about 1 h each) for a paired oracle gap.
+- Optional: independent pf with `--algo td3` / `--cwMinOnly`; v3.3.0 sensing + heuristics (IdleSense) as a non-RL baseline; uneven loads (`--apLoads`).
