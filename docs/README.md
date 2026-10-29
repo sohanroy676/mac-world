@@ -15,6 +15,7 @@ Files are grouped by purpose. Version numbers in file names match the roadmap (`
 ## planning/
 - `project_description.md`: full spec and terminology.
 - `detailed_roadmap.md`: per-version completion criteria.
+- `mac-world-v4-plan-2026-10-29.html`: proposed plan after v3.4.0 (RAFA method, baseline zoo, benchmark suite, win criteria). Proposal only, not approved.
 
 ## design/
 - `multi-ap-design-v0.2.0.md`: multi-AP design specification (v0.2.0).

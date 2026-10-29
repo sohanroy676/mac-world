@@ -143,6 +143,11 @@
 - Optional: #11, then #10, then #13, only on user request.
 - Status: ⏳ optional.
 
+### Proposed v3.5.0 to v4.5.0 (plan 2026-10-29, NOT approved)
+- `docs/planning/mac-world-v4-plan-2026-10-29.html`. If approved it replaces the optional v3.5.0 above and absorbs v3.3.0: P0 foundations (parallel lanes, sensing/delay traces, on/off traffic), P1 baseline zoo (IdleSense, Bianchi/Kalman, Patras PI, Gawłowicz KW, BLADE-style, UCB, drlCW, CCOD) + static Pareto map, P2 optional surrogate, P3 RAFA by ablation (shared TD3, sensing obs, analytical prior + residual, alpha-fair reward with alpha input, no-harm constraint, beacon neighbour summary, backoff mode, domain randomisation), P4 full benchmark S1-S9, P5 dynamics/latency/generalisation, P6 stretch, P7 write-up.
+- Open user decisions: claim framing, scope exceptions (on/off traffic, neighbour obs, each with an ADR), compute (parallel lanes or bigger machine), re-implemented baselines.
+- Status: 📝 proposed.
+
 ## Not Planned for v1
 
 - Mobility

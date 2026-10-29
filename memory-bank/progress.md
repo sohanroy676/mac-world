@@ -7,6 +7,8 @@
 
 ## Done
 
+- **v4 plan PROPOSED (2026-10-29, branch `claude/project-thread-p80xpo`)** — docs only, no runs. `docs/planning/mac-world-v4-plan-2026-10-29.html`; ROADMAP "Proposed v3.5.0 to v4.5.0". Not approved yet.
+
 - **v3.4.0 policy-seed variance (trainSeed 1) DONE (2026-10-29, branch `docs/v3.4.0-policy-seed`)** — independent and shared `--reward pf` retrained with `--trainSeed 1`, frozen eval on seeds 100-107, 18/18 jobs PASS (arms E, F in `results/fair-v3.4.0-{E-indep-pf-t1,F-shared-pf-t1}`, local, not committed). Independent pf t1: PF 8.89 ± 0.02, min-AP 11.62 ± 0.82, level with the 256,128,256 oracle on PF (+0.02, p = 0.078). Shared pf t1: PF 8.69, min-AP 7.30, aggregate 64.5. The ordering of §4 holds, but the policies differ (final CWs, policy-seed gaps larger than the eval CIs). Report §4c, tables `docs/figures/v3.4.0-seeds/`. `--trainSeed 2` not run.
 
 - **v3.4.0 paired static oracle DONE (2026-10-29, branch `docs/v3.4.0-oracle-eval`; merged to dev + pushed)** — static 256,128,256 and 256,64,256 at eval seeds 100-107 (16 jobs PASS, 456-606 s each, 2.3 h). Paired vs 256,128,256 (n=8, p=0.008): independent `--reward pf` PF -0.03 ± 0.01, min-AP -3.26 ± 0.51, aggregate +3.23 ± 1.13; shared pf PF -0.29 ± 0.06; Global PF -0.71 ± 0.07; BEB -1.39 ± 0.04. §4 numbers regenerate unchanged. Report §4b, tables `docs/figures/v3.4.0-oracle/`. Not done: policy-seed variance, TD3/cwMinOnly, v3.3.0, tag v3.2.0. Run dirs (trace.csv + config.json), logs and manifest of `results/ceiling-v3.4.0-eval` committed (user-approved 2026-10-29). Handoff: `sessionPrompt.md`.
