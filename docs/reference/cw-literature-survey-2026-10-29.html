@@ -1,0 +1,794 @@
+<title>Contention Window Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column for the narrative, then a full-width filterable catalog. Header motif = a row of backoff slots. */
+:root{
+  --bg:#f5f7f8; --panel:#ffffff; --ink:#15202b; --muted:#56636f; --rule:#d5dde3;
+  --accent:#0f6b77; --accent-soft:#dcefF1; --warn:#9a5b00; --warn-soft:#fbefd9; --busy:#c43d2b;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f161c; --panel:#162028; --ink:#e3eaef; --muted:#9aa9b5; --rule:#2a3843;
+  --accent:#5cc3cf; --accent-soft:#16363b; --warn:#e7b25a; --warn-soft:#3a2c14; --busy:#ef7a68; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f161c; --panel:#162028; --ink:#e3eaef; --muted:#9aa9b5; --rule:#2a3843;
+  --accent:#5cc3cf; --accent-soft:#16363b; --warn:#e7b25a; --warn-soft:#3a2c14; --busy:#ef7a68; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+a{color:var(--accent)} a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,5vw,3.1rem);font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.6rem;font-weight:700;margin-top:56px;padding-top:16px;border-top:1px solid var(--rule)}
+h3{font-size:1.12rem;font-weight:700;margin-top:28px}
+.col{max-width:760px;margin:0 auto}
+.wide{max-width:1400px;margin:0 auto}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+header{padding-block:40px 8px}
+.slots{display:flex;gap:3px;margin:20px 0 22px;flex-wrap:nowrap;overflow:hidden}
+.slots i{flex:1 1 0;min-width:4px;height:18px;border:1px solid var(--rule);background:var(--panel)}
+.slots i.b{background:var(--busy);border-color:var(--busy)} .slots i.t{background:var(--accent);border-color:var(--accent)}
+.slotkey{font-family:var(--mono);font-size:.72rem;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
+.slotkey span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px;border:1px solid var(--rule);background:var(--panel)}
+.slotkey .k-t::before{background:var(--accent);border-color:var(--accent)} .slotkey .k-b::before{background:var(--busy);border-color:var(--busy)}
+.lede{font-size:1.15rem;color:var(--ink);margin:16px 0 0}
+.meta{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-top:14px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:24px}
+.stats div{border-top:2px solid var(--accent);padding-top:8px}
+.stats b{display:block;font-family:var(--display);font-size:1.8rem;font-variant-numeric:tabular-nums}
+.stats span{font-size:.85rem;color:var(--muted)}
+@media (max-width:560px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+ol.big{padding-left:1.3em;display:grid;gap:10px} ol.big li::marker{font-family:var(--mono);color:var(--accent);font-weight:600}
+.callout{background:var(--warn-soft);border-left:3px solid var(--warn);padding:12px 16px;margin:20px 0;font-size:.97rem}
+.timeline{display:grid;gap:0;margin-top:16px}
+.era{display:grid;grid-template-columns:110px minmax(0,1fr);gap:16px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.era .y{font-family:var(--mono);font-size:.82rem;color:var(--accent);font-weight:600;padding-top:3px}
+.era p{margin:4px 0 0;font-size:.97rem}
+@media (max-width:520px){.era{grid-template-columns:1fr;gap:2px}}
+.tw{overflow-x:auto;border:1px solid var(--rule);background:var(--panel);margin-top:12px}
+table{border-collapse:collapse;width:100%;font-size:.9rem;line-height:1.45}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--rule)}
+thead th{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);position:sticky;top:0;background:var(--panel);z-index:1}
+.small td,.small th{font-size:.88rem}
+#cat{min-width:1100px}
+#cat td:nth-child(3),#cat td:nth-child(4),#cat td:nth-child(5){min-width:200px}
+tr.grp th{font-family:var(--display);font-size:1rem;background:var(--accent-soft);color:var(--ink)}
+tr.grp .n{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-left:6px}
+td.yr{font-family:var(--mono);font-size:.8rem;white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums}
+td.nm{min-width:220px} td.nm .t{font-weight:600} td.nm .who{color:var(--muted);font-size:.82rem;margin-top:2px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.pill{font-family:var(--mono);font-size:.68rem;padding:1px 7px;border-radius:999px;border:1px solid var(--rule);color:var(--muted);white-space:nowrap}
+.pill.new{border-color:var(--accent);color:var(--accent);font-weight:600}
+.pill.lab-read{color:var(--ink)} .pill.lab-known{border-style:dashed}
+.proj{margin:8px 0 0;padding:6px 8px;background:var(--accent-soft);font-size:.86rem}
+td.rel span{font-family:var(--mono);font-size:.75rem;font-weight:600}
+.rel-H{color:var(--accent)} .rel-M{color:var(--warn)} .rel-L{color:var(--muted)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;align-items:center}
+.chip{font-family:var(--mono);font-size:.74rem;padding:5px 10px;border:1px solid var(--rule);background:var(--panel);color:var(--ink);border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.filters label{font-family:var(--mono);font-size:.78rem;display:flex;gap:6px;align-items:center;margin-right:8px}
+#count{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-left:auto}
+.legend{font-size:.85rem;color:var(--muted);margin-top:10px}
+ul.tight{padding-left:1.2em} ul.tight li{margin:4px 0}
+code{font-family:var(--mono);font-size:.85em;background:var(--accent-soft);padding:0 4px}
+footer{margin-top:48px;font-size:.85rem;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.slots i.t{animation:pulse 3.2s ease-in-out infinite}}
+@keyframes pulse{50%{opacity:.55}}
+</style>
+
+<header class="col">
+  <div class="eyebrow">Literature survey · mac-world · 29 Oct 2026</div>
+  <h1>Contention window optimization, 1994 to 2026</h1>
+  <div class="slots" aria-hidden="true">
+    <i></i><i></i><i></i><i class="t"></i><i></i><i></i><i class="b"></i><i class="b"></i><i></i><i></i><i></i><i></i><i class="t"></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="t"></i><i></i><i></i><i class="b"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="t"></i><i></i>
+  </div>
+  <div class="slotkey" aria-hidden="true"><span>idle slot (σ)</span><span class="k-t">successful transmission</span><span class="k-b">collision</span></div>
+  <p class="lede">Every way the field has tried to pick the contention window for 802.11 and other CSMA/CA systems: standard rules, analytical optima, heuristics, feedback control, game theory, supervised learning, bandits, deep and multi-agent RL, and the 2024 to 2026 work on LLMs, transformers and Wi-Fi 7 and 8. Each entry says what was done, how it was tested, what it reported, and whether it matters for mac-world.</p>
+  <div class="stats">
+    <div><b>70</b><span>entries in the catalog</span></div>
+    <div><b>29</b><span>read this session</span></div>
+    <div><b>57</b><span>new relative to the 27 Oct report</span></div>
+    <div><b>6</b><span>new and highly relevant</span></div>
+  </div>
+  <p class="meta">Labels on each entry: <b>read</b> = fetched and read in this session; <b>found</b> = existence and topic confirmed by search, details from abstract or listings; <b>known</b> = from background knowledge, not fetched (check before citing). All gains are as reported by each paper's authors, on their own setups. None was reproduced here.</p>
+</header>
+
+<main>
+<section class="col">
+  <h2>Bottom line for mac-world</h2>
+  <ol class="big">
+    <li><b>The closest published work is drlCW (Yan et al., VTC 2024-Spring).</b> It is per-AP multi-agent DDQN for 802.11bn with neighbour observations shared through beacons, and a reward that is positive only when an AP is no worse than CSMA on throughput and loss. That gate is a direct fix for the selfish CW race the earlier report diagnosed (D1). It must be cited and is the best template for our next reward.</li>
+    <li><b>Strong non-learning baselines exist and one paper shows RL failing to beat them.</b> Kosek-Szott et al. (2021) found DQN gave no meaningful gain over a tuned heuristic for 802.11ax UORA. A reviewer will ask for IdleSense, the Patras PI controller, or the 2026 BLADE rule, not only BEB.</li>
+    <li><b>Gawłowicz, Walrand and Wolisz (2021) is a ready-made multi-agent baseline in our exact stack.</b> ns-3 plus ns3-gym, per-node CW, decentralised gradient search for proportional fairness, about +20 % over BEB in one collision domain, and a finding that purely local utility oscillates.</li>
+    <li><b>Hardware evidence supports a pinned CW.</b> Learning to Wait (CableLabs, 8 real APs) shows a well-chosen CWmin = CWmax beats BEB by up to 155 % median throughput, with Jain 0.98 against 0.82. This answers the obvious reviewer worry about OSCAR-style pinning.</li>
+    <li><b>Most single-AP DRL papers report +30 % to +45 % over BEB on custom 802.11b-like simulators.</b> Few of them compare against the best static CW, so part of that gain is likely just the static-optimum gap (inference), not proof the learner is smart. This backs the earlier report's ceiling sweep (#1).</li>
+    <li><b>The 2025 to 2026 frontier</b> is constrained MARL (FC-MAPPO, QaSAL), transformer in-context learning that adapts to unseen station counts without retraining (MobiHoc 2025), LLM agents for multi-AP coordination, differentiable digital twins for fast pre-training, and standard changes in 802.11bn (P-EDCA, NPCA, MAPC) that make CW behaviour conditional and coordinated.</li>
+  </ol>
+  <div class="callout">Reported gains are rarely comparable. Papers differ in PHY (802.11b at 11 Mbps up to 802.11ax HE-MCS11), simulator (ns-3, ns-2, MATLAB, custom Python, WiPySim, testbeds), traffic (mostly saturated), and baseline (BEB, CCOD, or a static setting). Many recent DRL papers have no BEB baseline at all. Compare methods inside mac-world, on paired seeds.</div>
+</section>
+
+<section class="col">
+  <h2>How the field developed</h2>
+  <div class="timeline">
+    <div class="era"><div class="y">1994–1999</div><div><b>Backoff rules are invented.</b><p>MACAW's MILD, then the 802.11 DCF with binary exponential backoff. CW is a fixed rule: double on failure, reset on success.</p></div></div>
+    <div class="era"><div class="y">2000–2005</div><div><b>The optimum becomes computable.</b><p>Bianchi's Markov model and Calì, Conti and Gregori's p-persistent analysis show the optimal CW grows with the number of stations and that BEB is far from it at high load. Gentle-decrease rules (SD, DIDD, EIED, GDCF), FCR and AEDCF tweak BEB. EDCA standardises per-class CWs.</p></div></div>
+    <div class="era"><div class="y">2003–2011</div><div><b>Estimate, then control.</b><p>Kalman and Bayesian estimators of the number of contenders, AOB's slot-utilisation filter, Idle Sense's idle-slot AIMD, and the Patras PI controller with a hardware testbed. These reach near-optimal throughput without learning.</p></div></div>
+    <div class="era"><div class="y">2005–2011</div><div><b>Selfishness and optimality theory.</b><p>Game theory shows selfish CW choice is inefficient (Čagalj, Konorski) and designs utility-driven MACs with good equilibria (random access game). Adaptive CSMA proves queue-based access is throughput-optimal in any conflict graph. Proportional-fair CWs get a closed form.</p></div></div>
+    <div class="era"><div class="y">2008–2016</div><div><b>Collision-free and dense-network ideas.</b><p>Deterministic backoff after success (L-BEB, CSMA/ECA) and 802.11ax-era dense-network proposals.</p></div></div>
+    <div class="era"><div class="y">2015–2020</div><div><b>Learning arrives.</b><p>Post-decision-state Q-learning, Q-learning over COSB (iQRA), fuzzy and supervised CW predictors, DLMA's DRL multiple access, load-based CW prediction on real APs, ns3-gym.</p></div></div>
+    <div class="era"><div class="y">2021–2023</div><div><b>Deep RL for one AP.</b><p>CCOD (DQN, DDPG), SETL-DQN, DDQN variants and OSCAR: a central agent at the AP sets one CW for all its stations from a collision or loss history.</p></div></div>
+    <div class="era"><div class="y">2024–2026</div><div><b>Many agents, constraints and new models.</b><p>Per-AP MARL with neighbour observations (drlCW), federated DRL, constrained MAPPO, bandits that pick channel and CW together, Gumbel exploration, LSTM-SAC for Wi-Fi 7 MLO, transformer in-context learning, LLM-driven MAC design, differentiable twins, and 802.11bn's P-EDCA, NPCA and multi-AP coordination.</p></div></div>
+  </div>
+</section>
+
+<section class="col">
+  <h2>What is new for the project</h2>
+  <p>Ideas found in this survey that the 27 Oct report did not cover, ranked by gain per effort for mac-world. Numbers refer to the earlier report's idea list.</p>
+  <div class="tw"><table class="small">
+    <thead><tr><th>Idea</th><th>Source</th><th>How it fits</th><th>Effort</th></tr></thead>
+    <tbody>
+      <tr><td><b>Gate the reward on "not worse than BEB"</b></td><td>drlCW, VTC 2024</td><td>Give each AP a positive reward only when its throughput and loss are at least the BEB reference, else −1. Blocks the CW race to the bottom (D1) while keeping per-AP rewards. Needs a BEB reference per AP, for example from a paired BEB run or a running estimate.</td><td>S</td></tr>
+      <tr><td><b>Add Gawłowicz PF gradient search as a baseline</b></td><td>Gawłowicz, Walrand, Wolisz 2021</td><td>Same stack, per-node CW, no network. Strengthens the comparison table beside IdleSense (#5).</td><td>S</td></tr>
+      <tr><td><b>Add a PI controller on collision probability as a baseline</b></td><td>Patras et al., TMC 2011</td><td>The control-theory version of what the agent learns. Proven stable. Pair with Bianchi's analytic target.</td><td>S</td></tr>
+      <tr><td><b>Report tail latency and per-AP losses</b></td><td>BLADE 2026; drlCW; Casasnovas et al.</td><td>Per-AP control wins most clearly on p95 to p99.99 latency and on the worst AP, and greedy learners can hurt neighbours by up to 59 %. Add p95 delay, min-AP throughput and Jain to every table.</td><td>XS</td></tr>
+      <tr><td><b>Fairness as a Lagrangian constraint</b></td><td>FC-MAPPO; QaSAL</td><td>Instead of tuning λ in "total + λ·min-AP" (#14), add a dual variable for "min-AP ≥ target" and append it to the observation. Works with DDPG or TD3.</td><td>S–M</td></tr>
+      <tr><td><b>Let the agent choose the backoff rule too</b></td><td>ECCOD 2026; gentle-decrease rules</td><td>Action = (CW level, mode), mode ∈ {pinned, BEB doubling, linear growth}. Extends #8 without a new algorithm.</td><td>S</td></tr>
+      <tr><td><b>Structured exploration</b></td><td>SETL-DDQN Gumbel 2025</td><td>Replace Gaussian action noise with decaying or Gumbel-style noise, and evaluate noise-free. Targets D5.</td><td>XS</td></tr>
+      <tr><td><b>Channel busy time as an input</b></td><td>LSTM-SAC MLO 2026; drlCW</td><td>Confirms idea #4 (channel-sensing observations) with recent published use. An LSTM over the history is optional.</td><td>M</td></tr>
+      <tr><td><b>Pre-train on a fast surrogate</b></td><td>Differentiable digital twin 2025; Bianchi model</td><td>Warm-start actors on a Bianchi-based surrogate before ns-3 runs, cutting the destructive warm-up.</td><td>M</td></tr>
+      <tr><td><b>Adapt to unseen STA counts in context</b></td><td>Transformer ICL, MobiHoc 2025</td><td>Related work for N = 2 to 10 scaling. Implementing it is a v2 idea.</td><td>L</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Already in the earlier report and still current</h3>
+  <p>Bianchi and Kalman CW*, IdleSense, Čagalj's selfish game, CCOD, SETL, OSCAR, MAPPO and FC-MAPPO, E-FRL federated averaging, Casasnovas bandits, Cruz decentralised DRL, hierarchical MARL for spatial reuse, COMA, TD3, mean-field MARL and residual RL. Nothing found here contradicts that report's diagnosis. Several entries support it: one collision domain (Kumar et al. fixed point), selfish equilibria (Konorski, DOMINO), and the static-optimum gap (Learning to Wait).</p>
+</section>
+
+<section class="col">
+  <h2>How these methods are evaluated</h2>
+  <div class="tw"><table class="small">
+    <thead><tr><th>Aspect</th><th>What the literature does</th><th>Implication for mac-world</th></tr></thead>
+    <tbody>
+      <tr><td>Simulator</td><td>ns-3 with ns3-gym (CCOD, OSCAR, Gawłowicz, FC-MAPPO, BLADE); custom Python (SETL family, PDCF, ECCOD, UORA); MATLAB (LSTM-SAC); WiPySim (bandits); a few hardware testbeds (Patras, Learning to Wait, BLADE).</td><td>ns-3 is the credible choice and matches the closest baselines.</td></tr>
+      <tr><td>Topology</td><td>Mostly one AP, saturated uplink, 10 to 120 STAs. Multi-AP work uses 2 to 6 APs (drlCW, bandits, MAPC), occasionally partial overlap.</td><td>Our 2 to 10 AP setting is above the norm. A partial-overlap case (#7) would be rare and valuable.</td></tr>
+      <tr><td>Metrics</td><td>Throughput and collision rate always; Jain sometimes; tail delay in latency work (drlCW, BLADE, P-EDCA); convergence time in OSCAR and transformer ICL.</td><td>Add p95 delay, min-AP throughput and convergence time.</td></tr>
+      <tr><td>Baselines</td><td>BEB almost always for older papers; CCOD and SETL for recent DRL; many 2025 to 2026 papers compare only against other learners or a static setting.</td><td>Keep BEB, add a heuristic and a model-based baseline.</td></tr>
+      <tr><td>Statistics</td><td>Few report seeds or confidence intervals; results are usually one run per point or averages over a handful.</td><td>Our planned n ≥ 8 paired seeds would already be stronger than most of the field.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="wide">
+  <div class="col" style="max-width:none">
+  <h2>Catalog</h2>
+  <p>Filter by family, or show only entries that are new relative to the earlier report or highly relevant. Scroll the table sideways on a phone.</p>
+  </div>
+  <div class="filters" role="group" aria-label="Filter catalog">
+    <button type="button" class="chip" data-f="all" aria-pressed="true">All families</button>
+    <button type="button" class="chip" data-f="std" aria-pressed="false">Standards and protocol mechanisms</button><button type="button" class="chip" data-f="model" aria-pressed="false">Analytical models</button><button type="button" class="chip" data-f="heur" aria-pressed="false">Heuristic backoff rules</button><button type="button" class="chip" data-f="ctrl" aria-pressed="false">Estimation and feedback control</button><button type="button" class="chip" data-f="theory" aria-pressed="false">Optimal CSMA theory and fairness</button><button type="button" class="chip" data-f="game" aria-pressed="false">Game theory</button><button type="button" class="chip" data-f="soft" aria-pressed="false">Soft computing</button><button type="button" class="chip" data-f="sl" aria-pressed="false">Supervised learning and transformers</button><button type="button" class="chip" data-f="rl" aria-pressed="false">Tabular RL and bandits</button><button type="button" class="chip" data-f="drl" aria-pressed="false">Single-agent deep RL</button><button type="button" class="chip" data-f="marl" aria-pressed="false">Multi-agent and distributed deep RL</button><button type="button" class="chip" data-f="new" aria-pressed="false">LLMs, digital twins and contention-free designs</button>
+  </div>
+  <div class="filters">
+    <label for="fNew"><input type="checkbox" id="fNew"> New only</label>
+    <label for="fHigh"><input type="checkbox" id="fHigh"> High relevance only</label>
+    <span id="count" aria-live="polite"></span>
+  </div>
+  <div class="tw">
+    <table id="cat">
+      <thead><tr><th>Year</th><th>Method and source</th><th>How it works</th><th>Evaluation</th><th>Reported result</th><th>Relevance</th></tr></thead>
+      <tbody>
+<tr class="grp" data-cat="std"><th colspan="6" scope="colgroup">Standards and protocol mechanisms <span class="n">8</span></th></tr>
+<tr class="it" data-cat="std" data-new="0" data-rel="H">
+<td class="yr">1997/99</td>
+<td class="nm"><div class="t">DCF with binary exponential backoff (BEB)</div><div class="who">IEEE 802.11-1997, 802.11a/b</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Draw backoff uniformly in [0, CW]; CW doubles after each failed attempt from CWmin to CWmax, resets to CWmin on success or after the retry limit.</td>
+<td>The standard every paper compares against. ns-3 default for 802.11ax BE: CWmin 15, CWmax 1023.</td>
+<td>Reference. Collision rate rises fast with N (FC-MAPPO measures about 40 % at 10 saturated STAs in ns-3).<p class="proj"><b>For mac-world:</b> Our BEB baseline is ns-3 dryRun, CW 16..1024.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="it" data-cat="std" data-new="1" data-rel="M">
+<td class="yr">2005</td>
+<td class="nm"><div class="t">EDCA (802.11e)</div><div class="who">IEEE 802.11e</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Four access categories, each with its own CWmin, CWmax, AIFSN and TXOP limit. The AP advertises parameters in beacons (EDCA Parameter Set).</td>
+<td>Basis of every QoS-aware CW paper.</td>
+<td>Prioritises voice and video by giving them smaller CW and AIFS.<p class="proj"><b>For mac-world:</b> Beacon-advertised EDCA parameters are the real-world channel by which an AP can push a CW to its STAs and neighbours can read it.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="std" data-new="1" data-rel="L">
+<td class="yr">2021</td>
+<td class="nm"><div class="t">MU EDCA and UORA (802.11ax)</div><div class="who">IEEE 802.11ax</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>MU EDCA: separate, usually larger EDCA parameters for STAs after they are served by trigger-based uplink. UORA: OFDMA random access with its own OFDMA backoff (OBO) and OCW from 7 to 31.</td>
+<td>Wi-Fi 6 MAC.</td>
+<td>Moves part of contention into AP-scheduled OFDMA.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="std" data-new="1" data-rel="L">
+<td class="yr">2016+</td>
+<td class="nm"><div class="t">LAA / NR-U Cat-4 LBT contention window adjustment</div><div class="who">3GPP Rel-13 LAA, Rel-16 NR-U</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Cat-4 listen-before-talk with priority classes. The CW is raised when a large share of HARQ feedback in a reference slot is NACK, and reset otherwise.</td>
+<td>Licensed-assisted access in 5 GHz, coexisting with Wi-Fi.</td>
+<td>Feedback-driven CW, not per-frame BEB. Many DRL coexistence papers tune this CW.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="std" data-new="1" data-rel="L">
+<td class="yr">2024</td>
+<td class="nm"><div class="t">MLO channel access (802.11be, Wi-Fi 7)</div><div class="who">IEEE 802.11be</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Multi-link devices contend on several links (STR, NSTR, EMLSR). Each link has its own backoff.</td>
+<td>Wi-Fi 7.</td>
+<td>Adds a new decision: which link to contend on, and with what CW.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="std" data-new="1" data-rel="M">
+<td class="yr">2025-26</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2607.19931" target="_blank" rel="noopener">P-EDCA (802.11bn, Wi-Fi 8)</a></div><div class="who">IEEE 802.11bn drafts; Liu et al., arXiv 2607.19931</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Prioritised EDCA for latency-sensitive voice traffic. Triggered when the AC_VO retry counter hits a threshold: the STA sends a DS-CTS that suspends other backoffs, then contends with a small fixed CW (reported CWmin = CWmax = 7, AIFSN 2) and protects its TXOP with RTS/CTS.</td>
+<td>Single BSS, 80 MHz, 10 STAs (5 using P-EDCA), and an OBSS case.</td>
+<td>Latency reduced by more than 40 % beyond 5 Mbps load in a single BSS, and more than 30 % in OBSS (paper&#x27;s own simulation).<p class="proj"><b>For mac-world:</b> Shows the standard itself is moving toward conditional, state-triggered CW changes. Note that P-EDCA pins CWmin = CWmax, like OSCAR.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="std" data-new="1" data-rel="M">
+<td class="yr">2025-26</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2507.19377" target="_blank" rel="noopener">NPCA, MAPC (Co-TDMA, Co-SR, Co-BF, Co-RTWT) in 802.11bn</a></div><div class="who">IEEE 802.11bn; Liu et al. 2026; Nunez et al. 2026</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>NPCA: switch to a non-primary channel when the primary is busy and run backoff there. MAPC: APs coordinate who transmits in a TXOP instead of each contending blindly.</td>
+<td>Multi-AP Wi-Fi 8.</td>
+<td>NPCA: +16 % to +36 % throughput and 49 % to 72 % lower downlink latency in the paper&#x27;s two-BSS case. MAPC DRL scheduling: up to 30 % lower worst-case delay than the best heuristic.<p class="proj"><b>For mac-world:</b> Multi-AP coordination is where Wi-Fi 8 is heading. A per-AP CW agent with neighbour information is a light form of it.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="std" data-new="1" data-rel="L">
+<td class="yr">2022-23</td>
+<td class="nm"><div class="t"><a href="https://mentor-ieee-org.bibliotheek.ehb.be/802.11/dcn/22/11-22-2119-00-aiml-proposed-ieee-802-11-aiml-tig-technical-report-text-for-the-distributed-channel-access-use-case.docx" target="_blank" rel="noopener">IEEE 802.11 AIML TIG: distributed channel access use case</a></div><div class="who">IEEE 802.11 AIML Topic Interest Group technical report</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>The standards group lists ML-tuned distributed channel access (including CW) as a candidate use case, alongside spatial reuse, roaming and rate control.</td>
+<td>Technical report text, not an algorithm.</td>
+<td>Confirms ML-based CW tuning is on the standards radar for Wi-Fi 8 and later.<p class="proj"><b>For mac-world:</b> Useful framing for the report&#x27;s introduction.</p></td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="grp" data-cat="model"><th colspan="6" scope="colgroup">Analytical models <span class="n">6</span></th></tr>
+<tr class="it" data-cat="model" data-new="0" data-rel="H">
+<td class="yr">2000</td>
+<td class="nm"><div class="t">Bianchi Markov model of DCF</div><div class="who">G. Bianchi, IEEE JSAC 18(3)</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>2-D Markov chain of backoff stage and counter. Fixed point gives attempt probability tau and conditional collision probability p for n saturated stations, then throughput.</td>
+<td>Single collision domain, saturated, ideal channel.</td>
+<td>Optimal CW grows roughly linearly with n, about n·sqrt(2·Tc/σ) (Bianchi; Bianchi and Tinnirello).<p class="proj"><b>For mac-world:</b> Already in earlier report. Use it to compute CW* for our timings as a model-based baseline.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="it" data-cat="model" data-new="1" data-rel="M">
+<td class="yr">2000</td>
+<td class="nm"><div class="t">p-persistent approximation and theoretical throughput limit</div><div class="who">F. Calì, M. Conti, E. Gregori, IEEE/ACM ToN</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Replace BEB by a p-persistent protocol with the same mean backoff. Derive the p (equivalently CW) that maximises throughput, and estimate the number of stations at run time to tune it.</td>
+<td>Single collision domain, saturated.</td>
+<td>Showed standard 802.11 can be far from the capacity limit and that run-time tuning closes most of the gap.<p class="proj"><b>For mac-world:</b> The first &#x27;dynamic tuning&#x27; paper. Same idea as OSCAR without learning.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="model" data-new="1" data-rel="M">
+<td class="yr">2002-07</td>
+<td class="nm"><div class="t">Model refinements: retry limits, fixed points, heterogeneity</div><div class="who">Wu et al. INFOCOM 2002; Kumar, Altman, Miorandi, Goyal ToN 2007; Ziouva and Antonakopoulos 2002</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Add retry limit, post-backoff, freezing, and non-saturated traffic. Kumar et al. show the fixed point is unique and that throughput depends mainly on the attempt rate.</td>
+<td>Analytical.</td>
+<td>Basis for the claim that in one collision domain only the aggregate attempt rate matters.<p class="proj"><b>For mac-world:</b> Supports the earlier report&#x27;s ceiling argument: per-AP CWs mostly redistribute airtime in one collision domain.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="model" data-new="1" data-rel="L">
+<td class="yr">2003</td>
+<td class="nm"><div class="t">Performance anomaly</div><div class="who">Heusse, Rousseau, Berger-Sabbatel, Duda, INFOCOM 2003</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Shows DCF gives equal transmission opportunities, so one slow station drags every station&#x27;s throughput down to near its rate.</td>
+<td>802.11b multi-rate.</td>
+<td>Motivated airtime fairness and Idle Sense.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="model" data-new="1" data-rel="L">
+<td class="yr">2025</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/html/2509.25855v1" target="_blank" rel="noopener">Analytical MLO EDCA + genetic algorithm</a></div><div class="who">Yi, Cheng, Wang, Pan, Ouyang, Zhang, arXiv 2509.25855</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>AIFS-zone fixed-point model for multi-link EDCA gives loss and delay CCDF. A genetic algorithm searches CWmin, CWmax, AIFSN, TXOP and retry limit per AC per link.</td>
+<td>5-AC BSS on 2 STR links, no named simulator.</td>
+<td>Qualitative only (figures): optimised MLO EDCA beats optimised single link and default settings.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="model" data-new="1" data-rel="M">
+<td class="yr">2026</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2603.18602" target="_blank" rel="noopener">Bianchi model extended to MLO + LSTM-SAC</a></div><div class="who">Z. Liu et al., arXiv 2603.18602</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Extends the Bianchi chain to Wi-Fi 7 STR MLO. An LSTM-SAC agent jointly picks the traffic split across links and each link&#x27;s initial CW, from a history of SNR and channel busy time.</td>
+<td>MATLAB event simulator driven from Python/Gym, 1 AP, 10 STAs, 2 links.</td>
+<td>+6 % throughput over plain SAC and +37 % over fixed initial CW (summary-level figures, no BEB baseline).<p class="proj"><b>For mac-world:</b> Uses channel busy time as input, which supports our planned idle/busy observation.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="grp" data-cat="heur"><th colspan="6" scope="colgroup">Heuristic backoff rules <span class="n">7</span></th></tr>
+<tr class="it" data-cat="heur" data-new="1" data-rel="M">
+<td class="yr">1994</td>
+<td class="nm"><div class="t">MILD (MACAW)</div><div class="who">Bharghavan, Demers, Shenker, Zhang, SIGCOMM 1994</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Multiplicative increase (×1.5) on collision, linear decrease (−1) on success, plus copying the backoff value heard in packet headers.</td>
+<td>Indoor wireless LAN, pre-802.11.</td>
+<td>Fairer than BEB and avoids the sharp reset to CWmin.<p class="proj"><b>For mac-world:</b> Backoff copying is an early form of neighbours sharing their CW.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="heur" data-new="1" data-rel="M">
+<td class="yr">2003-05</td>
+<td class="nm"><div class="t">Gentle decrease family: SD, DIDD, EIED, LMILD, GDCF</div><div class="who">Ni, Aad, Barakat, Turletti (slow decrease) 2003; Song et al. (EIED) VTC 2003; Chatzimisios et al. (DIDD); Wang, Li, Li (GDCF) IEEE TVT 2004</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>After a success, do not reset CW to CWmin. Halve it (SD, DIDD), divide by a factor (EIED), or reset only after c consecutive successes (GDCF).</td>
+<td>Analytical plus ns-2.</td>
+<td>Gains of roughly 10 % to 30 % throughput over BEB at high load are typical in these papers, because CW stays near the right size.<p class="proj"><b>For mac-world:</b> A cheap baseline that keeps BEB&#x27;s safety net. Relevant to idea #8 (agent sets CWmin, backoff rule kept).</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="heur" data-new="1" data-rel="L">
+<td class="yr">2003</td>
+<td class="nm"><div class="t">Fast Collision Resolution (FCR)</div><div class="who">Kwon, Fang, Latchman, INFOCOM 2003</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Small CWmin, larger CW growth on collision, and stations that sense a busy slot increase their backoff, so a winner tends to keep winning briefly.</td>
+<td>Analytical plus simulation.</td>
+<td>Higher throughput than BEB at moderate load; fairness needs extra fixes.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="heur" data-new="1" data-rel="L">
+<td class="yr">2003</td>
+<td class="nm"><div class="t">AEDCF (adaptive EDCF)</div><div class="who">Romdhani, Ni, Turletti, WCNC 2003</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Per-AC CW update based on an estimate of the collision rate, with a slower decrease after success.</td>
+<td>ns-2, 802.11e.</td>
+<td>Reported large gains in medium utilisation over fixed EDCA.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="heur" data-new="1" data-rel="M">
+<td class="yr">2008-14</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/abs/1412.1395v2" target="_blank" rel="noopener">Deterministic backoff: Learning-BEB, CSMA/ECA, CSMA/E2CA</a></div><div class="who">Barcelo, Bellalta, Cano, Oliver 2008; Sanabria-Russo et al. arXiv 1412.1395</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>After a successful transmission, a station uses a fixed (deterministic) backoff next time. Stations converge to a collision-free schedule. Hysteresis and fair-share variants handle density.</td>
+<td>Simulation, dense WLANs.</td>
+<td>Approaches collision-free operation in saturated single-collision-domain networks.<p class="proj"><b>For mac-world:</b> A non-RL scheme that targets exactly the single-collision-domain setting our simulation has today.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="heur" data-new="1" data-rel="L">
+<td class="yr">2016</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/1611.06609" target="_blank" rel="noopener">802.11ax dense-network CW proposals (EICW, TDuCSMA, CSMA/ECA)</a></div><div class="who">da Silva, Nogueira, arXiv 1611.06609</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Survey plus small ns-3 study of collision avoidance proposals for dense 802.11ax.</td>
+<td>ns-3, saturated UDP.</td>
+<td>All cut collisions versus 802.11n DCF, but lower collisions did not always mean higher throughput.<p class="proj"><b>For mac-world:</b> Reminder to report throughput, not only collision rate.</p></td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="heur" data-new="1" data-rel="H">
+<td class="yr">2026</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2603.16119" target="_blank" rel="noopener">BLADE (HIMD contention control)</a></div><div class="who">Guo, Zhou, ..., Xie, Liu (Tencent, PKU and others), arXiv 2603.16119</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Hybrid increase / multiplicative decrease of a shared &#x27;microscopic access rate&#x27; signal. Every transmitter runs the same local rule. Aimed at tail latency for real-time traffic.</td>
+<td>ns-3 802.11ax (2 to 16 AP-STA pairs), commodity APs, 24-room apartment, game and video traces.</td>
+<td>Tail latency more than 5× lower and video stalls more than 90 % lower than 802.11 BEB under heavy contention. Apartment p99.99 latency 120 ms against more than 500 ms.<p class="proj"><b>For mac-world:</b> A 2026, rule-based, distributed multi-AP scheme with a real deployment. Strong candidate for a non-RL baseline beside IdleSense, and evidence that tail latency is a metric where per-AP control wins.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="grp" data-cat="ctrl"><th colspan="6" scope="colgroup">Estimation and feedback control <span class="n">6</span></th></tr>
+<tr class="it" data-cat="ctrl" data-new="0" data-rel="H">
+<td class="yr">2003</td>
+<td class="nm"><div class="t">Kalman estimation of the number of contenders</div><div class="who">Bianchi, Tinnirello, INFOCOM 2003</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Estimate n from the measured conditional collision probability, n ≈ 1 + log(1−p)/log(1−τ), smoothed by an extended Kalman filter. Then set CW*.</td>
+<td>Analytical plus simulation.</td>
+<td>Tracks n accurately and quickly.<p class="proj"><b>For mac-world:</b> Already in earlier report.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="it" data-cat="ctrl" data-new="1" data-rel="M">
+<td class="yr">2004</td>
+<td class="nm"><div class="t">Asymptotically Optimal Backoff (AOB)</div><div class="who">Bononi, Conti, Gregori, IEEE TPDS 2004</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Measure slot utilisation and add a probability of skipping a transmission, so the effective attempt rate stays near optimal. Works on top of standard backoff.</td>
+<td>Simulation.</td>
+<td>Close to the theoretical throughput limit and robust to load changes.<p class="proj"><b>For mac-world:</b> A &#x27;filter&#x27; on top of BEB, an alternative to replacing BEB.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="ctrl" data-new="0" data-rel="H">
+<td class="yr">2005</td>
+<td class="nm"><div class="t">Idle Sense</div><div class="who">Heusse, Rousseau, Guillier, Duda, SIGCOMM 2005</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Every station measures the mean number of idle slots between transmissions and adjusts CW by AIMD toward a target (about 5.68 for 802.11b). Gives time fairness as well.</td>
+<td>ns-2 and analysis.</td>
+<td>Near-optimal throughput and fairness, fully distributed.<p class="proj"><b>For mac-world:</b> Already in earlier report as the key non-RL baseline.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="it" data-cat="ctrl" data-new="1" data-rel="L">
+<td class="yr">2006</td>
+<td class="nm"><div class="t">Bayesian estimation of competing stations</div><div class="who">Toledo, Vercauteren, Wang, IEEE TMC 2006</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Sequential Monte Carlo (particle filter) estimate of n, then optimal CW.</td>
+<td>Simulation.</td>
+<td>Faster tracking than Kalman under abrupt changes.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="ctrl" data-new="1" data-rel="H">
+<td class="yr">2009-11</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/1203.2970.pdf" target="_blank" rel="noopener">Control-theoretic CW tuning (PI controller)</a></div><div class="who">Patras, Banchs, Serrano, Azcorra, IEEE TMC 2011; testbed paper arXiv 1203.2970</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>A PI controller drives the measured conditional collision probability to the analytically optimal target. Distributed and centralised versions. Stability proven with control theory.</td>
+<td>Simulation plus a real testbed on commodity hardware.</td>
+<td>Near-optimal throughput, stable, fast convergence; confirmed on hardware.<p class="proj"><b>For mac-world:</b> Very close to what our per-AP agent tries to learn: a feedback loop on collision probability. Cheap, explainable baseline with stability guarantees.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="it" data-cat="ctrl" data-new="1" data-rel="H">
+<td class="yr">2019</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/1912.06747" target="_blank" rel="noopener">Learning to Wait (load-based CW prediction)</a></div><div class="who">Sandholm, Huberman, Hamzeh, Clearwater (CableLabs), arXiv 1912.06747</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Predict the optimal fixed CW (CWmin = CWmax, BEB off) from active transmitters and last throughput, with linear regression, naive Bayes or a small DNN. One-step prediction, not RL.</td>
+<td>Real testbed: 8 OpenWrt 802.11ac APs, 80 MHz, hostapd patch, traffic traces.</td>
+<td>Median throughput up to +155 % with 8 transmitters over default BEB; online average +26 % (DNN). Jain 0.98 with the optimal fixed CW against 0.82 for BEB.<p class="proj"><b>For mac-world:</b> Hardware evidence that a well-chosen pinned CW (as in OSCAR) beats BEB in a multi-AP setting, and that a simple regressor can find it.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="grp" data-cat="theory"><th colspan="6" scope="colgroup">Optimal CSMA theory and fairness <span class="n">4</span></th></tr>
+<tr class="it" data-cat="theory" data-new="1" data-rel="M">
+<td class="yr">2008-10</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/0907.1266.pdf" target="_blank" rel="noopener">Adaptive CSMA (throughput- and utility-optimal)</a></div><div class="who">Jiang, Walrand, IEEE/ACM ToN 2010</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>Each link adjusts its access aggressiveness from its own queue length or a virtual queue. Proven throughput-optimal and utility-maximising in general conflict graphs.</td>
+<td>Theory plus simulation, arbitrary interference graphs.</td>
+<td>Achieves the capacity region with only local information (in the idealised model).<p class="proj"><b>For mac-world:</b> The theoretical answer to &#x27;per-node CW in a partial-overlap topology&#x27;. Matters once idea #7 (partial overlap) is built.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="theory" data-new="1" data-rel="L">
+<td class="yr">2010</td>
+<td class="nm"><div class="t">Q-CSMA and utility-optimal CSMA</div><div class="who">Ni, Tan, Srikant, INFOCOM 2010; Liu, Yi, Proutière, Chiang, Poor 2010</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Discrete-time, collision-aware versions of adaptive CSMA with queue-based access probabilities.</td>
+<td>Theory plus simulation.</td>
+<td>Throughput-optimal with collisions taken into account.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="theory" data-new="1" data-rel="M">
+<td class="yr">2011</td>
+<td class="nm"><div class="t">Proportional fairness in 802.11 WLANs</div><div class="who">Checco, Leith, IEEE Comm. Letters 2011</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Derives the per-station CW (attempt rates) that maximise the sum of log throughputs. The PF allocation is unique and has a closed form.</td>
+<td>Analytical.</td>
+<td>Gives an analytic target for fair per-station CWs.<p class="proj"><b>For mac-world:</b> Analytic target for a proportional-fair reward (idea #14).</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="theory" data-new="1" data-rel="H">
+<td class="yr">2021</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2102.05149" target="_blank" rel="noopener">Distributed learning for proportional fairness (Kiefer-Wolfowitz)</a></div><div class="who">Gawłowicz, Walrand, Wolisz, arXiv 2102.05149</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Each node runs an asynchronous two-point gradient search on log-CW to maximise the sum of log throughputs, using throughput overheard from neighbours over 200 ms. No neural network.</td>
+<td>ns-3 with ns3-gym, 802.11n, single collision domain and flow-in-the-middle topology.</td>
+<td>About +20 % total throughput over BEB with 10 nodes. Gives the starved middle node more airtime. Using only local utility oscillates.<p class="proj"><b>For mac-world:</b> Same tools as us (ns-3 + ns3-gym), same per-node CW knob, multi-agent and decentralised. A direct, cheap baseline. Its finding that purely local utility fails matches our D1 diagnosis.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="grp" data-cat="game"><th colspan="6" scope="colgroup">Game theory <span class="n">5</span></th></tr>
+<tr class="it" data-cat="game" data-new="1" data-rel="M">
+<td class="yr">2002-06</td>
+<td class="nm"><div class="t">Backoff misbehaviour games</div><div class="who">Konorski, ToN 2006; Raya, Hubaux, Aad (DOMINO) MobiSys 2004</div><div class="tags"><span class="pill new">new</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Stations can cheat by using a smaller CW. Konorski models the attack as a game; DOMINO detects cheaters from observed backoff statistics.</td>
+<td>Analysis plus ns-2 and testbed.</td>
+<td>Selfish CW tuning collapses throughput unless detected or penalised.<p class="proj"><b>For mac-world:</b> Same failure mode as our independent agents (D1).</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="game" data-new="0" data-rel="H">
+<td class="yr">2005</td>
+<td class="nm"><div class="t">Selfish behaviour in CSMA/CA</div><div class="who">Čagalj, Ganeriwal, Aad, Hubaux, INFOCOM 2005</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Non-cooperative CW game: Nash equilibria are inefficient; a repeated game with punishment (penalising strategy) restores efficiency.</td>
+<td>Analysis.</td>
+<td>Shows the price of anarchy of selfish CW choice.<p class="proj"><b>For mac-world:</b> Already in earlier report.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="it" data-cat="game" data-new="1" data-rel="M">
+<td class="yr">2007-10</td>
+<td class="nm"><div class="t"><a href="https://doyle.caltech.edu/images/doyle/a/ab/8.IEEETransNetworkingAug2010.pdf" target="_blank" rel="noopener">Random access game</a></div><div class="who">L. Chen, S. Low, T. Cui, J. Doyle, IEEE/ACM ToN 2010</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>Reverse-engineers contention control as a game whose utility gives the CW. Designs MAC rules (gradient / best response) that converge to a chosen efficient and fair equilibrium.</td>
+<td>Analysis plus simulation.</td>
+<td>Higher throughput and better fairness than BEB with a provable equilibrium.<p class="proj"><b>For mac-world:</b> Gives a principled way to design the per-AP reward so the selfish equilibrium is efficient.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="game" data-new="1" data-rel="L">
+<td class="yr">2017+</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/1710.08800" target="_blank" rel="noopener">Mean-field and large-player games for random access</a></div><div class="who">e.g. arXiv 1710.08800; Tembine et al.</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>With many players, each reacts to the average behaviour of others, which keeps learning tractable as N grows.</td>
+<td>Theory.</td>
+<td>Equilibria exist and can be learned with local rules.<p class="proj"><b>For mac-world:</b> Background for idea #11 (mean-field neighbour summary).</p></td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="game" data-new="1" data-rel="L">
+<td class="yr">2025</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/html/2510.10895v1" target="_blank" rel="noopener">LLM-empowered agentic MAC as a Stackelberg game</a></div><div class="who">Tan, Li, Wang, Peng, Wu, Zhao, Zhang, arXiv 2510.10895</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Base station as leader, UEs as followers. An LLM actor-critic (Llama-3 1B) trained with PPO, outputs constrained by a protocol action grammar. Slot bitmaps, not CW.</td>
+<td>Custom simulator, 3 to 10 UEs, NR-style numerology.</td>
+<td>+77.6 % throughput and +65.2 % fairness over conventional baselines (abstract).</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="grp" data-cat="soft"><th colspan="6" scope="colgroup">Soft computing <span class="n">2</span></th></tr>
+<tr class="it" data-cat="soft" data-new="1" data-rel="L">
+<td class="yr">2000s-2022</td>
+<td class="nm"><div class="t"><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4386703/" target="_blank" rel="noopener">Fuzzy-logic backoff</a></div><div class="who">e.g. Sci. World J. 2015 (PMC4386703); F-802.11p, arXiv 2208.04860; &#x27;Run-time fuzzy optimization of IEEE 802.11 WLANs&#x27;</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>Fuzzy rules map measured load, collisions or queue to a CW or backoff interval.</td>
+<td>Ad hoc and V2X simulations.</td>
+<td>Moderate gains over BEB; rules are hand-built.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="soft" data-new="1" data-rel="L">
+<td class="yr">2000s-2025</td>
+<td class="nm"><div class="t">Genetic algorithms and swarm search for EDCA</div><div class="who">e.g. Yi et al. 2025 (see analytical section)</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>Offline search of EDCA parameters on an analytical or simulated model.</td>
+<td>Offline.</td>
+<td>Good static settings, no run-time adaptation.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="grp" data-cat="sl"><th colspan="6" scope="colgroup">Supervised learning and transformers <span class="n">3</span></th></tr>
+<tr class="it" data-cat="sl" data-new="1" data-rel="L">
+<td class="yr">2019-21</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2109.04786" target="_blank" rel="noopener">Supervised CW predictors (random forest, decision trees)</a></div><div class="who">Surveyed in Szott et al., IEEE COMST 2022</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Random forest predicts the minimum CW from network features; decision trees set AIFS and CW per class (Coronado et al.).</td>
+<td>Mostly simulation.</td>
+<td>One random-forest paper reports +153.9 % throughput, −64 % latency and +19.34 % fairness over 802.11ac (as summarised by the survey).</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="sl" data-new="1" data-rel="L">
+<td class="yr">2021</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2106.10307" target="_blank" rel="noopener">DL-MAC: joint channel access and rate adaptation</a></div><div class="who">Xin, Xu, Cai, Wang, Zhang, Liu, Guo, Luo, arXiv 2106.10307</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>ResNet predicts from 360 past RSSI mini-slots whether to transmit and at which MCS. Supervised. No CW.</td>
+<td>Real RSSI traces (lab, airport).</td>
+<td>About 2× CSMA/CA in the lab and +91 % at the airport.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="sl" data-new="1" data-rel="M">
+<td class="yr">2025</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/html/2508.09146v4" target="_blank" rel="noopener">Transformer in-context learning for CSMA</a></div><div class="who">Hao, Li, Duan, ACM MobiHoc 2025, arXiv 2508.09146</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>A one-layer transformer is given a prompt of (collision, CW threshold) examples and predicts the CW threshold for the current node density without retraining. Proves convergence and shows BEB is a special case.</td>
+<td>ns-3; trained on 2 to 6 nodes, tested on unseen densities.</td>
+<td>Within 3 % of near-optimal throughput; reaches low loss in about 100 steps where SAC needs at least 650 (summary-level figures).<p class="proj"><b>For mac-world:</b> Fast adaptation to unseen STA counts is exactly our scaling problem (N = 2 to 10). Possible v2 idea or related-work point.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="grp" data-cat="rl"><th colspan="6" scope="colgroup">Tabular RL and bandits <span class="n">5</span></th></tr>
+<tr class="it" data-cat="rl" data-new="1" data-rel="L">
+<td class="yr">2015</td>
+<td class="nm"><div class="t">Post-decision-state learning of MAC contention</div><div class="who">Amuru, Xiao, van der Schaar, Buehrer, GLOBECOM 2015</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>Model the contention decision as an MDP and learn with post-decision-state Q-learning, which is faster than plain Q-learning.</td>
+<td>Simulation.</td>
+<td>Faster convergence than Q-learning.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="rl" data-new="1" data-rel="M">
+<td class="yr">2018</td>
+<td class="nm"><div class="t"><a href="https://ieeexplore.ieee.org/document/8580452" target="_blank" rel="noopener">iQRA: Q-learning over channel-observation-based backoff</a></div><div class="who">Ali, Shahin, Kim et al., IEEE Access 2018</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>Q-learning tunes the CW of channel-observation-based scaled backoff (COSB) from observed collision probability.</td>
+<td>ns-3, 15 and 50 STAs.</td>
+<td>Higher throughput and lower collisions than BEB in dense WLANs.<p class="proj"><b>For mac-world:</b> Early RL CW paper on ns-3 with the same 15 and 50 STA counts OSCAR uses.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="rl" data-new="1" data-rel="M">
+<td class="yr">2020</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2011.09418" target="_blank" rel="noopener">Rainbow DQN for fair CW</a></div><div class="who">Kumar, Verma, Rao, Swami, Segarra, arXiv 2011.09418</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>A single node picks its minimum CW from {32..128} to maximise a fairness utility, without knowing others&#x27; CWs.</td>
+<td>ns-3, 802.11b, 5 to 20 nodes.</td>
+<td>Mean utility up to 0.97 against 0.75 for the standard; close to the full-knowledge optimum.<p class="proj"><b>For mac-world:</b> An example of a fairness reward for a single agent among unknown others, which is our independent-agent setting.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="rl" data-new="1" data-rel="H">
+<td class="yr">2021</td>
+<td class="nm"><div class="t"><a href="https://www.ccs-labs.org/bib/kosek-szott2022improving/kosek-szott2022improving.pdf" target="_blank" rel="noopener">RL vs heuristic for 802.11ax UORA</a></div><div class="who">Kosek-Szott, Szott, Dressler, IEEE Access 2021</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>DQN at the AP tunes the OFDMA backoff countdown rate, compared with a hand-built heuristic (E-OBO).</td>
+<td>Custom Python simulator, single AP.</td>
+<td>RL-OBO &#x27;does not provide meaningful advantages&#x27; over the heuristic; the heuristic was more stable.<p class="proj"><b>For mac-world:</b> A published negative result from the CCOD group: a good heuristic can match DRL. We must compare against IdleSense or BLADE, not only BEB.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="it" data-cat="rl" data-new="0" data-rel="H">
+<td class="yr">2025-26</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/html/2511.10143v1" target="_blank" rel="noopener">Multi-armed bandits for channel access (UCB, LinUCB, E-RLB)</a></div><div class="who">Casasnovas, Wilhelmi, ..., Bellalta; IEEE TCCN and IEEE Access 2026; npj Wireless Tech.</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Bandits jointly pick primary channel, width and CW (16..1024). Joint (84 actions) versus factorised multi-agent action spaces, contextual and non-contextual. Reward from delay.</td>
+<td>WiPySim (802.11ax), single- and multi-BSS.</td>
+<td>Up to +25 % to +30 % over static configuration in multi-BSS cases, but greedy learners can cost legacy BSSs up to 59 %.<p class="proj"><b>For mac-world:</b> Already in earlier report. The new part is the companion paper and the warning that a learner&#x27;s gain can be a neighbour&#x27;s loss: report per-AP numbers.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="grp" data-cat="drl"><th colspan="6" scope="colgroup">Single-agent deep RL <span class="n">10</span></th></tr>
+<tr class="it" data-cat="drl" data-new="1" data-rel="M">
+<td class="yr">2019</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/1712.00162" target="_blank" rel="noopener">DLMA: DRL multiple access</a></div><div class="who">Y. Yu, T. Wang, S. C. Liew, IEEE JSAC 2019</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>A DQN node learns when to transmit in a slotted channel shared with TDMA and ALOHA nodes it knows nothing about. Later extended to multi-agent with imperfect channels (arXiv 2003.11210).</td>
+<td>Slotted simulation.</td>
+<td>Reaches near-optimal sum throughput or proportional fairness with heterogeneous neighbours.<p class="proj"><b>For mac-world:</b> Founding DRL-MAC paper and a common baseline for later LLM-MAC work.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="drl" data-new="0" data-rel="H">
+<td class="yr">2021</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/abs/2003.01492" target="_blank" rel="noopener">CCOD (DQN and DDPG)</a></div><div class="who">Wydmański, Szott, IEEE WCNC 2021</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>Central AP agent sets CW for all STAs from a history of collision probability. Uses ns3-gym.</td>
+<td>ns-3 802.11ax, up to 50 STAs.</td>
+<td>Higher throughput than BEB, increasingly with N.<p class="proj"><b>For mac-world:</b> Already in earlier report. OSCAR&#x27;s predecessor.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="it" data-cat="drl" data-new="0" data-rel="M">
+<td class="yr">2022</td>
+<td class="nm"><div class="t">SETL-DQN and DDQN variants</div><div class="who">Ke, Astuti, KSII TIIS 2022; Applied Sciences 12(9) 2022</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>DQN or Double DQN picks a CW threshold; below it CW is fixed, above it a smooth update is used.</td>
+<td>Custom simulator, saturated, 802.11b-like.</td>
+<td>Higher throughput and lower collisions than BEB and CCOD.<p class="proj"><b>For mac-world:</b> Already in earlier report.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="drl" data-new="0" data-rel="H">
+<td class="yr">2023</td>
+<td class="nm"><div class="t">OSCAR</div><div class="who">Grasso, Raftopoulos, Schembra, IEEE ICC 2023</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-known" title="Background knowledge, not fetched">known</span></div></td>
+<td>DDPG agent at the AP; observation is a loss ratio; action sets CWmin = CWmax for all STAs.</td>
+<td>ns-3 with ns3-gym, 1 AP, 15 and 50 STAs.</td>
+<td>+11 % (15 STAs) to +40 % (50 STAs) over 802.11; +30 %/+15 % over CCOD; converges about 36× faster.<p class="proj"><b>For mac-world:</b> Our reference method.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="it" data-cat="drl" data-new="1" data-rel="L">
+<td class="yr">2024</td>
+<td class="nm"><div class="t"><a href="https://www.sciencedirect.com/science/article/pii/S138912862400522X" target="_blank" rel="noopener">Enhanced-SETL (multi-variable DRL)</a></div><div class="who">Computer Networks 2024 (S138912862400522X)</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>Extends SETL with several observed variables in the state and joint control variables.</td>
+<td>Dense Wi-Fi simulation.</td>
+<td>Reported gains over SETL and CCOD (full text not accessible here).</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="drl" data-new="1" data-rel="M">
+<td class="yr">2024</td>
+<td class="nm"><div class="t"><a href="https://link.springer.com/article/10.1007/s11227-024-06634-4" target="_blank" rel="noopener">PDCF-DRL (per-AC CW compensation)</a></div><div class="who">Zuo, Wang, Nie, Pan, Deng, ..., Ma, J. Supercomputing 81 (2025)</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>AP-side DQN outputs a CW compensation value broadcast in beacons; each access category applies it with its own threshold rule.</td>
+<td>Custom Python simulator, 1 AP, 20 to 140 STAs.</td>
+<td>Collision rate below 18 % and normalised throughput above 76 % across 20 to 120 STAs; EDCA collisions 64 % to 85 % in the same runs.<p class="proj"><b>For mac-world:</b> Adds a learned offset on top of a rule, which is the residual idea (#6) in published form.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="drl" data-new="1" data-rel="L">
+<td class="yr">2024</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2408.04835" target="_blank" rel="noopener">Generative-diffusion DRL with LLM problem formulation</a></div><div class="who">J. Wang, X. Fang, D. Niyato, T. Liu, arXiv 2408.04835</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>An LLM formulates the problem (joint CW and frame length); a diffusion-model policy solves it.</td>
+<td>ns-3, one AP, Wi-Fi 5/6, TCP and UDP.</td>
+<td>Higher and more stable throughput than DDPG and 802.11 (qualitative).</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="drl" data-new="1" data-rel="M">
+<td class="yr">2025</td>
+<td class="nm"><div class="t"><a href="https://www.techscience.com/cmc/v84n3/63200/html" target="_blank" rel="noopener">SETL-DDQN with Gumbel exploration</a></div><div class="who">Tu, Ma, CMC 84(3) 2025</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Double DQN chooses CW threshold 128..1024 from collision-probability history; Gumbel noise (or Gumbel-softmax) replaces ε-greedy exploration.</td>
+<td>Custom simulator, 10 to 100 STAs static and 5 to 100 time-varying.</td>
+<td>+40.6 % (static) and +44 % (time-varying) mean throughput over CSMA/CA; collision rate 7 % to 17 % against 21 % to 44 % (summary-level figures).<p class="proj"><b>For mac-world:</b> Exploration noise is a cause of our D5 problem; structured exploration is a cheap thing to try.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="drl" data-new="1" data-rel="L">
+<td class="yr">2025</td>
+<td class="nm"><div class="t"><a href="https://www.researchgate.net/publication/399518547_Linear_scaling_on_contention_window_with_deep_Q-networks_in_wireless_networks" target="_blank" rel="noopener">Linear scaling on CW with DQN</a></div><div class="who">ResearchGate 399518547 (2025)</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>DQN with a linearly scaled CW action (details not accessible here).</td>
+<td>Unknown.</td>
+<td>Unknown.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="drl" data-new="1" data-rel="M">
+<td class="yr">2026</td>
+<td class="nm"><div class="t"><a href="https://jit.ndhu.edu.tw/article/view/3283" target="_blank" rel="noopener">ECCOD (CW + backoff-mode action)</a></div><div class="who">Chen, Lin, Ke, J. Internet Technology 27(4), July 2026</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>DRQN at the AP picks one of 12 actions: 6 CW values × 2 modes (keep CW, or add 16 per failure).</td>
+<td>Python/PFRL, 802.11b parameters, 30 to 90 nodes.</td>
+<td>+2.7 % throughput over CCOD and +29 % over CSMA/CA on average; collisions −69 % against CSMA/CA.<p class="proj"><b>For mac-world:</b> Letting the agent choose the backoff rule as well as the CW is a small, novel action-space change for our agents.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="grp" data-cat="marl"><th colspan="6" scope="colgroup">Multi-agent and distributed deep RL <span class="n">8</span></th></tr>
+<tr class="it" data-cat="marl" data-new="1" data-rel="L">
+<td class="yr">2021</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2108.07144" target="_blank" rel="noopener">Emergent MAC protocols with MARL</a></div><div class="who">Mota, Valcarce, Gorce, Hoydis, arXiv 2108.07144</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>MADDPG learns both signalling messages and channel access between a base station and UEs. No CW.</td>
+<td>1 BS, 2 UEs.</td>
+<td>Beats a contention-free baseline on goodput in some regimes.<p class="proj"><b>For mac-world:</b> Background on &#x27;learn the protocol, not the parameter&#x27;.</p></td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="marl" data-new="0" data-rel="M">
+<td class="yr">2022-25</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/abs/2409.01004" target="_blank" rel="noopener">Adversarial and federated CW learning</a></div><div class="who">Kihira et al. (adversarial RL); Du et al. E-FRL arXiv 2409.01004</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>E-FRL: per-AP DRL agents periodically average weights (federated). Adversarial RL trains against worst-case neighbours.</td>
+<td>Dense Wi-Fi simulation.</td>
+<td>E-FRL: up to +14.2 % throughput over independent DRL.<p class="proj"><b>For mac-world:</b> Federated averaging already in earlier report (#12).</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="marl" data-new="1" data-rel="H">
+<td class="yr">2024</td>
+<td class="nm"><div class="t"><a href="http://ieeevtc.org/vtc2024spring/DATA/PID2024002425.pdf" target="_blank" rel="noopener">drlCW for 802.11bn (per-AP MARL with neighbour observations)</a></div><div class="who">Yan, Du, Zhang, Dong, IEEE VTC 2024-Spring</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>One DDQN agent per AP with an LSTM over 10 steps of its own and neighbours&#x27; observations, shared via beacons for APs within 40 m. Action: backoff exponent, CW = 2^(4+b). Reward is relative to the CSMA baseline: α − β·(tail delay) if throughput and loss are no worse than CSMA, otherwise −1.</td>
+<td>Single BSS and OBSS with 3 and 6 APs.</td>
+<td>More than 25 % average gain; 95th-percentile delay 15 % to 45 % lower than CSMA/CA in OBSS with no throughput loss.<p class="proj"><b>For mac-world:</b> The closest published work to mac-world: per-AP agents, multi-AP, Wi-Fi 8. Two ideas to copy: beacon-shared neighbour observations, and a reward gated on &#x27;not worse than BEB&#x27;, which directly blocks the selfish CW race.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="it" data-cat="marl" data-new="0" data-rel="M">
+<td class="yr">2024</td>
+<td class="nm"><div class="t"><a href="https://biblioteca.sbrt.org.br/articlefile/4631.pdf" target="_blank" rel="noopener">Decentralised DRL for channel access</a></div><div class="who">Cruz, de Figueiredo, de Souza, SBrT 2024</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>Per-station DRL agents choose CW independently.</td>
+<td>ns-3 / ns3-gym.</td>
+<td>Gains over BEB in dense settings.<p class="proj"><b>For mac-world:</b> Already in earlier report.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="marl" data-new="1" data-rel="M">
+<td class="yr">2025</td>
+<td class="nm"><div class="t"><a href="https://www.sciencedirect.com/science/article/pii/S2405959525000104" target="_blank" rel="noopener">MADRL framework with adaptive interaction strategies</a></div><div class="who">ICT Express 2025 (S2405959525000104)</div><div class="tags"><span class="pill new">new</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>Multi-agent DRL for CW in 802.11 WLANs with several interaction modes between agents (independent, shared, communicating). Full text not accessible here.</td>
+<td>Unknown.</td>
+<td>Unknown.<p class="proj"><b>For mac-world:</b> Worth reading in full: it compares interaction strategies, which mirrors our independent / shared / global modes.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="marl" data-new="0" data-rel="H">
+<td class="yr">2025</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/html/2509.23154v1" target="_blank" rel="noopener">FC-MAPPO (constrained MAPPO for Wi-Fi 8)</a></div><div class="who">Pan, Wang, Ouyang, Cheng, Zhang, arXiv 2509.23154</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>CTDE with constrained MAPPO and RCPO Lagrangian penalties. After each deferral a station picks a backoff from {0, 1, 2, CW}. Fairness is a constraint E[B/CW] ≥ 0.5.</td>
+<td>ns-3 802.11ax, saturated uplink, up to 10 STAs.</td>
+<td>Collision probability about 6 points below BEB (34 % against 40 %); +5 % system throughput in mixed networks, with legacy STAs also helped.<p class="proj"><b>For mac-world:</b> Already in earlier report. New detail: fairness enforced as a Lagrangian constraint rather than a reward term.</p></td>
+<td class="rel"><span class="rel-H">High</span></td>
+</tr>
+<tr class="it" data-cat="marl" data-new="0" data-rel="L">
+<td class="yr">2025</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2501.03680" target="_blank" rel="noopener">Hierarchical MARL and bandits for coordinated spatial reuse</a></div><div class="who">Yu, Liang, Ye, Jin arXiv 2506.14187; IEEE 802.11bn MAPC with hierarchical MAB, arXiv 2501.03680</div><div class="tags"><span class="pill old">in earlier report</span><span class="pill lab-found" title="Found by search, details from abstract or listing">found</span></div></td>
+<td>Upper level groups APs, lower level picks transmit power or SR parameters.</td>
+<td>Multi-AP simulations.</td>
+<td>Gains over OBSS/PD spatial reuse.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="marl" data-new="1" data-rel="M">
+<td class="yr">2025</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2503.00259" target="_blank" rel="noopener">QaSAL: state-augmented constrained RL (NR-U / Wi-Fi)</a></div><div class="who">Fasihi, Mark, arXiv 2503.00259</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>DQN picks CW; the dual variables of the delay constraint are appended to the state, so the policy adapts to constraint violation online.</td>
+<td>SimPy MAC simulator, 1 gNB versus up to 25 Wi-Fi APs.</td>
+<td>Keeps the delay constraint while improving Jain fairness over primal-dual (figures only).<p class="proj"><b>For mac-world:</b> A clean way to add a min-AP or fairness constraint to our reward without hand-tuning λ.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="grp" data-cat="new"><th colspan="6" scope="colgroup">LLMs, digital twins and contention-free designs <span class="n">6</span></th></tr>
+<tr class="it" data-cat="new" data-new="1" data-rel="L">
+<td class="yr">2025</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/html/2503.08123v1" target="_blank" rel="noopener">LLM4MAC</a></div><div class="who">Tan, Li, Zhao, arXiv 2503.08123</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>A Flan-T5 LLM is the shared policy for base station and UEs, trained with PPO, and learns signalling and access. No CW.</td>
+<td>Custom simulator, 2 to 5 UEs.</td>
+<td>Outperforms MAPPO and MADDPG baselines (figures).</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="new" data-new="1" data-rel="M">
+<td class="yr">2025</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2511.20719v1" target="_blank" rel="noopener">Multi-AP coordination with LLM agents</a></div><div class="who">Fan, Liang, Liu, Li, Guo, Lan, Jin, Tong, arXiv 2511.20719</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>LLM agents (GPT-4o, DeepSeek-R1) per AP negotiate Co-TDMA / Co-SR slot schedules in natural language, with memory and reflection.</td>
+<td>Custom OBSS simulator, 2 and 3 APs.</td>
+<td>Normalised throughput 1.85 against 1.05 for optimised OBSS/PD in the 2-AP Co-SR case.<p class="proj"><b>For mac-world:</b> Shows APs exchanging compact messages as a coordination layer. Too slow for per-10 ms CW control, but a talking point.</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="new" data-new="1" data-rel="L">
+<td class="yr">2026</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/html/2601.18563v1" target="_blank" rel="noopener">LLM agent for AoI in heterogeneous random access</a></div><div class="who">Liu, Zhu, Tan, Tong, Wang, Zhang, arXiv 2601.18563</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Fine-tuned LLM in an observe-reflect-decide loop sets each node&#x27;s transmit probability among TDMA and ALOHA nodes.</td>
+<td>Custom simulator.</td>
+<td>Up to 14.9 % lower AoI than an earlier LLM agent; DLMA still better in some phases.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="new" data-new="1" data-rel="M">
+<td class="yr">2025</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/pdf/2512.10874" target="_blank" rel="noopener">Differentiable digital twin of contention</a></div><div class="who">Zhao, Ming, Chan, Swami, Segarra, arXiv 2512.10874</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Analytical, differentiable model of CSMA-like randomized contention; contention weights tuned by gradient descent.</td>
+<td>Random multi-hop networks, 20 to 100 nodes.</td>
+<td>631× to 5424× faster than packet simulation; correlation above 0.98.<p class="proj"><b>For mac-world:</b> A fast surrogate could pre-train agents before slow ns-3 runs (our runs take 20 to 30 minutes).</p></td>
+<td class="rel"><span class="rel-M">Medium</span></td>
+</tr>
+<tr class="it" data-cat="new" data-new="1" data-rel="L">
+<td class="yr">2024</td>
+<td class="nm"><div class="t"><a href="https://arxiv.org/html/2402.14667v1" target="_blank" rel="noopener">Contention-free alternatives: ConPA, ConMLO</a></div><div class="who">Wilhelmi, Baracca, Fontanesi, Galati-Giordano (Nokia), arXiv 2402.14667 and 2405.09390</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>Remove contention: transmit always with power adapted to sensed interference (ConPA), or chain backoffs across links to hold the medium (ConMLO).</td>
+<td>Analytical CTMC and trace-driven.</td>
+<td>ConPA up to +76 % median throughput over DCF; ConMLO airtime 0.96 to 1.0.</td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+<tr class="it" data-cat="new" data-new="1" data-rel="L">
+<td class="yr">2024</td>
+<td class="nm"><div class="t"><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11124915/" target="_blank" rel="noopener">DRL for 802.11ah RAW and graph learning for RAW grouping</a></div><div class="who">Jiang et al. Sensors 24(10) 2024; Gu et al. arXiv 2402.00879</div><div class="tags"><span class="pill new">new</span><span class="pill lab-read" title="Read this session">read</span></div></td>
+<td>PPO tunes RAW groups and slots; a GNN critic plus max-cut groups stations to limit contention.</td>
+<td>ns-3 802.11ah.</td>
+<td>+80 % throughput over default RAW; 30 % to 80 % higher worst-case user throughput.<p class="proj"><b>For mac-world:</b> Contention reduced by grouping instead of CW.</p></td>
+<td class="rel"><span class="rel-L">Low</span></td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="legend">Relevance is a judgement about mac-world (multi-AP, per-AP CW, ns-3, beat OSCAR and BEB), not about the paper's quality. "In earlier report" means the 27 Oct research note already covers it.</p>
+</section>
+
+<section class="col">
+  <h2>Gaps and open questions</h2>
+  <ul class="tight">
+    <li>Full texts of the 2025 ICT Express MADRL framework paper, Enhanced-SETL (2024) and the "linear scaling" DQN paper could not be opened. They should be read before the final report, especially the ICT Express one, which compares agent interaction strategies like our modes.</li>
+    <li>No paper found combines per-AP DDPG or TD3, a partial-overlap multi-AP ns-3 topology, and a non-RL heuristic baseline. That combination is a defensible contribution for mac-world.</li>
+    <li>Wi-Fi 8 P-EDCA parameters differ between sources (CWmax 7 in text, 15 in one table of Liu et al.). Use the 802.11bn draft if this is cited.</li>
+    <li>Entries marked "known" are from background knowledge and should be checked against the original paper before they go into the final report's references.</li>
+  </ul>
+</section>
+</main>
+
+<footer class="col">
+  <p>Prepared for the mac-world project (github.com/sohanroy676/mac-world). Companion to the 27 Oct 2026 note "Research: beating OSCAR and BEB" (project file research/research-beat-oscar.md). Gains are the authors' own numbers; summaries of long papers sometimes came from partial text and are marked as summary-level where that matters.</p>
+</footer>
+
+<script>
+(function(){
+  var chips=[].slice.call(document.querySelectorAll('.chip'));
+  var fNew=document.getElementById('fNew'), fHigh=document.getElementById('fHigh'), count=document.getElementById('count');
+  var cat='all';
+  function apply(){
+    var shown=0, total=0, seen={};
+    document.querySelectorAll('#cat tr.it').forEach(function(r){
+      total++;
+      var ok=(cat==='all'||r.dataset.cat===cat)&&(!fNew.checked||r.dataset.new==='1')&&(!fHigh.checked||r.dataset.rel==='H');
+      r.hidden=!ok; if(ok){shown++;seen[r.dataset.cat]=1;}
+    });
+    document.querySelectorAll('#cat tr.grp').forEach(function(g){g.hidden=!seen[g.dataset.cat];});
+    count.textContent=shown+' of '+total+' entries';
+  }
+  chips.forEach(function(c){c.addEventListener('click',function(){
+    cat=c.dataset.f; chips.forEach(function(x){x.setAttribute('aria-pressed',x===c?'true':'false');}); apply();
+  });});
+  fNew.addEventListener('change',apply); fHigh.addEventListener('change',apply); apply();
+})();
+</script>

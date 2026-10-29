@@ -9,7 +9,7 @@ Files are grouped by purpose. Version numbers in file names match the roadmap (`
 | `adr/` | Architecture decision records (ADR-0001 to ADR-0004, plus the template). |
 | `results/` | One write-up per experiment version: baseline, validation, benchmarks, scaling, robustness, final results, v3.0.0. |
 | `reports/` | Final deliverables: technical report, presentation notes, final audit. |
-| `reference/` | Supporting material: OSCAR paper metrics, reproducibility guide, pre-v0.1.0 audits. |
+| `reference/` | Supporting material: OSCAR paper metrics, CW literature survey, reproducibility guide, pre-v0.1.0 audits. |
 | `figures/` | Generated tables (`tables.md`), CSVs and plots per benchmark version. |
 
 ## planning/
@@ -45,5 +45,6 @@ Files are grouped by purpose. Version numbers in file names match the roadmap (`
 
 ## reference/
 - `oscar-baseline-metrics.md`: published OSCAR numbers and how they map to this project.
+- `cw-literature-survey-2026-10-29.html`: literature survey of contention window optimization (70 entries, 1994 to 2026: BEB, analytical, heuristic, control, game theory, ML, DRL, MARL, LLM, 802.11be/bn), with relevance to this project. Open in a browser.
 - `reproducibility-v2.1.0.md`: how to reproduce runs, dependencies.
 - `pre_v0.1.0_audit/`: forensic audit of the inherited OSCAR code and the next-actions results.
