@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**UPDATE 2026-10-30 (policy-seed variance, trainSeed 2, DONE, branch `docs/v3.4.0-policy-seed-t2`):** arms G (independent pf) and H (shared pf) with `--trainSeed 2`, 18/18 jobs PASS. Report §4d, `docs/figures/v3.4.0-seeds/`. Over 3 policy seeds both PF arms beat BEB and Global on PF and min-AP in all eval seeds; independent pf t2 is -0.27 PF / -4.9 min-AP below the 256,128,256 oracle, so 'matches the oracle' and 'independent beats shared on PF' are NOT stable across policy seeds. Run dirs G/H are local (committing needs user approval). Next options: TD3/cwMinOnly, v3.3.0, `--apLoads`, tag v3.2.0 (only if user says tag).
+
 **UPDATE 2026-10-29 (policy-seed variance, trainSeed 1, DONE, branch `docs/v3.4.0-policy-seed`):** independent/shared `--reward pf` with `--trainSeed 1`, 16 eval + 2 train jobs PASS. Ordering of §4 holds; policies differ (see report §4c, `docs/figures/v3.4.0-seeds/`). Next options: `--trainSeed 2` (~1.4 h/arm), TD3/cwMinOnly, v3.3.0, tag v3.2.0 (only if user says tag). Run dirs E/F are local; committing them needs approval.
 
 **UPDATE 2026-10-29 (paired static oracle DONE, branch `docs/v3.4.0-oracle-eval`):** static 256,128,256 / 256,64,256 at eval seeds 100-107, 16/16 PASS. Independent `--reward pf` is within -0.03 ± 0.01 PF of the 256,128,256 oracle but 3.3 Mbps below on min-AP (n=8, p=0.008). Report §4b, `docs/figures/v3.4.0-oracle/`. Next options: policy-seed variance (`--trainSeed 1,2`, ~1.4 h/arm), TD3/cwMinOnly, v3.3.0, tag v3.2.0 (only if user says tag). `v3.4.0` is already tagged (66cf363), contrary to the older sessionPrompt wording.

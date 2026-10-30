@@ -5,6 +5,8 @@
      For the forward-looking feature plan, see ROADMAP.md instead —
      don't duplicate the full plan here, just what's actually in motion. -->
 
+- **v3.4.0 policy-seed variance (trainSeed 2) DONE (2026-10-30, branch `docs/v3.4.0-policy-seed-t2`)** — independent and shared `--reward pf`, `--trainSeed 2`, frozen eval seeds 100-107, 18/18 jobs PASS (arms G, H in `results/fair-v3.4.0-{G-indep-pf-t2,H-shared-pf-t2}`, local). Independent t2: PF 8.60 ± 0.05, min-AP 8.37 ± 0.66, -0.27 PF vs the 256,128,256 oracle. Shared t2: PF 8.71, min-AP 7.77. 3-seed means: independent PF 8.78 / min-AP 9.99, shared PF 8.66 / min-AP 6.52. Report §4d, tables `docs/figures/v3.4.0-seeds/`.
+
 ## Done
 
 - **v3.4.0 policy-seed variance (trainSeed 1) DONE (2026-10-29, branch `docs/v3.4.0-policy-seed`)** — independent and shared `--reward pf` retrained with `--trainSeed 1`, frozen eval on seeds 100-107, 18/18 jobs PASS (arms E, F in `results/fair-v3.4.0-{E-indep-pf-t1,F-shared-pf-t1}`, local, not committed). Independent pf t1: PF 8.89 ± 0.02, min-AP 11.62 ± 0.82, level with the 256,128,256 oracle on PF (+0.02, p = 0.078). Shared pf t1: PF 8.69, min-AP 7.30, aggregate 64.5. The ordering of §4 holds, but the policies differ (final CWs, policy-seed gaps larger than the eval CIs). Report §4c, tables `docs/figures/v3.4.0-seeds/`. `--trainSeed 2` not run.

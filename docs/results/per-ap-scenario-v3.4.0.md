@@ -126,8 +126,38 @@ Reading:
 - Fact: the two policies differ. The final CWs are very different (independent: 208/41/77 vs 218/123/251; shared: 126 vs 241) and the policy-seed gaps (ΔPF, Δmin-AP) are larger than the eval-seed CIs. So the §4 CIs understate total uncertainty.
 - Fact: independent pf with trainSeed 1 is level with the 256,128,256 oracle on PF (+0.02, p = 0.078) and closer on min-AP (-1.6 vs -3.3 Mbps for seed 0). The seed-0 "slightly below the oracle on PF" is therefore not stable across policy seeds.
 - Fact: shared pf trainSeed 1 raised min-AP and PF but gave up 9 Mbps of aggregate versus seed 0 (it ends at about 241 on all three APs).
-- Limit: two policy seeds are not a policy-seed CI. No statistics across trainSeeds are claimed; the eval-seed CIs above condition on one policy per row. A third seed (`--trainSeed 2`) is still open.
+- Limit: two policy seeds are not a policy-seed CI. No statistics across trainSeeds are claimed; the eval-seed CIs above condition on one policy per row. A third seed was added in §4d.
+
+## 4d. Third policy seed (`--trainSeed 2`) (fact)
+Independent and shared `--reward pf` retrained with `--trainSeed 2` (2 episodes, ns-3 seeds 3 and 1003, otherwise identical to §4c; arms G, H) and evaluated frozen on eval seeds 100-107. 18 jobs, all `--check` PASS (train 1243 s / 953 s, eval 455-588 s). Tables and figures: `docs/figures/v3.4.0-seeds/` (log `batch-t2.log`); the existing A-F and oracle rows regenerate unchanged. Mean ± 95 % CI over the 8 eval seeds, exact Wilcoxon p = 0.008 unless noted.
+
+| Arm | trainSeed | PF utility | min-AP | aggregate | final CW (AP1/2/3, last-100 mean) |
+|---|---|---|---|---|---|
+| independent pf | 2 | 8.60 ± 0.05 | 8.37 ± 0.66 | 59.49 ± 0.28 | 286 / 311 / 347 |
+| shared pf | 2 | 8.71 ± 0.05 | 7.77 ± 0.63 | 63.68 ± 0.35 | 248 / 236 / 249 |
+
+Paired Δ (PF utility / min-AP Mbps / aggregate Mbps) of trainSeed 2:
+
+| Arm (trainSeed 2) | vs BEB | vs Global | vs static 256,128,256 |
+|---|---|---|---|
+| independent pf | +1.12 ± 0.05 / +6.93 ± 0.65 / -12.13 ± 0.69 | +0.44 ± 0.03 / +5.78 ± 0.47 / -16.97 ± 0.13 | -0.27 ± 0.05 / -4.89 ± 0.64 / -0.09 ± 0.25 (p = 0.383) |
+| shared pf | +1.23 ± 0.05 / +6.33 ± 0.61 / -7.95 ± 0.73 | +0.54 ± 0.03 / +5.19 ± 0.43 / -12.78 ± 0.10 | -0.16 ± 0.06 / -5.48 ± 0.60 / +4.09 ± 0.31 |
+
+Three policy seeds (descriptive; mean of the per-policy eval means, sample SD across the three policies, range; the t-interval with n = 3 uses t = 4.303 and is very wide):
+
+| Arm | PF utility | min-AP (Mbps) | aggregate (Mbps) |
+|---|---|---|---|
+| independent pf | 8.78, SD 0.16, range 8.60-8.89 (t-CI ± 0.39) | 9.99, SD 1.63, range 8.37-11.62 (± 4.04) | 61.36, SD 1.70, range 59.49-62.82 (± 4.23) |
+| shared pf | 8.66, SD 0.07, range 8.58-8.71 (± 0.17) | 6.52, SD 1.77, range 4.49-7.77 (± 4.41) | 67.20, SD 5.41, range 63.68-73.43 (± 13.45) |
+
+Reading:
+- Fact: for all three policy seeds, both PF arms beat BEB and Global on PF utility and min-AP in all 8 eval seeds (p = 0.008), and both stay below Global on aggregate throughput (Global 76.46). Against BEB (71.63) the aggregate is lower for every policy except shared pf trainSeed 0 (73.43).
+- Fact: trainSeed 2 independent pf is the weakest independent policy: PF -0.27 ± 0.05 and min-AP -4.9 Mbps against the 256,128,256 oracle (p = 0.008). Its CWs ended high on all APs (286/311/347). So the trainSeed 0/1 result "close to or level with the oracle on PF" does not hold for every policy seed; only seed 1 was level (§4c).
+- Fact: the independent-vs-shared ordering is not stable. On PF, independent beats shared for trainSeeds 0 and 1 (8.84 vs 8.58, 8.89 vs 8.69) but not for trainSeed 2 (8.60 vs 8.71, shared higher). On min-AP independent is higher for all three seeds (9.99 / 11.62 / 8.37 vs 4.49 / 7.30 / 7.77).
+- Fact: policy-to-policy variation is larger than the eval-seed CIs for both arms. Independent min-AP spans 8.4-11.6 and shared aggregate spans 63.7-73.4.
+- Inference: a claim about "independent beats shared" or "independent matches the oracle" needs more than three policies. The claim that survives all three is "PF reward beats BEB and Global on fairness, at an aggregate cost".
+- Limit: three policies per arm, no policy-seed hypothesis test. One topology, one training length (2 episodes).
 
 ## 5. Next
-- Policy-seed variance: `--trainSeed 2` for both PF arms (about 1.4 h each); seed 1 is done (§4c).
+- Policy-seed variance is done for trainSeeds 0, 1, 2 (§4c, §4d); more seeds only if a policy-ranking claim is needed.
 - Optional: independent pf with `--algo td3` / `--cwMinOnly`; v3.3.0 sensing + heuristics (IdleSense) as a non-RL baseline; uneven loads (`--apLoads`).
