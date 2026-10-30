@@ -21,15 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **v3.4.0**: Add trainSeed 2 policy-seed results
 - **changelog**: Regenerate with git-cliff
 - **v3.4.0**: Add trainSeed 2 run dirs (G, H)
+- **changelog**: Regenerate with git-cliff
+- **v3.4.0**: Add TD3, cwMinOnly and apLoads results
 
 ## [3.4.0] - 2026-10-29
 
 ### Added
 
-- **cw**: Add --cwMinOnly for agent actions
-- **agents**: Add TD3 learner
-- **trainer**: Add fair-protocol flags
-- **runner**: Add v3.2.0 fair-protocol runner
 - **cw**: Opt-in hidden BSS pairs and per-AP loads
 - **trainer**: Scenario flags and proportional-fair reward
 - **bench**: Chain3 grid, PF/min-AP and Wilcoxon tables
@@ -37,14 +35,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
-- **ceiling**: Add paired 6x10 BEB/Global refs
-- **results**: Add 6x10 refs and 20,40 fair-protocol pilot runs
-- **v3.2.0**: Add fair-protocol report and handoff
 - **v3.4.0**: Add chain3 static gate result
 - **v3.4.0**: Add n=8 frozen-eval batch results
 - **handoff**: Rewrite session prompt for v3.4.0 follow-ups
 - **v3.4.0**: Add run dirs, logs, manifests and actors
 - **changelog**: Regenerate with git-cliff
+
+## [3.2.0] - 2026-10-28
+
+### Added
+
+- **cw**: Add --cwMinOnly for agent actions
+- **agents**: Add TD3 learner
+- **trainer**: Add fair-protocol flags
+- **runner**: Add v3.2.0 fair-protocol runner
+
+### Documentation
+
+- **ceiling**: Add paired 6x10 BEB/Global refs
+- **results**: Add 6x10 refs and 20,40 fair-protocol pilot runs
+- **v3.2.0**: Add fair-protocol report and handoff
 
 ### Fixed
 
@@ -435,7 +445,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add CLAUDE.md and close v0.3.0 handoff
 
 [unreleased]: https://github.com/sohanroy676/mac-world/compare/v3.4.0..HEAD
-[3.4.0]: https://github.com/sohanroy676/mac-world/compare/v3.1.0..v3.4.0
+[3.4.0]: https://github.com/sohanroy676/mac-world/compare/v3.2.0..v3.4.0
+[3.2.0]: https://github.com/sohanroy676/mac-world/compare/v3.1.0..v3.2.0
 [3.1.0]: https://github.com/sohanroy676/mac-world/compare/v3.0.0..v3.1.0
 [3.0.0]: https://github.com/sohanroy676/mac-world/compare/v2.7.2..v3.0.0
 [2.7.2]: https://github.com/sohanroy676/mac-world/compare/v2.7.1..v2.7.2
