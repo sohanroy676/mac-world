@@ -158,6 +158,42 @@ Reading:
 - Inference: a claim about "independent beats shared" or "independent matches the oracle" needs more than three policies. The claim that survives all three is "PF reward beats BEB and Global on fairness, at an aggregate cost".
 - Limit: three policies per arm, no policy-seed hypothesis test. One topology, one training length (2 episodes).
 
+## 4e. TD3 and `--cwMinOnly` arms (`--trainSeed 0`) (fact)
+Independent `--reward pf`, 2 training episodes, ns-3 seeds 1 and 1001, frozen eval on seeds 100-107. Arm I = `--algo td3`, arm J = `--cwMinOnly` (agent action sets CWmin only, CWmax stays 1023, BEB doubling kept). 18 jobs, all `--check` PASS (train 1029 s / 1006 s, eval 454-600 s). Tables and figures: `docs/figures/v3.4.0-algo/` (arms A, B, C, I, J and the oracle; the existing rows regenerate unchanged). Mean ± 95 % CI over 8 eval seeds; exact Wilcoxon p = 0.008 unless noted.
+
+| Arm | PF utility | min-AP | aggregate | Jain | final CW (AP1/2/3) |
+|---|---|---|---|---|---|
+| independent pf, DDPG (arm B) | 8.84 ± 0.01 | 9.99 ± 0.54 | 62.82 ± 1.18 | 0.877 | 208 / 41 / 77 |
+| independent pf, TD3 (arm I) | 8.78 ± 0.03 | 13.75 ± 0.69 | 57.66 ± 1.04 | 0.946 | 350 / 58 / 104 |
+| independent pf, `--cwMinOnly` (arm J) | 8.39 ± 0.11 | 4.38 ± 0.61 | 68.42 ± 1.39 | 0.754 | 116 / 59 / 16 |
+
+Paired Δ (PF utility / min-AP Mbps / aggregate Mbps):
+
+| Arm | vs BEB | vs Global | vs static 256,128,256 |
+|---|---|---|---|
+| DDPG (B) | +1.36 ± 0.04 / +8.56 ± 0.52 / -8.81 ± 1.31 | +0.68 ± 0.08 / +7.41 ± 0.35 / -13.64 ± 0.87 | -0.03 ± 0.01 / -3.26 ± 0.51 / +3.23 ± 1.13 |
+| TD3 (I) | +1.30 ± 0.06 / +12.31 ± 0.66 / -13.97 ± 1.14 | +0.61 ± 0.10 / +11.16 ± 0.49 / -18.81 ± 0.74 | -0.09 ± 0.03 / +0.49 ± 0.66 (p = 0.195) / -1.93 ± 1.01 (p = 0.016) |
+| `--cwMinOnly` (J) | +0.92 ± 0.10 / +2.94 ± 0.58 / -3.21 ± 1.42 | +0.23 ± 0.05 / +1.80 ± 0.42 / -8.04 ± 1.09 | -0.48 ± 0.11 / -8.87 ± 0.57 / +8.83 ± 1.36 |
+
+Reading:
+- Fact: both variants beat BEB and Global on PF utility and min-AP in all 8 eval seeds (p = 0.008).
+- Fact: TD3 reaches the oracle's min-AP (+0.49 ± 0.66, p = 0.195) and its Jain index (0.946 vs 0.948, p = 0.641) but sits 0.09 ± 0.03 PF below it; DDPG is closer on PF (-0.03) and lower on min-AP (-3.3). Different trade-off, not a uniform win.
+- Fact: `--cwMinOnly` is the weakest PF arm: its outcome sits closest to BEB (aggregate -3.2 vs BEB, Jain 0.754, AP2 4.4 Mbps). Its last-100 CWmin is 116 / 59 ± 63 / 16 (AP3 at the floor, AP2 widely spread across eval seeds) and its convergence step is 660 ± 357 (the fixed-CW policies converge at 0). Why it is weaker was not tested.
+- Limit: one `--trainSeed` per arm. §4c/§4d show policy-seed spread larger than these CIs (DDPG independent min-AP spans 8.4-11.6 over three seeds), so the TD3-vs-DDPG gaps above (min-AP +3.8, PF -0.06) are not shown to exceed policy-seed variation. The `--cwMinOnly` gap vs DDPG (-0.45 PF, -5.6 min-AP) is larger than any DDPG seed gap seen so far, but that is not a test.
+
+## 4f. Uneven loads, `--apLoads 150,150,20` (fact, but it does NOT test what was intended)
+Topology `10,10,10 --apHidden 1-3` with `--apLoads 150,150,20` (per-STA offered load in Mbps, so AP3 offers 10 x 20 = 200 Mbps). Arm K: BEB + independent pf (`--trainSeed 0`, 2 episodes, trained and evaluated in this load); static 256,128,256 as an a-priori reference (picked on the equal-load gate, not tuned here); eval seeds 100-107. 17 + 8 jobs, all PASS (eval 366-426 s). Tables: `docs/figures/v3.4.0-apload/`.
+
+| Arm | aggregate | AP1 / AP2 / AP3 | PF utility | min-AP |
+|---|---|---|---|---|
+| BEB | 71.76 ± 0.42 | 35.28 / 1.36 / 35.12 | 7.42 ± 0.09 | 1.36 ± 0.13 |
+| static 256,128,256 | 59.55 ± 0.08 | 23.15 / 13.26 / 23.13 | 8.87 ± 0.00 | 13.26 ± 0.09 |
+| independent pf | 65.45 ± 1.61 | 30.66 / 5.03 / 29.75 | 8.43 ± 0.01 | 5.03 ± 0.35 |
+
+- Fact: the BEB per-AP split (35.3 / 1.4 / 35.1) is the same as at equal load 150 (35.0 / 1.4 / 35.2, §2). AP3 still carries ~35 Mbps, so 20 Mbps per STA still saturates it. The load asymmetry is not binding, and this run is effectively a second equal-load replicate (different training and ns-3 randomness), not an uneven-load test.
+- Fact: independent pf trained here gives PF +1.00 ± 0.09 and min-AP +3.67 ± 0.32 over BEB (p = 0.008), but -0.44 PF and -8.2 min-AP vs the static oracle. These numbers are within the policy-seed spread of §4c/§4d for the equal-load case, so they do not show a load effect.
+- Inference: a real uneven-load check needs an AP that is not saturated, e.g. `--apLoads 150,150,1` (AP3 offers 10 Mbps in total). Not run.
+
 ## 5. Next
-- Policy-seed variance is done for trainSeeds 0, 1, 2 (§4c, §4d); more seeds only if a policy-ranking claim is needed.
-- Optional: independent pf with `--algo td3` / `--cwMinOnly`; v3.3.0 sensing + heuristics (IdleSense) as a non-RL baseline; uneven loads (`--apLoads`).
+- Done: policy seeds 0-2 (§4c, §4d), TD3 and `--cwMinOnly` (§4e), `--apLoads` 150,150,20 (§4f, not informative).
+- Open: a real uneven-load check with an unsaturated AP (e.g. `--apLoads 150,150,1`); a second policy seed for the TD3 / `--cwMinOnly` arms; v3.3.0 sensing + heuristics (IdleSense) as a non-RL baseline.
