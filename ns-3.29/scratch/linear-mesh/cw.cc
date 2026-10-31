@@ -72,9 +72,13 @@ std::vector<std::vector<uint64_t>> g_heard;                   // g_heard[rxBss][
 bool g_idleSense = false;   // --idleSense: per-AP AIMD on CW toward --idleTarget mean idle slots (non-RL baseline)
 bool g_residual = false;    // --residual: agent action is a Delta in log2(CW) around the IdleSense CW (needs --idleSense)
 bool g_obsIdle = false;     // --obsIdle: per-AP observation is mean idle slots / 20 (clipped to 1) instead of the loss ratio
-double g_idleTarget = 5.68; // --idleTarget (Heusse 2005 value for 802.11b; calibrated for this PHY in the v3.3.0 report)
-double g_idleEps = 6.0;     // --idleEps: additive CW increase when idle < target (project choice, constants not verified vs the paper)
-double g_idleAlpha = 0.9375; // --idleAlpha: multiplicative CW decrease when idle >= target (project choice)
+// Heusse et al., SIGCOMM 2005, Fig. 6 (verified from the paper): after maxtrans observed transmission attempts,
+// n = mean idle slots; n < target -> CW = CW / alpha (1/alpha = 1.2), else CW = 2 CW / (2 + eps CW), eps = 0.001.
+double g_idleTarget = 5.68; // --idleTarget (the paper's value for 802.11b; the v3.3.0 report derives the value for this PHY)
+double g_idleEps = 0.001;   // --idleEps
+double g_idleUp = 1.2;      // --idleUp: 1/alpha, multiplicative CW increase when idle < target
+uint32_t g_idleMaxTrans = 5; // --idleMaxTrans: observed transmission attempts per update
+std::vector<uint64_t> g_apSumSlots, g_apNTrans;    // per-AP sums since the last IdleSense update
 std::vector<uint64_t> g_apIdleSlots, g_apIdleGaps; // backoff-idle slots and gaps seen by AP i since the last step
 std::vector<float> g_apIdleMean;                   // mean idle slots per gap in the last step (held when no gap)
 std::vector<double> g_idleCw;                      // IdleSense CW state per AP
@@ -548,13 +552,12 @@ void recordHistory()
             {
                 if (g_apIdleGaps[ap])
                     g_apIdleMean[ap] = (float)((double)g_apIdleSlots[ap] / g_apIdleGaps[ap]);
-                if (g_idleSense && g_apIdleGaps[ap])
+                // The CW state is updated in apPhyState (every maxtrans attempts); it is written to the BSS once per step.
+                if (g_idleSense && !g_residual)
                 {
-                    double &cw = g_idleCw[ap];
-                    cw = g_apIdleMean[ap] < g_idleTarget ? cw + g_idleEps : cw * g_idleAlpha;
-                    cw = std::min(1024.0, std::max(16.0, cw));
-                    if (!g_residual)
-                        setApCw(ap, (uint32_t)std::lround(cw), (uint32_t)std::lround(cw));
+                    uint32_t cw = (uint32_t)std::lround(g_idleCw[ap]);
+                    if (cw != g_apCwMin.at(ap))
+                        setApCw(ap, cw, cw);
                 }
                 g_apIdleSlots[ap] = 0;
                 g_apIdleGaps[ap] = 0;
@@ -615,8 +618,21 @@ void apPhyState(uint32_t ap, Time start, Time duration, WifiPhyState state)
     if (state != WifiPhyState::IDLE || duration <= MicroSeconds(20))
         return;
     int64_t extra = duration.GetNanoSeconds() - 43000;
-    g_apIdleSlots[ap] += extra > 0 ? extra / 9000 : 0;
+    uint64_t slots = extra > 0 ? extra / 9000 : 0;
+    g_apIdleSlots[ap] += slots;
     g_apIdleGaps[ap]++;
+    if (!g_idleSense)
+        return;
+    g_apSumSlots[ap] += slots;
+    if (++g_apNTrans[ap] >= g_idleMaxTrans)
+    {
+        double n = (double)g_apSumSlots[ap] / g_apNTrans[ap];
+        double &cw = g_idleCw[ap];
+        cw = n < g_idleTarget ? cw * g_idleUp : 2.0 * cw / (2.0 + g_idleEps * cw);
+        cw = std::min(1024.0, std::max(16.0, cw));
+        g_apSumSlots[ap] = 0;
+        g_apNTrans[ap] = 0;
+    }
 }
 
 // Hook the per-AP counters. Sinks live on the AP node, OnOff sources on its STAs, and every
@@ -637,6 +653,8 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
     g_apIdleGaps.assign(wifiApNode.GetN(), 0);
     g_apIdleMean.assign(wifiApNode.GetN(), 0.0f);
     g_idleCw.assign(wifiApNode.GetN(), 16.0);
+    g_apSumSlots.assign(wifiApNode.GetN(), 0);
+    g_apNTrans.assign(wifiApNode.GetN(), 0);
 
     for (uint32_t apIndex = 0; apIndex < wifiApNode.GetN(); ++apIndex)
     {
@@ -1257,8 +1275,9 @@ int main(int argc, char *argv[])
     cmd.AddValue("apLoads", "Comma-separated per-STA offered load in Mbps per AP, e.g. 150,150,5 (one per AP). Default: empty = offeredLoad for every AP", apLoadsArg);
     cmd.AddValue("idleSense", "v3.3.0: per-AP IdleSense AIMD on CW from the AP's own idle-slot count (multi-AP; use with dryRun=true for the non-RL baseline). Default: false", g_idleSense);
     cmd.AddValue("idleTarget", "IdleSense target mean idle slots per backoff gap. Default: 5.68", g_idleTarget);
-    cmd.AddValue("idleEps", "IdleSense additive CW increase. Default: 6", g_idleEps);
-    cmd.AddValue("idleAlpha", "IdleSense multiplicative CW decrease factor. Default: 0.9375", g_idleAlpha);
+    cmd.AddValue("idleEps", "IdleSense eps in CW = 2 CW / (2 + eps CW) (applied when idle >= target). Default: 0.001", g_idleEps);
+    cmd.AddValue("idleUp", "IdleSense multiplicative CW increase 1/alpha (applied when idle < target). Default: 1.2", g_idleUp);
+    cmd.AddValue("idleMaxTrans", "IdleSense observed transmission attempts per CW update. Default: 5", g_idleMaxTrans);
     cmd.AddValue("residual", "v3.3.0: agent action is a Delta log2(CW) in [-2, 2] around the IdleSense CW (needs --idleSense and an agent). Default: false", g_residual);
     cmd.AddValue("obsIdle", "v3.3.0: per-AP observation = mean idle slots / 20 (clipped to 1) instead of the loss ratio. Default: false", g_obsIdle);
     cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);
@@ -1296,7 +1315,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
     if (g_idleSense)
-        NS_LOG_UNCOND("--idleSense: target " << g_idleTarget << ", eps " << g_idleEps << ", alpha " << g_idleAlpha << ", residual " << g_residual);
+        NS_LOG_UNCOND("--idleSense: target " << g_idleTarget << ", eps " << g_idleEps << ", up " << g_idleUp << ", maxtrans " << g_idleMaxTrans << ", residual " << g_residual);
     NS_LOG_UNCOND("--apHidden: " << (apHiddenArg.empty() ? "(none, one collision domain)" : apHiddenArg) << " hiddenLoss=" << g_hiddenLossDb);
     NS_LOG_UNCOND("--apLoads: " << (apLoadsArg.empty() ? "(none, every AP uses offeredLoad)" : apLoadsArg));
     NS_LOG_UNCOND("--simulationTime: " << simulationTime);

@@ -60,8 +60,8 @@ parser.add_argument("--loadActor", default="", help="load agents from DIR/agent<
 parser.add_argument("--eval", action="store_true", help="frozen evaluation: needs --loadActor; no exploration noise, no warm-up, no replay, no training")
 parser.add_argument("--cwMinOnly", action="store_true", help="agent action sets CWmin only; CWmax stays 1023 so BEB doubling is kept (multi-AP agent modes)")
 parser.add_argument("--idleTarget", type=float, default=0.0, help="idlesense / --residual: target mean idle slots per backoff gap (0 = cw.cc default 5.68)")
-parser.add_argument("--idleEps", type=float, default=0.0, help="idlesense / --residual: additive CW increase (0 = cw.cc default)")
-parser.add_argument("--idleAlpha", type=float, default=0.0, help="idlesense / --residual: multiplicative CW decrease factor (0 = cw.cc default)")
+parser.add_argument("--idleEps", type=float, default=0.0, help="idlesense / --residual: eps in CW = 2 CW / (2 + eps CW) (0 = cw.cc default 0.001)")
+parser.add_argument("--idleUp", type=float, default=0.0, help="idlesense / --residual: multiplicative CW increase 1/alpha (0 = cw.cc default 1.2)")
 parser.add_argument("--residual", action="store_true", help="independent/shared: action = Delta log2 CW in [-2, 2] around the per-AP IdleSense CW (cw.cc --residual)")
 parser.add_argument("--obsIdle", action="store_true", help="independent/shared: state = the AP's own mean idle slots / 20 (clipped to 1) instead of its loss ratio (cw.cc --obsIdle)")
 args = parser.parse_args()
@@ -124,7 +124,7 @@ if args.mode in ("beb", "idlesense"):
 assert not (args.residual or args.obsIdle) or args.mode in ("independent", "shared"), "--residual/--obsIdle only for independent/shared"
 if args.mode == "idlesense" or args.residual:
     sim_args["idleSense"] = "true"
-    for k in ("idleTarget", "idleEps", "idleAlpha"):
+    for k in ("idleTarget", "idleEps", "idleUp"):
         if getattr(args, k) > 0:
             sim_args[k] = getattr(args, k)
 if args.residual:
