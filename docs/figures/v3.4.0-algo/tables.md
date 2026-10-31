@@ -12,7 +12,9 @@ Policy window = steps >= 300 (3.00 s of stepping); mean ± 95% CI (Student t) ov
 | fz-global | 8 | 76.46 ± 0.34 | 36.93 ± 0.28 | 2.58 ± 0.21 | 36.94 ± 0.26 | 0.572 ± 0.001 | 0.712 ± 0.004 | 64 ± 0 | 64 ± 0 | 64 ± 0 | 0 ± 0 |
 | fz-independent-pf | 8 | 62.82 ± 1.18 | 24.76 ± 0.82 | 9.99 ± 0.54 | 28.07 ± 0.91 | 0.572 ± 0.004 | 0.877 ± 0.014 | 208 ± 0 | 41 ± 0 | 77 ± 0 | 0 ± 0 |
 | fz-independent-pf-cwmin | 8 | 68.42 ± 1.39 | 32.29 ± 1.09 | 4.38 ± 0.61 | 31.75 ± 0.90 | 0.595 ± 0.003 | 0.754 ± 0.013 | 116 ± 0 | 59 ± 63 | 16 ± 0 | 660 ± 357 |
+| fz-independent-pf-cwmin-t1 | 8 | 64.37 ± 0.51 | 28.83 ± 0.62 | 9.07 ± 0.69 | 26.47 ± 0.58 | 0.531 ± 0.001 | 0.856 ± 0.015 | 163 ± 0 | 126 ± 0 | 237 ± 0 | 0 ± 0 |
 | fz-independent-td3-pf | 8 | 57.66 ± 1.04 | 18.97 ± 0.75 | 13.75 ± 0.69 | 24.94 ± 0.98 | 0.563 ± 0.004 | 0.946 ± 0.014 | 350 ± 0 | 58 ± 0 | 104 ± 1 | 0 ± 0 |
+| fz-independent-td3-pf-t1 | 8 | 63.53 ± 0.70 | 26.07 ± 0.73 | 10.73 ± 0.79 | 26.74 ± 0.76 | 0.535 ± 0.002 | 0.891 ± 0.017 | 220 ± 0 | 114 ± 0 | 199 ± 0 | 0 ± 0 |
 | fz-shared-pf | 8 | 73.43 ± 0.47 | 34.46 ± 0.40 | 4.49 ± 0.35 | 34.48 ± 0.42 | 0.541 ± 0.001 | 0.750 ± 0.007 | 126 ± 0 | 130 ± 1 | 126 ± 0 | 0 ± 0 |
 
 Paired difference vs BEB (same ns-3 seed), aggregate throughput:
@@ -24,7 +26,9 @@ Paired difference vs BEB (same ns-3 seed), aggregate throughput:
 | fz-global | 8 | 4.84 ± 0.70 | 6.8 ± 1.0 |
 | fz-independent-pf | 8 | -8.81 ± 1.31 | -12.3 ± 1.8 |
 | fz-independent-pf-cwmin | 8 | -3.21 ± 1.42 | -4.5 ± 2.0 |
+| fz-independent-pf-cwmin-t1 | 8 | -7.25 ± 0.75 | -10.1 ± 1.0 |
 | fz-independent-td3-pf | 8 | -13.97 ± 1.14 | -19.5 ± 1.5 |
+| fz-independent-td3-pf-t1 | 8 | -8.09 ± 0.94 | -11.3 ± 1.3 |
 | fz-shared-pf | 8 | 1.80 ± 0.67 | 2.5 ± 0.9 |
 
 | Mode | n | PF utility | min-AP Mbps |
@@ -35,7 +39,9 @@ Paired difference vs BEB (same ns-3 seed), aggregate throughput:
 | fz-global | 8 | 8.16 ± 0.07 | 2.58 ± 0.21 |
 | fz-independent-pf | 8 | 8.84 ± 0.01 | 9.99 ± 0.54 |
 | fz-independent-pf-cwmin | 8 | 8.39 ± 0.11 | 4.38 ± 0.61 |
+| fz-independent-pf-cwmin-t1 | 8 | 8.84 ± 0.04 | 9.07 ± 0.69 |
 | fz-independent-td3-pf | 8 | 8.78 ± 0.03 | 13.75 ± 0.69 |
+| fz-independent-td3-pf-t1 | 8 | 8.91 ± 0.03 | 10.73 ± 0.79 |
 | fz-shared-pf | 8 | 8.58 ± 0.06 | 4.49 ± 0.35 |
 
 Paired difference vs BEB (802.11) (same ns-3 seed): mean ± 95% CI (Student t), exact Wilcoxon p (two-sided):
@@ -47,7 +53,9 @@ Paired difference vs BEB (802.11) (same ns-3 seed): mean ± 95% CI (Student t), 
 | fz-global | 8 | 0.69 ± 0.06, p=0.008 | 1.15 ± 0.19, p=0.008 | 4.84 ± 0.70, p=0.008 | 0.019 ± 0.004, p=0.008 |
 | fz-independent-pf | 8 | 1.36 ± 0.04, p=0.008 | 8.56 ± 0.52, p=0.008 | -8.81 ± 1.31, p=0.008 | 0.183 ± 0.014, p=0.008 |
 | fz-independent-pf-cwmin | 8 | 0.92 ± 0.10, p=0.008 | 2.94 ± 0.58, p=0.008 | -3.21 ± 1.42, p=0.008 | 0.061 ± 0.013, p=0.008 |
+| fz-independent-pf-cwmin-t1 | 8 | 1.36 ± 0.05, p=0.008 | 7.63 ± 0.67, p=0.008 | -7.25 ± 0.75, p=0.008 | 0.162 ± 0.015, p=0.008 |
 | fz-independent-td3-pf | 8 | 1.30 ± 0.06, p=0.008 | 12.31 ± 0.66, p=0.008 | -13.97 ± 1.14, p=0.008 | 0.252 ± 0.013, p=0.008 |
+| fz-independent-td3-pf-t1 | 8 | 1.44 ± 0.04, p=0.008 | 9.29 ± 0.77, p=0.008 | -8.09 ± 0.94, p=0.008 | 0.197 ± 0.017, p=0.008 |
 | fz-shared-pf | 8 | 1.10 ± 0.05, p=0.008 | 3.05 ± 0.32, p=0.008 | 1.80 ± 0.67, p=0.008 | 0.056 ± 0.006, p=0.008 |
 
 Paired difference vs fz-global (same ns-3 seed): mean ± 95% CI (Student t), exact Wilcoxon p (two-sided):
@@ -59,7 +67,9 @@ Paired difference vs fz-global (same ns-3 seed): mean ± 95% CI (Student t), exa
 | cw256-64-256 | 8 | 0.50 ± 0.07, p=0.008 | 14.78 ± 0.21, p=0.008 | -22.56 ± 0.37, p=0.008 | 0.286 ± 0.004, p=0.008 |
 | fz-independent-pf | 8 | 0.68 ± 0.08, p=0.008 | 7.41 ± 0.35, p=0.008 | -13.64 ± 0.87, p=0.008 | 0.164 ± 0.010, p=0.008 |
 | fz-independent-pf-cwmin | 8 | 0.23 ± 0.05, p=0.008 | 1.80 ± 0.42, p=0.008 | -8.04 ± 1.09, p=0.008 | 0.042 ± 0.010, p=0.008 |
+| fz-independent-pf-cwmin-t1 | 8 | 0.67 ± 0.04, p=0.008 | 6.49 ± 0.49, p=0.008 | -12.09 ± 0.20, p=0.008 | 0.143 ± 0.011, p=0.008 |
 | fz-independent-td3-pf | 8 | 0.61 ± 0.10, p=0.008 | 11.16 ± 0.49, p=0.008 | -18.81 ± 0.74, p=0.008 | 0.233 ± 0.010, p=0.008 |
+| fz-independent-td3-pf-t1 | 8 | 0.75 ± 0.05, p=0.008 | 8.14 ± 0.59, p=0.008 | -12.93 ± 0.38, p=0.008 | 0.179 ± 0.013, p=0.008 |
 | fz-shared-pf | 8 | 0.41 ± 0.02, p=0.008 | 1.90 ± 0.16, p=0.008 | -3.03 ± 0.21, p=0.008 | 0.038 ± 0.003, p=0.008 |
 
 Paired difference vs cw256-128-256 (same ns-3 seed): mean ± 95% CI (Student t), exact Wilcoxon p (two-sided):
@@ -71,6 +81,8 @@ Paired difference vs cw256-128-256 (same ns-3 seed): mean ± 95% CI (Student t),
 | fz-global | 8 | -0.71 ± 0.07, p=0.008 | -10.67 ± 0.20, p=0.008 | 16.88 ± 0.32, p=0.008 | -0.235 ± 0.004, p=0.008 |
 | fz-independent-pf | 8 | -0.03 ± 0.01, p=0.008 | -3.26 ± 0.51, p=0.008 | 3.23 ± 1.13, p=0.008 | -0.071 ± 0.013, p=0.008 |
 | fz-independent-pf-cwmin | 8 | -0.48 ± 0.11, p=0.008 | -8.87 ± 0.57, p=0.008 | 8.83 ± 1.36, p=0.008 | -0.193 ± 0.013, p=0.008 |
+| fz-independent-pf-cwmin-t1 | 8 | -0.03 ± 0.04, p=0.055 | -4.18 ± 0.67, p=0.008 | 4.79 ± 0.47, p=0.008 | -0.092 ± 0.015, p=0.008 |
 | fz-independent-td3-pf | 8 | -0.09 ± 0.03, p=0.008 | 0.49 ± 0.66, p=0.195 | -1.93 ± 1.01, p=0.016 | -0.002 ± 0.013, p=0.641 |
+| fz-independent-td3-pf-t1 | 8 | 0.05 ± 0.03, p=0.016 | -2.53 ± 0.77, p=0.008 | 3.95 ± 0.66, p=0.008 | -0.056 ± 0.017, p=0.008 |
 | fz-shared-pf | 8 | -0.29 ± 0.06, p=0.008 | -8.77 ± 0.32, p=0.008 | 13.85 ± 0.43, p=0.008 | -0.198 ± 0.006, p=0.008 |
 
