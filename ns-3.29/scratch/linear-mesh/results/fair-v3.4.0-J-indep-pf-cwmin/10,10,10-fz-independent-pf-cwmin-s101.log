@@ -1,0 +1,305 @@
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
+wandb: Tracking run with wandb version 0.18.7
+wandb: W&B syncing is set to `offline` in this directory.  
+wandb: Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+Waf: Entering directory `/home/pranay/mac-world/ns-3.29/build'
+Waf: Leaving directory `/home/pranay/mac-world/ns-3.29/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (1.599s)
+Ns3Env parameters:
+--nWifi: 30
+--apStaCounts: 10,10,10
+--apCws: (none, every AP uses CW)
+--cwMinOnly: 1
+--apHidden: 1-3 hiddenLoss=200
+--apLoads: (none, every AP uses offeredLoad)
+--simulationTime: 15
+--openGymPort: 31899
+--envStepTime: 0.01
+--seed: 102
+--agentType: continuous
+--scenario: basic
+--dryRun: 0
+--disableGym: 0
+Multi-AP topology:
+--apCount: 3
+--totalStaCount: 30
+AP1 nodeId=30 staCount=10
+AP1 STA1 nodeId=0
+AP1 STA2 nodeId=1
+AP1 STA3 nodeId=2
+AP1 STA4 nodeId=3
+AP1 STA5 nodeId=4
+AP1 STA6 nodeId=5
+AP1 STA7 nodeId=6
+AP1 STA8 nodeId=7
+AP1 STA9 nodeId=8
+AP1 STA10 nodeId=9
+AP2 nodeId=31 staCount=10
+AP2 STA1 nodeId=10
+AP2 STA2 nodeId=11
+AP2 STA3 nodeId=12
+AP2 STA4 nodeId=13
+AP2 STA5 nodeId=14
+AP2 STA6 nodeId=15
+AP2 STA7 nodeId=16
+AP2 STA8 nodeId=17
+AP2 STA9 nodeId=18
+AP2 STA10 nodeId=19
+AP3 nodeId=32 staCount=10
+AP3 STA1 nodeId=20
+AP3 STA2 nodeId=21
+AP3 STA3 nodeId=22
+AP3 STA4 nodeId=23
+AP3 STA5 nodeId=24
+AP3 STA6 nodeId=25
+AP3 STA7 nodeId=26
+AP3 STA8 nodeId=27
+AP3 STA9 nodeId=28
+AP3 STA10 nodeId=29
+Gym map: AP1 nodeId=30 stas=10 obsRow=0 actionIdx=0 rewardIdx=0
+Gym map: AP2 nodeId=31 stas=10 obsRow=1 actionIdx=1 rewardIdx=1
+Gym map: AP3 nodeId=32 stas=10 obsRow=2 actionIdx=2 rewardIdx=2
+Simulation started
+CW readback [start] t=0 s:
+  AP1 set=16/1024 ap=16/1024 stas: exact=10 edcaRounded(15/1023)=0 other=0 missing=0
+  AP2 set=16/1024 ap=16/1024 stas: exact=10 edcaRounded(15/1023)=0 other=0 missing=0
+  AP3 set=16/1024 ap=16/1024 stas: exact=10 edcaRounded(15/1023)=0 other=0 missing=0
+CW readback [warmup] t=1 s:
+  AP1 set=16/1024 ap=16/1024 stas: exact=0 edcaRounded(15/1023)=10 other=0 missing=0
+  AP2 set=16/1024 ap=16/1024 stas: exact=0 edcaRounded(15/1023)=10 other=0 missing=0
+  AP3 set=16/1024 ap=16/1024 stas: exact=0 edcaRounded(15/1023)=10 other=0 missing=0
+Simulation process id: 3870 (parent (waf shell) id: 3823)
+Waiting for Python process to connect on port: tcp://localhost:31899
+Please start proper Python Gym Agent
+Waiting for simulation script to connect on port: tcp://localhost:31899
+Please start proper ns-3 simulation script using ./waf --run "..."
+APs: [10, 10, 10] steps/ep: 1500 out: results/multi-ap-20261030-213526
+episode 0 ns-3 seed 102
+ep0 step    1 | AP1 cw= 116 r=0.022 loss=0.569 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.001 loss=0.900 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.633 aL=0.000 cL=0.0000
+ep0 step   10 | AP1 cw= 116 r=0.021 loss=0.557 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.001 loss=0.857 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.628 aL=0.000 cL=0.0000
+ep0 step   20 | AP1 cw= 115 r=0.020 loss=0.554 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.005 loss=0.647 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.606 aL=0.000 cL=0.0000
+ep0 step   30 | AP1 cw= 115 r=0.025 loss=0.536 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.002 loss=0.600 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.658 aL=0.000 cL=0.0000
+ep0 step   40 | AP1 cw= 116 r=0.021 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw=  21 r=0.005 loss=0.632 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.632 aL=0.000 cL=0.0000
+ep0 step   50 | AP1 cw= 115 r=0.020 loss=0.536 aL=0.000 cL=0.0000 | AP2 cw=  21 r=0.002 loss=0.769 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.658 aL=0.000 cL=0.0000
+ep0 step   60 | AP1 cw= 115 r=0.023 loss=0.531 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.002 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.628 aL=0.000 cL=0.0000
+ep0 step   70 | AP1 cw= 116 r=0.022 loss=0.525 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.003 loss=0.714 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.021 loss=0.614 aL=0.000 cL=0.0000
+ep0 step   80 | AP1 cw= 116 r=0.021 loss=0.526 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.002 loss=0.727 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.022 loss=0.622 aL=0.000 cL=0.0000
+ep0 step   90 | AP1 cw= 115 r=0.023 loss=0.492 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.003 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.019 loss=0.657 aL=0.000 cL=0.0000
+ep0 step  100 | AP1 cw= 116 r=0.017 loss=0.585 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.004 loss=0.706 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.019 loss=0.647 aL=0.000 cL=0.0000
+ep0 step  110 | AP1 cw= 115 r=0.021 loss=0.542 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.857 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.018 loss=0.662 aL=0.000 cL=0.0000
+ep0 step  120 | AP1 cw= 115 r=0.026 loss=0.535 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.639 aL=0.000 cL=0.0000
+ep0 step  130 | AP1 cw= 116 r=0.021 loss=0.542 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.002 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.024 loss=0.557 aL=0.000 cL=0.0000
+ep0 step  140 | AP1 cw= 115 r=0.016 loss=0.562 aL=0.000 cL=0.0000 | AP2 cw=  25 r=0.007 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.014 loss=0.684 aL=0.000 cL=0.0000
+ep0 step  150 | AP1 cw= 116 r=0.020 loss=0.528 aL=0.000 cL=0.0000 | AP2 cw=  24 r=0.004 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.600 aL=0.000 cL=0.0000
+ep0 step  160 | AP1 cw= 116 r=0.016 loss=0.571 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.007 loss=0.654 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.016 loss=0.661 aL=0.000 cL=0.0000
+ep0 step  170 | AP1 cw= 116 r=0.023 loss=0.524 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.778 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.022 loss=0.622 aL=0.000 cL=0.0000
+ep0 step  180 | AP1 cw= 115 r=0.025 loss=0.515 aL=0.000 cL=0.0000 | AP2 cw=  25 r=0.002 loss=0.714 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.628 aL=0.000 cL=0.0000
+ep0 step  190 | AP1 cw= 115 r=0.023 loss=0.538 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.002 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.026 loss=0.577 aL=0.000 cL=0.0000
+ep0 step  200 | AP1 cw= 115 r=0.023 loss=0.561 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.002 loss=0.571 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.027 loss=0.580 aL=0.000 cL=0.0000
+ep0 step  210 | AP1 cw= 116 r=0.025 loss=0.543 aL=0.000 cL=0.0000 | AP2 cw=  27 r=0.000 loss=0.000 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.024 loss=0.617 aL=0.000 cL=0.0000
+ep0 step  220 | AP1 cw= 116 r=0.023 loss=0.554 aL=0.000 cL=0.0000 | AP2 cw= 774 r=0.000 loss=0.000 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.024 loss=0.631 aL=0.000 cL=0.0000
+ep0 step  230 | AP1 cw= 115 r=0.025 loss=0.529 aL=0.000 cL=0.0000 | AP2 cw=  35 r=0.001 loss=0.500 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.027 loss=0.573 aL=0.000 cL=0.0000
+ep0 step  240 | AP1 cw= 116 r=0.025 loss=0.536 aL=0.000 cL=0.0000 | AP2 cw=  35 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.642 aL=0.000 cL=0.0000
+ep0 step  250 | AP1 cw= 115 r=0.019 loss=0.538 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.003 loss=0.765 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.021 loss=0.609 aL=0.000 cL=0.0000
+ep0 step  260 | AP1 cw= 116 r=0.022 loss=0.541 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.002 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.024 loss=0.597 aL=0.000 cL=0.0000
+ep0 step  270 | AP1 cw= 116 r=0.024 loss=0.523 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.002 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.022 loss=0.641 aL=0.000 cL=0.0000
+ep0 step  280 | AP1 cw= 116 r=0.023 loss=0.517 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.833 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.600 aL=0.000 cL=0.0000
+ep0 step  290 | AP1 cw= 116 r=0.024 loss=0.508 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.001 loss=0.833 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.026 loss=0.566 aL=0.000 cL=0.0000
+ep0 step  300 | AP1 cw= 115 r=0.025 loss=0.508 aL=0.000 cL=0.0000 | AP2 cw=  25 r=0.004 loss=0.583 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.025 loss=0.568 aL=0.000 cL=0.0000
+ep0 step  310 | AP1 cw= 116 r=0.025 loss=0.543 aL=0.000 cL=0.0000 | AP2 cw= 774 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.025 loss=0.600 aL=0.000 cL=0.0000
+ep0 step  320 | AP1 cw= 116 r=0.020 loss=0.569 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.002 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.024 loss=0.581 aL=0.000 cL=0.0000
+ep0 step  330 | AP1 cw= 115 r=0.023 loss=0.508 aL=0.000 cL=0.0000 | AP2 cw=  23 r=0.002 loss=0.769 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.592 aL=0.000 cL=0.0000
+ep0 step  340 | AP1 cw= 116 r=0.022 loss=0.556 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.002 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.634 aL=0.000 cL=0.0000
+ep0 step  350 | AP1 cw= 115 r=0.019 loss=0.579 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.002 loss=0.824 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.632 aL=0.000 cL=0.0000
+ep0 step  360 | AP1 cw= 115 r=0.027 loss=0.514 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.027 loss=0.557 aL=0.000 cL=0.0000
+ep0 step  370 | AP1 cw= 116 r=0.022 loss=0.525 aL=0.000 cL=0.0000 | AP2 cw=  22 r=0.003 loss=0.636 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.017 loss=0.707 aL=0.000 cL=0.0000
+ep0 step  380 | AP1 cw= 116 r=0.023 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.004 loss=0.583 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.597 aL=0.000 cL=0.0000
+ep0 step  390 | AP1 cw= 115 r=0.020 loss=0.536 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.003 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.649 aL=0.000 cL=0.0000
+ep0 step  400 | AP1 cw= 115 r=0.018 loss=0.566 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.005 loss=0.611 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.018 loss=0.667 aL=0.000 cL=0.0000
+ep0 step  410 | AP1 cw= 115 r=0.022 loss=0.548 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.002 loss=0.833 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.022 loss=0.622 aL=0.000 cL=0.0000
+ep0 step  420 | AP1 cw= 115 r=0.022 loss=0.541 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.003 loss=0.636 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.639 aL=0.000 cL=0.0000
+ep0 step  430 | AP1 cw= 115 r=0.016 loss=0.580 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.006 loss=0.652 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.016 loss=0.672 aL=0.000 cL=0.0000
+ep0 step  440 | AP1 cw= 116 r=0.025 loss=0.508 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.618 aL=0.000 cL=0.0000
+ep0 step  450 | AP1 cw= 116 r=0.023 loss=0.531 aL=0.000 cL=0.0000 | AP2 cw=  23 r=0.002 loss=0.778 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.623 aL=0.000 cL=0.0000
+ep0 step  460 | AP1 cw= 116 r=0.012 loss=0.600 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.008 loss=0.677 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.012 loss=0.680 aL=0.000 cL=0.0000
+ep0 step  470 | AP1 cw= 115 r=0.018 loss=0.596 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.002 loss=0.867 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.021 loss=0.609 aL=0.000 cL=0.0000
+ep0 step  480 | AP1 cw= 115 r=0.027 loss=0.527 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.646 aL=0.000 cL=0.0000
+ep0 step  490 | AP1 cw= 115 r=0.021 loss=0.534 aL=0.000 cL=0.0000 | AP2 cw=  28 r=0.002 loss=0.571 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.024 loss=0.592 aL=0.000 cL=0.0000
+ep0 step  500 | AP1 cw= 115 r=0.024 loss=0.530 aL=0.000 cL=0.0000 | AP2 cw= 774 r=0.001 loss=0.500 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.024 loss=0.627 aL=0.000 cL=0.0000
+ep0 step  510 | AP1 cw= 116 r=0.024 loss=0.508 aL=0.000 cL=0.0000 | AP2 cw=  28 r=0.002 loss=0.571 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.025 loss=0.590 aL=0.000 cL=0.0000
+ep0 step  520 | AP1 cw= 116 r=0.020 loss=0.528 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.005 loss=0.632 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.018 loss=0.652 aL=0.000 cL=0.0000
+ep0 step  530 | AP1 cw= 116 r=0.023 loss=0.538 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.002 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.024 loss=0.592 aL=0.000 cL=0.0000
+ep0 step  540 | AP1 cw= 116 r=0.017 loss=0.585 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.002 loss=0.846 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.021 loss=0.625 aL=0.000 cL=0.0000
+ep0 step  550 | AP1 cw= 115 r=0.016 loss=0.583 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.004 loss=0.783 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.016 loss=0.650 aL=0.000 cL=0.0000
+ep0 step  560 | AP1 cw= 115 r=0.022 loss=0.509 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.004 loss=0.643 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.021 loss=0.625 aL=0.000 cL=0.0000
+ep0 step  570 | AP1 cw= 115 r=0.018 loss=0.540 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.005 loss=0.714 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.603 aL=0.000 cL=0.0000
+ep0 step  580 | AP1 cw= 116 r=0.025 loss=0.492 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.002 loss=0.769 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.583 aL=0.000 cL=0.0000
+ep0 step  590 | AP1 cw= 115 r=0.023 loss=0.545 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.001 loss=0.833 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.600 aL=0.000 cL=0.0000
+ep0 step  600 | AP1 cw= 116 r=0.022 loss=0.541 aL=0.000 cL=0.0000 | AP2 cw=  25 r=0.003 loss=0.765 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.574 aL=0.000 cL=0.0000
+ep0 step  610 | AP1 cw= 115 r=0.023 loss=0.516 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.003 loss=0.600 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.600 aL=0.000 cL=0.0000
+ep0 step  620 | AP1 cw= 116 r=0.020 loss=0.528 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.003 loss=0.765 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.632 aL=0.000 cL=0.0000
+ep0 step  630 | AP1 cw= 116 r=0.023 loss=0.540 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.002 loss=0.778 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.613 aL=0.000 cL=0.0000
+ep0 step  640 | AP1 cw= 115 r=0.019 loss=0.547 aL=0.000 cL=0.0000 | AP2 cw=  21 r=0.005 loss=0.650 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.016 loss=0.656 aL=0.000 cL=0.0000
+ep0 step  650 | AP1 cw= 115 r=0.024 loss=0.523 aL=0.000 cL=0.0000 | AP2 cw=  29 r=0.002 loss=0.625 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.022 loss=0.627 aL=0.000 cL=0.0000
+ep0 step  660 | AP1 cw= 116 r=0.020 loss=0.490 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.006 loss=0.680 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.016 loss=0.672 aL=0.000 cL=0.0000
+ep0 step  670 | AP1 cw= 116 r=0.020 loss=0.559 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.004 loss=0.545 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.603 aL=0.000 cL=0.0000
+ep0 step  680 | AP1 cw= 116 r=0.020 loss=0.552 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.001 loss=0.909 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.603 aL=0.000 cL=0.0000
+ep0 step  690 | AP1 cw= 115 r=0.022 loss=0.533 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.800 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.618 aL=0.000 cL=0.0000
+ep0 step  700 | AP1 cw= 115 r=0.020 loss=0.552 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.004 loss=0.643 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.597 aL=0.000 cL=0.0000
+ep0 step  710 | AP1 cw= 115 r=0.021 loss=0.518 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.005 loss=0.632 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.618 aL=0.000 cL=0.0000
+ep0 step  720 | AP1 cw= 116 r=0.022 loss=0.541 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.003 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.019 loss=0.667 aL=0.000 cL=0.0000
+ep0 step  730 | AP1 cw= 116 r=0.019 loss=0.538 aL=0.000 cL=0.0000 | AP2 cw=  21 r=0.005 loss=0.727 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.597 aL=0.000 cL=0.0000
+ep0 step  740 | AP1 cw= 115 r=0.021 loss=0.571 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.778 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.628 aL=0.000 cL=0.0000
+ep0 step  750 | AP1 cw= 115 r=0.019 loss=0.547 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.005 loss=0.650 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.021 loss=0.578 aL=0.000 cL=0.0000
+ep0 step  760 | AP1 cw= 115 r=0.019 loss=0.556 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.001 loss=0.941 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.019 loss=0.662 aL=0.000 cL=0.0000
+ep0 step  770 | AP1 cw= 116 r=0.021 loss=0.542 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.004 loss=0.706 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.627 aL=0.000 cL=0.0000
+ep0 step  780 | AP1 cw= 116 r=0.024 loss=0.544 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.025 loss=0.614 aL=0.000 cL=0.0000
+ep0 step  790 | AP1 cw= 115 r=0.020 loss=0.581 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.700 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.658 aL=0.000 cL=0.0000
+ep0 step  800 | AP1 cw= 116 r=0.020 loss=0.537 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.006 loss=0.600 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.019 loss=0.636 aL=0.000 cL=0.0000
+ep0 step  810 | AP1 cw= 116 r=0.021 loss=0.518 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.005 loss=0.625 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.638 aL=0.000 cL=0.0000
+ep0 step  820 | AP1 cw= 115 r=0.023 loss=0.559 aL=0.000 cL=0.0000 | AP2 cw=  35 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.029 loss=0.549 aL=0.000 cL=0.0000
+ep0 step  830 | AP1 cw= 116 r=0.025 loss=0.522 aL=0.000 cL=0.0000 | AP2 cw=  35 r=0.001 loss=0.500 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.651 aL=0.000 cL=0.0000
+ep0 step  840 | AP1 cw= 115 r=0.028 loss=0.507 aL=0.000 cL=0.0000 | AP2 cw=  35 r=0.002 loss=0.500 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.024 loss=0.622 aL=0.000 cL=0.0000
+ep0 step  850 | AP1 cw= 115 r=0.022 loss=0.533 aL=0.000 cL=0.0000 | AP2 cw=  22 r=0.002 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.024 loss=0.592 aL=0.000 cL=0.0000
+ep0 step  860 | AP1 cw= 115 r=0.025 loss=0.522 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.001 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.633 aL=0.000 cL=0.0000
+ep0 step  870 | AP1 cw= 115 r=0.023 loss=0.540 aL=0.000 cL=0.0000 | AP2 cw=  25 r=0.004 loss=0.545 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.019 loss=0.657 aL=0.000 cL=0.0000
+ep0 step  880 | AP1 cw= 116 r=0.019 loss=0.547 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.006 loss=0.652 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.014 loss=0.695 aL=0.000 cL=0.0000
+ep0 step  890 | AP1 cw= 116 r=0.024 loss=0.523 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.002 loss=0.571 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.610 aL=0.000 cL=0.0000
+ep0 step  900 | AP1 cw= 115 r=0.022 loss=0.525 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.003 loss=0.714 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.639 aL=0.000 cL=0.0000
+ep0 step  910 | AP1 cw= 116 r=0.015 loss=0.578 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.005 loss=0.708 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.017 loss=0.627 aL=0.000 cL=0.0000
+ep0 step  920 | AP1 cw= 116 r=0.023 loss=0.531 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.002 loss=0.700 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.021 loss=0.635 aL=0.000 cL=0.0000
+ep0 step  930 | AP1 cw= 115 r=0.018 loss=0.589 aL=0.000 cL=0.0000 | AP2 cw=  22 r=0.003 loss=0.778 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.018 loss=0.657 aL=0.000 cL=0.0000
+ep0 step  940 | AP1 cw= 116 r=0.023 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.002 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.022 loss=0.616 aL=0.000 cL=0.0000
+ep0 step  950 | AP1 cw= 116 r=0.023 loss=0.525 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.005 loss=0.562 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.612 aL=0.000 cL=0.0000
+ep0 step  960 | AP1 cw= 115 r=0.024 loss=0.551 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.001 loss=0.833 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.026 loss=0.588 aL=0.000 cL=0.0000
+ep0 step  970 | AP1 cw= 115 r=0.023 loss=0.540 aL=0.000 cL=0.0000 | AP2 cw=  22 r=0.002 loss=0.700 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.025 loss=0.579 aL=0.000 cL=0.0000
+ep0 step  980 | AP1 cw= 115 r=0.025 loss=0.515 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.571 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.620 aL=0.000 cL=0.0000
+ep0 step  990 | AP1 cw= 115 r=0.023 loss=0.531 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.022 loss=0.632 aL=0.000 cL=0.0000
+ep0 step 1000 | AP1 cw= 116 r=0.026 loss=0.522 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.022 loss=0.636 aL=0.000 cL=0.0000
+ep0 step 1010 | AP1 cw= 116 r=0.020 loss=0.536 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.800 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.634 aL=0.000 cL=0.0000
+ep0 step 1020 | AP1 cw= 115 r=0.023 loss=0.532 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.000 loss=1.000 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.025 loss=0.579 aL=0.000 cL=0.0000
+ep0 step 1030 | AP1 cw= 115 r=0.022 loss=0.548 aL=0.000 cL=0.0000 | AP2 cw=  25 r=0.003 loss=0.600 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.026 loss=0.560 aL=0.000 cL=0.0000
+ep0 step 1040 | AP1 cw= 116 r=0.018 loss=0.558 aL=0.000 cL=0.0000 | AP2 cw=  21 r=0.004 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.019 loss=0.662 aL=0.000 cL=0.0000
+ep0 step 1050 | AP1 cw= 116 r=0.018 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw=  21 r=0.007 loss=0.679 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.015 loss=0.672 aL=0.000 cL=0.0000
+ep0 step 1060 | AP1 cw= 115 r=0.023 loss=0.508 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.003 loss=0.692 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.019 loss=0.667 aL=0.000 cL=0.0000
+ep0 step 1070 | AP1 cw= 115 r=0.023 loss=0.508 aL=0.000 cL=0.0000 | AP2 cw=  35 r=0.005 loss=0.647 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.623 aL=0.000 cL=0.0000
+ep0 step 1080 | AP1 cw= 116 r=0.020 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.005 loss=0.696 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.019 loss=0.625 aL=0.000 cL=0.0000
+ep0 step 1090 | AP1 cw= 115 r=0.020 loss=0.552 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.005 loss=0.625 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.618 aL=0.000 cL=0.0000
+ep0 step 1100 | AP1 cw= 116 r=0.023 loss=0.532 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.002 loss=0.818 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.644 aL=0.000 cL=0.0000
+ep0 step 1110 | AP1 cw= 115 r=0.021 loss=0.534 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.003 loss=0.733 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.017 loss=0.656 aL=0.000 cL=0.0000
+ep0 step 1120 | AP1 cw= 116 r=0.020 loss=0.527 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.004 loss=0.722 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.627 aL=0.000 cL=0.0000
+ep0 step 1130 | AP1 cw= 116 r=0.020 loss=0.552 aL=0.000 cL=0.0000 | AP2 cw=  23 r=0.004 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.021 loss=0.597 aL=0.000 cL=0.0000
+ep0 step 1140 | AP1 cw= 116 r=0.025 loss=0.522 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.001 loss=0.800 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.026 loss=0.598 aL=0.000 cL=0.0000
+ep0 step 1150 | AP1 cw= 116 r=0.018 loss=0.558 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.002 loss=0.800 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.018 loss=0.657 aL=0.000 cL=0.0000
+ep0 step 1160 | AP1 cw= 116 r=0.017 loss=0.560 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.006 loss=0.704 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.017 loss=0.633 aL=0.000 cL=0.0000
+ep0 step 1170 | AP1 cw= 115 r=0.025 loss=0.522 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.002 loss=0.714 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.022 loss=0.632 aL=0.000 cL=0.0000
+ep0 step 1180 | AP1 cw= 116 r=0.024 loss=0.508 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.002 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.021 loss=0.630 aL=0.000 cL=0.0000
+ep0 step 1190 | AP1 cw= 116 r=0.021 loss=0.557 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.002 loss=0.700 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.021 loss=0.635 aL=0.000 cL=0.0000
+ep0 step 1200 | AP1 cw= 115 r=0.020 loss=0.559 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.005 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.615 aL=0.000 cL=0.0000
+ep0 step 1210 | AP1 cw= 116 r=0.020 loss=0.527 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.002 loss=0.769 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.021 loss=0.645 aL=0.000 cL=0.0000
+ep0 step 1220 | AP1 cw= 115 r=0.018 loss=0.549 aL=0.000 cL=0.0000 | AP2 cw=  21 r=0.004 loss=0.722 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.017 loss=0.662 aL=0.000 cL=0.0000
+ep0 step 1230 | AP1 cw= 115 r=0.021 loss=0.550 aL=0.000 cL=0.0000 | AP2 cw=  22 r=0.002 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.667 aL=0.000 cL=0.0000
+ep0 step 1240 | AP1 cw= 116 r=0.023 loss=0.525 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.003 loss=0.636 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.024 loss=0.587 aL=0.000 cL=0.0000
+ep0 step 1250 | AP1 cw= 115 r=0.027 loss=0.514 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.025 loss=0.610 aL=0.000 cL=0.0000
+ep0 step 1260 | AP1 cw= 116 r=0.020 loss=0.528 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.004 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.016 loss=0.677 aL=0.000 cL=0.0000
+ep0 step 1270 | AP1 cw= 115 r=0.021 loss=0.550 aL=0.000 cL=0.0000 | AP2 cw=  19 r=0.002 loss=0.727 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.019 loss=0.680 aL=0.000 cL=0.0000
+ep0 step 1280 | AP1 cw= 115 r=0.016 loss=0.592 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.004 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.017 loss=0.676 aL=0.000 cL=0.0000
+ep0 step 1290 | AP1 cw= 115 r=0.020 loss=0.552 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.003 loss=0.714 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.019 loss=0.642 aL=0.000 cL=0.0000
+ep0 step 1300 | AP1 cw= 116 r=0.026 loss=0.535 aL=0.000 cL=0.0000 | AP2 cw=  29 r=0.001 loss=0.857 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.671 aL=0.000 cL=0.0000
+ep0 step 1310 | AP1 cw= 115 r=0.023 loss=0.516 aL=0.000 cL=0.0000 | AP2 cw=  22 r=0.002 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.019 loss=0.657 aL=0.000 cL=0.0000
+ep0 step 1320 | AP1 cw= 116 r=0.019 loss=0.564 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.005 loss=0.625 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.022 loss=0.588 aL=0.000 cL=0.0000
+ep0 step 1330 | AP1 cw= 116 r=0.020 loss=0.554 aL=0.000 cL=0.0000 | AP2 cw=  22 r=0.005 loss=0.647 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.621 aL=0.000 cL=0.0000
+ep0 step 1340 | AP1 cw= 115 r=0.023 loss=0.516 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.004 loss=0.583 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.649 aL=0.000 cL=0.0000
+ep0 step 1350 | AP1 cw= 115 r=0.019 loss=0.564 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.004 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.592 aL=0.000 cL=0.0000
+ep0 step 1360 | AP1 cw= 116 r=0.025 loss=0.529 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.001 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.030 loss=0.542 aL=0.000 cL=0.0000
+ep0 step 1370 | AP1 cw= 116 r=0.023 loss=0.538 aL=0.000 cL=0.0000 | AP2 cw=  21 r=0.001 loss=0.833 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.024 loss=0.608 aL=0.000 cL=0.0000
+ep0 step 1380 | AP1 cw= 116 r=0.017 loss=0.542 aL=0.000 cL=0.0000 | AP2 cw=  23 r=0.007 loss=0.640 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.017 loss=0.633 aL=0.000 cL=0.0000
+ep0 step 1390 | AP1 cw= 115 r=0.021 loss=0.518 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.769 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.018 loss=0.662 aL=0.000 cL=0.0000
+ep0 step 1400 | AP1 cw= 116 r=0.020 loss=0.554 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.800 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.018 loss=0.662 aL=0.000 cL=0.0000
+ep0 step 1410 | AP1 cw= 116 r=0.017 loss=0.585 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.005 loss=0.647 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.018 loss=0.641 aL=0.000 cL=0.0000
+ep0 step 1420 | AP1 cw= 115 r=0.017 loss=0.542 aL=0.000 cL=0.0000 | AP2 cw=  16 r=0.007 loss=0.609 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.018 loss=0.610 aL=0.000 cL=0.0000
+ep0 step 1430 | AP1 cw= 115 r=0.024 loss=0.516 aL=0.000 cL=0.0000 | AP2 cw=  24 r=0.002 loss=0.571 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.027 loss=0.541 aL=0.000 cL=0.0000
+ep0 step 1440 | AP1 cw= 116 r=0.023 loss=0.532 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.003 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.022 loss=0.622 aL=0.000 cL=0.0000
+ep0 step 1450 | AP1 cw= 116 r=0.022 loss=0.533 aL=0.000 cL=0.0000 | AP2 cw=  17 r=0.002 loss=0.833 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.022 loss=0.627 aL=0.000 cL=0.0000
+ep0 step 1460 | AP1 cw= 115 r=0.020 loss=0.536 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.003 loss=0.750 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.021 loss=0.609 aL=0.000 cL=0.0000
+ep0 step 1470 | AP1 cw= 115 r=0.020 loss=0.545 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.005 loss=0.632 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.594 aL=0.000 cL=0.0000
+ep0 step 1480 | AP1 cw= 115 r=0.020 loss=0.528 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.005 loss=0.611 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.020 loss=0.627 aL=0.000 cL=0.0000
+ep0 step 1490 | AP1 cw= 116 r=0.021 loss=0.534 aL=0.000 cL=0.0000 | AP2 cw=  18 r=0.002 loss=0.769 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.016 loss=0.704 aL=0.000 cL=0.0000
+ep0 step 1500 | AP1 cw= 115 r=0.025 loss=0.492 aL=0.000 cL=0.0000 | AP2 cw=  20 r=0.002 loss=0.667 aL=0.000 cL=0.0000 | AP3 cw=  16 r=0.023 loss=0.615 aL=0.000 cL=0.0000
+wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:           AP1/ActorLoss ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  AP1/CW ▁▁███▁▁▁▁▁▁█▁▁▁▁▁█▁█▁█▁▁▁█▁▁████▁███████
+wandb:          AP1/CriticLoss ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    AP1/CumulativeReward ▁
+wandb:           AP1/LossRatio ▁▂▃▅▁▇▅▆▁▃██▂▆▄▃▅▁▃▅▇▃▂▄▅▂▃▅▁▄▂▆▁▄▃▂▂▃▄▇
+wandb:         AP1/Observation ▅▂▆▄▃▅▄▂▂▆▂▃▇▆▁█▁▆▆▄▅▄▃▄▂▇▄▄▂▆▄▄▄▇▅█▆▂▅▇
+wandb:              AP1/Reward ▆▃▃▂▅▆▆▆▄▃▅▅▆▄█▆▄▅▃▆▅▆▃▄▅▃▆▃▃▆▁▆▄▄▆█▅▅▅▅
+wandb:          AP1/Throughput █▆▃▃▇▆▆▃▆▃▅▇▁▄▃▄▅▄▇▃▄▆▂▃▂▇▂▃▆▅▅▆▆▆▁▅▆▂▇▅
+wandb:           AP2/ActorLoss ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  AP2/CW ▁▁▁▁▁▁██▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          AP2/CriticLoss ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    AP2/CumulativeReward ▁
+wandb:           AP2/LossRatio ▆▆▆▆▆▆▆█▁█▆▅▇▆▆▅▆▆▆▇▆▇▇▆▇▆▆▇▇▆█▆▇▇█▆▇▇▇▆
+wandb:         AP2/Observation ▆▆▅▆▆▆▇▅▆█▆█▁▇▆▆▅▆▆▆▆▆▆█▅▆▅▇▅▆▆▆▇▆▇▇▆▆▅▆
+wandb:              AP2/Reward ▃▂▂▄█▆█▃█▃█▃▃▄▆▂▇▁▅▆▅▅▁▆▅▁▃▅▁▄▂▅▄▅▇▃▂▇▅▃
+wandb:          AP2/Throughput ▃▃▂▂▂▃▃▁▂▁▂▂▃▃▃▂▃▃▂▃▄▃▂▄▂▅▃▃▃▃█▃▂▂▃▂▃▄▃▁
+wandb:           AP3/ActorLoss ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  AP3/CW ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          AP3/CriticLoss ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    AP3/CumulativeReward ▁
+wandb:           AP3/LossRatio ▄▂▅▇▆▅▃▇▅▅▇▆▃█▁▇▄▄▃▄▄▄▅▅▃▃▅▆▇█▅▆▄▂▅▂▃▆▆▄
+wandb:         AP3/Observation ▁▁▂▅▂▆▄▂▂▃▄▁▄▂█▂▄▅▃▂▃▂▃▃▄▄▃▂▂▆▄▃▁▅▁▇▂▅▅▃
+wandb:              AP3/Reward ▅▆▇▃▅▇▇▅▅▇▁▇▆▆▄▇▅▄▅▂▄▄▄▅▄▃█▄▅▅▅▅▄▄▅▄▄▆█▅
+wandb:          AP3/Throughput ▅█▄▄▇▂▇▆▃▇▁▅▇▃▆▄▂▃▄▃▃▇▇▃▆▅▅▃▄▂▁▂▅▂▃▂▃▃▄▂
+wandb:                 Episode ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: Global/CumulativeReward ▁
+wandb:         Global/Fairness ▂▄█▂▅▇▁▂▅▂▅▃▂▂▃▂▃▅▂▂█▅▅▃▄▃▃▅▂▃▄▃▆▄▄▅▄▄▅▃
+wandb:        Global/LossRatio ▅▂▄▁▅▄▅▆▃▄▂▃▄▂▁▂▂▇▄▁▅▅▆▄▄▂▅▂▄▂█▄▃▃▁▃▄▃▃▅
+wandb:       Global/Throughput ▅▅▅▂▄▄▂▃▅▇▆▃▆▇▆▄▇▃▇▂▆▆▅▆▅▄▅▄▆▇▄█▆▁▄▄▄▅▇▇
+wandb:                    Step ▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▅▅▅▅▅▅▅▅▆▆▆▆▆▆▆▆▇▇▇▇▇████
+wandb: 
+wandb: Run summary:
+wandb:           AP1/ActorLoss 0
+wandb:                  AP1/CW 115
+wandb:          AP1/CriticLoss 0
+wandb:    AP1/CumulativeReward 31.46703
+wandb:           AP1/LossRatio 0.49206
+wandb:         AP1/Observation 0.49206
+wandb:              AP1/Reward 0.02499
+wandb:          AP1/Throughput 37.4784
+wandb:           AP2/ActorLoss 0
+wandb:                  AP2/CW 20
+wandb:          AP2/CriticLoss 0
+wandb:    AP2/CumulativeReward 4.86751
+wandb:           AP2/LossRatio 0.66667
+wandb:         AP2/Observation 0.66667
+wandb:              AP2/Reward 0.00234
+wandb:          AP2/Throughput 3.5136
+wandb:           AP3/ActorLoss 0
+wandb:                  AP3/CW 16
+wandb:          AP3/CriticLoss 0
+wandb:    AP3/CumulativeReward 31.06881
+wandb:           AP3/LossRatio 0.61538
+wandb:         AP3/Observation 0.61538
+wandb:              AP3/Reward 0.02342
+wandb:          AP3/Throughput 35.136
+wandb:                 Episode 0
+wandb: Global/CumulativeReward 67.40335
+wandb:         Global/Fairness 0.72857
+wandb:        Global/LossRatio 0.56667
+wandb:       Global/Throughput 76.128
+wandb:                    Step 1500
+wandb: 
+wandb: You can sync this run to the cloud by running:
+wandb: wandb sync /home/pranay/mac-world/ns-3.29/scratch/linear-mesh/wandb/offline-run-20261030_213526-qzj4mqin
+wandb: Find logs at: ./wandb/offline-run-20261030_213526-qzj4mqin/logs
+episode 0 cumulative reward per AP: [31.467, 4.868, 31.069]
+W&B check: 1500 rows, 26 keys each
+RESULT: PASS | steps: 1500
