@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **sensing**: Add per-AP idle-slot sensing and IdleSense
+
+### Documentation
+
+- **report**: Add v3.4.0 hidden-chain results
+- **results**: Add TD3 and cwMinOnly policy seed 2
+- **v3.3.0**: Add sensing and IdleSense results
+- **report**: Add v3.3.0 sensing section
+
+## [3.4.1] - 2026-10-31
+
 ### Documentation
 
 - **v3.4.0**: Mark milestone tagged
@@ -30,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **changelog**: Regenerate with git-cliff
 - **v3.4.1**: Add run dirs for algo, seed 1 and load arms
 - **handoff**: Update session prompt and memory bank for v3.4.1
+- **changelog**: Regenerate with git-cliff
 
 ## [3.4.0] - 2026-10-29
 
@@ -73,6 +87,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **sweep**: Add static CW mode and ceiling sweep pilot
 
+### Documentation
+
+- **research**: Add plan to beat OSCAR and BEB
+- **workflow**: Adopt dev branch and push rule
+- **ceiling**: Add v3.1.0 static CW sweep results
+- **handoff**: Commit v3.1.0 runs and next-session prompt
+
+## [main-at-v3.4.1] - 2026-10-27
+
 ### Changed
 
 - **scratch**: Drop two unused names
@@ -91,10 +114,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add v3.0.0 report section, fill refs, fix stale status
 - **memory**: Record restructure and cleanup state
 - **memory**: Mark restructure merged and pushed
-- **research**: Add plan to beat OSCAR and BEB
-- **workflow**: Adopt dev branch and push rule
-- **ceiling**: Add v3.1.0 static CW sweep results
-- **handoff**: Commit v3.1.0 runs and next-session prompt
 
 ## [3.0.0] - 2026-10-26
 
@@ -451,10 +470,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **design**: Define multi-ap v0.2.0
 - Add CLAUDE.md and close v0.3.0 handoff
 
-[unreleased]: https://github.com/sohanroy676/mac-world/compare/v3.4.0..HEAD
+[unreleased]: https://github.com/sohanroy676/mac-world/compare/v3.4.1..HEAD
+[3.4.1]: https://github.com/sohanroy676/mac-world/compare/v3.4.0..v3.4.1
 [3.4.0]: https://github.com/sohanroy676/mac-world/compare/v3.2.0..v3.4.0
 [3.2.0]: https://github.com/sohanroy676/mac-world/compare/v3.1.0..v3.2.0
-[3.1.0]: https://github.com/sohanroy676/mac-world/compare/v3.0.0..v3.1.0
+[3.1.0]: https://github.com/sohanroy676/mac-world/compare/main-at-v3.4.1..v3.1.0
+[main-at-v3.4.1]: https://github.com/sohanroy676/mac-world/compare/v3.0.0..main-at-v3.4.1
 [3.0.0]: https://github.com/sohanroy676/mac-world/compare/v2.7.2..v3.0.0
 [2.7.2]: https://github.com/sohanroy676/mac-world/compare/v2.7.1..v2.7.2
 [2.7.1]: https://github.com/sohanroy676/mac-world/compare/v2.7.0..v2.7.1
