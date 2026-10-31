@@ -13,6 +13,7 @@
 
 ## Done
 
+- **v3.3.1 corrected IdleSense DONE (2026-11-01, branch `fix/idlesense-paper-rule` + `docs/v3.3.1-results`)** — see activeContext 2026-11-01; `20,40` IdleSense/BEB/Global runs in progress.
 - **v3.3.0 sensing + heuristics DONE (2026-10-31, branch `feature/v3.3.0-sensing`; not tagged)** and seed-2 TD3/cwMinOnly (report §4i) and technical-report §20.5 written. See activeContext 2026-10-31 for numbers; results `docs/results/sensing-heuristics-v3.3.0.md`.
 
 - **v3.4.0 policy-seed variance (trainSeed 1) DONE (2026-10-29, branch `docs/v3.4.0-policy-seed`)** — independent and shared `--reward pf` retrained with `--trainSeed 1`, frozen eval on seeds 100-107, 18/18 jobs PASS (arms E, F in `results/fair-v3.4.0-{E-indep-pf-t1,F-shared-pf-t1}`, local, not committed). Independent pf t1: PF 8.89 ± 0.02, min-AP 11.62 ± 0.82, level with the 256,128,256 oracle on PF (+0.02, p = 0.078). Shared pf t1: PF 8.69, min-AP 7.30, aggregate 64.5. The ordering of §4 holds, but the policies differ (final CWs, policy-seed gaps larger than the eval CIs). Report §4c, tables `docs/figures/v3.4.0-seeds/`. `--trainSeed 2` not run.
