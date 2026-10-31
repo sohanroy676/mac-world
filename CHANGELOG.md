@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **v3.4.0**: Add unsaturated uneven-load result
 - **changelog**: Regenerate with git-cliff
 - **v3.4.0**: Add TD3/cwMinOnly second policy seed
+- **changelog**: Regenerate with git-cliff
+- **v3.4.1**: Add run dirs for algo, seed 1 and load arms
+- **handoff**: Update session prompt and memory bank for v3.4.1
 
 ## [3.4.0] - 2026-10-29
 
