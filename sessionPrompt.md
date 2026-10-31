@@ -26,6 +26,9 @@ Continue the mac-world project (Multi-AP OSCAR, ns-3.29). Follow CLAUDE.md, exce
 ## Update (after v3.3.0 session, 2026-10-31)
 v3.3.0 sensing/IdleSense/residual/idle-obs done (`docs/results/sensing-heuristics-v3.3.0.md`), seed-2 TD3/cwMinOnly done (report §4i), technical report §20.5 written. Tasks 1-3 below are complete; remaining optional work: `--trainSeed 1/2` for residual and idle-obs arms, IdleSense on a single-domain topology (20,40), Bianchi (needs a fetchable Heusse/Bianchi source), v3.5.0 items.
 
+## Update (2026-11-01)
+`--idleSense` was corrected to the published Idle Sense rule (v3.3.1; see `docs/results/sensing-heuristics-v3.3.0.md` §3b). IdleSense / BEB / Global-CW at `20,40` n=8 were queued after the hidden-chain batch (check `results/fair-v3.3.1-20-40-*`); when they finish, add the table to that file and report §20.6. Run dirs from v3.3.1 and the `20,40` runs are not yet committed (needs approval). Tags still pending.
+
 ## Open tasks (ask me which to do first, and the time budget before any batch)
 1. v3.3.0 sensing + heuristics (IdleSense / Bianchi, residual RL) as a non-RL baseline: plan first (roadmap `docs/planning/detailed_roadmap.md`, `docs/research-beat-oscar.md` §6), likely touches `cw.cc` or the trainer, so a rebuild and regression checks.
 2. Write the v3.4.0 conclusion into the technical report.
