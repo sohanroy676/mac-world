@@ -17,6 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **results**: Add TD3 and cwMinOnly policy seed 2
 - **v3.3.0**: Add sensing and IdleSense results
 - **report**: Add v3.3.0 sensing section
+- **changelog**: Regenerate with git-cliff
+- **v3.3.0**: Add run dirs for seed 2, sensing and calibration
+- **v3.3.0**: Flag IdleSense rule as a variant
+- **v3.3.1**: Add corrected IdleSense results
+
+### Fixed
+
+- **sensing**: Use the published Idle Sense AIMD rule
 
 ## [3.4.1] - 2026-10-31
 
