@@ -245,6 +245,20 @@ Facts:
 
 Inference (untested): the PF reward gives each learner an objective that the static asymmetric optimum also maximises, so reaching about the oracle's PF is expected; the claim that survives is "a cooperative fairness reward lets independent learners fix the hidden-node starvation that BEB and a single common CW leave".
 
+### 20.6 Sensing and heuristics in the hidden chain (v3.3.0)
+
+Each AP counts idle slots on its own radio (no cross-AP information). Same scenario and protocol as §20.5, eval seeds 100-107, full tables in `docs/results/sensing-heuristics-v3.3.0.md`.
+
+| Arm | PF utility | min-AP (Mbps) | aggregate (Mbps) |
+|---|---|---|---|
+| BEB | 7.48 ± 0.04 | 1.44 ± 0.07 | 71.63 ± 0.62 |
+| Global-CW | 8.16 ± 0.07 | 2.58 ± 0.21 | 76.46 ± 0.34 |
+| IdleSense (target 20, no learning) | 7.88 ± 0.08 | 4.07 ± 0.42 | 55.18 ± 0.37 |
+| residual RL, PF reward (1 policy seed) | 8.55 ± 0.01 | 10.98 ± 1.18 | 55.05 ± 1.00 |
+| PF reward, idle-slot observation (1 policy seed) | 8.87 ± 0.02 | 11.00 ± 0.76 | 62.33 ± 0.73 |
+
+Facts: the IdleSense baseline beats BEB on PF (+0.40 ± 0.07) in all 8 seeds but is 0.29 ± 0.02 below Global-CW and holds the middle AP at the CW limit (1024). Residual RL and the idle-slot observation both beat BEB and Global-CW on PF and weakest-AP throughput; the idle-observation policy is level with the static 256,128,256 oracle on PF (+0.01 ± 0.02, p = 0.25). Neither is shown to beat the loss-observation learner of §20.5, whose three policy seeds span PF 8.60-8.89. Inference (untested): idle-slot regulation presumes one collision domain, which a hidden chain breaks for the middle AP.
+
 ## 21. Scaling Analysis
 
 Total stations fixed at 60, equal split, N = 2, 4, 6, 10 (removes the confound of growing station count in the earlier v1.x sweep).
@@ -291,7 +305,7 @@ Per-AP scenario (v3.4.0, §20.5):
 - The v3.0.0 ablations V1–V4 and A2 are single-seed, 6x10 is single-seed, and all of v3.0.0 uses one load (150 Mbps per station) and 15 s runs.
 - Raw traces and `.wandb` files are local only, so regeneration needs the local run directories.
 - A single channel, fixed positions, uplink UDP only; no mobility and no dynamic stations.
-- v3.4.0 (§20.5): one coarse topology (a 3-AP hidden chain, 200 dB / 50 dB loss), one main load, 2 training episodes, 15 s runs; 3 policy seeds for DDPG, TD3 and CWmin-only. Policy-seed variance exceeds the eval-seed CIs and no policy-seed test was run, so rankings between algorithms and the "matches the static oracle" claim are not shown. The static oracle comes from a coarse grid and is not a proven optimum. The PF reward matches the PF/min-AP metrics by construction. Idle-sensing and IdleSense/Bianchi heuristics (v3.3.0) were not part of these runs.
+- v3.4.0 (§20.5): one coarse topology (a 3-AP hidden chain, 200 dB / 50 dB loss), one main load, 2 training episodes, 15 s runs; 3 policy seeds for DDPG, TD3 and CWmin-only. Policy-seed variance exceeds the eval-seed CIs and no policy-seed test was run, so rankings between algorithms and the "matches the static oracle" claim are not shown. The static oracle comes from a coarse grid and is not a proven optimum. The PF reward matches the PF/min-AP metrics by construction. The v3.3.0 sensing arms (§20.6) use one policy seed per learned arm, an IdleSense target calibrated on one seed, AIMD constants that were not checked against the original paper, and no Bianchi estimator.
 
 ## 24. Future Work
 
