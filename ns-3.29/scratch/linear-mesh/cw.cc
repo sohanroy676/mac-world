@@ -67,6 +67,18 @@ std::map<Mac48Address, uint32_t> g_macBss;                    // device address 
 std::vector<std::vector<uint64_t>> g_heard;                   // g_heard[rxBss][txBss]: frames decoded by rxBss devices sent by txBss devices
 
 
+// v3.3.0 opt-in sensing (defaults = old behaviour: no State trace is connected, no CW is changed by sensing).
+// Idle slots are measured on each AP's OWN radio (PHY "State" trace), so ADR-0002 isolation holds.
+bool g_idleSense = false;   // --idleSense: per-AP AIMD on CW toward --idleTarget mean idle slots (non-RL baseline)
+bool g_residual = false;    // --residual: agent action is a Delta in log2(CW) around the IdleSense CW (needs --idleSense)
+bool g_obsIdle = false;     // --obsIdle: per-AP observation is mean idle slots / 20 (clipped to 1) instead of the loss ratio
+double g_idleTarget = 5.68; // --idleTarget (Heusse 2005 value for 802.11b; calibrated for this PHY in the v3.3.0 report)
+double g_idleEps = 6.0;     // --idleEps: additive CW increase when idle < target (project choice, constants not verified vs the paper)
+double g_idleAlpha = 0.9375; // --idleAlpha: multiplicative CW decrease when idle >= target (project choice)
+std::vector<uint64_t> g_apIdleSlots, g_apIdleGaps; // backoff-idle slots and gaps seen by AP i since the last step
+std::vector<float> g_apIdleMean;                   // mean idle slots per gap in the last step (held when no gap)
+std::vector<double> g_idleCw;                      // IdleSense CW state per AP
+
 uint32_t history_length = 20;
 deque<float> history;
 
@@ -182,7 +194,7 @@ std::string MyGetExtraInfo(void)
 
     if (g_apBss.size() > 1)
     {
-        // v0.6.0: per-AP records "cwSet,cwReadbackAp,reward,loss,rxDelta,phyTxDelta", AP order, ';'-separated.
+        // v0.6.0: per-AP records "cwSet,cwReadbackAp,reward,loss,rxDelta,phyTxDelta,idleMean", AP order, ';'-separated.
         myInfo = myInfo + "|";
         for (uint32_t ap = 0; ap < g_apBss.size(); ++ap)
         {
@@ -192,7 +204,8 @@ std::string MyGetExtraInfo(void)
                 match.Get(0)->GetAttribute("MinCw", minV);
             myInfo += (ap ? ";" : "") + to_string(g_apCwMin.at(ap)) + "," + to_string(minV.Get()) + "," +
                       to_string(g_apReward.at(ap)) + "," + to_string(g_apLoss.at(ap)) + "," +
-                      to_string(g_apRxDelta.at(ap)) + "," + to_string(g_apTxDelta.at(ap));
+                      to_string(g_apRxDelta.at(ap)) + "," + to_string(g_apTxDelta.at(ap)) + "," +
+                      to_string(g_apIdleMean.at(ap));
         }
     }
 
@@ -354,6 +367,9 @@ bool MyExecuteActions(Ptr<OpenGymDataContainer> action)
                 std::cout << "Unsupported agent type!" << endl;
                 exit(0);
             }
+            if (g_residual)
+                // v3.3.0: action 3 = the IdleSense CW; +-2 in log2 around it (a in 0..6 -> delta clipped to [-2, 2])
+                cw = (uint32_t)std::lround(g_idleCw.at(ap) * pow(2.0, std::min(2.0f, std::max(-2.0f, a - 3.0f))));
             cw = min(1024u, max(cw, 16u));
             // v3.1.0: with --apCws the static CW set in set_phy stays; agent actions must not overwrite it.
             if (!dry_run && g_apCwOverride.empty())
@@ -528,7 +544,22 @@ void recordHistory()
             double goodputMbit = g_apRxDelta[ap] * (1500 - 20 - 8 - 8) * 8.0 / 1e6;
             double r = goodputMbit / ((g_apLoadMbps.empty() ? g_offeredLoadMbps : g_apLoadMbps[ap]) * g_apStaCounts[ap] * envStepTime);
             g_apReward[ap] = (float)std::min(1.0, std::max(0.0, r));
-            g_apHistory[ap].push_front(g_apLoss[ap]);
+            if (g_idleSense || g_obsIdle)
+            {
+                if (g_apIdleGaps[ap])
+                    g_apIdleMean[ap] = (float)((double)g_apIdleSlots[ap] / g_apIdleGaps[ap]);
+                if (g_idleSense && g_apIdleGaps[ap])
+                {
+                    double &cw = g_idleCw[ap];
+                    cw = g_apIdleMean[ap] < g_idleTarget ? cw + g_idleEps : cw * g_idleAlpha;
+                    cw = std::min(1024.0, std::max(16.0, cw));
+                    if (!g_residual)
+                        setApCw(ap, (uint32_t)std::lround(cw), (uint32_t)std::lround(cw));
+                }
+                g_apIdleSlots[ap] = 0;
+                g_apIdleGaps[ap] = 0;
+            }
+            g_apHistory[ap].push_front(g_obsIdle ? std::min(1.0f, g_apIdleMean[ap] / 20.0f) : g_apLoss[ap]);
             if (g_apHistory[ap].size() > history_length)
                 g_apHistory[ap].pop_back();
         }
@@ -577,6 +608,17 @@ void packetSentAppAp(uint32_t apIndex, Ptr<const Packet> packet)
     g_apAppTxPkt[apIndex]++;
 }
 
+// v3.3.0: the AP radio logs each IDLE interval when the medium turns busy. A gap longer than a SIFS-sized
+// pause is a backoff gap; its idle slots are (gap - AIFS(BE) = SIFS + 3 slots = 43 us) / 9 us, floored.
+void apPhyState(uint32_t ap, Time start, Time duration, WifiPhyState state)
+{
+    if (state != WifiPhyState::IDLE || duration <= MicroSeconds(20))
+        return;
+    int64_t extra = duration.GetNanoSeconds() - 43000;
+    g_apIdleSlots[ap] += extra > 0 ? extra / 9000 : 0;
+    g_apIdleGaps[ap]++;
+}
+
 // Hook the per-AP counters. Sinks live on the AP node, OnOff sources on its STAs, and every
 // wifi device belongs to exactly one BSS, so each trace source maps to exactly one AP index.
 void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apStaNodes)
@@ -591,6 +633,10 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
     g_apTxDelta.assign(wifiApNode.GetN(), 0);
     g_apLastRx.assign(wifiApNode.GetN(), 0);
     g_apLastTx.assign(wifiApNode.GetN(), 0);
+    g_apIdleSlots.assign(wifiApNode.GetN(), 0);
+    g_apIdleGaps.assign(wifiApNode.GetN(), 0);
+    g_apIdleMean.assign(wifiApNode.GetN(), 0.0f);
+    g_idleCw.assign(wifiApNode.GetN(), 16.0);
 
     for (uint32_t apIndex = 0; apIndex < wifiApNode.GetN(); ++apIndex)
     {
@@ -611,7 +657,15 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
             {
                 Ptr<WifiNetDevice> dev = DynamicCast<WifiNetDevice>(node->GetDevice(d));
                 if (dev)
+                {
                     dev->GetPhy()->TraceConnectWithoutContext("PhyTxBegin", MakeBoundCallback(&packetSentPhyAp, apIndex));
+                    if (n == 0 && (g_idleSense || g_obsIdle)) // AP radio only: sensing stays local to the AP
+                    {
+                        PointerValue st;
+                        dev->GetPhy()->GetAttribute("State", st);
+                        st.Get<WifiPhyStateHelper>()->TraceConnectWithoutContext("State", MakeBoundCallback(&apPhyState, apIndex));
+                    }
+                }
             }
             if (n == 0)
                 continue; // AP node: no OnOff sources
@@ -1201,6 +1255,12 @@ int main(int argc, char *argv[])
     cmd.AddValue("apHidden", "Comma-separated 1-based AP pairs whose BSSs cannot hear each other, e.g. 1-3 (3-AP chain). Default: empty = one collision domain", apHiddenArg);
     cmd.AddValue("hiddenLoss", "Path loss in dB between hidden BSS pairs. Default: 200", g_hiddenLossDb);
     cmd.AddValue("apLoads", "Comma-separated per-STA offered load in Mbps per AP, e.g. 150,150,5 (one per AP). Default: empty = offeredLoad for every AP", apLoadsArg);
+    cmd.AddValue("idleSense", "v3.3.0: per-AP IdleSense AIMD on CW from the AP's own idle-slot count (multi-AP; use with dryRun=true for the non-RL baseline). Default: false", g_idleSense);
+    cmd.AddValue("idleTarget", "IdleSense target mean idle slots per backoff gap. Default: 5.68", g_idleTarget);
+    cmd.AddValue("idleEps", "IdleSense additive CW increase. Default: 6", g_idleEps);
+    cmd.AddValue("idleAlpha", "IdleSense multiplicative CW decrease factor. Default: 0.9375", g_idleAlpha);
+    cmd.AddValue("residual", "v3.3.0: agent action is a Delta log2(CW) in [-2, 2] around the IdleSense CW (needs --idleSense and an agent). Default: false", g_residual);
+    cmd.AddValue("obsIdle", "v3.3.0: per-AP observation = mean idle slots / 20 (clipped to 1) instead of the loss ratio. Default: false", g_obsIdle);
     cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);
     cmd.AddValue("seed", "Random seed", simSeed);
     cmd.AddValue("trafficStart", "Diagnostic: time (s) at which the data sources start. Default: 0", g_trafficStartTime);
@@ -1225,6 +1285,18 @@ int main(int argc, char *argv[])
     NS_LOG_UNCOND("--apStaCounts: " << (apStaCountsArg.empty() ? "(single AP, nWifi stations)" : apStaCountsArg));
     NS_LOG_UNCOND("--apCws: " << (apCwsArg.empty() ? "(none, every AP uses CW)" : apCwsArg) << (dry_run && !apCwsArg.empty() ? " (ignored: dryRun)" : ""));
     NS_LOG_UNCOND("--cwMinOnly: " << g_cwMinOnly);
+    if ((g_idleSense || g_residual || g_obsIdle) && apStaCounts.size() < 2)
+    {
+        std::cout << "--idleSense/--residual/--obsIdle need --apStaCounts with at least 2 APs." << endl;
+        exit(1);
+    }
+    if (g_residual && (!g_idleSense || dry_run || !g_apCwOverride.empty() || g_cwMinOnly))
+    {
+        std::cout << "--residual needs --idleSense, an agent (no dryRun), no --apCws and no --cwMinOnly." << endl;
+        exit(1);
+    }
+    if (g_idleSense)
+        NS_LOG_UNCOND("--idleSense: target " << g_idleTarget << ", eps " << g_idleEps << ", alpha " << g_idleAlpha << ", residual " << g_residual);
     NS_LOG_UNCOND("--apHidden: " << (apHiddenArg.empty() ? "(none, one collision domain)" : apHiddenArg) << " hiddenLoss=" << g_hiddenLossDb);
     NS_LOG_UNCOND("--apLoads: " << (apLoadsArg.empty() ? "(none, every AP uses offeredLoad)" : apLoadsArg));
     NS_LOG_UNCOND("--simulationTime: " << simulationTime);

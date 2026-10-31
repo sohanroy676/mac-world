@@ -1,0 +1,9 @@
+START target 30 at 14:00:17
+idlesense-t30 seed=0 ...
+   -> PASS (rc=0, 428 s) results/multi-ap-20261031-140018
+batch complete
+START target 50 at 14:07:26
+idlesense-t50 seed=0 ...
+   -> PASS (rc=0, 419 s) results/multi-ap-20261031-140727
+batch complete
+DONE
