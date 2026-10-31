@@ -179,6 +179,7 @@ Reading:
 - Fact: both variants beat BEB and Global on PF utility and min-AP in all 8 eval seeds (p = 0.008).
 - Fact: TD3 reaches the oracle's min-AP (+0.49 ± 0.66, p = 0.195) and its Jain index (0.946 vs 0.948, p = 0.641) but sits 0.09 ± 0.03 PF below it; DDPG is closer on PF (-0.03) and lower on min-AP (-3.3). Different trade-off, not a uniform win.
 - Fact: `--cwMinOnly` is the weakest PF arm: its outcome sits closest to BEB (aggregate -3.2 vs BEB, Jain 0.754, AP2 4.4 Mbps). Its last-100 CWmin is 116 / 59 ± 63 / 16 (AP3 at the floor, AP2 widely spread across eval seeds) and its convergence step is 660 ± 357 (the fixed-CW policies converge at 0). Why it is weaker was not tested.
+- Update: the `--trainSeed 1` repeat in §4h changes both readings above (TD3 no longer matches the oracle's min-AP, `--cwMinOnly` is no longer weak). Treat the seed-0 bullets as one policy, not a property of the algorithm.
 - Limit: one `--trainSeed` per arm. §4c/§4d show policy-seed spread larger than these CIs (DDPG independent min-AP spans 8.4-11.6 over three seeds), so the TD3-vs-DDPG gaps above (min-AP +3.8, PF -0.06) are not shown to exceed policy-seed variation. The `--cwMinOnly` gap vs DDPG (-0.45 PF, -5.6 min-AP) is larger than any DDPG seed gap seen so far, but that is not a test.
 
 ## 4f. Uneven loads, `--apLoads 150,150,20` (fact, but it does NOT test what was intended)
@@ -213,7 +214,31 @@ Reading:
 - Inference: with an unsaturated AP, a PF reward still recovers the static oracle's PF; the 256,128,256 setting is not tuned for this load, so it is a fixed reference, not an upper bound.
 - Limit: one policy seed, one load vector, one topology.
 
+## 4h. TD3 and `--cwMinOnly` with `--trainSeed 1` (fact)
+Arms O (TD3) and P (`--cwMinOnly`) repeated with `--trainSeed 1` (2 episodes, ns-3 seeds 2 and 1002), same eval seeds 100-107. 18 jobs, all PASS (train 965 s / 953 s, eval 467-473 s). Tables: `docs/figures/v3.4.0-algo/` (arms A, B, C, I, J, O, P and the oracle; earlier rows regenerate unchanged). Mean ± 95 % CI over 8 eval seeds; exact Wilcoxon p.
+
+| Arm | trainSeed | PF utility | min-AP | aggregate | Jain | final CW (AP1/2/3) |
+|---|---|---|---|---|---|---|
+| TD3 | 0 | 8.78 ± 0.03 | 13.75 ± 0.69 | 57.66 ± 1.04 | 0.946 | 350 / 58 / 104 |
+| TD3 | 1 | 8.91 ± 0.03 | 10.73 ± 0.79 | 63.53 ± 0.70 | 0.891 | 220 / 114 / 199 |
+| `--cwMinOnly` | 0 | 8.39 ± 0.11 | 4.38 ± 0.61 | 68.42 ± 1.39 | 0.754 | 116 / 59 / 16 |
+| `--cwMinOnly` | 1 | 8.84 ± 0.04 | 9.07 ± 0.69 | 64.37 ± 0.51 | 0.856 | 163 / 126 / 237 |
+| DDPG (for reference, §4/§4c) | 0 / 1 | 8.84 / 8.89 | 9.99 / 11.62 | 62.82 / 61.78 | | |
+
+Paired Δ of the `--trainSeed 1` policies (PF utility / min-AP Mbps / aggregate Mbps):
+
+| Arm (trainSeed 1) | vs BEB | vs Global | vs static 256,128,256 |
+|---|---|---|---|
+| TD3 | +1.44 ± 0.04 / +9.29 ± 0.77 / -8.09 ± 0.94 | +0.75 ± 0.05 / +8.14 ± 0.59 / -12.93 ± 0.38 | +0.05 ± 0.03 (p = 0.016) / -2.53 ± 0.77 / +3.95 ± 0.66 |
+| `--cwMinOnly` | +1.36 ± 0.05 / +7.63 ± 0.67 / -7.25 ± 0.75 | +0.67 ± 0.04 / +6.49 ± 0.49 / -12.09 ± 0.20 | -0.03 ± 0.04 (p = 0.055) / -4.18 ± 0.67 / +4.79 ± 0.47 |
+
+Reading:
+- Fact: all four new policies beat BEB and Global on PF utility and min-AP in all 8 eval seeds (p = 0.008), and give up aggregate throughput.
+- Fact: the algorithm / action-space rankings from §4e do not survive a second policy seed. `--cwMinOnly` goes from the weakest arm (PF 8.39, -0.48 vs the oracle) to level with DDPG (PF 8.84, -0.03 vs the oracle, p = 0.055). TD3 goes from matching the oracle's min-AP (+0.49) to -2.5, and its PF goes from -0.09 to +0.05 (p = 0.016) relative to the oracle.
+- Fact: with two policy seeds each, DDPG, TD3 and `--cwMinOnly` span overlapping ranges on PF (8.39-8.91) and min-AP (4.4-13.8). The seed-to-seed spread within one algorithm (e.g. `--cwMinOnly` min-AP 4.4 vs 9.1) is larger than the between-algorithm differences in the seed-1 row (min-AP 9.1-11.6).
+- Inference: this data does not support ranking DDPG, TD3 and `--cwMinOnly`; it supports only "a PF reward with an independent per-AP learner reliably beats BEB and Global on PF and min-AP in this scenario, whatever the algorithm". Ranking them would need more policy seeds.
+- Limit: two policy seeds per new arm, three for DDPG; no policy-seed test.
+
 ## 5. Next
-- Done: policy seeds 0-2 (§4c, §4d), TD3 and `--cwMinOnly` (§4e), `--apLoads` 150,150,20 (§4f, not informative).
-- Done: unsaturated uneven-load check (§4g).
-- Open: a second policy seed for the TD3 / `--cwMinOnly` arms; v3.3.0 sensing + heuristics (IdleSense) as a non-RL baseline.
+- Done: policy seeds 0-2 for DDPG (§4c, §4d); TD3 and `--cwMinOnly` at seeds 0 and 1 (§4e, §4h); `--apLoads` 150,150,20 (§4f, not informative) and 150,150,1 (§4g).
+- Open: a third policy seed for TD3 / `--cwMinOnly` only if a ranking claim is wanted; v3.3.0 sensing + heuristics (IdleSense) as a non-RL baseline; technical-report conclusion for v3.4.0.
