@@ -133,7 +133,7 @@
 
 ### v3.3.0
 - Sensing + heuristics: idle-slot/busy-fraction and MacTxDataFailed observations, IdleSense (and optionally Bianchi) mode, residual RL (ideas #4, #5, #6).
-- Status: ⏳ planned.
+- Status: ✅ DONE 2026-10-31 on `feature/v3.3.0-sensing` (not tagged). `cw.cc --idleSense/--residual/--obsIdle` (own-radio idle-slot sensing), trainer `--mode idlesense`, `--residual`, `--obsIdle`; defaults byte-identical (10533/9000, smoke 10.59458). On `10,10,10 --apHidden 1-3`, n=8: IdleSense (target 20, calibrated on seed 0) beats BEB on PF (+0.40) but is -0.29 vs Global and pins the middle AP at CW 1024; residual PF 8.55 and idle-observation PF 8.87 (level with the static oracle) are one policy seed each, inside the loss-observation DDPG spread. Bianchi not done; Heusse constants not verified (paper not fetchable). `docs/results/sensing-heuristics-v3.3.0.md`.
 
 ### v3.4.0
 - Per-AP scenario: partial-overlap loss matrix + fairness reward (ideas #7, #14). Needs user approval first (touches "detailed interference modelling" out-of-scope line).

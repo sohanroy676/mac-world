@@ -32,6 +32,7 @@ parser.add_argument("--benchDir", default="results/fair-%s" % time.strftime("%Y%
 parser.add_argument("--trainerArgs", default="", help="extra trainer args for EVERY job incl. BEB, e.g. '--historyLength 20 --obsWindow 20'")
 parser.add_argument("--learnerArgs", default="", help="extra trainer args for learned modes only (train and eval, not BEB), e.g. '--alpha 0 --rewardScale 100 --cwMinOnly'")
 parser.add_argument("--variant", default="", help="v3.4.0: label appended to run tags, log names and the actor dir (e.g. '-pf'), so variants of one mode can share an aggregate")
+parser.add_argument("--idleOnly", action="store_true", help="v3.3.0: no training and no learned arms; only run --mode idlesense (label idlesense<variant>, tag the same) on --evalSeeds; pass --idleTarget etc. via --trainerArgs")
 parser.add_argument("--no-beb", action="store_true")
 parser.add_argument("--no-check", action="store_true")
 args = parser.parse_args()
@@ -79,6 +80,12 @@ trained = load(train_manifest)
 evaled = load(eval_manifest)
 actor_dir = lambda mode: os.path.abspath(os.path.join(args.benchDir, "actors", mode + suffix))
 
+if args.idleOnly:
+    for seed in args.evalSeeds:
+        if ("idlesense", seed) not in evaled:
+            run(eval_manifest, "idlesense" + args.variant, "idlesense", seed, ["--tag", "idlesense" + args.variant], learner=False)
+    print("batch complete")
+    sys.exit(0)
 for mode in args.modes:
     if (mode, args.trainSeed) not in trained:
         run(train_manifest, "train-" + mode + suffix, mode, args.trainSeed,
