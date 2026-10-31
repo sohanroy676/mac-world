@@ -1,6 +1,6 @@
 # Multi-AP OSCAR: Contention-Window Optimization with Per-AP DDPG Agents in a Shared ns-3 Simulation
 
-Technical report, v2.3.0, updated 2026-10-27 with the v3.0.0 results (§20.4). Status: draft for review. Five citations are filled (§26); the remaining placeholders are written `[REF:key]` and wait for the author's reference list.
+Technical report, v2.3.0, updated 2026-10-27 with the v3.0.0 results (§20.4) and 2026-10-31 with the v3.4.0 results (§20.5). Status: draft for review. Five citations are filled (§26); the remaining placeholders are written `[REF:key]` and wait for the author's reference list.
 
 Labels used throughout: **[Inherited]** = comes from the original OSCAR design or code; **[New]** = added by this project; **[Upstream]** = ns-3 / ns3-gym code used unchanged. Statements are fact unless marked *inference* (reasoned, untested).
 
@@ -10,7 +10,7 @@ Labels used throughout: **[Inherited]** = comes from the original OSCAR design o
 
 OSCAR optimizes the IEEE 802.11 contention window (CW) of one access point (AP) with a DDPG actor-critic agent. This project extends it to N APs in one shared ns-3 simulation, each AP with its own independent DDPG agent and its own CW. We compare three controllers against standard 802.11 binary exponential backoff (BEB): independent per-AP agents, one shared "global-CW" agent whose CW is broadcast to every AP, and (as an appendix, negative result) a central-critic variant.
 
-On the final, fixed-binary set (n = 3 seeds, 95 % confidence intervals), the global-CW agent gains +29.5 % to +33.2 % aggregate throughput over BEB in every saturated topology, from 2 to 10 APs at a fixed 60 stations. The independent per-AP agents do not scale: they are on par with BEB at N = 2 (+3.8 ± 27.2 %), then fall below it from N = 4 (−27.0 ± 21.8 %) to N = 10 (−46.2 ± 12.2 %). At a light load of 0.5 Mbps per station the global gain shrinks to +6.3 ± 8.0 %. The central critic did not help and is reported as a negative result. A later attempt (v3.0.0, §20.4) to beat the global-CW agent with per-AP controllers that share weights reached global level (paired intervals span 0) and lowered seed variance in two topologies; it did not prove a gain. Results have wide intervals at n = 3, and several effects are explained only by inference.
+On the final, fixed-binary set (n = 3 seeds, 95 % confidence intervals), the global-CW agent gains +29.5 % to +33.2 % aggregate throughput over BEB in every saturated topology, from 2 to 10 APs at a fixed 60 stations. The independent per-AP agents do not scale: they are on par with BEB at N = 2 (+3.8 ± 27.2 %), then fall below it from N = 4 (−27.0 ± 21.8 %) to N = 10 (−46.2 ± 12.2 %). At a light load of 0.5 Mbps per station the global gain shrinks to +6.3 ± 8.0 %. The central critic did not help and is reported as a negative result. A later attempt (v3.0.0, §20.4) to beat the global-CW agent with per-AP controllers that share weights reached global level (paired intervals span 0) and lowered seed variance in two topologies; it did not prove a gain. In a hidden-chain scenario with a fairness reward (v3.4.0, §20.5) independent per-AP agents beat BEB and the global agent on proportional-fair utility and weakest-AP throughput, at lower aggregate throughput. Results have wide intervals at n = 3, and several effects are explained only by inference.
 
 ## 2. Introduction
 
@@ -220,6 +220,31 @@ V5 vs BEB is +35.8 ± 6.2 %. Imbalance, V5 minus Global, n = 3: 5,55 +5.0 ± 13.
 
 Facts: every paired interval against Global includes 0, so no gain over Global is shown. V5's seed spread is lower at 20,40 (±0.85 vs ±6.95) and at 5,55. In the independent-agent screen (n = 1 each) the added observation and reward changes lowered throughput; only parameter sharing reached Global level. Per-AP CWs end nearly equal even under imbalance. Inference (untested): V5 behaves like a global CW with shared weights, and the variance reduction may come from the N transitions per step feeding one agent.
 
+### 20.5 Per-AP scenario: hidden chain and a fairness reward (v3.4.0)
+
+Question: in a topology where the best CWs differ per AP, does a per-AP learner with a cooperative reward beat BEB and Global-CW? ADR-0005 approved a coarse loss matrix (the "detailed interference modelling" item in the out-of-scope list is touched only to this extent). Scenario `10,10,10 --apHidden 1-3`: BSS1 and BSS3 cannot hear each other (200 dB), every other pair keeps 50 dB; 150 Mbps per station, 15 s. Reward option `--reward pf` (sum of log per-AP goodput). Full tables: `docs/results/per-ap-scenario-v3.4.0.md` (section numbers below refer to it).
+
+Static gate (§3, no learning, n = 3): the middle AP is starved under BEB (35.0 / 1.4 / 35.2 Mbps). An asymmetric static setting 256,128,256 beats the best common CW on PF utility by +0.15 ± 0.02, and 256,64,256 beats it on the weakest AP by +7.62 ± 0.27 Mbps. The gain is a fairness gain; aggregate falls from 62.9 (common 256) to 53.9-59.5 Mbps.
+
+Frozen evaluation (§4, 2 training episodes, eval seeds 100-107, paired by seed, mean ± 95 % CI, exact Wilcoxon p = 0.008 means all 8 seeds agree):
+
+| Arm | aggregate | AP1 / AP2 / AP3 | PF utility | min-AP |
+|---|---|---|---|---|
+| BEB | 71.63 ± 0.62 | 34.95 / 1.44 / 35.24 | 7.48 ± 0.04 | 1.44 ± 0.07 |
+| Global-CW | 76.46 ± 0.34 | 36.93 / 2.58 / 36.94 | 8.16 ± 0.07 | 2.58 ± 0.21 |
+| independent, aggregate reward | 68.77 ± 0.15 | 38.50 / 1.26 / 29.01 | 7.25 ± 0.05 | 1.26 ± 0.07 |
+| independent, `--reward pf` (trainSeed 0) | 62.82 ± 1.18 | 24.76 / 9.99 / 28.07 | 8.84 ± 0.01 | 9.99 ± 0.54 |
+| static 256,128,256 (§4b) | 59.58 ± 0.11 | 23.18 / 13.25 / 23.15 | 8.87 ± 0.00 | 13.25 ± 0.09 |
+
+Facts:
+- A PF-reward independent per-AP learner beats BEB and Global-CW on PF utility and weakest-AP throughput in all 8 eval seeds, for every policy seed (3 seeds DDPG, 2 seeds each TD3 and CWmin-only, §4c-§4h). Against BEB: +0.92 to +1.44 PF and +2.9 to +12.3 Mbps min-AP across all policies. The price is aggregate throughput (-3 to -14 Mbps vs BEB; Global-CW has the highest aggregate).
+- With the aggregate-goodput reward the independent learner is worse than BEB on all four metrics.
+- The learned CWs separate per AP, but the policies differ from seed to seed (final CWs 208/41/77, 218/123/251, 286/311/347). The comparison with the static oracle is not stable: independent pf is -0.03 ± 0.01 PF (seed 0), +0.02 ± 0.02 (seed 1) and -0.27 ± 0.05 (seed 2) against 256,128,256, and 3-5 Mbps under it on min-AP.
+- Not stable across policy seeds, so not claimed: independent-vs-shared ordering on PF, DDPG vs TD3 vs CWmin-only ranking, "matches the oracle". The policy-to-policy spread is larger than the eval-seed CIs.
+- Unsaturated AP3 (`--apLoads 150,150,1`, §4g): BEB gives AP2 11.25 Mbps instead of 1.4; independent pf ties the static 256,128,256 on PF (+0.00 ± 0.01) and beats BEB by +0.31 ± 0.01, and its CWs adapt to the load (AP3 stays at 16). `150,150,20` still saturates AP3 and was not an uneven-load test (§4f).
+
+Inference (untested): the PF reward gives each learner an objective that the static asymmetric optimum also maximises, so reaching about the oracle's PF is expected; the claim that survives is "a cooperative fairness reward lets independent learners fix the hidden-node starvation that BEB and a single common CW leave".
+
 ## 21. Scaling Analysis
 
 Total stations fixed at 60, equal split, N = 2, 4, 6, 10 (removes the confound of growing station count in the earlier v1.x sweep).
@@ -251,6 +276,10 @@ Inference (not tested):
 - A weak learning signal (small, saturated reward) may contribute to modest and uneven gains.
 - The global agent benefits from a signal that reflects the whole network; it does not respect the per-AP isolation rule, so the comparison shows an upper reference, not a deployable method.
 
+Per-AP scenario (v3.4.0, §20.5):
+- Facts: in a hidden chain the single global CW leaves the middle AP at 2.6 Mbps, while PF-reward independent per-AP learners lift the weakest AP (the middle one) to 4.4-13.8 Mbps depending on the policy (BEB: 1.4). This is the setting where per-AP control does better than the global agent, on fairness, not on aggregate throughput.
+- Inference: the earlier failure of independent agents (§21) is partly an objective problem. With the aggregate reward the independent learner cannot see the starved AP and is worse than BEB here; with a PF reward it is not.
+
 ## 23. Limitations
 
 - n = 3 per cell; most agent-versus-BEB intervals are wide and several include 0.
@@ -262,6 +291,7 @@ Inference (not tested):
 - The v3.0.0 ablations V1–V4 and A2 are single-seed, 6x10 is single-seed, and all of v3.0.0 uses one load (150 Mbps per station) and 15 s runs.
 - Raw traces and `.wandb` files are local only, so regeneration needs the local run directories.
 - A single channel, fixed positions, uplink UDP only; no mobility and no dynamic stations.
+- v3.4.0 (§20.5): one coarse topology (a 3-AP hidden chain, 200 dB / 50 dB loss), one main load, 2 training episodes, 15 s runs; 3 policy seeds for DDPG and 2 for TD3 and CWmin-only. Policy-seed variance exceeds the eval-seed CIs and no policy-seed test was run, so rankings between algorithms and the "matches the static oracle" claim are not shown. The static oracle comes from a coarse grid and is not a proven optimum. The PF reward matches the PF/min-AP metrics by construction. Idle-sensing and IdleSense/Bianchi heuristics (v3.3.0) were not part of these runs.
 
 ## 24. Future Work
 
@@ -274,7 +304,7 @@ Inference (not tested):
 
 ## 25. Conclusion
 
-The project delivers a working multi-AP OSCAR in one ns-3 process with strictly isolated per-AP DDPG agents, per-AP statistics and CW control, baselines, and a reproducible benchmark pipeline. Under saturation a single shared CW agent beats BEB by about 30 % at every tested size, while isolated per-AP agents match BEB at two APs and degrade as APs are added. Learning to coordinate through local loss alone is therefore not sufficient in this setup. The central critic prototype did not change that conclusion, and the open causes are listed in §23–24. Relaxing isolation with shared weights (v3.0.0) brings per-AP controllers to the global agent's level, not past it (§20.4).
+The project delivers a working multi-AP OSCAR in one ns-3 process with strictly isolated per-AP DDPG agents, per-AP statistics and CW control, baselines, and a reproducible benchmark pipeline. Under saturation a single shared CW agent beats BEB by about 30 % at every tested size, while isolated per-AP agents match BEB at two APs and degrade as APs are added. Learning to coordinate through local loss alone is therefore not sufficient in this setup. The central critic prototype did not change that conclusion, and the open causes are listed in §23–24. Relaxing isolation with shared weights (v3.0.0) brings per-AP controllers to the global agent's level, not past it (§20.4). In a hidden-chain topology with a proportional-fairness reward (v3.4.0, §20.5), strictly isolated per-AP agents do beat both BEB and the global agent on PF utility and on the weakest AP in all 8 evaluation seeds, at lower aggregate throughput; which learner or algorithm is best is not settled by the policy seeds run.
 
 ## 26. References
 
@@ -303,4 +333,4 @@ From `ns-3.29/scratch/linear-mesh`, with `../../venv/bin/python` and the local r
 
 ## Appendix C. Version history
 
-v0.1 baseline freeze → v0.2 design → v0.3 two-AP topology → v0.4 per-AP statistics → v0.5 per-AP CW → v0.6 multi-AP ns3-gym → v0.7 independent agents → v0.8 W&B → v0.9 validation → v1.0 core → v1.1–v1.6 benchmarks and 2→10 AP scaling (pre-fix) → v1.7–v1.9 central critic (spec, prototype, evaluation) → v2.0 robustness and CW-start fix → v2.1 reproducibility → v2.2 final results → v2.3 this report → v2.4 presentation → v2.5 final audit → v2.7 W&B sync of the final runs → v3.0 attempt to beat Global-CW (§20.4).
+v0.1 baseline freeze → v0.2 design → v0.3 two-AP topology → v0.4 per-AP statistics → v0.5 per-AP CW → v0.6 multi-AP ns3-gym → v0.7 independent agents → v0.8 W&B → v0.9 validation → v1.0 core → v1.1–v1.6 benchmarks and 2→10 AP scaling (pre-fix) → v1.7–v1.9 central critic (spec, prototype, evaluation) → v2.0 robustness and CW-start fix → v2.1 reproducibility → v2.2 final results → v2.3 this report → v2.4 presentation → v2.5 final audit → v2.7 W&B sync of the final runs → v3.0 attempt to beat Global-CW (§20.4) → v3.1 ceiling → v3.2 fair protocol → v3.4 per-AP hidden-chain scenario (§20.5).
