@@ -194,6 +194,26 @@ Topology `10,10,10 --apHidden 1-3` with `--apLoads 150,150,20` (per-STA offered 
 - Fact: independent pf trained here gives PF +1.00 ± 0.09 and min-AP +3.67 ± 0.32 over BEB (p = 0.008), but -0.44 PF and -8.2 min-AP vs the static oracle. These numbers are within the policy-seed spread of §4c/§4d for the equal-load case, so they do not show a load effect.
 - Inference: a real uneven-load check needs an AP that is not saturated, e.g. `--apLoads 150,150,1` (AP3 offers 10 Mbps in total). Not run.
 
+## 4g. Uneven loads with an unsaturated AP, `--apLoads 150,150,1` (fact)
+Same design as §4f but AP3 offers 1 Mbps per STA (10 Mbps in total, so it is not saturated). Arm M: BEB + independent `--reward pf` (`--trainSeed 0`, 2 episodes, trained and evaluated in this load); arm N: static 256,128,256 (chosen on the equal-load gate, not tuned for this load); eval seeds 100-107. 17 + 8 jobs, all PASS (eval 345-369 s). Tables and figures: `docs/figures/v3.4.0-apload1/`. Mean ± 95 % CI over 8 eval seeds; exact Wilcoxon p.
+
+| Arm | aggregate | AP1 / AP2 / AP3 | Jain | PF utility | min-AP | final CW (AP1/2/3) |
+|---|---|---|---|---|---|---|
+| BEB | 45.25 ± 0.07 | 24.00 / 11.25 / 10.00 | 0.850 | 7.90 ± 0.01 | 10.00 | 16 / 16 / 16 |
+| static 256,128,256 | 48.49 ± 0.07 | 17.78 / 20.71 / 10.00 | 0.927 | 8.21 ± 0.00 | 10.00 | 256 / 128 / 256 |
+| independent pf | 49.37 ± 0.04 | 23.89 / 15.48 / 10.00 | 0.892 | 8.22 ± 0.01 | 10.00 | 110 / 93 / 16 |
+
+Paired Δ of independent pf (PF utility / aggregate Mbps / Jain): vs BEB +0.31 ± 0.01 / +4.12 ± 0.07 / +0.042 ± 0.005 (p = 0.008); vs static 256,128,256 +0.00 ± 0.01 (p = 0.312) / +0.88 ± 0.06 / -0.035 ± 0.005 (p = 0.008).
+
+Reading:
+- Fact: the load is now binding. BEB gives AP3 exactly its offered 10.00 Mbps, and AP2 is no longer starved (11.25 vs 1.4 Mbps at equal saturated load), because the light AP3 leaves the middle AP airtime.
+- Fact: min-AP is 10.00 in every arm, set by AP3's offered load, so min-AP cannot discriminate here. Use PF utility and the AP1/AP2 split.
+- Fact: independent pf and the static asymmetric setting both beat BEB by +0.31 PF (all 8 seeds). The learned policy ties the static one on PF (+0.00 ± 0.01, p = 0.312) and has +0.88 Mbps more aggregate but a lower Jain index (0.892 vs 0.927). It gives AP1 more (23.9 vs 17.8) and AP2 less (15.5 vs 20.7).
+- Fact: its CWs adapt to the load: AP3 stays at 16 (light AP), AP1 110, AP2 93, unlike the equal-load policies (§4c-§4e).
+- Inference: with an unsaturated AP, a PF reward still recovers the static oracle's PF; the 256,128,256 setting is not tuned for this load, so it is a fixed reference, not an upper bound.
+- Limit: one policy seed, one load vector, one topology.
+
 ## 5. Next
 - Done: policy seeds 0-2 (§4c, §4d), TD3 and `--cwMinOnly` (§4e), `--apLoads` 150,150,20 (§4f, not informative).
-- Open: a real uneven-load check with an unsaturated AP (e.g. `--apLoads 150,150,1`); a second policy seed for the TD3 / `--cwMinOnly` arms; v3.3.0 sensing + heuristics (IdleSense) as a non-RL baseline.
+- Done: unsaturated uneven-load check (§4g).
+- Open: a second policy seed for the TD3 / `--cwMinOnly` arms; v3.3.0 sensing + heuristics (IdleSense) as a non-RL baseline.
