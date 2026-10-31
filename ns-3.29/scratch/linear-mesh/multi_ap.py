@@ -18,7 +18,7 @@ def parse_ap_info(info, n_aps):
     records = fields[4].split(";")
     if len(records) != n_aps:
         raise ValueError("expected %d AP records, got %d" % (n_aps, len(records)))
-    keys = ("cw_set", "cw_ap", "reward", "loss", "rx", "tx")
+    keys = ("cw_set", "cw_ap", "reward", "loss", "rx", "tx", "idle")
     out = []
     for rec in records:
         vals = [float(v) for v in rec.split(",")]

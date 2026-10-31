@@ -50,7 +50,7 @@ parser.add_argument("--tag", default="", help="variant label stored in config.js
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static"], default="independent")
+parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense"], default="independent")
 parser.add_argument("--apCws", default="", help="static mode only: fixed CW per AP, e.g. 64,512 (no agent; cw.cc applies it from t=0)")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 parser.add_argument("--algo", choices=["ddpg", "td3"], default="ddpg", help="learner for independent/global/shared (td3: twin critics, delayed actor, target smoothing)")
@@ -59,6 +59,11 @@ parser.add_argument("--saveActor", default="", help="after training save every a
 parser.add_argument("--loadActor", default="", help="load agents from DIR/agent<i>_* before the run (use with --eval)")
 parser.add_argument("--eval", action="store_true", help="frozen evaluation: needs --loadActor; no exploration noise, no warm-up, no replay, no training")
 parser.add_argument("--cwMinOnly", action="store_true", help="agent action sets CWmin only; CWmax stays 1023 so BEB doubling is kept (multi-AP agent modes)")
+parser.add_argument("--idleTarget", type=float, default=0.0, help="idlesense / --residual: target mean idle slots per backoff gap (0 = cw.cc default 5.68)")
+parser.add_argument("--idleEps", type=float, default=0.0, help="idlesense / --residual: additive CW increase (0 = cw.cc default)")
+parser.add_argument("--idleAlpha", type=float, default=0.0, help="idlesense / --residual: multiplicative CW decrease factor (0 = cw.cc default)")
+parser.add_argument("--residual", action="store_true", help="independent/shared: action = Delta log2 CW in [-2, 2] around the per-AP IdleSense CW (cw.cc --residual)")
+parser.add_argument("--obsIdle", action="store_true", help="independent/shared: state = the AP's own mean idle slots / 20 (clipped to 1) instead of its loss ratio (cw.cc --obsIdle)")
 args = parser.parse_args()
 
 # W&B mode must be decided before wandb is imported.
@@ -114,9 +119,19 @@ assert (args.mode == "static") == bool(static_cws), "--mode static needs --apCws
 assert not static_cws or (len(static_cws) == n and all(16 <= c <= 1024 for c in static_cws)), "--apCws: one CW in 16..1024 per AP"
 if static_cws:
     sim_args["apCws"] = args.apCws
-if args.mode == "beb":
-    sim_args["dryRun"] = "true"  # cw.cc skips setApCw; every AP keeps BEB CW 16..1024
-n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
+if args.mode in ("beb", "idlesense"):
+    sim_args["dryRun"] = "true"  # cw.cc skips setApCw for actions; beb keeps CW 16..1024, idlesense moves it by sensing (cw.cc --idleSense)
+assert not (args.residual or args.obsIdle) or args.mode in ("independent", "shared"), "--residual/--obsIdle only for independent/shared"
+if args.mode == "idlesense" or args.residual:
+    sim_args["idleSense"] = "true"
+    for k in ("idleTarget", "idleEps", "idleAlpha"):
+        if getattr(args, k) > 0:
+            sim_args[k] = getattr(args, k)
+if args.residual:
+    sim_args["residual"] = "true"
+if args.obsIdle:
+    sim_args["obsIdle"] = "true"
+n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
 LOCAL_MODES = ("independent", "shared")
 assert args.obs == "loss" or args.mode in LOCAL_MODES, "--obs hist only for independent/shared"
 assert args.alpha == 1.0 or args.mode in LOCAL_MODES, "--alpha only for independent/shared"
@@ -179,7 +194,7 @@ def scalar(x):
 
 def agent_loss(i, name):
     """Loss of the agent that acts for AP i (independent: own; global: the shared one; beb: none -> 0)."""
-    if args.mode in ("beb", "static"):
+    if args.mode in ("beb", "static", "idlesense"):
         return 0.0
     if args.mode == "central":
         return scalar(central.actor_losses[i] if name == "actor_loss" else central.critic_loss)
@@ -302,18 +317,26 @@ try:
                               and np.isclose(replays[ri].reward[k, 0], r_rep) and np.isclose(replays[ri].action[k, 0], acts[i]),
                               "replay %d row mismatch at t=%d" % (i, time_step))
                     # cw.cc computes pow(2, 4 + a) with a float, so 4 + a is rounded to float32 before pow.
-                    want_cw = static_cws[i] if args.mode == "static" else 16 if args.mode == "beb" else int(min(1024, max(
-                        16, 2 ** float(np.float32(4) + np.float32(real[i])))))
-                    check(recs[i]["cw_set"] == want_cw and recs[i]["cw_ap"] == want_cw,
-                          "AP%d cw %s/%s != %d at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], want_cw, time_step))
+                    if args.mode == "idlesense" or args.residual:  # CW comes from the AP's own sensing: range and readback only
+                        check(16 <= recs[i]["cw_set"] <= 1024 and recs[i]["cw_set"] == recs[i]["cw_ap"],
+                              "AP%d cw %s/%s out of range or readback mismatch at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], time_step))
+                    else:
+                        want_cw = static_cws[i] if args.mode == "static" else 16 if args.mode == "beb" else int(min(1024, max(
+                            16, 2 ** float(np.float32(4) + np.float32(real[i])))))
+                        check(recs[i]["cw_set"] == want_cw and recs[i]["cw_ap"] == want_cw,
+                              "AP%d cw %s/%s != %d at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], want_cw, time_step))
                     check(0.0 <= r <= 1.0, "AP%d reward %s out of [0,1]" % (i + 1, r))
                     # Test A: obs is this AP's own loss, recomputed from its own tx/rx counters
                     own_loss = (recs[i]["tx"] - recs[i]["rx"]) / recs[i]["tx"] if recs[i]["tx"] else 0.0
                     if args.obs == "hist":  # state recomputed from this AP's own row and own previous action only
                         w = S2[i, :args.obsWindow]
                         check(np.allclose(s2_i, [S2[i, 0], w.mean(), w.std(), acts[i]], atol=1e-5), "AP%d hist state mismatch at t=%d" % (i + 1, time_step))
-                    check(np.isclose(s2_i[0], own_loss, atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
-                          "AP%d obs %s / loss %s != own (tx-rx)/tx %s at t=%d" % (i + 1, s2_i[0], recs[i]["loss"], own_loss, time_step))
+                    if args.obsIdle:  # state is the AP's own sensed idle slots, scaled like cw.cc does
+                        check(np.isclose(s2_i[0], min(1.0, recs[i]["idle"] / 20.0), atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
+                              "AP%d obs %s != own idle/20 (idle %s) at t=%d" % (i + 1, s2_i[0], recs[i]["idle"], time_step))
+                    else:
+                        check(np.isclose(s2_i[0], own_loss, atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
+                              "AP%d obs %s / loss %s != own (tx-rx)/tx %s at t=%d" % (i + 1, s2_i[0], recs[i]["loss"], own_loss, time_step))
                     # Test D: reward = own goodput / (offered load * own STAs * step), clamped to [0,1]
                     want_r = min(1.0, max(0.0, recs[i]["rx"] * PAYLOAD_BITS / 1e6 / (LOADS[i] * counts[i] * args.stepTime)))
                     check(abs(r - want_r) < 1e-4, "AP%d reward %s != recomputed %s at t=%d" % (i + 1, r, want_r, time_step))
