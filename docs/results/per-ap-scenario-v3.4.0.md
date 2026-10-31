@@ -239,6 +239,29 @@ Reading:
 - Inference: this data does not support ranking DDPG, TD3 and `--cwMinOnly`; it supports only "a PF reward with an independent per-AP learner reliably beats BEB and Global on PF and min-AP in this scenario, whatever the algorithm". Ranking them would need more policy seeds.
 - Limit: two policy seeds per new arm, three for DDPG; no policy-seed test.
 
+## 4i. TD3 and `--cwMinOnly` with `--trainSeed 2` (fact)
+Arms Q (TD3) and R (`--cwMinOnly`) with `--trainSeed 2` (2 episodes, ns-3 seeds 3 and 1003), same eval seeds 100-107. 18 jobs, all PASS (train 913 s / 970 s, eval 432-477 s). Tables and figures: `docs/figures/v3.4.0-algo/` (log `batch-seed2.log`; arms A, B, C, I, J, O, P, Q, R and the oracle; all earlier rows regenerate unchanged). Mean ± 95 % CI over 8 eval seeds; exact Wilcoxon p.
+
+| Arm | trainSeed | PF utility | min-AP | aggregate | Jain | final CW (AP1/2/3) |
+|---|---|---|---|---|---|---|
+| TD3 | 0 / 1 / 2 | 8.78 / 8.91 / **8.15 ± 0.04** | 13.75 / 10.73 / 10.72 ± 0.85 | 57.66 / 63.53 / **48.41 ± 0.05** | 0.946 / 0.891 / 0.882 | seed 2: 311 / 428 / 1018 |
+| `--cwMinOnly` | 0 / 1 / 2 | 8.39 / 8.84 / **8.87 ± 0.01** | 4.38 / 9.07 / **14.15 ± 0.75** | 68.42 / 64.37 / 59.19 ± 0.65 | 0.754 / 0.856 / 0.957 | seed 2: 265 / 59 / 152 |
+
+Paired Δ of the `--trainSeed 2` policies (PF utility / min-AP Mbps / aggregate Mbps):
+
+| Arm (trainSeed 2) | vs BEB | vs Global | vs static 256,128,256 |
+|---|---|---|---|
+| TD3 | +0.67 ± 0.04 / +9.28 ± 0.83 / -23.22 ± 0.63 | **-0.01 ± 0.03 (p = 0.383)** / +8.14 ± 0.65 / -28.05 ± 0.30 | -0.72 ± 0.04 / -2.53 ± 0.83 / -11.18 ± 0.10 |
+| `--cwMinOnly` | +1.39 ± 0.04 / +12.71 ± 0.72 / -12.44 ± 0.85 | +0.71 ± 0.08 / +11.56 ± 0.56 / -17.27 ± 0.36 | **0.00 ± 0.01 (p = 0.641)** / +0.89 ± 0.71 (p = 0.055) / -0.40 ± 0.61 (p = 0.195) |
+
+Reading:
+- Fact: TD3 trainSeed 2 is the first learned PF policy that does NOT beat Global-CW on PF utility (-0.01 ± 0.03, p = 0.383). It still beats BEB on PF (+0.67) and Global on min-AP (+8.14), but with the lowest aggregate of any arm (48.41). Its final CW is 1018 at AP3 (near the 1024 clamp) and 428 at AP2, so AP3 gets only 13.4 Mbps vs 24.3 for AP1.
+- Fact: `--cwMinOnly` trainSeed 2 is statistically level with the 256,128,256 oracle on PF (0.00 ± 0.01), min-AP (+0.89 ± 0.71, p = 0.055) and aggregate (-0.40 ± 0.61), and has the highest Jain index of the learned arms (0.957). It was the weakest arm at seed 0 (PF 8.39, min-AP 4.38).
+- Fact: with three policy seeds each, `--cwMinOnly` spans PF 8.39-8.87 and min-AP 4.4-14.2; TD3 spans PF 8.15-8.91 and aggregate 48.4-63.5. Both spreads are larger than any eval-seed CI, and the algorithm ordering flips between seeds (cwMinOnly worst at seed 0, best at seed 2; TD3 best at seed 0 on min-AP, worst at seed 2 on PF).
+- Fact: "every learned PF policy beats BEB and Global on PF utility and min-AP in all 8 eval seeds" (§4h) no longer holds: TD3 trainSeed 2 ties Global on PF. It holds for 8 of the 9 independent PF policies (DDPG x3, TD3 x3, `--cwMinOnly` x3) and for all 3 shared PF policies.
+- Inference: this data does not support ranking DDPG, TD3 and `--cwMinOnly`, and shows that a single bad policy seed (TD3 seed 2) can lose the PF advantage over Global. A claim that holds for every policy is no longer supported; "usually" is.
+- Limit: three policy seeds per algorithm, no policy-seed test, one topology, 2 training episodes. Why TD3 seed 2 drove AP3 to the CW cap was not investigated.
+
 ## 5. Next
-- Done: policy seeds 0-2 for DDPG (§4c, §4d); TD3 and `--cwMinOnly` at seeds 0 and 1 (§4e, §4h); `--apLoads` 150,150,20 (§4f, not informative) and 150,150,1 (§4g).
-- Open: a third policy seed for TD3 / `--cwMinOnly` only if a ranking claim is wanted; v3.3.0 sensing + heuristics (IdleSense) as a non-RL baseline; technical-report conclusion for v3.4.0.
+- Done: policy seeds 0-2 for DDPG (§4c, §4d) and for TD3 and `--cwMinOnly` (§4e, §4h, §4i); `--apLoads` 150,150,20 (§4f, not informative) and 150,150,1 (§4g).
+- Open: v3.3.0 sensing + heuristics (IdleSense) as a non-RL baseline; technical-report conclusion for v3.4.0.
