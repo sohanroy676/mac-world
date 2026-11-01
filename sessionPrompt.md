@@ -4,7 +4,7 @@ Continue the mac-world project (Multi-AP OSCAR, ns-3.29). Follow CLAUDE.md, exce
 1. `git fetch origin && git checkout dev && git pull`. Read `memory-bank/activeContext.md` and `memory-bank/progress.md`, then `docs/results/sensing-heuristics-v3.3.0.md` (§1 what was added, §3b corrected results, §3c `20,40`) and `docs/results/per-ap-scenario-v3.4.0.md` (§4 to §4i, §5). Read `docs/reports/technical-report-v2.3.0.md` §20.5-20.6 for the narrative, `docs/adr/0005-coarse-loss-matrix.md` for the scenario, and `docs/results/fair-protocol-v3.2.0.md` §2-3 only if you touch the runner.
 2. Toolchain per CLAUDE.md "Stack" (Python 3.7.16 venv `ns-3.29/venv`; no scipy, Wilcoxon is in `aggregate_bench.py`). If the venv is missing, ask; do not upgrade or downgrade anything.
 3. Rebuild only if you change `cw.cc`: `cd ns-3.29 && ./waf build --target=linear-mesh`, then confirm the binary mtime changed (an unchanged mtime after a no-op build is fine). Regressions to re-check after any `cw.cc` change: `--nWifi=5` dry seed 1 simTime 2 = 10533 packets, `--apStaCounts=5,15` = 9000, `baseline_v0_1_0.py --smoke` cumulative reward 10.59458. Do not edit `cw.cc` or the trainer while a batch runs (each job calls `waf --run`).
-4. Branch each piece of work from `dev`.
+4. v4 work: branch each piece from `feature/v4` (long-lived v4 integration branch, merge `--no-ff`, push); `dev` gets `feature/v4` only when a milestone closes and the user agrees. 2 parallel lanes max (`nproc` = 3); see `docs/results/m0-foundations-v3.5.0.md` for the M0 state.
 
 ## Git rules (override CLAUDE.md and .clinerules where they differ)
 - `main` is frozen: never commit to, merge into or push it.
