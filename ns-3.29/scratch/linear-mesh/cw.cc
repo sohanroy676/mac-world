@@ -964,6 +964,28 @@ std::vector<std::pair<uint32_t, uint32_t>> parseApHidden(std::string apHidden, s
 }
 
 // --apLoads: exactly one per-STA offered load (Mbps) per AP.
+// --staSchedule=ap:first-last:start:stop/...  (0-based AP and STA indices, STA range inclusive, seconds)
+std::vector<StaWindow> g_staSchedule;
+std::vector<StaWindow> parseStaSchedule(std::string arg, const std::vector<uint32_t> &counts)
+{
+    std::vector<StaWindow> out;
+    std::stringstream ss(arg);
+    std::string tok;
+    while (std::getline(ss, tok, '/'))
+    {
+        unsigned ap, first, last;
+        double start, stop;
+        if (sscanf(tok.c_str(), "%u:%u-%u:%lf:%lf", &ap, &first, &last, &start, &stop) != 5 || ap >= counts.size() || first > last ||
+            last >= counts[ap] || start < 0 || stop <= start)
+        {
+            std::cout << "Invalid --staSchedule entry '" << tok << "' (want ap:first-last:start:stop within the AP's STAs)." << endl;
+            exit(1);
+        }
+        out.push_back({ap, first, last, start, stop});
+    }
+    return out;
+}
+
 std::vector<double> parseApLoads(std::string apLoads, size_t apCount)
 {
     std::vector<double> loads;
@@ -1160,6 +1182,8 @@ void set_nodes(int channelWidth,
 
 void set_sim(bool tracing, bool dry_run, bool disableGym, int warmup, uint32_t openGymPort, YansWifiPhyHelper phy, NetDeviceContainer apDevice, int end_delay, Ptr<FlowMonitor> &monitor, FlowMonitorHelper &flowmon)
 {
+    if (g_extraTraces)
+        flowmon.SetMonitorAttribute("DelayBinWidth", DoubleValue(0.0002)); // 0.2 ms bins for the per-AP delay percentiles
     monitor = flowmon.InstallAll();
     monitor->SetAttribute("StartTime", TimeValue(Seconds(warmup)));
 
@@ -1292,6 +1316,7 @@ int main(int argc, char *argv[])
     int nWifi = 5;
     bool tracing = false;
     bool useRts = false;
+    string staScheduleArg;
     int mcs = 11;
     int channelWidth = 20;
     int guardInterval = 800;
@@ -1340,6 +1365,7 @@ int main(int argc, char *argv[])
     cmd.AddValue("idleUp", "IdleSense multiplicative CW increase 1/alpha (applied when idle < target). Default: 1.2", g_idleUp);
     cmd.AddValue("idleMaxTrans", "IdleSense observed transmission attempts per CW update. Default: 5", g_idleMaxTrans);
     cmd.AddValue("residual", "v3.3.0: agent action is a Delta log2(CW) in [-2, 2] around the IdleSense CW (needs --idleSense and an agent). Default: false", g_residual);
+    cmd.AddValue("staSchedule", "v3.5.0: per-STA on/off windows ap:first-last:start:stop[/...] (0-based, simulated seconds; outside the window those STAs are silent). Default: empty = always on", staScheduleArg);
     cmd.AddValue("useRts", "v3.5.0: enable RTS/CTS for every frame (RtsCtsThreshold=0). Default: false", useRts);
     cmd.AddValue("rewardNorm", "v3.5.0: fixed per-STA reward divisor in Mbps (multi-AP). Default: 0 = per-AP offered load", g_rewardNormMbps);
     cmd.AddValue("extraTraces", "v3.5.0: append retry rate, active STAs and failed data attempts to each per-AP info record. Default: false", g_extraTraces);
@@ -1357,6 +1383,7 @@ int main(int argc, char *argv[])
     g_apCwOverride = parseApCws(apCwsArg, apStaCounts.size());
     g_hiddenPairs = parseApHidden(apHiddenArg, apStaCounts.size());
     g_apLoadMbps = parseApLoads(apLoadsArg, apStaCounts.size());
+    g_staSchedule = parseStaSchedule(staScheduleArg, apStaCounts);
     nWifi = 0;
     for (uint32_t count : apStaCounts)
     {
@@ -1487,6 +1514,8 @@ int main(int argc, char *argv[])
     std::vector<uint64_t> apRxPackets(wifiApNode.GetN(), 0);
     std::vector<double> apThroughput(wifiApNode.GetN(), 0.0);
     uint32_t crossApFlows = 0;
+    std::vector<std::map<uint32_t, uint64_t>> apDelayBins(wifiApNode.GetN()); // --extraTraces: merged delay histogram per AP
+    std::vector<double> apDelaySum(wifiApNode.GetN(), 0.0);
 
     Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowmon.GetClassifier());
     std::map<FlowId, FlowMonitor::FlowStats> stats = monitor->GetFlowStats();
@@ -1510,8 +1539,36 @@ int main(int argc, char *argv[])
         apFlowCount[dstAp->second]++;
         apRxPackets[dstAp->second] += i->second.rxPackets;
         apThroughput[dstAp->second] += flowThr;
+        if (g_extraTraces)
+        {
+            apDelaySum[dstAp->second] += i->second.delaySum.GetSeconds();
+            Histogram h = i->second.delayHistogram; // copy: the accessors are non-const
+            for (uint32_t b = 0; b < h.GetNBins(); ++b)
+                apDelayBins[dstAp->second][b] += h.GetBinCount(b);
+        }
     }
     myfile.close();
+    if (g_extraTraces)
+    {
+        for (uint32_t ap = 0; ap < wifiApNode.GetN(); ++ap)
+        {
+            uint64_t total = 0;
+            for (const auto &b : apDelayBins[ap])
+                total += b.second;
+            double p50 = 0, p99 = 0;
+            uint64_t acc = 0;
+            for (const auto &b : apDelayBins[ap]) // bin upper edge = (index + 1) * width
+            {
+                acc += b.second;
+                if (!p50 && acc >= 0.5 * total)
+                    p50 = (b.first + 1) * 0.0002;
+                if (!p99 && acc >= 0.99 * total)
+                    p99 = (b.first + 1) * 0.0002;
+            }
+            NS_LOG_UNCOND("DELAY AP" << ap + 1 << " n=" << total << " mean_ms=" << (total ? 1000.0 * apDelaySum[ap] / total : 0.0)
+                                     << " p50_ms=" << 1000.0 * p50 << " p99_ms=" << 1000.0 * p99);
+        }
+    }
 
     NS_LOG_UNCOND("Per-AP sink check (flow-monitor, v0.3.0 validation only):");
     for (uint32_t apIndex = 0; apIndex < wifiApNode.GetN(); ++apIndex)
