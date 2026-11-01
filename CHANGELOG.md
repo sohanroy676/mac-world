@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **v3.3.0**: Add run dirs for seed 2, sensing and calibration
 - **v3.3.0**: Flag IdleSense rule as a variant
 - **v3.3.1**: Add corrected IdleSense results
+- **changelog**: Regenerate with git-cliff
+- **v3.3.1**: Add IdleSense results on 20,40
 
 ### Fixed
 
