@@ -13,6 +13,7 @@
 
 ## Done
 
+- **v3.3.1 TAGGED + HANDOFF (2026-11-01)** — tag `v3.3.1` pushed (ddc1913); run dirs committed; session handoff in `sessionPrompt.md`.
 - **v3.3.1 corrected IdleSense DONE (2026-11-01, branch `fix/idlesense-paper-rule` + `docs/v3.3.1-results`)** — see activeContext 2026-11-01; `20,40` IdleSense/BEB/Global runs in progress.
 - **v3.3.0 sensing + heuristics DONE (2026-10-31, branch `feature/v3.3.0-sensing`; not tagged)** and seed-2 TD3/cwMinOnly (report §4i) and technical-report §20.5 written. See activeContext 2026-10-31 for numbers; results `docs/results/sensing-heuristics-v3.3.0.md`.
 
