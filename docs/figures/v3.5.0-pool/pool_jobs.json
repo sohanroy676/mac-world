@@ -1,0 +1,502 @@
+[
+{
+"id": "pool19-chain-10,10,10-halfedge-off",
+"args": [
+"--apStaCounts",
+"10,10,10",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2019",
+"--tag",
+"poolbeb-chain-10,10,10-halfedge-off",
+"--apHidden",
+"1-3",
+"--staSchedule",
+"0:0-4:0:7.5/2:0-4:0:7.5"
+],
+"deps": []
+},
+{
+"id": "pool20-chain-15,10,15-halfedge-off",
+"args": [
+"--apStaCounts",
+"15,10,15",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2020",
+"--tag",
+"poolbeb-chain-15,10,15-halfedge-off",
+"--apHidden",
+"1-3",
+"--staSchedule",
+"0:0-7:0:7.5/2:0-7:0:7.5"
+],
+"deps": []
+},
+{
+"id": "pool21-chain-8,8,8-halfedge-off",
+"args": [
+"--apStaCounts",
+"8,8,8",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2021",
+"--tag",
+"poolbeb-chain-8,8,8-halfedge-off",
+"--apHidden",
+"1-3",
+"--staSchedule",
+"0:0-3:0:7.5/2:0-3:0:7.5"
+],
+"deps": []
+},
+{
+"id": "pool00-one-domain-20,40",
+"args": [
+"--apStaCounts",
+"20,40",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2000",
+"--tag",
+"poolbeb-one-domain-20,40"
+],
+"deps": []
+},
+{
+"id": "pool01-one-domain-10,30",
+"args": [
+"--apStaCounts",
+"10,30",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2001",
+"--tag",
+"poolbeb-one-domain-10,30"
+],
+"deps": []
+},
+{
+"id": "pool02-one-domain-30,30",
+"args": [
+"--apStaCounts",
+"30,30",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2002",
+"--tag",
+"poolbeb-one-domain-30,30"
+],
+"deps": []
+},
+{
+"id": "pool03-one-domain-15,45",
+"args": [
+"--apStaCounts",
+"15,45",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2003",
+"--tag",
+"poolbeb-one-domain-15,45"
+],
+"deps": []
+},
+{
+"id": "pool04-one-domain-5,15",
+"args": [
+"--apStaCounts",
+"5,15",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2004",
+"--tag",
+"poolbeb-one-domain-5,15"
+],
+"deps": []
+},
+{
+"id": "pool05-one-domain-40,20",
+"args": [
+"--apStaCounts",
+"40,20",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2005",
+"--tag",
+"poolbeb-one-domain-40,20"
+],
+"deps": []
+},
+{
+"id": "pool06-one-domain-10,10",
+"args": [
+"--apStaCounts",
+"10,10",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2006",
+"--tag",
+"poolbeb-one-domain-10,10"
+],
+"deps": []
+},
+{
+"id": "pool07-one-domain-25,25",
+"args": [
+"--apStaCounts",
+"25,25",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2007",
+"--tag",
+"poolbeb-one-domain-25,25"
+],
+"deps": []
+},
+{
+"id": "pool08-chain-10,10,10",
+"args": [
+"--apStaCounts",
+"10,10,10",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2008",
+"--tag",
+"poolbeb-chain-10,10,10",
+"--apHidden",
+"1-3"
+],
+"deps": []
+},
+{
+"id": "pool09-chain-5,10,5",
+"args": [
+"--apStaCounts",
+"5,10,5",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2009",
+"--tag",
+"poolbeb-chain-5,10,5",
+"--apHidden",
+"1-3"
+],
+"deps": []
+},
+{
+"id": "pool10-chain-10,5,10",
+"args": [
+"--apStaCounts",
+"10,5,10",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2010",
+"--tag",
+"poolbeb-chain-10,5,10",
+"--apHidden",
+"1-3"
+],
+"deps": []
+},
+{
+"id": "pool11-chain-15,10,15",
+"args": [
+"--apStaCounts",
+"15,10,15",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2011",
+"--tag",
+"poolbeb-chain-15,10,15",
+"--apHidden",
+"1-3"
+],
+"deps": []
+},
+{
+"id": "pool12-chain-8,8,8",
+"args": [
+"--apStaCounts",
+"8,8,8",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2012",
+"--tag",
+"poolbeb-chain-8,8,8",
+"--apHidden",
+"1-3"
+],
+"deps": []
+},
+{
+"id": "pool13-chain-12,6,12",
+"args": [
+"--apStaCounts",
+"12,6,12",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2013",
+"--tag",
+"poolbeb-chain-12,6,12",
+"--apHidden",
+"1-3"
+],
+"deps": []
+},
+{
+"id": "pool14-chain-10,10,10-load150,150,1",
+"args": [
+"--apStaCounts",
+"10,10,10",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2014",
+"--tag",
+"poolbeb-chain-10,10,10-load150,150,1",
+"--apHidden",
+"1-3",
+"--apLoads",
+"150,150,1"
+],
+"deps": []
+},
+{
+"id": "pool15-chain-10,10,10-load1,150,150",
+"args": [
+"--apStaCounts",
+"10,10,10",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2015",
+"--tag",
+"poolbeb-chain-10,10,10-load1,150,150",
+"--apHidden",
+"1-3",
+"--apLoads",
+"1,150,150"
+],
+"deps": []
+},
+{
+"id": "pool16-chain-10,10,10-load150,150,20",
+"args": [
+"--apStaCounts",
+"10,10,10",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2016",
+"--tag",
+"poolbeb-chain-10,10,10-load150,150,20",
+"--apHidden",
+"1-3",
+"--apLoads",
+"150,150,20"
+],
+"deps": []
+},
+{
+"id": "pool17-chain-5,10,5-load150,150,1",
+"args": [
+"--apStaCounts",
+"5,10,5",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2017",
+"--tag",
+"poolbeb-chain-5,10,5-load150,150,1",
+"--apHidden",
+"1-3",
+"--apLoads",
+"150,150,1"
+],
+"deps": []
+},
+{
+"id": "pool18-chain-15,10,15-load150,150,1",
+"args": [
+"--apStaCounts",
+"15,10,15",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2018",
+"--tag",
+"poolbeb-chain-15,10,15-load150,150,1",
+"--apHidden",
+"1-3",
+"--apLoads",
+"150,150,1"
+],
+"deps": []
+},
+{
+"id": "pool22-three-domain-10,10,10",
+"args": [
+"--apStaCounts",
+"10,10,10",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2022",
+"--tag",
+"poolbeb-three-domain-10,10,10"
+],
+"deps": []
+},
+{
+"id": "pool23-three-domain-5,10,15",
+"args": [
+"--apStaCounts",
+"5,10,15",
+"--simTime",
+"15",
+"--stepTime",
+"0.01",
+"--check",
+"--mode",
+"beb",
+"--seed",
+"2023",
+"--tag",
+"poolbeb-three-domain-5,10,15"
+],
+"deps": []
+}
+]
