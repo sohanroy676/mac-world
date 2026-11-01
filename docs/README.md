@@ -48,4 +48,5 @@ Files are grouped by purpose. Version numbers in file names match the roadmap (`
 - `oscar-baseline-metrics.md`: published OSCAR numbers and how they map to this project.
 - `reproducibility-v2.1.0.md`: how to reproduce runs, dependencies.
 - `recent-work-beyond-oscar-2026-11-01.md`: 2023-2026 papers on learned CW control, whether any already makes the v4 robustness claim (none found), the remaining gap and novelty wording for faculty.
+- `industry_relevance_multi_ap_wifi_2026.md`: 2024-2026 vendor and standards evidence on dense multi-AP Wi-Fi contention, what products do, Wi-Fi 7/8 status, and whether learned CW tuning is commercially documented (no explicit evidence found).
 - `pre_v0.1.0_audit/`: forensic audit of the inherited OSCAR code and the next-actions results.
