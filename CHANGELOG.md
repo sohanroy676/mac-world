@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **changelog**: Regenerate with git-cliff
 - **planning**: Apply second review to v4 plan
 - **changelog**: Regenerate with git-cliff
+- **changelog**: Regenerate with git-cliff
+- **planning**: Apply final check to v4 plan
 
 ### Fixed
 
