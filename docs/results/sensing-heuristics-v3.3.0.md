@@ -92,6 +92,29 @@ Reading:
 - Fact: the idle-slot observation (arm U) beats BEB and Global on PF and min-AP in all 3 policy seeds (p = 0.008), and sits at or just below the static oracle on PF (+0.01, -0.17, +0.05) with min-AP 2.3-4.1 Mbps under it. Mean PF 8.83 vs 8.78 for the loss-observation DDPG policies and min-AP 10.06 vs 9.99; the seed spread is similar, so **no advantage over the loss observation is shown**.
 - Limit: 3 policy seeds per learned arm, no policy-seed test; hidden chain only; T_c estimated; sensitivity runs n = 1.
 
+## 3c. IdleSense on a single collision domain, `20,40` (fact)
+Where Idle Sense was designed to work. `--topo 20,40` (no `--apHidden`, 150 Mbps per STA, 15 s), eval seeds 100-107 (ns-3 seeds 101-108), paired by seed. IdleSense: published rule, **target 3.3 unchanged from the hidden-chain batch (no tuning here)**, no training. Global-CW: DDPG, default settings, 2 training episodes, `--trainSeed 0`, frozen. BEB on the same seeds. 25 jobs, all `--check` PASS (eval 826-860 s, Global training about 1770 s). Tables and figures: `docs/figures/v3.3.1-20-40/`. Mean ± 95 % CI; exact Wilcoxon p.
+
+| Arm | aggregate (Mbps) | AP1 / AP2 | PF utility | min-AP | Jain | final CW |
+|---|---|---|---|---|---|---|
+| BEB | 27.66 ± 0.40 | 9.35 / 18.31 | 5.14 ± 0.05 | 9.35 ± 0.87 | 0.902 | 16 / 16 |
+| Global-CW | 38.65 ± 0.40 | 12.79 / 25.86 | 5.80 ± 0.04 | 12.79 ± 1.06 | 0.896 | 276 / 276 |
+| IdleSense (target 3.3) | **38.77 ± 0.21** | 12.84 / 25.93 | 5.80 ± 0.04 | 12.84 ± 1.06 | 0.896 | 366 / 366 |
+
+Paired Δ (aggregate Mbps / PF utility / min-AP Mbps):
+
+| Arm | vs BEB | vs Global-CW |
+|---|---|---|
+| Global-CW | +10.99 ± 0.20 (+39.7 ± 1.0 %) / +0.66 ± 0.02 / +3.44 ± 0.35 (p = 0.008) | n/a |
+| IdleSense | +11.10 ± 0.35 (+40.2 ± 1.8 %) / +0.67 ± 0.03 / +3.49 ± 0.40 (p = 0.008) | +0.11 ± 0.25 (p = 0.312) / +0.01 ± 0.01 (p = 0.195) / +0.05 ± 0.09 (p = 0.250) |
+
+Reading:
+- Fact: with a single collision domain the corrected IdleSense, a decentralised non-RL heuristic with no training, **matches Global-CW within noise** on aggregate, PF and min-AP (all paired p > 0.19) and beats BEB by +40 % in all 8 seeds. Both land at nearly the same operating point (about 38.7 Mbps); the CWs end at 366 (IdleSense) vs 276 (Global-CW).
+- Fact: this is the same target (3.3, derived from the paper's formula with an estimated T_c) that failed on the hidden chain, so the hidden-chain failure (§3b) is not a bad target; it is the topology. This also supports the derived target and the implementation.
+- Context (inference, not paired): the v3.1.0 best static common CW (512) reached 39.62 ± 0.21 Mbps on seeds 0-2 (`docs/results/ceiling-v3.1.0.md`), about 0.9 Mbps above both arms here; different seeds, so not tested.
+- Consequence for the project: the earlier claim "RL global CW beats BEB by about 30 %" (report §20-21) is also reached by a heuristic with no learning in this topology; the RL arms show an advantage only where the heuristic's assumption (one collision domain) breaks, i.e. the hidden chain with a PF reward.
+- Limit: one topology and load, one Global-CW policy seed, no Bianchi baseline, T_c estimated.
+
 ## 4. Next
-- IdleSense on the single collision domain `20,40` (queued after the hidden-chain batch; BEB, Global-CW and IdleSense at n = 8). Results will be added to this file.
+- Done: IdleSense on `20,40` (§3c).
 - Not done: Bianchi / Kalman baseline (the 2000 paper was not retrievable); IdleSense constants other than the paper's (eps 0.001, 1/alpha 1.2, maxtrans 5).
