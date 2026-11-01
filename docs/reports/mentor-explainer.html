@@ -1,0 +1,775 @@
+<title>mac-world Mentor Explainer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one reading column (about 72ch) with wide tables that scroll in place; a slot-timeline motif marks phase order. */
+:root {
+  --bg: #f6f8fa;
+  --surface: #ffffff;
+  --fg: #16202b;
+  --muted: #536173;
+  --line: #d5dde6;
+  --accent: #1d5fb8;
+  --accent-soft: #e3edf9;
+  --good: #1f7a4d;
+  --good-soft: #e2f3ea;
+  --warn: #9a5b00;
+  --warn-soft: #fbf0dc;
+  --bad: #a83232;
+  --bad-soft: #f8e4e4;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f151c; --surface: #16202a; --fg: #e3e9f0; --muted: #9aa8b8; --line: #2a3644;
+    --accent: #7fb0f0; --accent-soft: #1b2c42; --good: #6fcf9c; --good-soft: #15302a;
+    --warn: #e9b35e; --warn-soft: #33281a; --bad: #f08f8f; --bad-soft: #3a1f22; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f151c; --surface: #16202a; --fg: #e3e9f0; --muted: #9aa8b8; --line: #2a3644;
+  --accent: #7fb0f0; --accent-soft: #1b2c42; --good: #6fcf9c; --good-soft: #15302a;
+  --warn: #e9b35e; --warn-soft: #33281a; --bad: #f08f8f; --bad-soft: #3a1f22; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.6; }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 40px 80px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 44px; }
+header { display: grid; gap: 10px; }
+.eyebrow { font-family: var(--mono); font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 5vw, 44px); line-height: 1.1; margin: 0; text-wrap: balance; }
+h2 { font-family: var(--display); font-weight: 700; font-size: 25px; line-height: 1.2; margin: 0; text-wrap: balance; }
+h3 { font-family: var(--display); font-weight: 700; font-size: 18.5px; margin: 0; }
+p, ul, ol { margin: 0; max-width: 72ch; }
+section { display: grid; gap: 16px; min-width: 0; }
+ul, ol { padding-left: 1.3em; display: grid; gap: 6px; }
+.lede { font-size: 19px; color: var(--muted); max-width: 70ch; }
+code, .mono { font-family: var(--mono); font-size: .86em; }
+code { background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; word-break: break-word; }
+a { color: var(--accent); }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; color: var(--muted); }
+.labels { display: flex; flex-wrap: wrap; gap: 8px; font-size: 13.5px; }
+.tag { font-family: var(--mono); font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.tag.fact { color: var(--good); background: var(--good-soft); border-color: transparent; }
+.tag.inf { color: var(--warn); background: var(--warn-soft); border-color: transparent; }
+.tag.lit { color: var(--accent); background: var(--accent-soft); border-color: transparent; }
+.tag.dec { color: var(--fg); background: var(--surface); }
+.tag.unk { color: var(--bad); background: var(--bad-soft); border-color: transparent; }
+.bottom { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px 24px; display: grid; gap: 12px; }
+.bottom ol { gap: 10px; }
+.table { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+th { font-family: var(--mono); font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--bg); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: var(--mono); font-size: 13px; }
+td.w { min-width: 220px; }
+.hl td { background: var(--accent-soft); }
+.note { font-size: 14px; color: var(--muted); max-width: 80ch; }
+.arenas { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.arena { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.arena .k { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: .05em; }
+.arena p { font-size: 15px; }
+.phases { display: grid; gap: 0; border-left: 2px solid var(--line); margin-left: 8px; }
+.phase { position: relative; padding: 0 0 26px 24px; display: grid; gap: 8px; min-width: 0; }
+.phase::before { content: ""; position: absolute; left: -7px; top: 6px; width: 12px; height: 12px; border-radius: 2px; background: var(--surface); border: 2px solid var(--accent); }
+.phase.core::before { background: var(--accent); }
+.phase.opt::before { border-style: dashed; }
+.phase .head { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; }
+.phase .ver { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.phase ul { font-size: 15.5px; }
+.exit { font-size: 15px; background: var(--good-soft); border-radius: 6px; padding: 8px 12px; max-width: 80ch; }
+.exit b { color: var(--good); }
+.diagram { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+.diagram svg { display: block; min-width: 720px; width: 100%; height: auto; }
+.diagram text { font-family: var(--body); fill: var(--fg); }
+.diagram .sm { font-size: 12px; fill: var(--muted); }
+.diagram .mono { font-family: var(--mono); font-size: 11.5px; fill: var(--muted); }
+.box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+.boxa { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+.edge { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+.arrowhead { fill: var(--muted); }
+.ask { background: var(--warn-soft); border-radius: 10px; padding: 18px 22px; display: grid; gap: 10px; }
+.ask h2 { color: var(--warn); }
+footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
+@media (max-width: 560px) { body { font-size: 16px; } .bottom { padding: 18px; } }
+</style>
+<style>
+/* Additions for the explainer: part dividers, a contents list, Q&A blocks, glossary grid, scatter chart. */
+.part { font-family: var(--mono); font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); border-top: 2px solid var(--accent); padding-top: 10px; }
+.toc { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px 22px; display: grid; gap: 8px; }
+.toc ol { gap: 4px; font-size: 15.5px; }
+.explain { background: var(--accent-soft); border-radius: 8px; padding: 14px 18px; display: grid; gap: 8px; max-width: 80ch; }
+.explain p { font-size: 16px; }
+.say { border-left: 3px solid var(--good); padding: 6px 0 6px 14px; font-style: italic; max-width: 76ch; }
+.qa { display: grid; gap: 12px; }
+.qa details { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; }
+.qa summary { cursor: pointer; font-weight: 600; font-family: var(--body); }
+.qa summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.qa details > div { display: grid; gap: 8px; padding-top: 10px; font-size: 16px; }
+.gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px 22px; }
+.gloss div { min-width: 0; font-size: 15px; }
+.gloss b { font-family: var(--display); font-weight: 700; display: block; font-size: 15.5px; }
+.chart text { font-family: var(--mono); font-size: 11px; fill: var(--muted); }
+.chart .lbl { font-family: var(--body); font-size: 12.5px; fill: var(--fg); }
+.grid { stroke: var(--line); stroke-width: 1; }
+.axis { stroke: var(--muted); stroke-width: 1.2; }
+.pt-base { fill: var(--muted); }
+.pt-heur { fill: var(--bad); }
+.pt-oracle { fill: var(--good); }
+.pt-learn { fill: var(--accent); }
+.slot-busy { fill: var(--accent); }
+.slot-idle { fill: var(--surface); stroke: var(--line); }
+.slot-col { fill: var(--bad); }
+</style>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">mac-world · explainer for the mentor meeting · 1 Nov 2026</div>
+  <h1>mac-world explained: multi-AP contention-window control with deep RL</h1>
+  <p class="lede">Everything the project has done from the first baseline to v3.4.2, the latest results before v4, why the problem is still open, and the v4 plan explained on its own. Written so you can learn it from scratch and then explain it to your mentor.</p>
+  <div class="meta"><span>Based on: branch <code>dev</code> at 0b8606f (v0.1.0 to v3.4.2, corrected IdleSense v3.3.1), branch <code>feature/v4</code> at aa21f98 (v3.5.0 = v4 milestone M0, plan revision 6), the ADRs, results docs, memory-bank, the Review 2 audit, the OSCAR metrics note, the recent-work and industry notes</span><span>No new runs were made for this page</span></div>
+  <div class="labels"><span class="tag fact">fact</span> read from code or committed results <span class="tag inf">inference</span> reasoning, not tested <span class="tag lit">lit</span> reported by a paper <span class="tag dec">decision</span> a choice the project made <span class="tag unk">unknown</span> not yet measured</div>
+</header>
+
+<section class="bottom">
+  <h2>The project in one minute</h2>
+  <ol>
+    <li><b>What we built.</b> OSCAR (IEEE ICC 2023) uses one deep-RL agent to tune the contention window of one Wi-Fi access point. We extended it to N access points in one shared ns-3 simulation, each AP with its own agent and its own contention window, scaled it from 2 to 10 APs, and built a full evaluation protocol around it <span class="tag fact">fact</span>.</li>
+    <li><b>What we found first.</b> One global contention window learned by OSCAR beats standard Wi-Fi backoff (BEB) by about +30 % at every size we tried. Independent per-AP agents do <i>not</i>: at 20,40 stations they are −5.6 ± 76 % against BEB, and they get worse as APs are added (−46 % at 10 APs) <span class="tag fact">fact</span>.</li>
+    <li><b>What we found next.</b> When all APs hear each other, a simple 2005 rule with no learning (IdleSense) ties OSCAR: 38.77 vs 38.65 Mbps, p = 0.31. In a 3-AP "flow-in-the-middle" chain, every simple method starves the middle AP, and per-AP learners with a fairness reward lift it from 1.44 to about 10 Mbps, close to the best fixed setting, at a cost in total throughput <span class="tag fact">fact</span>.</li>
+    <li><b>So v4 aims at robustness.</b> No single method is best everywhere. v4 trains one controller (RAFA) once, then tests it unchanged on a suite of scenarios, and scores it by how much of the gap between BEB and the best fixed setting it closes in each one. The claim is that it is never clearly worse than the best rival in any scenario and clearly better than each rival somewhere <span class="tag dec">decision</span>. This is a plan being tested, not a result yet. Its first milestone (v3.5.0, tooling) is done <span class="tag fact">fact</span>.</li>
+  </ol>
+</section>
+
+<nav class="toc" aria-label="Contents">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#basics">Part 1. The basics from first principles</a></li>
+    <li><a href="#system">Part 2. What we built: the system</a></li>
+    <li><a href="#history">Part 3. Version by version, v0.1.0 to v3.4.2</a></li>
+    <li><a href="#latest">Part 4. The latest results before v4 (v3.3.0 to v3.4.2)</a></li>
+    <li><a href="#novelty">Part 5. Is this already solved? Novelty and industry evidence</a></li>
+    <li><a href="#v4">Part 6. v4, explained separately</a></li>
+    <li><a href="#limits">Part 7. Limitations and claims to avoid</a></li>
+    <li><a href="#qa">Part 8. Likely mentor questions with honest answers</a></li>
+    <li><a href="#glossary">Part 9. Glossary</a></li>
+  </ol>
+</nav>
+
+<!-- ============================ PART 1 ============================ -->
+<div class="part" id="basics">Part 1 · The basics from first principles</div>
+
+<section>
+  <h2>1.1 How Wi-Fi devices share one channel</h2>
+  <p>A Wi-Fi network is an <b>access point (AP)</b> plus the <b>stations (STAs)</b> attached to it, such as laptops and phones. One AP and its stations form a <b>BSS</b> (basic service set). All of them talk on the same radio channel, and only one transmission can succeed at a time where two signals overlap. If two devices send at once, both frames are corrupted. That is a <b>collision</b>.</p>
+  <p>Wi-Fi has no central scheduler for normal traffic. Each device decides for itself when to send, using a rule called <b>CSMA/CA</b> (carrier-sense multiple access with collision avoidance):</p>
+  <ol>
+    <li>Listen first (carrier sense). If the channel is busy, wait.</li>
+    <li>When the channel goes idle, wait a short fixed gap (AIFS, 43 µs for best-effort traffic in our setup).</li>
+    <li>Then pick a random number of <b>slots</b> (9 µs each) between 0 and the <b>contention window (CW)</b>, and count down only while the channel stays idle.</li>
+    <li>Send when the counter reaches zero. If no acknowledgement (ACK) comes back, assume a collision and try again.</li>
+  </ol>
+  <div class="diagram" role="img" aria-label="Timeline: after a busy period, two stations wait AIFS, then count down random backoff slots. The one with fewer slots sends first; if both pick the same count, their frames collide.">
+    <svg viewBox="0 0 900 190" xmlns="http://www.w3.org/2000/svg">
+      <text x="10" y="22" font-weight="700" font-size="14">Station A</text>
+      <text x="10" y="92" font-weight="700" font-size="14">Station B</text>
+      <rect class="slot-busy" x="100" y="8" width="120" height="22" rx="3"></rect>
+      <text x="112" y="24" font-size="12" style="fill: var(--surface)">channel busy</text>
+      <rect class="slot-idle" x="222" y="8" width="40" height="22"></rect><text class="mono" x="226" y="46">AIFS</text>
+      <rect class="slot-idle" x="264" y="8" width="26" height="22"></rect><rect class="slot-idle" x="292" y="8" width="26" height="22"></rect><rect class="slot-idle" x="320" y="8" width="26" height="22"></rect>
+      <text class="mono" x="268" y="46">backoff = 3 slots</text>
+      <rect class="slot-busy" x="350" y="8" width="150" height="22" rx="3"></rect>
+      <text x="362" y="24" font-size="12" style="fill: var(--surface)">A sends, gets ACK</text>
+      <rect class="slot-busy" x="100" y="78" width="120" height="22" rx="3"></rect>
+      <rect class="slot-idle" x="222" y="78" width="40" height="22"></rect>
+      <rect class="slot-idle" x="264" y="78" width="26" height="22"></rect><rect class="slot-idle" x="292" y="78" width="26" height="22"></rect><rect class="slot-idle" x="320" y="78" width="26" height="22"></rect>
+      <text class="sm" x="352" y="94">freezes at 5 left, waits for A</text>
+      <text class="mono" x="268" y="116">B drew 8 slots</text>
+      <rect class="slot-col" x="600" y="8" width="150" height="22" rx="3"></rect>
+      <rect class="slot-col" x="600" y="78" width="150" height="22" rx="3"></rect>
+      <text x="606" y="24" font-size="12" style="fill: var(--surface)">collision</text>
+      <text x="606" y="94" font-size="12" style="fill: var(--surface)">collision</text>
+      <text class="sm" x="560" y="140">Later round: both drew the same count, both send, both frames are lost.</text>
+      <text class="sm" x="560" y="158">Small CW = more such ties. Large CW = more idle slots wasted.</text>
+    </svg>
+  </div>
+  <div class="explain">
+    <p><b>The central trade-off.</b> A small CW means short waits but many devices pick the same number, so collisions rise. A large CW means few collisions but the channel sits idle while everyone counts down. The best CW grows with the number of devices competing. That single number is what this whole project tunes.</p>
+  </div>
+</section>
+
+<section>
+  <h2>1.2 BEB, the standard rule, and why it is not optimal</h2>
+  <p><b>Binary exponential backoff (BEB)</b> is what 802.11 does by default. Every device starts at a small CWmin (15 or 16 in our code), and after each failed attempt it doubles its CW up to CWmax (1023). After a success it resets to CWmin. BEB needs no knowledge of how many devices exist, which is why it is the standard.</p>
+  <p>Its weakness: every device returns to the small CWmin after each success, so in a crowded network the first attempt of almost every frame collides again. With 60 saturated stations, BEB in our simulator gets about 27.3 Mbps total, while the best fixed CW (512 for all) gets 39.6 Mbps <span class="tag fact">fact</span>. That 40 % gap is the headroom every method in this project tries to capture.</p>
+</section>
+
+<section>
+  <h2>1.3 Reinforcement learning and DDPG in plain words</h2>
+  <p><b>Reinforcement learning (RL)</b> learns a behaviour by trial and error. An <b>agent</b> sees an <b>observation</b> (here, a number describing how congested its AP is), takes an <b>action</b> (picks a CW), and receives a <b>reward</b> (here, how much data got through). Over many steps it learns a <b>policy</b>: a mapping from observation to action that earns high reward.</p>
+  <p><b>DDPG</b> (deep deterministic policy gradient) is an RL algorithm for continuous actions. It has two small neural networks that together make <i>one</i> agent:</p>
+  <ul>
+    <li>The <b>actor</b> takes the observation and outputs the action.</li>
+    <li>The <b>critic</b> estimates how good an (observation, action) pair is, i.e. the expected future reward. The actor is trained to choose actions the critic rates highly.</li>
+    <li>Past experience is stored in a <b>replay buffer</b> and sampled in batches. Slow-moving <b>target networks</b> keep training stable. During training a little random <b>exploration noise</b> is added to actions.</li>
+  </ul>
+  <p>Our DDPG is the one OSCAR uses, unchanged: actor and critic each 128 × 128 hidden units, discount γ = 0.7, soft update τ = 0.001, batch 32, noise σ = 0.1, the first 300 steps random warm-up <span class="tag fact">fact</span>. Important for your mentor: "actor + critic" is one agent, not two agents.</p>
+  <p><b>TD3</b> is an improved DDPG (two critics, delayed actor updates). We tested it as an option in v3.4.0.</p>
+</section>
+
+<section>
+  <h2>1.4 Multi-agent RL and the words that go with it</h2>
+  <ul>
+    <li><b>Independent learners</b>: each AP has its own agent, own replay buffer, own reward, and sees only its own data. This is our default "multi-agent" mode. It is decentralised, but not cooperative.</li>
+    <li><b>Parameter sharing</b> ("shared" mode): one network is used by every AP. Each AP still feeds it its own observation and gets its own CW, but all APs train the same weights.</li>
+    <li><b>Team reward</b>: every agent gets the same reward computed from all APs. This makes agents cooperate, but each AP then indirectly uses information about the others during training.</li>
+    <li><b>CTDE / central critic</b> (centralised training, decentralised execution, the idea behind MADDPG): during training one critic sees all APs; at run time each actor still acts on local data only.</li>
+  </ul>
+  <p>Why multi-agent is hard here: the APs share one channel, so each AP's best CW depends on what the others do. With selfish rewards, each agent is tempted to lower its CW to grab airtime, which raises collisions for everyone. That is a game, not a single optimisation problem <span class="tag inf">inference</span>, and it is the main reason independent agents did badly (Part 3).</p>
+</section>
+
+<section>
+  <h2>1.5 OSCAR, the paper we extend</h2>
+  <p>OSCAR (Grasso, Raftopoulos, Schembra, IEEE ICC 2023) runs one DDPG agent at a single AP. Every 10 ms of simulated time it reads the recent packet-loss ratio and outputs one CW, which is applied to the AP and all its stations with CWmin = CWmax (so the BEB doubling is turned off). The reward is normalised goodput <span class="tag lit">lit</span>. The paper reports +11 % (15 stations) to +40 % (50 stations) throughput over 802.11, +15 to +30 % over CCOD (an earlier DRL method), convergence in about 300 steps, and gives only relative numbers, no absolute Mbps, no fairness, delay or collision figures <span class="tag lit">lit</span>. So we never compare our Mbps to the paper's; we compare paired gains over BEB inside our own simulator <span class="tag dec">decision</span>.</p>
+  <p>Action mapping kept from OSCAR: the actor outputs a ∈ [−1, 1], scaled to 0..6, and CW = 2^(4 + a), so the CW range is 16 to 1024 <span class="tag fact">fact</span>.</p>
+</section>
+
+<section>
+  <h2>1.6 IdleSense, the strong heuristic rival</h2>
+  <p>IdleSense (Heusse et al., SIGCOMM 2005) is a non-learning rule. Theory says throughput is near-maximal when the average number of idle slots between transmission attempts equals a fixed target that depends only on the PHY timing. So each device counts idle slots and steers toward the target <span class="tag lit">lit</span>:</p>
+  <ul>
+    <li>After every 5 of its own transmissions, compute the mean idle slots n̂.</li>
+    <li>If n̂ is below the target (channel too busy): CW ← 1.2 × CW.</li>
+    <li>Otherwise: CW ← 2·CW / (2 + 0.001·CW), a gentle decrease.</li>
+  </ul>
+  <p>For our PHY the paper's formula gives a target of about 3.3 (we estimated the collision time, so this is an approximation) <span class="tag fact">fact</span> <span class="tag inf">T_c estimated</span>. It is decentralised, needs no training, and assumes every device hears every other one.</p>
+</section>
+
+<section>
+  <h2>1.7 Fairness, PF utility and the flow-in-the-middle problem</h2>
+  <p>Total throughput can hide a starved AP. We therefore use three numbers per run:</p>
+  <ul>
+    <li><b>Aggregate</b>: total Mbps of all APs.</li>
+    <li><b>min-AP</b>: the Mbps of the worst-off AP.</li>
+    <li><b>PF utility</b>: the sum over APs of ln(Mbps). This is "proportional fairness": doubling a small AP's rate is worth as much as doubling a large one's, so starving anyone costs a lot. Example: 23.18, 13.25, 23.15 Mbps gives ln 23.18 + ln 13.25 + ln 23.15 = 8.87.</li>
+  </ul>
+  <p>Jain's index (1 = perfectly equal) is reported too. <b>α-fairness</b> generalises this: α = 0 is plain total throughput, α = 1 is PF, α = 2 and above lean further toward the worst-off.</p>
+  <div class="diagram" role="img" aria-label="Three BSSs in a row. BSS1 and BSS2 hear each other, BSS2 and BSS3 hear each other, BSS1 and BSS3 cannot hear each other. The middle BSS defers to both edges and starves.">
+    <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ah1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"></path></marker></defs>
+      <rect class="box" x="40" y="40" width="200" height="90" rx="45"></rect>
+      <text x="100" y="80" font-weight="700" font-size="15">BSS 1</text><text class="sm" x="80" y="100">AP + 10 STAs (edge)</text>
+      <rect class="boxa" x="350" y="40" width="200" height="90" rx="45"></rect>
+      <text x="410" y="80" font-weight="700" font-size="15">BSS 2</text><text class="sm" x="380" y="100">AP + 10 STAs (middle)</text>
+      <rect class="box" x="660" y="40" width="200" height="90" rx="45"></rect>
+      <text x="720" y="80" font-weight="700" font-size="15">BSS 3</text><text class="sm" x="700" y="100">AP + 10 STAs (edge)</text>
+      <path class="edge" d="M242 85 L348 85" marker-end="url(#ah1)" marker-start="url(#ah1)"></path>
+      <path class="edge" d="M552 85 L658 85" marker-end="url(#ah1)" marker-start="url(#ah1)"></path>
+      <text class="mono" x="262" y="76">50 dB, hear</text><text class="mono" x="572" y="76">50 dB, hear</text>
+      <path class="edge" d="M140 132 Q450 200 760 132" stroke-dasharray="5 5"></path>
+      <text class="mono" x="355" y="190">200 dB: BSS 1 and BSS 3 are deaf to each other</text>
+    </svg>
+  </div>
+  <p>Our hard scenario is <code>10,10,10 --apHidden 1-3</code>. The two edge BSSs cannot hear each other, so they transmit independently and their airtime overlaps freely. The middle BSS hears both, so it must defer whenever <i>either</i> edge is sending, and the channel it sees is almost never idle. Under BEB the middle AP gets 1.44 Mbps while each edge gets about 35 <span class="tag fact">fact</span>. The literature calls this <b>flow-in-the-middle</b> (Gawłowicz et al.) <span class="tag lit">lit</span>. It is related to, but not the same as, the classic hidden-terminal problem. The fix is asymmetric: the edges must back off (high CW) and the middle should be aggressive (low CW). One common CW cannot do that, which is why it is the scenario where per-AP control can matter.</p>
+</section>
+
+<section>
+  <h2>1.8 The simulator: ns-3 and ns3-gym</h2>
+  <p><b>ns-3</b> is a packet-level network simulator used widely in research. It simulates every frame, backoff slot, collision and ACK with the real 802.11 MAC logic. We use ns-3.29 (the version OSCAR used) with 802.11ax at 5 GHz, one 20 MHz channel, fixed rate HE-MCS 11, uplink UDP traffic of 1464-byte packets from each station to its AP <span class="tag fact">fact</span>. Default load is 150 Mbps per station, far above capacity, so every station always has data (saturation).</p>
+  <p><b>ns3-gym</b> connects ns-3 to Python using the OpenAI Gym interface over a ZeroMQ socket. Every 10 ms of simulated time, ns-3 pauses, sends the observation and reward to Python, waits for the action, and continues. A standard run is 15 s of simulated time = 1500 steps. All numbers are measured in the policy window, steps 300 and later (after 3 s) <span class="tag fact">fact</span>.</p>
+</section>
+
+<!-- ============================ PART 2 ============================ -->
+<div class="part" id="system">Part 2 · What we built: the system</div>
+
+<section>
+  <h2>2.1 Architecture</h2>
+  <div class="diagram" role="img" aria-label="Python process with N DDPG agents and the trainer exchanges observations, rewards and actions over ns3-gym with one ns-3 process containing N APs and their stations on one shared channel.">
+    <svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"></path></marker></defs>
+      <rect class="box" x="20" y="20" width="330" height="220" rx="10"></rect>
+      <text x="36" y="46" font-weight="700" font-size="15">Python (OSCAR_multi_ap_train.py)</text>
+      <rect class="boxa" x="40" y="62" width="290" height="40" rx="6"></rect><text x="52" y="87" font-size="13">Agent 1: DDPG actor + critic + replay</text>
+      <rect class="boxa" x="40" y="110" width="290" height="40" rx="6"></rect><text x="52" y="135" font-size="13">Agent 2 ... Agent N (or one shared agent)</text>
+      <text class="sm" x="40" y="176">modes: beb · global · independent · shared</text>
+      <text class="sm" x="40" y="194">central · static · idlesense</text>
+      <text class="sm" x="40" y="212">--check verifies isolation every step</text>
+      <rect class="box" x="550" y="20" width="330" height="220" rx="10"></rect>
+      <text x="566" y="46" font-weight="700" font-size="15">ns-3.29 (cw.cc, one process)</text>
+      <rect class="box" x="570" y="62" width="90" height="56" rx="6"></rect><text x="584" y="86" font-size="13">AP 1</text><text class="sm" x="584" y="104">+ STAs</text>
+      <rect class="box" x="670" y="62" width="90" height="56" rx="6"></rect><text x="684" y="86" font-size="13">AP 2</text><text class="sm" x="684" y="104">+ STAs</text>
+      <rect class="box" x="770" y="62" width="90" height="56" rx="6"></rect><text x="784" y="86" font-size="13">AP N</text><text class="sm" x="784" y="104">+ STAs</text>
+      <text class="sm" x="570" y="146">one shared Wi-Fi channel, loss matrix</text>
+      <text class="sm" x="570" y="164">(50 dB = hear; 200 dB = deaf, opt-in)</text>
+      <text class="sm" x="570" y="190">per-AP stats, per-AP CW write + readback</text>
+      <path class="edge" d="M350 90 L550 90" marker-end="url(#ah2)"></path>
+      <text class="mono" x="370" y="82">N actions: CW per AP</text>
+      <path class="edge" d="M550 150 L350 150" marker-end="url(#ah2)"></path>
+      <text class="mono" x="370" y="142">per-AP obs, rewards, stats</text>
+      <text class="sm" x="390" y="180">ns3-gym over ZeroMQ</text>
+      <text class="sm" x="390" y="198">every 10 ms of sim time</text>
+    </svg>
+  </div>
+  <p>One ns-3 process holds every AP and station, so their transmissions really interfere <span class="tag fact">fact</span>. Python holds the agents. The number of APs and stations per AP is a run-time flag (<code>--apStaCounts 20,40</code>). All APs share one collision domain by default: the loss model gives 50 dB between every pair of nodes, so positions do not matter and everyone hears everyone <span class="tag fact">fact</span>. The hidden chain is an opt-in exception (ADR-0005).</p>
+</section>
+
+<section>
+  <h2>2.2 Observation, action and reward designs</h2>
+  <div class="table"><table>
+    <thead><tr><th>Part</th><th>Default (ADR-0002)</th><th>Opt-in variants and where they came from</th></tr></thead>
+    <tbody>
+      <tr><td><b>Observation</b></td><td class="w">One scalar per AP: that AP's newest loss ratio (PHY transmissions minus received, over transmissions). It is a proxy: it also counts ACKs and beacons, so it is not a true collision rate <span class="tag fact">fact</span>.</td><td class="w"><code>--obs hist</code>: mean and std of the AP's own loss history plus its last action (v3.0.0). <code>--obsIdle</code>: the AP's own mean idle slots per gap (v3.3.0). New in v3.5.0: Retry-bit rate, active-station count, failed attempts, delay.</td></tr>
+      <tr><td><b>Action</b></td><td class="w">One number per AP mapped to CW = 2^(4+a), 16 to 1024, written to the AP and all its stations as CWmin = CWmax (no BEB doubling) <span class="tag fact">fact</span>.</td><td class="w"><code>--cwMinOnly</code>: only CWmin is set, CWmax stays 1023, so doubling remains (v3.2.0). <code>--residual</code>: action scales the IdleSense CW by 2^(−2..2) (v3.3.0).</td></tr>
+      <tr><td><b>Reward</b></td><td class="w">Per AP: own goodput divided by its own offered load, clamped to [0, 1]. Local and selfish <span class="tag fact">fact</span>.</td><td class="w"><code>--alpha</code>: mix of own and network reward (v3.0.0). <code>--rewardScale</code> ×100 (v2.6.0, v3.0.0). <code>--reward pf</code>: every agent gets the same PF team reward 1 + mean_i log(0.001 + r_i)/(−log 0.001) (v3.4.0, ADR-0005).</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Code fact worth knowing: stations take their CW from the AP's EDCA parameter set in beacons, which only carries 2^k − 1 values, so a CW between powers of two is rounded at the stations (e.g. 512 and 768 behave identically) <span class="tag fact">fact</span>.</p>
+</section>
+
+<section>
+  <h2>2.3 Controller modes compared in the project</h2>
+  <div class="table"><table>
+    <thead><tr><th>Mode</th><th>What it is</th><th>Learning?</th><th>Per-AP CW?</th></tr></thead>
+    <tbody>
+      <tr><td><b>BEB</b></td><td class="w">Standard 802.11 backoff, nothing changed (ns-3 runs with actions ignored)</td><td>No</td><td>n/a</td></tr>
+      <tr><td><b>Global-CW (OSCAR)</b></td><td class="w">One DDPG agent, network-wide loss in, network goodput reward, one CW for all APs. This is OSCAR applied to the whole network</td><td>Yes</td><td>No</td></tr>
+      <tr><td><b>Independent</b></td><td class="w">One DDPG agent per AP, local obs and reward. The v1 core ("OSCAR per AP")</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td><b>Shared</b></td><td class="w">One network used by all APs (parameter sharing)</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td><b>Central</b></td><td class="w">N local actors + one central critic on global reward (CTDE, MADDPG-style)</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td><b>Static</b></td><td class="w">Fixed CW per AP via <code>--apCws</code>. The best static setting per scenario is the "oracle" (found by a grid search)</td><td>No</td><td>Yes</td></tr>
+      <tr><td><b>IdleSense</b></td><td class="w">The 2005 heuristic, per AP on its own radio's idle slots</td><td>No</td><td>Yes</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>2.4 Scenarios and the evaluation protocol</h2>
+  <ul>
+    <li><b>Topologies run</b>: 2,3 · 5,15 · 20,20 · 20,40 (main one-domain case) · 4 APs 5,10,15,20 · 6 APs 5..30 · 8 APs 5..40 · 10 APs 4,8,...,40 (220 STAs) · fixed 60 STAs over 2/4/6/10 APs · imbalance 5,55 and 5,5,5,45 · 6×10 · 22×10 · loads 0.5, 1, 150 Mbps per STA · the hidden chain 10,10,10 with equal and uneven loads <span class="tag fact">fact</span>.</li>
+    <li><b>Early protocol (v1.x to v3.0)</b>: train and measure in the same run (the agent is still exploring), 3 to 5 seeds, mean ± 95 % CI, paired by seed against BEB.</li>
+    <li><b>Fair protocol (v3.2.0 onward)</b>: train for 2 episodes, save the actor, then evaluate it <b>frozen</b> (no noise, no learning) on 8 held-out evaluation seeds (python 100 to 107, ns-3 101 to 108). Every method runs on the same seeds, so differences are <b>paired</b>. Test: exact two-sided Wilcoxon signed-rank; with n = 8 the smallest possible p is 0.0078, reached when all 8 differences have the same sign <span class="tag fact">fact</span>.</li>
+    <li><b>Policy seeds</b>: from v3.4.0 we retrain with different training seeds (0, 1, 2), because two trainings of the same method can give different policies. This turned out to matter a lot (Part 4).</li>
+    <li><b>Validation habits</b>: after every simulator change we re-check fixed regression numbers (single-AP dry run = 10533 packets, 5,15 = 9000, OSCAR smoke reward 10.59458) and byte-identical traces for default flags. Every training run uses <code>--check</code>, which asserts per-AP isolation, CW readback and reward formulas every step <span class="tag fact">fact</span>.</li>
+  </ul>
+</section>
+
+<!-- ============================ PART 3 ============================ -->
+<div class="part" id="history">Part 3 · Version by version, v0.1.0 to v3.4.2</div>
+
+<section>
+  <h2>3.1 Building the system (v0.1.0 to v1.0.0, Sep 16 to Oct 8)</h2>
+  <div class="table"><table>
+    <thead><tr><th>Version</th><th>What was done</th><th>Key evidence</th></tr></thead>
+    <tbody>
+      <tr><td class="num">v0.1.0</td><td class="w">Froze and reproduced single-AP OSCAR; documented inherited bugs (uninitialised Jain index in the C++ logger, CW = 0 until the first action, hard-coded 5·150 reward normaliser, "sentMbytes" is Mbit, only 1 of 300 history values used)</td><td class="w">40 STAs: CW mean 196.9, about 34 Mbps, loss ratio 0.63 (episode 1)</td></tr>
+      <tr><td class="num">v0.2.0</td><td class="w">Design contract and ADR-0002: one ns-3 process, N APs, one DDPG agent per AP, local loss obs, local goodput reward, sequential joint stepping, no central critic in v1</td><td class="w">design only</td></tr>
+      <tr><td class="num">v0.3.0</td><td class="w">Two APs in one simulation with unequal STA counts. Found and fixed a real bug: both APs beaconed at identical times so nothing associated; beacon jitter is now on for more than one AP</td><td class="w">20/40, 5/15, 2/3 all associate correctly, 0 cross-AP flows</td></tr>
+      <tr><td class="num">v0.4.0</td><td class="w">Per-AP statistics (tx, rx, loss, throughput, Jain)</td><td class="w">Per-AP sums equal the global counters exactly</td></tr>
+      <tr><td class="num">v0.5.0</td><td class="w">Per-AP CW: replaced OSCAR's one wildcard CW write with per-BSS paths, plus readback check</td><td class="w">5,15 with 32/256: AP1 receives 7580 vs AP2 2805 packets</td></tr>
+      <tr><td class="num">v0.6.0</td><td class="w">Multi-AP ns3-gym: joint observation, action, reward vectors</td><td class="w">Readback CW = action per AP every step</td></tr>
+      <tr><td class="num">v0.7.0</td><td class="w">N independent DDPG agents with <code>--check</code> isolation tests</td><td class="w">Disjoint parameters and replay buffers asserted per step</td></tr>
+      <tr><td class="num">v0.8.0</td><td class="w">W&amp;B logging per AP and global (offline by default)</td><td class="w">Logged values read back and checked</td></tr>
+      <tr><td class="num">v0.9.0</td><td class="w">Validation tests A to F on short runs; long runs for 2,3 and 5,15</td><td class="w">5,15: AP1 30.8 vs AP2 7.7 Mbps, Jain 0.846</td></tr>
+      <tr class="hl"><td class="num">v1.0.0</td><td class="w">Core milestone: working, repeatable two-AP multi-agent OSCAR; seed-pinned reruns give identical traces</td><td class="w">20,40 trained 32.3 vs BEB 29.2 Mbps; 20,20 trained 30.0 vs BEB 32.2 (n = 1 each)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>3.2 Benchmarks and scaling (v1.1.0 to v1.6.0, Oct 9 to 16)</h2>
+  <div class="table"><table>
+    <thead><tr><th>Version</th><th>Setup</th><th>BEB</th><th>Global-CW</th><th>Independent</th></tr></thead>
+    <tbody>
+      <tr><td class="num">v1.1.0</td><td>20,20 (n = 3)</td><td class="num">30.10</td><td class="num">37.93 (+26.0 ± 13.1 %)</td><td class="num">30.19 (+0.2 ± 71.1 %)</td></tr>
+      <tr><td class="num">v1.1.0</td><td>20,40 (n = 5)</td><td class="num">27.96</td><td class="num">36.89 (+31.9 ± 11.8 %)</td><td class="num">25.27 (−9.3 ± 31.0 %)</td></tr>
+      <tr><td class="num">v1.2.0</td><td>4 APs (n = 3)</td><td class="num">28.63</td><td class="num">37.29 (+30.5 %)</td><td class="num">23.27 (−18.6 %)</td></tr>
+      <tr><td class="num">v1.3.0</td><td>6 APs</td><td class="num">23.83</td><td class="num">32.53 (+36.4 %)</td><td class="num">18.72 (−21.6 %, bimodal)</td></tr>
+      <tr><td class="num">v1.4.0</td><td>8 APs, 180 STAs</td><td class="num">20.05</td><td class="num">27.99 (+40.1 %)</td><td class="num">12.54 (−37.1 %)</td></tr>
+      <tr><td class="num">v1.5.0</td><td>10 APs, 220 STAs</td><td class="num">19.24</td><td class="num">27.04 (+41.0 %)</td><td class="num">9.00 (−53.5 ± 27.6 %, CI excludes 0)</td></tr>
+    </tbody>
+  </table></div>
+  <p>Aggregate Mbps, mean over seeds, paired change vs BEB <span class="tag fact">fact</span>. v1.1.0 also found that <code>--seed</code> had no effect on ns-3 (seed set after node creation) and fixed it. v1.6.0 recomputed everything from raw traces: Global-CW stays above BEB at every N, independent agents fall further behind as N grows. The 10-AP run also showed late association and de-association bursts, later explained in v2.0.0.</p>
+</section>
+
+<section>
+  <h2>3.3 Central critic (v1.7.0 to v1.9.0, Oct 16 to 17)</h2>
+  <p>Hypothesis: a central critic that sees all APs during training (CTDE, ADR-0003) would stop the selfish game. Built as <code>--mode central</code> and evaluated at 4 and 10 APs, 3 seeds. Result: <b>negative</b>. At 10 APs central was −5.80 ± 10.48 Mbps versus independent and collapsed to about 3.2 Mbps, below BEB <span class="tag fact">fact</span>. Follow-ups (v2.5.2 to v2.7.0) showed the collapse is linked to the tiny reward scale: at 22×10, reward ×100 avoided it (38.0 Mbps, Jain 0.98, n = 1) while ×3.67 did not <span class="tag fact">fact</span>. It was recorded as an optional negative result, as the design allowed.</p>
+</section>
+
+<section>
+  <h2>3.4 Robustness, reproducibility and the write-up (v2.0.0 to v2.8.x, Oct 19 to 20)</h2>
+  <ul>
+    <li><b>v2.0.0 robustness</b>: fixed-total-STA sweep, AP imbalance, traffic load, association diagnostics, 63/63 runs. Found and fixed a bug where multi-AP agents started with CW 0/0. Explained the large-N association failure: traffic starting at t = 0 plus missed-beacon limits, fixed with <code>--trafficStart</code>.</li>
+    <li><b>v2.1.0</b>: reproducibility (run names, git revision in each config, seeds and resets verified).</li>
+    <li><b>v2.2.0 final results</b> (81 runs, n = 3): 20,40 BEB 27.30, Global 36.29 (+33.0 %), independent 25.78 (−5.6 ± 76.0 %). Fixed 60 STAs: independent goes +3.8 % (2 APs) to −46.2 % (10 APs), Global stays about +30 %. At 0.5 Mbps/STA (unsaturated) everyone delivers the traffic and gains vanish <span class="tag fact">fact</span>.</li>
+    <li><b>v2.3.0 to v2.5.0</b>: technical report, 14-slide deck with a 33 s live demo, a 26-item final audit (ns-3 source identical to pristine 3.29; references were still placeholders).</li>
+    <li><b>v2.6.0 to v2.8.x</b>: reward-scale ablation of the central critic, independent mode at 22×10 (below BEB in all seeds), W&amp;B sync, README.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>3.5 Trying to beat OSCAR (v3.0.0 to v3.2.0, Oct 25 to 28)</h2>
+  <p>After a research note on why independent agents lose (selfish CW game, no BEB doubling, a noisy one-number observation, rewards near zero at saturation, measuring while still exploring) <span class="tag inf">inference</span>, three steps followed:</p>
+  <ul>
+    <li><b>v3.0.0</b>: history observation, reward mixing (<code>--alpha</code>), reward ×100 and parameter sharing (ADR-0004). Only sharing reached Global level. Best variant V5 at 20,40: 37.08 ± 0.85 vs Global 36.17 ± 6.95, +2.8 ± 16.9 % (CI spans 0). Its per-AP CWs did not separate, so it acts like one global CW with lower seed variance <span class="tag fact">fact</span>.</li>
+    <li><b>v3.1.0 ceiling</b>: 50 static runs. At 20,40 the best fixed common CW (512) gives 39.62 ± 0.21 Mbps, +12.3 over BEB but only +3.45 ± 6.77 over Global. No per-AP split beat the common CW. <b>Conclusion: in one collision domain there is no headroom for per-AP CWs</b> <span class="tag fact">fact</span>. This is what pushed the project toward the hidden chain.</li>
+    <li><b>v3.2.0 fair protocol</b>: multi-episode training, save/load actor, frozen evaluation, TD3 and <code>--cwMinOnly</code> options, a runner for paired batches. Pilot at 20,40: frozen shared policy 39.74 vs BEB 27.33 (n = 1).</li>
+  </ul>
+</section>
+
+<section>
+  <h2>3.6 The per-AP scenario and sensing (v3.4.0, v3.3.0, v3.3.1, v3.4.2)</h2>
+  <p>v3.4.0 (Oct 28 to 31) added the hidden chain (ADR-0005, user-approved exception to the "no detailed interference" scope line), per-AP loads, the PF team reward, PF tables and Wilcoxon tests. A static gate first confirmed that asymmetric fixed CWs beat the best common CW there (PF +0.15 ± 0.02, min-AP +7.62 ± 0.27 Mbps, n = 3). v3.3.0 (Oct 31) added idle-slot sensing, IdleSense, residual RL and the idle observation. v3.3.1 (Nov 1) corrected IdleSense to the published rule after reading the paper; the first version was a different controller and its results are flagged as superseded. "v3.4.2" is the name of the results branch for the third training seed of TD3 and <code>--cwMinOnly</code>; there is no v3.4.2 tag (tags exist for v3.4.0, v3.4.1, v3.3.1) <span class="tag fact">fact</span>. The numbers are in Part 4.</p>
+</section>
+
+<!-- ============================ PART 4 ============================ -->
+<div class="part" id="latest">Part 4 · The latest results before v4 (v3.3.0 to v3.4.2)</div>
+
+<section>
+  <h2>4.1 One collision domain (20,40): a 2005 heuristic ties OSCAR</h2>
+  <div class="table"><table>
+    <thead><tr><th>Arm (n = 8, seeds 100–107)</th><th>Aggregate Mbps</th><th>AP1 / AP2</th><th>PF</th><th>min-AP</th><th>Final CW</th></tr></thead>
+    <tbody>
+      <tr><td>BEB</td><td class="num">27.66 ± 0.40</td><td class="num">9.35 / 18.31</td><td class="num">5.14</td><td class="num">9.35</td><td class="num">16 / 16</td></tr>
+      <tr><td>Global-CW (OSCAR, frozen)</td><td class="num">38.65 ± 0.40</td><td class="num">12.79 / 25.86</td><td class="num">5.80</td><td class="num">12.79</td><td class="num">276 / 276</td></tr>
+      <tr class="hl"><td>IdleSense, published rule, target 3.3, no training</td><td class="num">38.77 ± 0.21</td><td class="num">12.84 / 25.93</td><td class="num">5.80</td><td class="num">12.84</td><td class="num">366 / 366</td></tr>
+      <tr><td>Best static common CW 512 (v3.1.0, seeds 0–2, not paired)</td><td class="num">39.62 ± 0.21</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num">512 / 512</td></tr>
+    </tbody>
+  </table></div>
+  <p>IdleSense vs Global: +0.11 ± 0.25 Mbps, p = 0.312; both beat BEB by about +40 % in all 8 seeds (p = 0.008) <span class="tag fact">fact</span>. <b>What it changed:</b> the project's headline "RL beats BEB by 30 %" is matched by a no-learning rule in this setting. Any honest claim here must use IdleSense and the static ceiling as the bar, not BEB.</p>
+</section>
+
+<section>
+  <h2>4.2 The flow-in-the-middle chain (10,10,10, edges deaf)</h2>
+  <div class="table"><table>
+    <thead><tr><th>Arm (n = 8 eval seeds; one policy per row)</th><th>Aggregate</th><th>AP1 / AP2 / AP3</th><th>PF</th><th>min-AP</th><th>Final CW</th></tr></thead>
+    <tbody>
+      <tr><td>BEB</td><td class="num">71.63</td><td class="num">34.95 / 1.44 / 35.24</td><td class="num">7.48</td><td class="num">1.44</td><td class="num">16/16/16</td></tr>
+      <tr><td>Global-CW</td><td class="num">76.46</td><td class="num">36.93 / 2.58 / 36.94</td><td class="num">8.16</td><td class="num">2.58</td><td class="num">64/64/64</td></tr>
+      <tr><td>IdleSense (published, v3.3.1)</td><td class="num"><b>78.12</b></td><td class="num">… / 0.53 / …</td><td class="num">6.68</td><td class="num">0.53</td><td class="num">106/963/107</td></tr>
+      <tr class="hl"><td>Static oracle 256,128,256</td><td class="num">59.58</td><td class="num">23.18 / 13.25 / 23.15</td><td class="num"><b>8.87</b></td><td class="num">13.25</td><td class="num">256/128/256</td></tr>
+      <tr><td>Static 256,64,256</td><td class="num">53.90</td><td class="num">17.39 / 19.12 / 17.39</td><td class="num">8.66</td><td class="num">17.37</td><td class="num">256/64/256</td></tr>
+      <tr><td>Independent, own reward (<code>--alpha 0</code>)</td><td class="num">68.77</td><td class="num">38.50 / 1.26 / 29.01</td><td class="num">7.25</td><td class="num">1.26</td><td class="num">75/110/16</td></tr>
+      <tr><td>Independent PF, DDPG, train seeds 0 / 1 / 2</td><td class="num">62.82 / 61.78 / 59.49</td><td class="num">AP2 9.99 / 11.62 / 8.37</td><td class="num">8.84 / 8.89 / 8.60</td><td class="num">9.99 / 11.62 / 8.37</td><td class="num">208/41/77 · 218/123/251 · 286/311/347</td></tr>
+      <tr><td>Shared PF, train seeds 0 / 1 / 2</td><td class="num">73.43 / 64.48 / 63.68</td><td class="num"></td><td class="num">8.58 / 8.69 / 8.71</td><td class="num">4.49 / 7.30 / 7.77</td><td class="num">126 · 241 · 248 (all APs)</td></tr>
+      <tr><td>Independent PF, TD3, seeds 0 / 1 / 2</td><td class="num">57.66 / 63.53 / 48.41</td><td class="num"></td><td class="num">8.78 / 8.91 / 8.15</td><td class="num">13.75 / 10.73 / 10.72</td><td class="num">seed 2: 311/428/1018</td></tr>
+      <tr><td>Independent PF, <code>--cwMinOnly</code>, seeds 0 / 1 / 2</td><td class="num">68.42 / 64.37 / 59.19</td><td class="num"></td><td class="num">8.39 / 8.84 / 8.87</td><td class="num">4.38 / 9.07 / 14.15</td><td class="num"></td></tr>
+      <tr><td>Residual on IdleSense (v3.3.1), seeds 0 / 1 / 2</td><td class="num">75.36 / 72.86 / 77.00</td><td class="num"></td><td class="num">7.93 / 8.19 / 6.57</td><td class="num">2.09 / 2.99 / 0.49</td><td class="num">AP2 242 / 371 / 1017</td></tr>
+      <tr><td>PF + idle-slot observation, seeds 0 / 1 / 2</td><td class="num">62.33 / 60.61 / 64.97</td><td class="num"></td><td class="num">8.87 / 8.70 / 8.92</td><td class="num">11.00 / 9.20 / 9.97</td><td class="num">AP2 104 / 239 / 101</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">All facts from <code>docs/results/per-ap-scenario-v3.4.0.md</code> §4–§4i and <code>sensing-heuristics-v3.3.0.md</code> §3b. CIs over eval seeds are small (for example PF ± 0.01 to 0.11) and are listed in those docs. Each paired difference quoted below has p = 0.008 unless another p is given.</p>
+
+  <div class="diagram chart" role="img" aria-label="Scatter of aggregate throughput against the weakest AP's throughput in the chain. BEB, Global and IdleSense sit at high aggregate but near-zero min-AP. The static oracles sit at low aggregate and high min-AP. Independent PF learners sit between them, close to the oracle.">
+    <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg">
+      <line class="grid" x1="80" y1="193.3" x2="680" y2="193.3"></line>
+      <line class="grid" x1="80" y1="126.7" x2="680" y2="126.7"></line>
+      <line class="grid" x1="80" y1="60" x2="680" y2="60"></line>
+      <line class="axis" x1="80" y1="260" x2="680" y2="260"></line>
+      <line class="axis" x1="80" y1="20" x2="80" y2="260"></line>
+      <text x="74" y="264" text-anchor="end">0</text><text x="74" y="197" text-anchor="end">5</text><text x="74" y="131" text-anchor="end">10</text><text x="74" y="64" text-anchor="end">15</text>
+      <text x="80" y="278" text-anchor="middle">50</text><text x="180" y="278" text-anchor="middle">55</text><text x="280" y="278" text-anchor="middle">60</text><text x="380" y="278" text-anchor="middle">65</text><text x="480" y="278" text-anchor="middle">70</text><text x="580" y="278" text-anchor="middle">75</text><text x="680" y="278" text-anchor="middle">80</text>
+      <text x="380" y="304" text-anchor="middle">aggregate throughput (Mbps), higher is more total data</text>
+      <text x="16" y="140" transform="rotate(-90 16 140)" text-anchor="middle">weakest AP (Mbps)</text>
+      <circle class="pt-base" cx="512.6" cy="240.8" r="6"></circle><text class="lbl" x="490" y="232" text-anchor="end">BEB</text>
+      <circle class="pt-base" cx="609.2" cy="225.6" r="6"></circle><text class="lbl" x="609" y="212" text-anchor="middle">Global</text>
+      <circle class="pt-heur" cx="642.4" cy="252.9" r="6"></circle><text class="lbl" x="652" y="248">IdleSense</text>
+      <circle class="pt-oracle" cx="271.6" cy="83.4" r="6"></circle><text class="lbl" x="282" y="80">oracle 256,128,256</text>
+      <circle class="pt-oracle" cx="158" cy="28.5" r="6"></circle><text class="lbl" x="168" y="32">static 256,64,256</text>
+      <circle class="pt-learn" cx="336.4" cy="126.8" r="6"></circle><text class="lbl" x="346" y="131">indep PF s0</text>
+      <circle class="pt-learn" cx="315.6" cy="105.1" r="6"></circle><text class="lbl" x="326" y="110">s1</text>
+      <circle class="pt-learn" cx="269.8" cy="148.4" r="6"></circle><text class="lbl" x="258" y="153" text-anchor="end">s2</text>
+      <circle class="pt-learn" cx="548.6" cy="200.1" r="6"></circle><text class="lbl" x="560" y="196">shared PF s0</text>
+    </svg>
+  </div>
+  <p class="note">Plotted from the table above (DDPG policies only). Up-right would be ideal, and no method gets there: you trade total throughput for the middle AP.</p>
+
+  <h3>What each result changed</h3>
+  <div class="table"><table>
+    <thead><tr><th>Result</th><th>What it means for the project</th></tr></thead>
+    <tbody>
+      <tr><td class="w"><b>PF reward works.</b> Independent PF beats BEB by +1.36 PF and +8.56 Mbps min-AP, and Global by +0.68 PF and +7.41 min-AP, in all 8 seeds. Cost: −8.8 Mbps aggregate vs BEB, −13.6 vs Global <span class="tag fact">fact</span></td><td class="w">Per-AP learning helps only where the best CW differs per AP, and only with a cooperative reward. With its own selfish reward the same learner is worse than BEB (PF −0.23).</td></tr>
+      <tr><td class="w"><b>Close to the oracle, but seed-dependent.</b> Seed 0: −0.03 PF vs 256,128,256. Seed 1: +0.02 (p = 0.078, level). Seed 2: −0.27 PF, −4.9 min-AP <span class="tag fact">fact</span></td><td class="w">"Matches the static optimum" is not a stable claim. Training-seed spread is larger than eval-seed CIs, so one-policy results understate uncertainty.</td></tr>
+      <tr><td class="w"><b>Algorithm rankings flip.</b> TD3 and cwMinOnly change order between seeds; TD3 seed 2 only ties Global on PF (−0.01, p = 0.383). 8 of 9 independent PF policies beat Global; all 3 shared PF ones do <span class="tag fact">fact</span></td><td class="w">No algorithm or action-space claim can be made. v4 keeps DDPG (most evidence) and uses 3 or more training seeds for every comparison.</td></tr>
+      <tr><td class="w"><b>IdleSense starves the middle AP.</b> Highest aggregate (78.12) but PF −0.80 vs BEB and middle AP 0.53 Mbps; middle CW near 1024, edges near 106 <span class="tag fact">fact</span></td><td class="w">The heuristic reads a locally true signal ("my channel is busy") and reaches a globally unfair state <span class="tag inf">inference</span>. The same target works at 20,40, so the failure is the topology, not the tuning. This is the scenario where learning must win.</td></tr>
+      <tr><td class="w"><b>Residual RL on IdleSense is unstable.</b> PF 7.93 / 8.19 / 6.57 over 3 seeds, seed 2 below BEB <span class="tag fact">fact</span></td><td class="w">Dropped from v4.</td></tr>
+      <tr><td class="w"><b>Idle-slot observation is safe.</b> PF 8.87 / 8.70 / 8.92, level with the oracle, but not shown better than the loss observation <span class="tag fact">fact</span></td><td class="w">Kept as an input in v4, with no claim that it beats loss.</td></tr>
+      <tr><td class="w"><b>Uneven load handled.</b> With AP3 offering only 10 Mbps (<code>--apLoads 150,150,1</code>), independent PF ties the static setting on PF (+0.00, p = 0.312) and beats BEB by +0.31; its CWs adapt (AP3 stays at 16). The 150,150,20 test was not informative because AP3 was still saturated <span class="tag fact">fact</span></td><td class="w">Kept as suite scenario S5a.</td></tr>
+      <tr><td class="w"><b>Not done</b>: Bianchi/Kalman baseline (2000 paper returned HTTP 403); measured T_c for IdleSense <span class="tag unk">unknown</span></td><td class="w">Built in v4 only from a source that can be read.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="explain">
+    <p><b>How to say Part 4 in two sentences.</b> Where every AP hears every other, the problem is already handled by a simple rule, so learning adds nothing measurable. Where the best CW differs per AP, simple rules fail on fairness and a per-AP learner with a fairness reward gets close to the best fixed setting, but how close depends on the training seed.</p>
+  </div>
+</section>
+
+<!-- ============================ PART 5 ============================ -->
+<div class="part" id="novelty">Part 5 · Is this already solved? Novelty and industry evidence</div>
+
+<section>
+  <h2>5.1 Recent research (2023 to 2026)</h2>
+  <p>A check of 15 papers from 2023 to 2026, on top of a 70-entry survey (29 Oct), found the topic is more active since OSCAR, not closed <span class="tag lit">lit</span>:</p>
+  <div class="table"><table>
+    <thead><tr><th>Closest work</th><th>What it does</th><th>Why it is not our v4 claim</th></tr></thead>
+    <tbody>
+      <tr><td><b>drlCW</b> (Yan et al., VTC 2024-Spring)</td><td class="w">Per-AP DDQN + LSTM, neighbour info shared in beacons, reward positive only if no worse than CSMA; 3 and 6 APs</td><td class="w">Trained and tested per scenario, compared only with CSMA. Its "no worse than CSMA" gate is prior art for our fair floor, so we cite it.</td></tr>
+      <tr><td><b>Hao, Li, Duan</b> 2025 (arXiv 2508.09146)</td><td class="w">Transformer in-context learning predicts CW for unseen node counts without retraining</td><td class="w">One collision domain, varies only node count, throughput only, no multi-AP or fairness. Venue not verified.</td></tr>
+      <tr><td><b>Nunez et al.</b> 2025 (arXiv 2507.19377)</td><td class="w">PPO picks multi-AP spatial-reuse groups (Wi-Fi 8 MAPC)</td><td class="w">Scheduling, not CW. Calls a size-independent model "an open research direction".</td></tr>
+      <tr><td>FC-MAPPO 2025, Cruz SBrT 2024, BLADE 2026</td><td class="w">Learned or rule-based CW/backoff</td><td class="w">BEB is the only baseline. FC-MAPPO lists generalising across traffic and network size as future work.</td></tr>
+      <tr><td>Casasnovas et al. 2025 (bandits)</td><td class="w">Online UCB picks channel and CW across BSSs</td><td class="w">Learns per run; reports greedy learners can hurt legacy BSSs by up to 59 %.</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>The gap</b>: none of the papers checked trains one controller once and scores it, in each scenario of a multi-AP suite, against the best fixed CW and against strong non-learned rivals like IdleSense, under a common fairness floor <span class="tag inf">inference from the papers read</span>. Our own data shows why that matters: a paper that only beats BEB at 20,40 would report +40 % while being no better than a 2005 rule.</p>
+  <p><b>Overlaps we must state up front</b>: per-AP deep RL for CW is not new (drlCW, Cruz, FC-MAPPO, OSCAR); generalising to unseen station counts is not new by itself (Hao et al.); the "not worse than standard" gate comes from drlCW; domain randomisation and α-fair utilities are standard tools. What we have not found is the combination, applied to CW and judged per scenario.</p>
+  <p><b>Two papers not yet read</b> <span class="tag unk">unknown</span>: an ICT Express 2025 multi-agent DRL paper for CW in 802.11 (ScienceDirect S2405959525000104, page blocked) and a ResearchGate entry "Multi-Agent RL-Based Channel Access Optimization for IEEE 802.11bn" (probably the drlCW group). Both must be read before the final report.</p>
+</section>
+
+<section>
+  <h2>5.2 Industry and standards</h2>
+  <ul>
+    <li><b>The problem is live</b>: Qualcomm's 2025 Wi-Fi 8 paper names "overlapping signals and airtime contention" in dense networks; Cisco Meraki and Juniper Mist docs describe congestion and devices pausing transmission <span class="tag lit">source</span>.</li>
+    <li><b>Wi-Fi 8 (802.11bn) is still a draft</b>, final approval expected about 2028; its targets include 25 % lower p95 latency in overlapping networks. Its CW-related changes are narrow and rule-based (high-priority EDCA) <span class="tag lit">source</span>.</li>
+    <li><b>Products tune radio settings, not backoff</b>: Meraki AutoRF, Aruba AirMatch and Mist RRM adjust channel, power, width and band; Mist uses RL, but for those settings. CW/EDCA parameters are configurable mostly as static profiles; Huawei documents an optional "dynamic EDCA" for high density without saying how it works <span class="tag lit">source</span>.</li>
+    <li><b>Exact wording to use</b>: "We did not find public product documentation explicitly advertising learned contention-window optimization." Do not say "no product does it". Keep RF interference, co-channel interference, airtime contention and MAC backoff separate: CW tuning only addresses the last two in part.</li>
+    <li><b>Gaps in that research</b>: no independent statistics on how common the problem is; Broadcom primary release, WBA article and Qualcomm OnQ blog not read; figures not visually checked.</li>
+  </ul>
+</section>
+
+<!-- ============================ PART 6 ============================ -->
+<div class="part" id="v4">Part 6 · v4, explained separately</div>
+
+<section class="bottom">
+  <h2>v4 in five sentences</h2>
+  <ol>
+    <li>Every method we have fails somewhere: IdleSense and Global-CW starve the middle AP in the chain, static settings need a per-scenario search, and per-scenario learners must be retrained for each case.</li>
+    <li>v4 builds one controller, <b>RAFA</b>, trains it once over a pool of randomised scenarios, and never retrains it.</li>
+    <li>It is scored per scenario by <b>gap closed</b>: 0 means BEB, 1 means the best fixed setting for that scenario.</li>
+    <li>Every method must respect a <b>fair floor</b> so that no AP is starved to inflate the total.</li>
+    <li>The claim: RAFA is never more than 0.05 GC below the best rival in any scenario, and significantly better than each rival in at least one.</li>
+  </ol>
+  <p class="note">Status: plan revision 6 (1 Nov). Milestone M0 is done and tagged v3.5.0 on <code>feature/v4</code>; <code>dev</code> has not received the v4 work yet. Next is M1 <span class="tag fact">fact</span>.</p>
+</section>
+
+<section>
+  <h2>6.1 The metric: gap closed (GC)</h2>
+  <p>For one scenario and one fairness level α:</p>
+  <p class="mono" style="font-size:15px">GC = (U − U_BEB) / (U_oracle − U_BEB),  U_α = Σ_i n_i · u_α( max(ε, x_i / n_i) )</p>
+  <ul>
+    <li>x_i is AP i's throughput, n_i its station count, so x_i/n_i is throughput per station. ε = 0.01 Mbps per station avoids log(0) for a starved AP.</li>
+    <li>u_α is the α-fair utility: α = 0 is plain throughput, α = 1 is log (PF), α = 2 is −1/x. Weighting by n_i fixes a flaw found in the old PF reward, which was unweighted and would give a 20-station BSS and a 40-station BSS equal shares <span class="tag fact">fact</span>.</li>
+    <li>The <b>oracle</b> is the best static per-AP CW for that scenario that still satisfies the fair floor, found by a grid search on selection seeds. It is a reference, not a rival.</li>
+    <li>Edge cases fixed in advance: if U_oracle − U_BEB is under 3 BEB seed SDs (for example at low load, where everyone delivers everything), the cell is scored on the raw metric with a 1 % margin. Delay cells use GC on log p99 delay.</li>
+  </ul>
+  <div class="explain"><p><b>Why GC?</b> A +40 % gain over BEB sounds big, but at 20,40 IdleSense gets it with no learning. GC asks the fairer question: of the improvement that was available in this scenario, how much did you capture?</p></div>
+</section>
+
+<section>
+  <h2>6.2 The fair floor</h2>
+  <p>floor_i = min(BEB_i, BEB aggregate · n_i / Σn). In words: no AP may get less than it would under standard BEB, or less than its station-weighted share of BEB's total, whichever is smaller. A result is <b>infeasible</b> in a cell if any AP gets below 0.95 · floor_i. It is still reported, but cannot win the cell. Unconstrained results are shown beside the constrained ones, so a reader can apply their own rule.</p>
+  <p>Revision 6 added the 5 % slack because with the strict floor the chain's own static oracle (256,128,256) was itself infeasible: its edge APs got 23.2 Mbps against a floor of 23.88, 2.9 % short <span class="tag fact">fact</span>. IdleSense at 0.53 Mbps for the middle AP (floor about 1.44) is infeasible in the chain <span class="tag inf">inference from the definition</span>.</p>
+</section>
+
+<section>
+  <h2>6.3 RAFA, the method</h2>
+  <div class="table"><table>
+    <thead><tr><th>Component</th><th>What it is</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td><b>Shared DDPG actor</b></td><td class="w">One actor and critic used by all APs, each AP feeding its own inputs. Needed to run on any number of APs</td><td class="w">Independent agents cannot be trained across scenarios with varying AP counts. DDPG has the most evidence (3 of 3 seeds beat Global) <span class="tag fact">fact</span></td></tr>
+      <tr><td><b>Own-radio inputs</b></td><td class="w">Idle-slot mean, loss ratio, Retry-bit rate of received frames, goodput per station, active-station count, current CW exponent. No AP reads another AP's data at run time</td><td class="w">The loss scalar alone made shared agents give every AP the same CW (126/130/126) <span class="tag fact">fact</span>. The extra inputs should separate a starved AP from a busy one <span class="tag inf">inference</span>, tested by gate G0b</td></tr>
+      <tr><td><b>α as an input</b></td><td class="w">α ∈ {0, 0.5, 1, 2, 4} given to actor and critic; each replay batch is relabelled with fresh α values</td><td class="w">One policy covers the whole fairness range; relabelling costs no extra simulation</td></tr>
+      <tr><td><b>Team reward + floor penalty</b></td><td class="w">Station-weighted U_α minus λ · Σ max(0, floor_i − x_i), training only</td><td class="w">The PF team reward is what fixed the chain <span class="tag fact">fact</span></td></tr>
+      <tr><td><b>Scenario randomisation</b></td><td class="w">Each training episode samples one of 24 fixed configurations (1 to 3 APs, one domain or chain, 5 to 40 STAs, saturated or uneven loads, stations on or off)</td><td class="w">One policy for all scenarios is the robustness claim</td></tr>
+      <tr><td><b>Ensembles</b></td><td class="w">6 training seeds form two disjoint ensembles of 3; each averages its members' log-CW actions. Both must pass every claim</td><td class="w">Training-seed spread was the biggest risk in v3.4 <span class="tag fact">fact</span></td></tr>
+      <tr><td><b>Dropped</b></td><td class="w">Residual on IdleSense, TD3, backoff-mode action, central critic, MAPPO</td><td class="w">Unstable or no stable benefit in v3.3/v3.4; central critic collapsed at N = 10; MAPPO needs too many 10-minute episodes</td></tr>
+      <tr><td><b>RAFA-N (optional)</b></td><td class="w">Adds neighbour CW and size, as a beacon would carry them (like drlCW)</td><td class="w">Promoted only if clearly better; needs its own ADR</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">The name RAFA is a working name in the plan; the plan does not expand it <span class="tag fact">fact</span>. ADR-0007 records the shared actor with a team reward as the main method (status: proposed, takes effect in M3).</p>
+</section>
+
+<section>
+  <h2>6.4 Baselines</h2>
+  <div class="table"><table>
+    <thead><tr><th>Baseline</th><th>Status</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td>BEB</td><td>exists</td><td>GC = 0</td></tr>
+      <tr><td>Static oracle per scenario</td><td>exists; finer grids in M1</td><td>GC = 1 reference</td></tr>
+      <tr><td>Global-CW OSCAR, OSCAR per AP</td><td>exist; OSCAR also reported online, as published</td><td>The method being extended</td></tr>
+      <tr><td>IdleSense (published rule)</td><td>exists (v3.3.1)</td><td>Strongest one-domain rival</td></tr>
+      <tr><td>Static PF learner (v3.4.0)</td><td>exists</td><td>Our own best so far, per-scenario training</td></tr>
+      <tr><td>Gawłowicz PF gradient search (2021)</td><td>new</td><td>Strongest flow-in-the-middle rival</td></tr>
+      <tr><td>BEB + RTS/CTS</td><td>flag added in v3.5.0</td><td>The first fix a reviewer suggests for the chain</td></tr>
+      <tr><td>drlCW re-implementation</td><td>new</td><td>Closest prior work</td></tr>
+      <tr><td>Patras PI controller, per-AP UCB bandit, CCOD, BLADE-style</td><td>new; BLADE and PI only from a readable source</td><td>Control-theory, cheap learner, OSCAR's own comparison, tail-latency rule</td></tr>
+      <tr><td>Bianchi/Kalman</td><td>only if a source can be read, else dropped and stated</td><td>Model-based rival</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>6.5 Scenario suite</h2>
+  <div class="table"><table>
+    <thead><tr><th>ID</th><th>Scenario</th><th>Purpose</th><th>Tier</th></tr></thead>
+    <tbody>
+      <tr><td class="num">S2</td><td>20,40, one domain</td><td>tie zone (IdleSense ≈ ceiling)</td><td>Core</td></tr>
+      <tr><td class="num">S4</td><td>10,10,10 flow-in-the-middle chain</td><td>main rival-breaker</td><td>Core</td></tr>
+      <tr><td class="num">S5</td><td>S4 with loads 150,150,1 (core) and 1,150,150 (extended)</td><td>uneven load</td><td>Core</td></tr>
+      <tr><td class="num">S7</td><td>20,40 and S4 at 80 % of BEB capacity</td><td>p99 delay</td><td>Core</td></tr>
+      <tr><td class="num">S8</td><td>30 s chain in three 10 s phases: S4, then S5a loads, then half the edge stations off</td><td>adaptation over time</td><td>Core</td></tr>
+      <tr><td class="num">S1</td><td>1 AP, 15 and 50 STAs</td><td>OSCAR's own setup</td><td>Extended</td></tr>
+      <tr><td class="num">S3, S6, S9</td><td>6×10; 5-AP chain; unseen 4-AP chain, 5,55, 10,10,10,10</td><td>scale and generalisation, never trained on</td><td>Extended</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>6.6 Statistics</h2>
+  <ul>
+    <li>Three disjoint seed sets: selection (python 0–2) for tuning and oracle choice; evaluation (python 100–109); training (ns-3 2001 and up).</li>
+    <li>Two stages: every method on 3 eval seeds, then the top 3 feasible baselines per cell plus each baseline's weakest cell, and both RAFA ensembles, to 10 seeds.</li>
+    <li>Claim 1: intersection-union non-inferiority test, margin 0.05 GC, every cell at 0.05. Claim 2: paired t with Holm correction over all (cell, baseline) pairs. Wilcoxon reported beside.</li>
+    <li>An analysis spec (metric code, margins, cells, seeds, tests) is committed before M4 as pre-registration.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>6.7 Milestones and status</h2>
+  <div class="phases">
+    <div class="phase core">
+      <div class="head"><h3>M0 · Foundations</h3><span class="ver">v3.5.0 · DONE 1 Nov, tagged on feature/v4</span></div>
+      <ul>
+        <li>Parallel lanes (unseeded free port, unique run dirs; same-seed parallel traces identical to serial).</li>
+        <li>New opt-in flags: <code>--useRts</code>, <code>--rewardNorm</code>, <code>--extraTraces</code> (Retry rate, active STAs, failed attempts, per-AP delay mean/p50/p99), <code>--staSchedule</code> (ADR-0006), <code>--scenarioPool</code>; <code>gc_analysis.py</code> reproduces the committed S4 numbers.</li>
+        <li>Load test (n = 3): 10 Mbps per STA with <code>--rewardNorm 150</code> matches 150 Mbps within the CI on S2 and S4, and jobs are 2.5 to 3 times faster, so it is adopted for equal-load cells <span class="tag fact">fact</span>. First GC numbers there: Global 0.68 (S2) and 0.53 (S4) at load 150, from a 1-episode training for the load test only, not a baseline result.</li>
+        <li>BEB references for all 24 pool configurations, all PASS.</li>
+      </ul>
+    </div>
+    <div class="phase core"><div class="head"><h3>M1 · Oracle grids and first GC table</h3><span class="ver">v3.6.0 · next · ~40 h compute</span></div><ul><li>Power-of-two grids for S4, S5a, S8 phase 3, S7; IdleSense convergence check; GC table for existing methods; gates G0a/G0b.</li></ul></div>
+    <div class="phase core"><div class="head"><h3>M2 · New baselines</h3><span class="ver">v3.7.0 · ~15 h</span></div><ul><li>Gawłowicz and RTS/CTS first, then drlCW, PI, UCB, CCOD, BLADE-style.</li></ul></div>
+    <div class="phase core"><div class="head"><h3>M3 · RAFA in 3 steps × 3 seeds, then 6 final seeds</h3><span class="ver">v4.0.0 · ~40 h</span></div><ul><li>Kill rules: if shared CWs cannot separate by role, fall back to independent actors for fixed topologies; if randomisation costs more than 0.05 GC, report RAFA as per-scenario.</li></ul></div>
+    <div class="phase core"><div class="head"><h3>M4 · Core suite</h3><span class="ver">v4.1.0 · ~105 h serial</span></div><ul><li>S2, S4, S5a, S7, S8, n = 10. M0 to M4 is the minimum complete result, about 210 serial hours (about 70 h wall-clock with 3 lanes; the machine has 3 cores so 2 lanes are used now).</li></ul></div>
+    <div class="phase core"><div class="head"><h3>M5 · Extended suite · M6 stretch · M7 write-up</h3><span class="ver">v4.2.0 to v4.5.0</span></div><ul><li>S1, S3, S6, S9; optional RAFA-N and beacon-interval control; report and deck.</li></ul></div>
+  </div>
+</section>
+
+<section>
+  <h2>6.8 Main risks</h2>
+  <div class="table"><table>
+    <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td>Shared actor cannot tell edge and middle APs apart</td><td class="w">Gate G0b before training; kill rule falls back to independent actors</td></tr>
+      <tr><td>Randomisation costs accuracy</td><td class="w">Kill rule in M3; claim narrows to per-scenario robustness</td></tr>
+      <tr><td>Training-seed variance</td><td class="w">Two ensembles must agree; disagreement is reported, not hidden</td></tr>
+      <tr><td>Gawłowicz's method matches RAFA in the chain</td><td class="w">Claim 2 still holds if RAFA beats it elsewhere; the tie is stated</td></tr>
+      <tr><td>Compute and deadline (deadline not recorded) <span class="tag unk">unknown</span></td><td class="w">Drop order fixed in the plan; S4, S5a, S8 and both ensembles are never dropped</td></tr>
+      <tr><td>Papers that cannot be fetched</td><td class="w">Implement only from a text that was read, else drop and say why</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============================ PART 7 ============================ -->
+<div class="part" id="limits">Part 7 · Limitations and claims to avoid</div>
+
+<section>
+  <h2>7.1 Limitations to state yourself</h2>
+  <ul>
+    <li><b>Simulator</b>: ns-3.29's early 802.11ax model (no OFDMA or MU-EDCA), one 20 MHz channel, fixed rate, uplink constant-rate UDP only, no mobility.</li>
+    <li><b>Topology model</b>: by default everyone hears everyone (positions do not matter). The chain is a coarse all-or-nothing BSS-level loss matrix, not a building model. No partial overlap, no distance-based path loss.</li>
+    <li><b>Observation</b>: the default loss ratio counts ACKs and beacons, so it is a proxy. A legacy logger names it "Current Collision Rate"; it is not a collision rate.</li>
+    <li><b>Metrics on dev</b>: no collision, retransmission, delay or queue metrics. Delay and Retry traces exist only from v3.5.0 on <code>feature/v4</code>.</li>
+    <li><b>Statistics</b>: early versions used 3 to 5 seeds measured during learning, with wide CIs. The chain results use 8 eval seeds but at most 3 training seeds per arm; no hypothesis test across training seeds. Training was only 2 episodes.</li>
+    <li><b>Inherited quirks</b> left unchanged: the C++ per-flow Jain index uses uninitialised variables (our reported Jain is computed in Python and is fine); "sentMbytes" is Mbit.</li>
+    <li><b>Repo hygiene</b>: tags v0.1.0 and v0.2.0 are missing on GitHub; v2.8.2 is not reachable from main or dev; v4 work sits on <code>feature/v4</code>, not yet on dev.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>7.2 Claims to avoid (from the Review 2 audit)</h2>
+  <ul>
+    <li>"Independent agents beat BEB or OSCAR." They do not (−5.6 ± 76 % at 20,40, worse with more APs).</li>
+    <li>"Cooperative multi-agent RL" or "MADDPG" for the default path. The default is independent DDPG; cooperative variants are opt-in; the MADDPG-style central critic was a negative result.</li>
+    <li>"Reduces collisions, retransmissions or latency." Not measured on dev.</li>
+    <li>"Models co-channel interference, spatial reuse or realistic dense deployments."</li>
+    <li>"Robust" or "generalises to unseen scenarios." That is the v4 hypothesis, not yet a result.</li>
+    <li>"Matches the static optimum." Not stable across training seeds.</li>
+    <li>Absolute Mbps comparison with the OSCAR paper, which reports only relative gains.</li>
+  </ul>
+</section>
+
+<!-- ============================ PART 8 ============================ -->
+<div class="part" id="qa">Part 8 · Likely mentor questions with honest answers</div>
+
+<section class="qa">
+  <details open><summary>What is your contribution, in one sentence?</summary><div><p class="say">"We extended OSCAR to a multi-AP ns-3 testbed with per-AP agents and strong baselines, showed where per-AP learning does and does not help, and in v4 we test whether one trained controller can be near-best in every scenario of a suite without retraining."</p><p>So far the evidence-backed contributions are: the multi-AP environment and protocol, the negative result for independent agents, the finding that IdleSense ties OSCAR in one domain, and the fairness result in the chain. The robustness claim is the v4 hypothesis.</p></div></details>
+  <details><summary>OSCAR is from 2023. Isn't this already solved?</summary><div><p>No. At least ten 2024 to 2026 papers work on learned contention control, Wi-Fi 8 is still a draft until about 2028, and the commercial RRM we checked tunes channel and power, not CW. Most papers compare only with BEB in one setup with a model trained for that setup. Cite drlCW, Hao et al. and Nunez et al. as closest work before you are asked (Part 5).</p></div></details>
+  <details><summary>Did your multi-agent system beat OSCAR?</summary><div><p>In one collision domain, no. Independent agents are below BEB on average and much worse at 10 APs; shared agents reach OSCAR's level but not beyond (+2.8 ± 16.9 %, CI spans 0); the best fixed CW is only about 1 Mbps above OSCAR, so there is little to gain. In the chain, per-AP learners with a PF reward beat OSCAR (Global-CW) on fairness (+0.68 PF, +7.4 Mbps for the weakest AP) at a cost of 13.6 Mbps total.</p></div></details>
+  <details><summary>Why do independent agents do worse than BEB?</summary><div><p>Most likely reasons <span class="tag inf">inference, partly tested</span>: each agent maximises its own goodput, so lowering its CW grabs airtime and hurts others (a selfish game); the action sets CWmin = CWmax, removing BEB's doubling safety net; the observation is one noisy scalar; rewards are near zero at saturation; and results were measured while agents still explored. Fixes tested in v3.0 (history, reward mixing, ×100, sharing) only helped once parameters were shared.</p></div></details>
+  <details><summary>Why does a 2005 heuristic tie your RL?</summary><div><p>In one collision domain the optimal CW depends mainly on how many stations compete, and IdleSense measures exactly the right signal (idle slots) to find it. RL has nothing extra to learn there. That is why v4 judges methods against IdleSense and the best fixed CW, not BEB.</p></div></details>
+  <details><summary>Isn't the PF win in the chain built in, since you reward PF?</summary><div><p>Partly, yes, and we say so: the reward and the metric are aligned. That is why we compare against the static oracle (the best any fixed setting can do on PF), report the aggregate cost, and in v4 score every method at several fairness levels (α = 0, 1, 2) with the same fair floor.</p></div></details>
+  <details><summary>Is the hidden chain realistic?</summary><div><p>It is a coarse model: the two edge BSSs are completely deaf to each other (200 dB), every other pair hears perfectly (50 dB). It captures the flow-in-the-middle effect known in the literature, not any real building. ADR-0005 records this as a deliberate, user-approved exception.</p></div></details>
+  <details><summary>Why DDPG, and not DQN, PPO or MAPPO?</summary><div><p>DDPG is what OSCAR uses, so keeping it isolates the multi-AP extension. TD3 was tested and its ranking against DDPG flipped between seeds. MAPPO needs far more episodes than 10-minute ns-3 jobs allow, and the CTDE central critic collapsed at 10 APs.</p></div></details>
+  <details><summary>How do you know the results are not noise?</summary><div><p>Every method runs on the same 8 held-out seeds, so we test paired differences; with all 8 differences of one sign the exact Wilcoxon p is 0.008. We also retrained with 3 training seeds and found that seed-to-seed spread is larger than the eval CIs, which is why we only keep claims that hold for every seed. v4 adds 10 eval seeds, two ensembles, multiple-comparison correction and a pre-registered analysis.</p></div></details>
+  <details><summary>Why did the central critic fail?</summary><div><p>At 10 APs it collapsed to about 3 Mbps. Follow-ups point to the tiny reward scale (×100 avoided the collapse at 22×10, n = 1). The exact cause was not fully tested. It was designed as optional and is reported as a negative result.</p></div></details>
+  <details><summary>Could a real AP do this?</summary><div><p>An AP can advertise EDCA parameters to its stations in beacons, but only CW values of 2^k − 1 and only once per beacon interval (102.4 ms), while our agents act every 10 ms. v4 measures the rounding effect and has an optional beacon-interval deployability check (M6). Compatibility with 802.11bn mechanisms was not studied.</p></div></details>
+  <details><summary>Do you measure collisions or delay?</summary><div><p>Not on dev. v3.5.0 (on <code>feature/v4</code>) added Retry-bit rate, failed attempts and per-AP delay mean/p50/p99; v4 scenario S7 scores p99 delay.</p></div></details>
+  <details><summary>What if v4 does not work?</summary><div><p>Each milestone ends in a reportable result, and the plan has kill rules: fall back to independent actors or to per-scenario robustness. A well-tested negative or narrower result is still a valid finding, and the suite table with GC for all existing methods (M1) is useful on its own.</p></div></details>
+  <details><summary>Is the compute feasible?</summary><div><p>The minimum complete result (M0 to M4) is estimated at about 210 serial hours, roughly 70 h wall-clock with 3 lanes. M0 already showed jobs run 2.5 to 3 times faster at the lower load. The deadline is not recorded in the repo, so the plan fixes a drop order <span class="tag unk">unknown deadline</span>.</p></div></details>
+  <details><summary>Why is it relevant to industry?</summary><div><p>Vendors and the Wi-Fi 8 work describe airtime contention in overlapping networks as a live problem; products tune channel and power, and CW/EDCA is mostly static. Whether learned CW control helps in practice is our hypothesis, and our own mixed results must be shown next to that argument.</p></div></details>
+</section>
+
+<!-- ============================ PART 9 ============================ -->
+<div class="part" id="glossary">Part 9 · Glossary</div>
+
+<section>
+  <div class="gloss">
+    <div><b>AP / STA / BSS</b>Access point; station (client device); one AP with its stations.</div>
+    <div><b>CSMA/CA</b>Listen before talking, then wait a random backoff, to avoid collisions.</div>
+    <div><b>Slot, AIFS</b>9 µs backoff unit; fixed 43 µs wait before backoff for best-effort traffic.</div>
+    <div><b>Contention window (CW)</b>Upper limit of the random backoff count. CWmin is the starting value, CWmax the cap.</div>
+    <div><b>BEB</b>Binary exponential backoff: double CW after a failure, reset after success. The 802.11 default.</div>
+    <div><b>EDCA</b>802.11's priority-based access; the AP advertises CW parameters (as 2^k − 1) to its stations.</div>
+    <div><b>Collision domain</b>Set of devices that all hear each other. Our default: all APs in one.</div>
+    <div><b>Hidden terminal / flow-in-the-middle</b>Devices that cannot hear each other; in our chain the middle BSS hears both deaf edges and starves.</div>
+    <div><b>RTS/CTS</b>Short handshake before data, the classic hidden-node fix; off by default, flag added in v3.5.0.</div>
+    <div><b>Retry bit</b>Flag set on retransmitted frames; v4 uses its rate as an input.</div>
+    <div><b>Goodput / throughput / saturation</b>Useful data delivered per second; saturated means stations always have data (150 Mbps per STA offered).</div>
+    <div><b>Aggregate, min-AP, PF utility, Jain</b>Total Mbps; worst AP's Mbps; Σ ln(Mbps per AP); equality index from 1/N to 1.</div>
+    <div><b>α-fairness</b>Family of utilities: α = 0 total, α = 1 PF, larger α favours the worst-off.</div>
+    <div><b>Static oracle</b>Best fixed per-AP CW for a scenario, found by grid search. A reference, not a deployable method.</div>
+    <div><b>RL, agent, policy</b>Learning by reward; the learner; its observation-to-action rule.</div>
+    <div><b>Observation, action, reward</b>What the agent sees (loss ratio), what it does (CW), what it is scored on (normalised goodput).</div>
+    <div><b>DDPG, actor, critic</b>Continuous-action deep RL; the actor picks actions, the critic rates them. Together one agent.</div>
+    <div><b>TD3</b>DDPG with twin critics and delayed updates.</div>
+    <div><b>Replay buffer, target network, exploration noise</b>Stored past steps; slow copies for stable training; random noise added while training.</div>
+    <div><b>Independent learners</b>One agent per AP, local data only. Our v1 core.</div>
+    <div><b>Parameter sharing</b>One network used by all APs ("shared" mode, and RAFA).</div>
+    <div><b>Team reward</b>Same reward for all agents (PF in v3.4.0, α-fair in v4).</div>
+    <div><b>CTDE / central critic / MADDPG</b>Critic sees all APs in training; actors act locally. Tested in v1.8–1.9, negative.</div>
+    <div><b>Global-CW</b>OSCAR applied network-wide: one agent, one CW for every AP.</div>
+    <div><b>OSCAR</b>ICC 2023 DDPG CW tuner for one AP; our starting point.</div>
+    <div><b>CCOD</b>WCNC 2021 DRL CW method that OSCAR compares with.</div>
+    <div><b>IdleSense</b>Heusse et al. 2005 rule that steers mean idle slots to a target.</div>
+    <div><b>drlCW</b>VTC 2024 per-AP DDQN + LSTM for Wi-Fi 8; closest prior work.</div>
+    <div><b>Gawłowicz KW</b>2021 per-AP gradient search on log CW for PF; a v4 baseline.</div>
+    <div><b>ns-3, ns3-gym, ZeroMQ</b>Packet simulator; its Gym bridge to Python; the socket used.</div>
+    <div><b>W&amp;B</b>Weights &amp; Biases experiment logging (offline by default).</div>
+    <div><b>Frozen evaluation</b>Run a trained actor with no noise and no learning.</div>
+    <div><b>Training seed vs eval seed</b>Randomness of training (gives different policies) vs of the test runs.</div>
+    <div><b>Paired test, Wilcoxon, 95 % CI</b>Compare methods seed by seed; a sign-rank test; the range likely to hold the true mean.</div>
+    <div><b>Holm, intersection-union</b>Correction for many comparisons; a test that passes only if every cell passes.</div>
+    <div><b>GC (gap closed)</b>(U − U_BEB)/(U_oracle − U_BEB): 0 = BEB, 1 = oracle.</div>
+    <div><b>Fair floor</b>No AP below min(BEB_i, BEB total · n_i/Σn), with 5 % slack.</div>
+    <div><b>Domain randomisation, ensemble</b>Training over varied scenarios; averaging several trained policies.</div>
+    <div><b>RAFA</b>The v4 method: shared DDPG, own-radio inputs, α-conditioned team reward, fair floor, randomisation, ensembles.</div>
+    <div><b>ADR</b>Architecture decision record; ADR-0002 to 0007 record the main design choices.</div>
+  </div>
+</section>
+
+<footer>
+  <div><b>Sources.</b> Repo <code>dev</code> 0b8606f: <code>ROADMAP.md</code>, <code>memory-bank/progress.md</code>, <code>activeContext.md</code>, <code>docs/adr/0002</code>–<code>0005</code>, <code>docs/results/</code> baseline-v0.1.0, benchmark-v1.1.0, scaling-v1.2.0 to v1.6.0, central-eval-v1.9.0, robustness-v2.0.0, final-results-v2.2.0, improvement-v3.0.0, ceiling-v3.1.0, fair-protocol-v3.2.0, per-ap-scenario-v3.4.0 §1–§4i, sensing-heuristics-v3.3.0 §1–§3c; <code>cw.cc</code>, <code>OSCAR_multi_ap_train.py</code>. Branch <code>feature/v4</code> aa21f98: <code>docs/planning/mac-world-v4-plan.html</code> (revision 6), <code>docs/results/m0-foundations-v3.5.0.md</code>, ADR-0006, ADR-0007, <code>sessionPrompt.md</code>. Project files: reviews/REVIEW2_IMPLEMENTATION_STATE.md, research/recent-work-beyond-oscar-2026-11-01.md, research/industry_relevance_multi_ap_wifi_2026.md, oscar-baseline-metrics note.</div>
+  <div>Numbers are copied from committed results; no run was made for this page. Where the repo and earlier notes disagree (for example the plan page header still said revision 5 on dev), the newer branch is used and the difference is named.</div>
+</footer>
+
+</div>

@@ -43,6 +43,7 @@ Files are grouped by purpose. Version numbers in file names match the roadmap (`
 - `technical-report-v2.3.0.md`: full write-up.
 - `presentation-v2.4.0.md`: deck notes and demo script.
 - `final-audit-v2.5.0.md`: 26-item final audit.
+- `mentor-explainer.html`: plain-language explainer of the whole project (v0.1.0 to v3.4.2), latest pre-v4 results, novelty evidence and the v4 plan, for the mentor meeting (2026-11-01).
 
 ## reference/
 - `oscar-baseline-metrics.md`: published OSCAR numbers and how they map to this project.
