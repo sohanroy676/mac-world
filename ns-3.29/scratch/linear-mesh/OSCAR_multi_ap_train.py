@@ -165,6 +165,8 @@ except (OSError, subprocess.CalledProcessError):
     git_rev = "unknown"
 
 out_dir = "results/multi-ap-%s" % time.strftime("%Y%m%d-%H%M%S")
+if os.path.exists(out_dir):  # parallel lanes can start in the same second
+    out_dir += "-p%d" % os.getpid()
 os.makedirs(out_dir)
 with open(os.path.join(out_dir, "config.json"), "w") as f:
     json.dump(dict(vars(args), ns3_seed=args.seed + 1, ns3_seeds=ns3_seeds, counts=counts, git_rev=git_rev), f)

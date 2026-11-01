@@ -1,4 +1,6 @@
 import numpy as np
+import random
+import socket
 import torch
 import gym
 import argparse
@@ -16,7 +18,7 @@ class EnvWrapper:
     def __init__(self, no_threads, **params):
         self.params = params
         self.no_threads = no_threads
-        self.ports = [13968+i+np.random.randint(40000) for i in range(no_threads)]
+        self.ports = self._free_ports(no_threads)
         self.commands = self._craft_commands(params)
 
         self.SCRIPT_RUNNING = False
@@ -28,6 +30,22 @@ class EnvWrapper:
             self.envs.append(env)
 
         self.SCRIPT_RUNNING = True
+
+    @staticmethod
+    def _free_ports(n):
+        # Ports come from the OS-seeded generator, not np.random: np.random.seed(args.seed) made two same-seed lanes pick the same port.
+        rng, ports = random.SystemRandom(), []
+        while len(ports) < n:
+            p = rng.randint(14000, 60000)
+            if p in ports:
+                continue
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                try:
+                    s.bind(("127.0.0.1", p))
+                except OSError:
+                    continue
+            ports.append(p)
+        return ports
 
     def run(self):
         if self.SCRIPT_RUNNING:
