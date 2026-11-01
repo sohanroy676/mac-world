@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **changelog**: Regenerate with git-cliff
 - **handoff**: Update session prompt and memory bank for v3.3.1
 - **changelog**: Regenerate with git-cliff
+- **changelog**: Regenerate with git-cliff
+- **claude**: Point roadmap status to the v4 plan
 
 ## [3.3.1] - 2026-11-01
 
