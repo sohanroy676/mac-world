@@ -13,7 +13,7 @@
 
 ## Done
 
-- **M0 foundations v3.5.0 (2026-11-01, branch `feature/v4`)** — code + load test done, pool BEB references running, run dirs not committed, not tagged. `docs/results/m0-foundations-v3.5.0.md`.
+- **M0 foundations v3.5.0 (2026-11-01, branch `feature/v4`)** — code + load test done, pool BEB references done (CSV committed), run dirs not committed, not tagged. `docs/results/m0-foundations-v3.5.0.md`.
 
 - **Final v4 plan, revision 4 (2026-11-01)** — docs only, no runs. `docs/planning/mac-world-v4-plan.html`; ROADMAP "v3.5.0 to v4.5.0". Next: M0.
 
