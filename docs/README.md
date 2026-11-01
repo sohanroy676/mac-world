@@ -15,7 +15,7 @@ Files are grouped by purpose. Version numbers in file names match the roadmap (`
 ## planning/
 - `project_description.md`: full spec and terminology.
 - `detailed_roadmap.md`: per-version completion criteria.
-- `mac-world-v4-plan.html`: final plan for v3.5.0 to v4.5.0 (revision 4, 2026-11-01): RAFA, GC suite metric, baselines, scenarios, milestones M0-M7.
+- `mac-world-v4-plan.html`: final plan for v3.5.0 to v4.5.0 (revision 5, 2026-11-01): RAFA, GC suite metric, baselines, scenarios, milestones M0-M7.
 
 ## design/
 - `multi-ap-design-v0.2.0.md`: multi-AP design specification (v0.2.0).
