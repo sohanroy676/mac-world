@@ -22,6 +22,7 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <set>
 #include "scenario.h"
 
 using namespace std;
@@ -82,6 +83,15 @@ std::vector<uint64_t> g_apSumSlots, g_apNTrans;    // per-AP sums since the last
 std::vector<uint64_t> g_apIdleSlots, g_apIdleGaps; // backoff-idle slots and gaps seen by AP i since the last step
 std::vector<float> g_apIdleMean;                   // mean idle slots per gap in the last step (held when no gap)
 std::vector<double> g_idleCw;                      // IdleSense CW state per AP
+std::vector<float> g_apRetryRate;                  // --extraTraces: Retry-bit share of data frames decoded by the AP last step
+std::vector<uint32_t> g_apActive, g_apTxFailStep;  // --extraTraces: active STAs / failed data attempts last step
+
+// v3.5.0 (M0): opt-in diagnostics/normaliser. All off by default (defaults stay byte-identical).
+double g_rewardNormMbps = 0.0; // --rewardNorm: fixed per-STA reward divisor in Mbps; 0 = per-AP offered load (old behaviour)
+bool g_extraTraces = false;    // --extraTraces: append retry,active,txfail to each per-AP info record
+std::vector<uint64_t> g_apDataRx, g_apRetryRx, g_apTxFail; // data frames addressed to AP i / of those with Retry bit / failed data attempts in BSS i, this step
+std::vector<std::set<Mac48Address>> g_apActiveSta;         // STAs whose data frames AP i decoded this step
+std::vector<Mac48Address> g_apMac;                         // MAC address of AP i
 
 uint32_t history_length = 20;
 deque<float> history;
@@ -210,6 +220,8 @@ std::string MyGetExtraInfo(void)
                       to_string(g_apReward.at(ap)) + "," + to_string(g_apLoss.at(ap)) + "," +
                       to_string(g_apRxDelta.at(ap)) + "," + to_string(g_apTxDelta.at(ap)) + "," +
                       to_string(g_apIdleMean.at(ap));
+            if (g_extraTraces)
+                myInfo += "," + to_string(g_apRetryRate.at(ap)) + "," + to_string(g_apActive.at(ap)) + "," + to_string(g_apTxFailStep.at(ap));
         }
     }
 
@@ -546,7 +558,16 @@ void recordHistory()
             g_apLastTx[ap] = g_apPhyTxPkt[ap];
             g_apLoss[ap] = g_apTxDelta[ap] ? (float)((double)g_apTxDelta[ap] - (double)g_apRxDelta[ap]) / g_apTxDelta[ap] : 0.0f;
             double goodputMbit = g_apRxDelta[ap] * (1500 - 20 - 8 - 8) * 8.0 / 1e6;
-            double r = goodputMbit / ((g_apLoadMbps.empty() ? g_offeredLoadMbps : g_apLoadMbps[ap]) * g_apStaCounts[ap] * envStepTime);
+            double perStaMbps = g_rewardNormMbps > 0 ? g_rewardNormMbps : (g_apLoadMbps.empty() ? g_offeredLoadMbps : g_apLoadMbps[ap]);
+            double r = goodputMbit / (perStaMbps * g_apStaCounts[ap] * envStepTime);
+            if (g_extraTraces)
+            {
+                g_apRetryRate[ap] = g_apDataRx[ap] ? (float)g_apRetryRx[ap] / g_apDataRx[ap] : 0.0f;
+                g_apActive[ap] = (uint32_t)g_apActiveSta[ap].size();
+                g_apTxFailStep[ap] = (uint32_t)g_apTxFail[ap];
+                g_apDataRx[ap] = g_apRetryRx[ap] = g_apTxFail[ap] = 0;
+                g_apActiveSta[ap].clear();
+            }
             g_apReward[ap] = (float)std::min(1.0, std::max(0.0, r));
             if (g_idleSense || g_obsIdle)
             {
@@ -635,6 +656,29 @@ void apPhyState(uint32_t ap, Time start, Time duration, WifiPhyState state)
     }
 }
 
+// --extraTraces: data frames decoded by AP radio `apIndex` and addressed to it (Retry bit, sender).
+void apSnifferRx(uint32_t apIndex, Ptr<const Packet> packet, uint16_t, WifiTxVector, MpduInfo, SignalNoiseDbm)
+{
+    WifiMacHeader hdr;
+    Ptr<Packet> copy = packet->Copy();
+    uint8_t delim[4] = {0, 0, 0, 0};
+    if (copy->GetSize() > 4)
+        copy->CopyData(delim, 4);
+    if (delim[3] == 0x4e)
+        copy->RemoveAtStart(4); // A-MPDU subframe delimiter (4 bytes, signature 0x4e) precedes the MAC header in the sniffer packet
+    if (copy->GetSize() < hdr.GetSerializedSize() || copy->PeekHeader(hdr) == 0 || !hdr.IsData() || hdr.GetAddr1() != g_apMac[apIndex])
+        return;
+    g_apDataRx[apIndex]++;
+    if (hdr.IsRetry())
+        g_apRetryRx[apIndex]++;
+    g_apActiveSta[apIndex].insert(hdr.GetAddr2());
+}
+
+void apTxDataFailed(uint32_t apIndex, Mac48Address)
+{
+    g_apTxFail[apIndex]++;
+}
+
 // Hook the per-AP counters. Sinks live on the AP node, OnOff sources on its STAs, and every
 // wifi device belongs to exactly one BSS, so each trace source maps to exactly one AP index.
 void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apStaNodes)
@@ -652,6 +696,14 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
     g_apIdleSlots.assign(wifiApNode.GetN(), 0);
     g_apIdleGaps.assign(wifiApNode.GetN(), 0);
     g_apIdleMean.assign(wifiApNode.GetN(), 0.0f);
+    g_apDataRx.assign(wifiApNode.GetN(), 0);
+    g_apRetryRx.assign(wifiApNode.GetN(), 0);
+    g_apTxFail.assign(wifiApNode.GetN(), 0);
+    g_apActiveSta.assign(wifiApNode.GetN(), std::set<Mac48Address>());
+    g_apMac.assign(wifiApNode.GetN(), Mac48Address());
+    g_apRetryRate.assign(wifiApNode.GetN(), 0.0f);
+    g_apActive.assign(wifiApNode.GetN(), 0);
+    g_apTxFailStep.assign(wifiApNode.GetN(), 0);
     g_idleCw.assign(wifiApNode.GetN(), 16.0);
     g_apSumSlots.assign(wifiApNode.GetN(), 0);
     g_apNTrans.assign(wifiApNode.GetN(), 0);
@@ -677,6 +729,15 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
                 if (dev)
                 {
                     dev->GetPhy()->TraceConnectWithoutContext("PhyTxBegin", MakeBoundCallback(&packetSentPhyAp, apIndex));
+                    if (g_extraTraces)
+                    {
+                        if (n == 0)
+                        {
+                            g_apMac[apIndex] = Mac48Address::ConvertFrom(dev->GetAddress());
+                            dev->GetPhy()->TraceConnectWithoutContext("MonitorSnifferRx", MakeBoundCallback(&apSnifferRx, apIndex));
+                        }
+                        dev->GetRemoteStationManager()->TraceConnectWithoutContext("MacTxDataFailed", MakeBoundCallback(&apTxDataFailed, apIndex));
+                    }
                     if (n == 0 && (g_idleSense || g_obsIdle)) // AP radio only: sensing stays local to the AP
                     {
                         PointerValue st;
@@ -1279,6 +1340,9 @@ int main(int argc, char *argv[])
     cmd.AddValue("idleUp", "IdleSense multiplicative CW increase 1/alpha (applied when idle < target). Default: 1.2", g_idleUp);
     cmd.AddValue("idleMaxTrans", "IdleSense observed transmission attempts per CW update. Default: 5", g_idleMaxTrans);
     cmd.AddValue("residual", "v3.3.0: agent action is a Delta log2(CW) in [-2, 2] around the IdleSense CW (needs --idleSense and an agent). Default: false", g_residual);
+    cmd.AddValue("useRts", "v3.5.0: enable RTS/CTS for every frame (RtsCtsThreshold=0). Default: false", useRts);
+    cmd.AddValue("rewardNorm", "v3.5.0: fixed per-STA reward divisor in Mbps (multi-AP). Default: 0 = per-AP offered load", g_rewardNormMbps);
+    cmd.AddValue("extraTraces", "v3.5.0: append retry rate, active STAs and failed data attempts to each per-AP info record. Default: false", g_extraTraces);
     cmd.AddValue("obsIdle", "v3.3.0: per-AP observation = mean idle slots / 20 (clipped to 1) instead of the loss ratio. Default: false", g_obsIdle);
     cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);
     cmd.AddValue("seed", "Random seed", simSeed);

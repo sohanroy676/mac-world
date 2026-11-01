@@ -63,6 +63,9 @@ parser.add_argument("--idleTarget", type=float, default=0.0, help="idlesense / -
 parser.add_argument("--idleEps", type=float, default=0.0, help="idlesense / --residual: eps in CW = 2 CW / (2 + eps CW) (0 = cw.cc default 0.001)")
 parser.add_argument("--idleUp", type=float, default=0.0, help="idlesense / --residual: multiplicative CW increase 1/alpha (0 = cw.cc default 1.2)")
 parser.add_argument("--residual", action="store_true", help="independent/shared: action = Delta log2 CW in [-2, 2] around the per-AP IdleSense CW (cw.cc --residual)")
+parser.add_argument("--useRts", action="store_true", help="cw.cc --useRts: RTS/CTS for every frame")
+parser.add_argument("--rewardNorm", type=float, default=0.0, help="cw.cc --rewardNorm: fixed per-STA reward divisor in Mbps (0 = per-AP offered load)")
+parser.add_argument("--extraTraces", action="store_true", help="cw.cc --extraTraces: add retry, active, txfail columns to trace.csv")
 parser.add_argument("--obsIdle", action="store_true", help="independent/shared: state = the AP's own mean idle slots / 20 (clipped to 1) instead of its loss ratio (cw.cc --obsIdle)")
 args = parser.parse_args()
 
@@ -95,6 +98,8 @@ OFFERED_MBPS = args.offeredLoad  # per-STA offered load, cw.cc offeredLoad
 LOADS = [float(x) for x in args.apLoads.split(",")] if args.apLoads else [OFFERED_MBPS] * len(args.apStaCounts.split(","))  # per-AP, per-STA load
 assert len(LOADS) == n and min(LOADS) > 0, "--apLoads: one positive load per AP"
 OFFERED_TOTAL = sum(c * l for c, l in zip(counts, LOADS))  # network offered load in Mbps (all STAs)
+NORM_LOADS = [args.rewardNorm] * n if args.rewardNorm > 0 else LOADS  # per-STA reward divisor, mirrors cw.cc --rewardNorm
+NORM_TOTAL = sum(c * l for c, l in zip(counts, NORM_LOADS))
 
 torch.manual_seed(args.seed)
 np.random.seed(args.seed)
@@ -108,6 +113,12 @@ if args.hiddenLoss > 0:
     sim_args["hiddenLoss"] = args.hiddenLoss
 if args.apLoads:
     sim_args["apLoads"] = args.apLoads
+if args.useRts:
+    sim_args["useRts"] = "true"
+if args.rewardNorm > 0:
+    sim_args["rewardNorm"] = "%g" % args.rewardNorm
+if args.extraTraces:
+    sim_args["extraTraces"] = "true"
 if args.cwReadbackEvery > 0:
     sim_args["cwReadbackEvery"] = args.cwReadbackEvery
 if args.trafficStart > 0:
@@ -173,7 +184,7 @@ with open(os.path.join(out_dir, "config.json"), "w") as f:
 trace_f = open(os.path.join(out_dir, "trace.csv"), "w", newline="")
 trace = csv.writer(trace_f)
 trace.writerow(["episode", "step", "ap", "state", "action", "real_action", "reward", "next_state", "cw_set",
-                "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"])
+                "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"] + (["retry", "active", "txfail"] if args.extraTraces else []))
 
 run = wandb.init(name="%s %s s%d" % (args.apStaCounts, args.mode, args.seed), entity=os.environ.get("WANDB_ENTITY", wandb_entity),
                  project=args.wandb_project, tags=["multi-ap", "mode-" + args.mode, git_rev], reinit=True,
@@ -206,7 +217,7 @@ def agent_loss(i, name):
 def global_reward(recs):
     """Network goodput normalized by offered load of all STAs (global and central modes)."""
     rx_g = sum(r["rx"] for r in recs)
-    return min(1.0, max(0.0, rx_g * PAYLOAD_BITS / 1e6 / (OFFERED_TOTAL * args.stepTime)))
+    return min(1.0, max(0.0, rx_g * PAYLOAD_BITS / 1e6 / (NORM_TOTAL * args.stepTime)))
 
 
 PF_EPS = 1e-3
@@ -340,17 +351,18 @@ try:
                         check(np.isclose(s2_i[0], own_loss, atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
                               "AP%d obs %s / loss %s != own (tx-rx)/tx %s at t=%d" % (i + 1, s2_i[0], recs[i]["loss"], own_loss, time_step))
                     # Test D: reward = own goodput / (offered load * own STAs * step), clamped to [0,1]
-                    want_r = min(1.0, max(0.0, recs[i]["rx"] * PAYLOAD_BITS / 1e6 / (LOADS[i] * counts[i] * args.stepTime)))
+                    want_r = min(1.0, max(0.0, recs[i]["rx"] * PAYLOAD_BITS / 1e6 / (NORM_LOADS[i] * counts[i] * args.stepTime)))
                     check(abs(r - want_r) < 1e-4, "AP%d reward %s != recomputed %s at t=%d" % (i + 1, r, want_r, time_step))
                     if args.reward == "pf" and i == 0:  # Test D2: pf reward recomputed from every AP's own rx counter
-                        want_pf = pf_reward([min(1.0, max(0.0, q["rx"] * PAYLOAD_BITS / 1e6 / (LOADS[j] * counts[j] * args.stepTime))) for j, q in enumerate(recs)])
+                        want_pf = pf_reward([min(1.0, max(0.0, q["rx"] * PAYLOAD_BITS / 1e6 / (NORM_LOADS[j] * counts[j] * args.stepTime))) for j, q in enumerate(recs)])
                         check(abs(r_pf - want_pf) < 1e-4 and 0.0 <= r_pf <= 1.0, "pf reward %s != recomputed %s at t=%d" % (r_pf, want_pf, time_step))
                 reward_cols[i].append(r)
                 ep_reward[i] += r
                 pp = preprocess(S2[i].reshape(-1, 1, 1))[0][0]  # this AP's history only; logging only
                 trace.writerow([episode, step, i + 1, float(s_i[0]), float(acts[i]), float(real[i]), r, float(s2_i[0]),
                                 recs[i]["cw_set"], recs[i]["cw_ap"], recs[i]["loss"], recs[i]["rx"], recs[i]["tx"],
-                                float(pp[0]), float(pp[1]), agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")])
+                                float(pp[0]), float(pp[1]), agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")]
+                               + ([recs[i]["retry"], recs[i]["active"], recs[i]["txfail"]] if args.extraTraces else []))
                 if args.mode == "independent" and learning and time_step >= args.start_timesteps:
                     agents[i].train(replays[i], args.batch_size)
             if args.mode == "shared" and learning and time_step >= args.start_timesteps:
