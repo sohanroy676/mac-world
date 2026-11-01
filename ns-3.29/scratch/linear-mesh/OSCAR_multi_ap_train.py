@@ -63,6 +63,8 @@ parser.add_argument("--idleTarget", type=float, default=0.0, help="idlesense / -
 parser.add_argument("--idleEps", type=float, default=0.0, help="idlesense / --residual: eps in CW = 2 CW / (2 + eps CW) (0 = cw.cc default 0.001)")
 parser.add_argument("--idleUp", type=float, default=0.0, help="idlesense / --residual: multiplicative CW increase 1/alpha (0 = cw.cc default 1.2)")
 parser.add_argument("--residual", action="store_true", help="independent/shared: action = Delta log2 CW in [-2, 2] around the per-AP IdleSense CW (cw.cc --residual)")
+parser.add_argument("--staSchedule", default="", help="cw.cc --staSchedule: per-STA on/off windows ap:first-last:start:stop[/...]")
+parser.add_argument("--scenarioPool", default="", help="JSON list of scenario dicts (apStaCounts, optional apLoads/apHidden/hiddenLoss/staSchedule/rewardNorm); episode e draws one at random (seeded by --seed). Mode shared only, no --check")
 parser.add_argument("--useRts", action="store_true", help="cw.cc --useRts: RTS/CTS for every frame")
 parser.add_argument("--rewardNorm", type=float, default=0.0, help="cw.cc --rewardNorm: fixed per-STA reward divisor in Mbps (0 = per-AP offered load)")
 parser.add_argument("--extraTraces", action="store_true", help="cw.cc --extraTraces: add retry, active, txfail columns to trace.csv")
@@ -113,6 +115,10 @@ if args.hiddenLoss > 0:
     sim_args["hiddenLoss"] = args.hiddenLoss
 if args.apLoads:
     sim_args["apLoads"] = args.apLoads
+if args.staSchedule:
+    sim_args["staSchedule"] = args.staSchedule
+pool = json.load(open(args.scenarioPool)) if args.scenarioPool else []
+assert not pool or (args.mode == "shared" and not args.check), "--scenarioPool: mode shared only, and not with --check"
 if args.useRts:
     sim_args["useRts"] = "true"
 if args.rewardNorm > 0:
@@ -267,14 +273,39 @@ if args.mode == "central" and args.check:
             check(not (ids[i] & ids[j]), "central actors %d,%d share parameters" % (i, j))
         check(not (ids[i] & {p.data_ptr() for p in central.critic.parameters()}), "actor %d shares critic parameters" % i)
 
-env = EnvWrapper(1, **sim_args)
+picks = []
+if pool:
+    _rng = np.random.RandomState(args.seed + 7)
+    picks = [int(_rng.randint(len(pool))) for _ in range(args.episodes)]
+
+
+def apply_cfg(cfg, episode):
+    """Switch the per-AP globals to scenario cfg for this episode and return the cw.cc args for it."""
+    global counts, n, LOADS, NORM_LOADS, NORM_TOTAL
+    ep_args = {k: v for k, v in sim_args.items() if k not in ("apStaCounts", "apLoads", "apHidden", "hiddenLoss", "staSchedule")}
+    ep_args.update({k: v for k, v in cfg.items() if k != "name"})
+    ep_args["seed"] = ns3_seeds[episode]
+    counts = [int(c) for c in str(cfg["apStaCounts"]).split(",")]
+    n = len(counts)
+    LOADS = [float(x) for x in str(cfg["apLoads"]).split(",")] if "apLoads" in cfg else [OFFERED_MBPS] * n
+    norm = float(cfg.get("rewardNorm", args.rewardNorm))
+    NORM_LOADS = [norm] * n if norm > 0 else LOADS
+    NORM_TOTAL = sum(c * l for c, l in zip(counts, NORM_LOADS))
+    return ep_args
+
+
+env = EnvWrapper(1, **(apply_cfg(pool[picks[0]], 0) if pool else sim_args))
 print("APs:", counts, "steps/ep:", steps_per_ep, "out:", out_dir)
 time_step = 0
 reward_cols = [[] for _ in range(n)]
 logged = []
 try:
     for episode in range(args.episodes):
-        if args.varySeeds and episode > 0:
+        if pool:
+            if episode > 0:
+                env.commands = env._craft_commands(apply_cfg(pool[picks[episode]], episode))
+            print("episode %d scenario %s" % (episode, pool[picks[episode]].get("name", pool[picks[episode]]["apStaCounts"])), flush=True)
+        elif args.varySeeds and episode > 0:
             env.commands = env._craft_commands(dict(sim_args, seed=ns3_seeds[episode]))
         print("episode %d ns-3 seed %d" % (episode, ns3_seeds[episode]), flush=True)
         try:
