@@ -532,7 +532,8 @@ if args.check:
                   "episode %d cumulative reward != sum of that episode's rewards" % ep)
         else:
             check(False, "episode %d has no cumulative reward row" % ep)
-    left = os.popen("pgrep -x linear-mesh || true").read().split()
+    # only this run's ns-3 processes (matched by their gym port), so parallel lanes do not see each other
+    left = sorted({p for port in env.ports for p in os.popen("pgrep -f '[o]penGymPort=%d' || true" % port).read().split()})
     check(not left, "leftover ns-3 process(es): %s" % left)
     print("W&B check: %d rows, %d keys each" % (len(hist), len(keys)))
     for i in range(n):
