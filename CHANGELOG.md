@@ -9,7 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **planning**: Add final v4 plan (revision 4)
+- **planning**: Add v4 plan to beat all baselines
+- **changelog**: Regenerate with git-cliff
+- **planning**: Revise v4 plan and take decisions
+- **changelog**: Regenerate with git-cliff
+- **planning**: Apply second review to v4 plan
+- **changelog**: Regenerate with git-cliff
+- **changelog**: Regenerate with git-cliff
+- **planning**: Apply final check to v4 plan
+- **changelog**: Regenerate with git-cliff
 - **handoff**: Update session prompt and memory bank for v3.3.1
+- **changelog**: Regenerate with git-cliff
+- **changelog**: Regenerate with git-cliff
+- **claude**: Point roadmap status to the v4 plan
 
 ## [3.3.1] - 2026-11-01
 
