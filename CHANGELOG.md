@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **cw**: Add useRts, rewardNorm, extraTraces flags
+- **sim**: Add staSchedule, scenarioPool, delay stats
+- **analysis**: Add GC tables, ADR-0006/0007, pool
+
 ### Documentation
 
 - **planning**: Add final v4 plan (revision 4)
@@ -23,6 +29,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **changelog**: Regenerate with git-cliff
 - **changelog**: Regenerate with git-cliff
 - **claude**: Point roadmap status to the v4 plan
+- **changelog**: Regenerate with git-cliff
+- **m0**: Record v3.5.0 results, add tagPrefix
+- **m0**: Add pool BEB reference table
+
+### Fixed
+
+- **lanes**: Unseeded free ports, unique run dirs
+- **trainer**: Per-run leftover check, floor slack
 
 ## [3.3.1] - 2026-11-01
 
