@@ -66,16 +66,57 @@ def a2(s7load_s4, s7load_s2):
     return jobs
 
 
+EVAL_SEEDS = (100, 101, 102)
+GC_BASE = ["--simTime", "15", "--stepTime", "0.01", "--check"]
+ACTORS = "/home/pranay/mac-world/ns-3.29/scratch/linear-mesh/results/m1/actors"
+
+
+def a3(statics, pf_seeds=(0, 1, 2), cells=("s4", "s2", "s5a")):
+    """First GC table jobs (eval seeds 100-102): BEB, static oracles, IdleSense, Global-CW, OSCAR per AP (independent,
+    local reward), static PF learner (independent --reward pf, 3 train seeds). Learners: 2 training episodes (v3.4.0),
+    frozen eval. Tags m1gc-<cell>-<method>; method = beb | idlesense | global | oscar | pf<k>; statics by apCws."""
+    jobs = []
+
+    def add(cell, name, seed, mode, extra, deps=()):
+        jobs.append({"id": "gc-%s-%s-s%d" % (cell, name, seed), "deps": list(deps),
+                     "args": list(CELLS[cell]) + GC_BASE + ["--mode", mode, "--seed", str(seed)] + extra})
+
+    for cell in cells:
+        for sd in EVAL_SEEDS:
+            add(cell, "beb", sd, "beb", ["--tag", "m1gc-%s-beb" % cell])
+        for cws in statics.get(cell, []):
+            for sd in EVAL_SEEDS:
+                add(cell, "static-" + cws.replace(",", "-"), sd, "static", ["--apCws", cws, "--tag", "m1gc-%s-static" % cell])
+        for sd in EVAL_SEEDS:
+            add(cell, "idlesense", sd, "idlesense", ["--tag", "m1gc-%s-idlesense" % cell])
+        arms = [("global", "global", [], 2000, "global"), ("oscar", "independent", [], 2000, "oscar")]  # training ns-3 seeds 2001+ (plan)
+        arms += [("pf%d" % k, "independent", ["--reward", "pf"], 2000 + k, "pf%d" % k) for k in pf_seeds]
+        for name, mode, extra, tseed, tag in arms:
+            d = "%s/%s-%s" % (ACTORS, cell, name)
+            tid = "gc-%s-%s-train" % (cell, name)
+            jobs.append({"id": tid, "deps": [], "args": list(CELLS[cell]) + GC_BASE + [
+                "--mode", mode, "--seed", str(tseed), "--episodes", "2", "--varySeeds", "--saveActor", d,
+                "--tag", "m1gc-%s-train-%s" % (cell, name)] + extra})
+            for sd in EVAL_SEEDS:
+                add(cell, name, sd, mode, ["--loadActor", d, "--eval", "--tag", "m1gc-%s-%s" % (cell, tag)] + extra, deps=[tid])
+    return jobs
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("which", choices=["a1", "a2"])
+    ap.add_argument("which", choices=["a1", "a2", "a3"])
     ap.add_argument("out")
     ap.add_argument("--s7loadS4", type=float, default=0.0, help="Mbps per STA = 0.8 x BEB aggregate / STAs (A1: 1.93)")
     ap.add_argument("--s7loadS2", type=float, default=0.0, help="(A1: 0.37)")
+    ap.add_argument("--statics", default="", help="a3: cell=cw,cw,cw+cw,cw,cw;cell=... static oracle settings to evaluate, e.g. s4=64,64,64+128,64,128;s2=512,512")
     a = ap.parse_args()
     if a.which == "a2" and (a.s7loadS4 <= 0 or a.s7loadS2 <= 0):
         ap.error("a2 needs --s7loadS4 and --s7loadS2")
-    jobs = a1() if a.which == "a1" else a2(a.s7loadS4, a.s7loadS2)
+    if a.which == "a3":
+        st = {kv.split("=")[0]: kv.split("=")[1].split("+") for kv in a.statics.split(";") if kv}
+        jobs = a3(st)
+    else:
+        jobs = a1() if a.which == "a1" else a2(a.s7loadS4, a.s7loadS2)
     ids = [j["id"] for j in jobs]
     assert len(ids) == len(set(ids))
     json.dump(jobs, open(a.out, "w"), indent=1)
