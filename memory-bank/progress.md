@@ -13,6 +13,8 @@
 
 ## Done
 
+- **Final v4 plan, revision 4 (2026-11-01)** — docs only, no runs. `docs/planning/mac-world-v4-plan.html`; ROADMAP "v3.5.0 to v4.5.0". Next: M0.
+
 - **v3.3.1 corrected IdleSense DONE (2026-11-01, branch `fix/idlesense-paper-rule` + `docs/v3.3.1-results`)** — see activeContext 2026-11-01; `20,40` IdleSense/BEB/Global runs in progress.
 - **v3.3.0 sensing + heuristics DONE (2026-10-31, branch `feature/v3.3.0-sensing`; not tagged)** and seed-2 TD3/cwMinOnly (report §4i) and technical-report §20.5 written. See activeContext 2026-10-31 for numbers; results `docs/results/sensing-heuristics-v3.3.0.md`.
 
