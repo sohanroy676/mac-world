@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **v3.3.1**: Add corrected IdleSense results
 - **changelog**: Regenerate with git-cliff
 - **v3.3.1**: Add IdleSense results on 20,40
+- **changelog**: Regenerate with git-cliff
+- **v3.3.1**: Add run dirs for corrected IdleSense arms
+- **claude**: Update roadmap status to v3.3.1
 
 ### Fixed
 
