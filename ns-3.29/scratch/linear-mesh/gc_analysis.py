@@ -9,7 +9,8 @@ Scans <results>/*/config.json (run dirs, as written by OSCAR_multi_ap_train.py),
 Definitions (docs/planning/mac-world-v4-plan.html, section Scoring and Statistics):
   u_alpha(x): alpha 0 -> x, alpha 1 -> ln x, else x^(1-alpha)/(1-alpha); per-station throughput floored at EPS Mbps.
   U_alpha = sum_i n_i * u_alpha(max(EPS, x_i / n_i))              (n_i = stations of AP i, x_i = policy-window Mbps)
-  floor_i = min(BEB_i, BEB aggregate * n_i / sum n)               (BEB means over the same seeds)
+  floor_i = min(BEB_i, BEB aggregate * n_i / sum n)               (BEB means over the same seeds); feasible = x_i >= 0.95 floor_i
+                                                                  (5 % slack, plan revision 6; --floorTol 0 = strict)
   GC      = (U - U_BEB) / (U_oracle - U_BEB)                      (oracle = best FEASIBLE static setting for that alpha)
   a cell is degenerate when U_oracle - U_BEB < 3 SD of BEB's U over seeds; it is then reported as raw U (not GC).
   GC_D    = same on ln p99 delay, lower is better (oracle = lowest p99 static setting delivering >= 99 % of the load).
@@ -235,7 +236,7 @@ def main():
     ap.add_argument("--load", type=float, default=150.0, help="offeredLoad per STA")
     ap.add_argument("--seeds", default="100-107")
     ap.add_argument("--results", default="results")
-    ap.add_argument("--floorTol", type=float, default=0.0, help="relative slack on the fair floor (plan definition = 0)")
+    ap.add_argument("--floorTol", type=float, default=0.05, help="relative slack on the fair floor: x_i >= (1 - tol) floor_i. 0.05 = plan revision 6 (decided 2026-11-01: with tol 0 the S4 static oracle is itself infeasible, 2.9 %% short on the edge APs); 0 = rev 5 strict")
     ap.add_argument("--alphas", default="0,1,2")
     ap.add_argument("--methods", default="", help="comma-separated method keys to show besides beb and the statics (default all)")
     ap.add_argument("--out", default="", help="write the markdown here too")
