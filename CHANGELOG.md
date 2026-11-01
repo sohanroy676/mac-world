@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **changelog**: Regenerate with git-cliff
 - **m0**: Record v3.5.0 results, add tagPrefix
 - **m0**: Add pool BEB reference table
+- **changelog**: Regenerate with git-cliff
+- **handoff**: Commit v3.5.0 runs, rewrite prompt
 
 ### Fixed
 
