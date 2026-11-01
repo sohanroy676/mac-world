@@ -569,7 +569,7 @@ void recordHistory()
                 g_apActiveSta[ap].clear();
             }
             g_apReward[ap] = (float)std::min(1.0, std::max(0.0, r));
-            if (g_idleSense || g_obsIdle)
+            if (g_idleSense || g_obsIdle || g_extraTraces)
             {
                 if (g_apIdleGaps[ap])
                     g_apIdleMean[ap] = (float)((double)g_apIdleSlots[ap] / g_apIdleGaps[ap]);
@@ -603,6 +603,46 @@ void recordHistory()
         std::fill(g_apLastTx.begin(), g_apLastTx.end(), 0);
         last_rx = 0;
         last_tx = 0;
+    }
+}
+
+// v3.6.0: per-AP delay summary (mean/p50/p99, ms) from the flow monitor. In gym runs the trainer's stop request ends the
+// process before the end-of-main summary, so main schedules this at the end of the traffic. Only with --extraTraces.
+void printDelaySummary()
+{
+    std::map<Ipv4Address, uint32_t> apIp;
+    for (uint32_t ap = 0; ap < g_apBss.size(); ++ap)
+        apIp[g_apBss.at(ap).Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal()] = ap;
+    std::vector<std::map<uint32_t, uint64_t>> bins(g_apBss.size());
+    std::vector<double> sum(g_apBss.size(), 0.0);
+    Ptr<Ipv4FlowClassifier> cls = DynamicCast<Ipv4FlowClassifier>(flowmon.GetClassifier());
+    std::map<FlowId, FlowMonitor::FlowStats> st = monitor->GetFlowStats();
+    for (const auto &f : st)
+    {
+        auto d = apIp.find(cls->FindFlow(f.first).destinationAddress);
+        if (d == apIp.end())
+            continue;
+        sum[d->second] += f.second.delaySum.GetSeconds();
+        Histogram h = f.second.delayHistogram;
+        for (uint32_t b = 0; b < h.GetNBins(); ++b)
+            bins[d->second][b] += h.GetBinCount(b);
+    }
+    for (uint32_t ap = 0; ap < g_apBss.size(); ++ap)
+    {
+        uint64_t total = 0, acc = 0;
+        for (const auto &b : bins[ap])
+            total += b.second;
+        double p50 = 0, p99 = 0;
+        for (const auto &b : bins[ap])
+        {
+            acc += b.second;
+            if (!p50 && acc >= 0.5 * total)
+                p50 = (b.first + 1) * 0.0002;
+            if (!p99 && acc >= 0.99 * total)
+                p99 = (b.first + 1) * 0.0002;
+        }
+        NS_LOG_UNCOND("DELAY AP" << ap + 1 << " n=" << total << " mean_ms=" << (total ? 1000.0 * sum[ap] / total : 0.0)
+                                 << " p50_ms=" << 1000.0 * p50 << " p99_ms=" << 1000.0 * p99);
     }
 }
 
@@ -738,7 +778,7 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
                         }
                         dev->GetRemoteStationManager()->TraceConnectWithoutContext("MacTxDataFailed", MakeBoundCallback(&apTxDataFailed, apIndex));
                     }
-                    if (n == 0 && (g_idleSense || g_obsIdle)) // AP radio only: sensing stays local to the AP
+                    if (n == 0 && (g_idleSense || g_obsIdle || g_extraTraces)) // AP radio only: sensing stays local to the AP
                     {
                         PointerValue st;
                         dev->GetPhy()->GetAttribute("State", st);
@@ -1490,6 +1530,8 @@ int main(int argc, char *argv[])
     if (g_cwReadbackEvery > 0)
         Simulator::Schedule(Seconds(warmup + g_cwReadbackEvery), &periodicCwReadback);
 
+    if (g_extraTraces && !disable_gym)
+        Simulator::Schedule(Seconds((non_zero_start ? end_delay : 1.0) + simulationTime - 1.5 * envStepTime), &printDelaySummary); // state reads run from that start for simTime; the last one is a step before the end
     set_sim(tracing, dry_run, disable_gym, warmup, openGymPort, phy, apDevice, end_delay, monitor, flowmon);
 
     double flowThr;

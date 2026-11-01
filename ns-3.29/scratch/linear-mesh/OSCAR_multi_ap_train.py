@@ -67,7 +67,7 @@ parser.add_argument("--staSchedule", default="", help="cw.cc --staSchedule: per-
 parser.add_argument("--scenarioPool", default="", help="JSON list of scenario dicts (apStaCounts, optional apLoads/apHidden/hiddenLoss/staSchedule/rewardNorm); episode e draws one at random (seeded by --seed). Mode shared only, no --check")
 parser.add_argument("--useRts", action="store_true", help="cw.cc --useRts: RTS/CTS for every frame")
 parser.add_argument("--rewardNorm", type=float, default=0.0, help="cw.cc --rewardNorm: fixed per-STA reward divisor in Mbps (0 = per-AP offered load)")
-parser.add_argument("--extraTraces", action="store_true", help="cw.cc --extraTraces: add retry, active, txfail columns to trace.csv")
+parser.add_argument("--extraTraces", action="store_true", help="cw.cc --extraTraces: add retry, active, txfail, idle columns (idle = AP-sensed mean backoff idle slots per step) to trace.csv")
 parser.add_argument("--obsIdle", action="store_true", help="independent/shared: state = the AP's own mean idle slots / 20 (clipped to 1) instead of its loss ratio (cw.cc --obsIdle)")
 args = parser.parse_args()
 
@@ -190,7 +190,7 @@ with open(os.path.join(out_dir, "config.json"), "w") as f:
 trace_f = open(os.path.join(out_dir, "trace.csv"), "w", newline="")
 trace = csv.writer(trace_f)
 trace.writerow(["episode", "step", "ap", "state", "action", "real_action", "reward", "next_state", "cw_set",
-                "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"] + (["retry", "active", "txfail"] if args.extraTraces else []))
+                "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"] + (["retry", "active", "txfail", "idle"] if args.extraTraces else []))
 
 run = wandb.init(name="%s %s s%d" % (args.apStaCounts, args.mode, args.seed), entity=os.environ.get("WANDB_ENTITY", wandb_entity),
                  project=args.wandb_project, tags=["multi-ap", "mode-" + args.mode, git_rev], reinit=True,
@@ -393,7 +393,7 @@ try:
                 trace.writerow([episode, step, i + 1, float(s_i[0]), float(acts[i]), float(real[i]), r, float(s2_i[0]),
                                 recs[i]["cw_set"], recs[i]["cw_ap"], recs[i]["loss"], recs[i]["rx"], recs[i]["tx"],
                                 float(pp[0]), float(pp[1]), agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")]
-                               + ([recs[i]["retry"], recs[i]["active"], recs[i]["txfail"]] if args.extraTraces else []))
+                               + ([recs[i]["retry"], recs[i]["active"], recs[i]["txfail"], recs[i]["idle"]] if args.extraTraces else []))
                 if args.mode == "independent" and learning and time_step >= args.start_timesteps:
                     agents[i].train(replays[i], args.batch_size)
             if args.mode == "shared" and learning and time_step >= args.start_timesteps:
