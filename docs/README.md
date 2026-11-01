@@ -47,4 +47,5 @@ Files are grouped by purpose. Version numbers in file names match the roadmap (`
 ## reference/
 - `oscar-baseline-metrics.md`: published OSCAR numbers and how they map to this project.
 - `reproducibility-v2.1.0.md`: how to reproduce runs, dependencies.
+- `recent-work-beyond-oscar-2026-11-01.md`: 2023-2026 papers on learned CW control, whether any already makes the v4 robustness claim (none found), the remaining gap and novelty wording for faculty.
 - `pre_v0.1.0_audit/`: forensic audit of the inherited OSCAR code and the next-actions results.
