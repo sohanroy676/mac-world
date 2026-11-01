@@ -34,8 +34,8 @@ PyTorch 1.13.1+cu117 (GTX 1650 Ti 4 GB) · Gym 0.26.2 · NumPy 1.21.6 · protobu
 - Distinguish project changes from upstream ns-3/ns3-gym code. Touch upstream only when necessary, and say so.
 
 ## Roadmap (ROADMAP.md, details in docs/planning/detailed_roadmap.md)
-v0.1–v3.0 ✅ (core, benchmarks, scaling, central critic, robustness, report, audit, beat-Global attempt) ·
-**v3.1 ceiling (IN PROGRESS)** → v3.2 fair protocol → v3.3 sensing+heuristics → v3.4 per-AP scenario (ask user first) → v3.5 optional.
+v0.1–v3.4 ✅ (core, benchmarks, scaling, central critic, robustness, report, audit, beat-Global attempt, ceiling, fair protocol, per-AP hidden-chain scenario, sensing + IdleSense; latest tag `v3.3.1`) ·
+**v3.5 optional (only on user request)**; open: Bianchi baseline, tags for later work.
 Plan: `docs/research-beat-oscar.md` §6.
 - Priority: Tier 1 (v0.1–v1.0) → Tier 2 (v1.1–v1.6) → central critic → rest.
 - When v1.0 works: tag it, run baselines, collect 2-AP results, THEN scale, THEN central critic.
