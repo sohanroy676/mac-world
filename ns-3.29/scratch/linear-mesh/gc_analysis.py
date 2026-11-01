@@ -170,7 +170,7 @@ def method_key(cfg):
     return cfg.get("tag") or cfg["mode"]
 
 
-def load_runs(results, topo, hidden, loads, offered, seeds, tags=None):
+def load_runs(results, topo, hidden, loads, offered, seeds, tags=None, tag_prefix=""):
     """{method: {seed: summary}} for one scenario. Duplicate (method, seed): the lexicographically last run dir wins."""
     runs = defaultdict(dict)
     for cfgp in sorted(glob.glob(os.path.join(results, "*", "config.json"))):
@@ -184,7 +184,9 @@ def load_runs(results, topo, hidden, loads, offered, seeds, tags=None):
             continue
         if cfg["mode"] in ("independent", "global", "shared", "central") and not cfg.get("eval"):
             continue  # training runs are not evaluation runs
-        key = method_key(cfg)
+        if tag_prefix and not (cfg.get("tag") or "").startswith(tag_prefix):
+            continue  # --tagPrefix: only one batch; the method is the last '-' part of its tag (beb / static / global)
+        key = method_key(cfg) if not tag_prefix else ("static:" + cfg["apCws"] if cfg["mode"] == "static" else cfg["tag"].split("-")[-1])
         if tags and key not in tags and not key.startswith("static:") and key != "beb":
             continue
         d = os.path.dirname(cfgp)
@@ -237,13 +239,14 @@ def main():
     ap.add_argument("--seeds", default="100-107")
     ap.add_argument("--results", default="results")
     ap.add_argument("--floorTol", type=float, default=0.05, help="relative slack on the fair floor: x_i >= (1 - tol) floor_i. 0.05 = plan revision 6 (decided 2026-11-01: with tol 0 the S4 static oracle is itself infeasible, 2.9 %% short on the edge APs); 0 = rev 5 strict")
+    ap.add_argument("--tagPrefix", default="", help="only runs whose tag starts with this (e.g. lt-s4-l10-); method = last part of the tag")
     ap.add_argument("--alphas", default="0,1,2")
     ap.add_argument("--methods", default="", help="comma-separated method keys to show besides beb and the statics (default all)")
     ap.add_argument("--out", default="", help="write the markdown here too")
     a = ap.parse_args()
     counts = [int(c) for c in a.topo.split(",")]
     seeds = parse_seeds(a.seeds)
-    runs = load_runs(a.results, a.topo, a.hidden, a.loads, a.load, seeds, set(a.methods.split(",")) if a.methods else None)
+    runs = load_runs(a.results, a.topo, a.hidden, a.loads, a.load, seeds, set(a.methods.split(",")) if a.methods else None, a.tagPrefix)
     md = ["## GC table: %s%s%s, load %g, seeds %s" % (a.topo, " hidden " + a.hidden if a.hidden else "", " loads " + a.loads if a.loads else "", a.load, a.seeds), ""]
     for alpha in [float(x) for x in a.alphas.split(",")]:
         rows, info = cell_table(runs, counts, int(alpha) if alpha == int(alpha) else alpha, a.floorTol)
