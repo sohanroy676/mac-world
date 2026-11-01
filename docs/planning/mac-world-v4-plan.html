@@ -99,7 +99,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
 <div class="wrap">
 
 <header>
-  <div class="eyebrow">mac-world · final research plan · revision 5 · 1 Nov 2026</div>
+  <div class="eyebrow">mac-world · final research plan · revision 6 · 1 Nov 2026</div>
   <h1>mac-world v4 plan: one controller that is near-optimal in every scenario</h1>
   <p class="lede">The final plan for the rest of the project. Built on the v3.3.0 to v3.4.2 results, with every assumption checked against the code on dev 33708ff. Revision 5 is the last check before implementation: it fixes 14 problems found in revision 4 (listed below) and replaces revisions 1 to 4.</p>
   <div class="meta"><span>Based on: dev 33708ff (results v3.1.0 to v3.4.2, corrected IdleSense v3.3.1), the 27 Oct research note, the 29 Oct Contention Window Atlas, the OSCAR metrics note</span><span>No new runs were made for this plan</span></div>
@@ -184,7 +184,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
 <section>
   <h2>The claim and how it is scored</h2>
   <div class="arenas">
-    <div class="arena"><div class="k">PROBLEM</div><h3>Constrained by a fair floor</h3><p>No AP may drop below floor_i = min(BEB_i, BEB aggregate · n_i / Σn). A result that breaks the floor in a cell is infeasible there. It is still reported, but cannot win that cell.</p></div>
+    <div class="arena"><div class="k">PROBLEM</div><h3>Constrained by a fair floor</h3><p>No AP may drop below floor_i = min(BEB_i, BEB aggregate · n_i / Σn). A result is infeasible in a cell when any AP gets less than 0.95 · floor_i (5 % slack, revision 6: with the strict floor the S4 static oracle 256,128,256 is itself infeasible, 2.9 % short on the edge APs). It is still reported, but cannot win that cell.</p></div>
     <div class="arena"><div class="k">METRIC</div><h3>Gap closed (GC)</h3><p>GC = (U_α − U_α,BEB) / (U_α,oracle − U_α,BEB) for α ∈ {0, 1, 2}, with U_α = Σ n_i·u_α(max(ε, x_i/n_i)). BEB scores 0 and the best feasible static setting scores 1. Delay cells use GC_D on log p99. Small-gap cells use the raw metric (see Statistics).</p></div>
     <div class="arena"><div class="k">CLAIM 1</div><h3>Never meaningfully worse</h3><p>In every core cell, RAFA is not more than 0.05 GC below the best feasible baseline (intersection-union test, each cell at 0.05).</p></div>
     <div class="arena"><div class="k">CLAIM 2</div><h3>Every rival beaten somewhere</h3><p>For each baseline, at least one cell where RAFA is significantly better (paired t, Holm over all cell × baseline pairs).</p></div>
@@ -316,7 +316,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
     <div class="phase core">
       <div class="head"><h3>M1 · Oracle grids and the GC baseline table</h3><span class="ver">v3.6.0 · ~1 week · ~40 h compute</span></div>
       <ul>
-        <li>Static grids on selection seeds for S4 (finer: edges 128 to 512, middle 32 to 256), S5a, S8 phase 3, and the two S7 delay configurations; S2 reuses v3.1.0.</li>
+        <li>Static grids on selection seeds (powers of two only: STAs read CW as 2^k-1 from the EDCA set, so 512 and 768 behave identically) for S4 (finer: edges 128 to 512, middle 32 to 256), S5a, S8 phase 3, and the two S7 delay configurations; S2 reuses v3.1.0.</li>
         <li>Convergence check of IdleSense on selection seeds (sets the window rule for the suite).</li>
         <li>GC table for the existing methods (BEB, Global, OSCAR per AP, IdleSense, static PF learner) on S2, S4 and S5.</li>
         <li>Gate G0a/G0b on the grids: idle slots near-constant at the one-domain oracle; features separate edge and middle APs in S4.</li>
@@ -429,7 +429,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
 
 <footer>
   <div><b>Sources.</b> Repo (dev 33708ff): <code>docs/results/sensing-heuristics-v3.3.0.md</code> §3b–§3c, <code>per-ap-scenario-v3.4.0.md</code> §4–§4i, <code>ceiling-v3.1.0.md</code>, <code>fair-protocol-v3.2.0.md</code> §4, <code>docs/adr/0005-coarse-loss-matrix.md</code>, <code>cw.cc</code>, <code>wrappers.py</code>, <code>OSCAR_multi_ap_train.py</code>, <code>memory-bank/activeContext.md</code>. Project research: research-beat-oscar.md, the Contention Window Atlas, oscar-baseline-metrics.md. Papers as catalogued in the Atlas: OSCAR (ICC 2023), Heusse et al. Idle Sense (SIGCOMM 2005), Gawłowicz, Walrand, Wolisz (arXiv 2102.05149), drlCW (VTC 2024), CCOD (WCNC 2021), Patras et al. (TMC 2011), BLADE (arXiv 2603.16119), Kosek-Szott et al. (IEEE Access 2021), Casasnovas et al. (IEEE TCCN), mean-field MARL, DDPG.</div>
-  <div>Revisions: 1 (29 Oct) first plan; 2 (29 Oct) statistics, budget, A2 rule; 3 (29 Oct) fair floor, load/reward coupling, delay loads, test families, seed reuse; 4 (1 Nov) rebuilt on v3.3.0–v3.4.2; 5 (1 Nov) final check: fair floor as a constraint for all methods, scoring edge cases, two RAFA ensembles, fixed training pool, multiplicity, compute recount.</div>
+  <div>Revisions: 1 (29 Oct) first plan; 2 (29 Oct) statistics, budget, A2 rule; 3 (29 Oct) fair floor, load/reward coupling, delay loads, test families, seed reuse; 4 (1 Nov) rebuilt on v3.3.0–v3.4.2; 5 (1 Nov) final check: fair floor as a constraint for all methods, scoring edge cases, two RAFA ensembles, fixed training pool, multiplicity, compute recount.; 6 (1 Nov) fair-floor feasibility with 5 % slack (x_i ≥ 0.95 floor_i), equal-load cells at 10 Mbps per STA with --rewardNorm 150.</div>
 </footer>
 
 </div>
