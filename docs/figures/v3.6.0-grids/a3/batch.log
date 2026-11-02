@@ -95,3 +95,100 @@
 06:45:17 gc-s2-global-s100 -> PASS (379 s) results/multi-ap-20261102-063900
 06:48:52 gc-s2-global-s101 -> PASS (308 s) results/multi-ap-20261102-064345
 06:48:52 STOP
+19:46:14 START lane0 gc-s2-global-s102
+19:46:17 START lane1 gc-s2-oscar-s100
+19:52:08 gc-s2-global-s102 -> PASS (353 s) results/multi-ap-20261102-194618
+19:52:08 START lane0 gc-s2-oscar-s101
+19:52:11 gc-s2-oscar-s100 -> PASS (354 s) results/multi-ap-20261102-194619
+19:52:11 START lane1 gc-s2-oscar-s102
+19:59:53 gc-s2-oscar-s101 -> PASS (465 s) results/multi-ap-20261102-195210
+19:59:53 START lane0 gc-s2-pf0-train
+19:59:56 gc-s2-oscar-s102 -> PASS (464 s) results/multi-ap-20261102-195213
+19:59:56 START lane1 gc-s2-pf1-train
+20:12:49 gc-s2-pf0-train -> PASS (776 s) results/multi-ap-20261102-195957
+20:12:49 START lane0 gc-s2-pf0-s100
+20:13:05 gc-s2-pf1-train -> PASS (789 s) results/multi-ap-20261102-195959
+20:13:05 START lane1 gc-s2-pf0-s101
+20:19:04 gc-s2-pf0-s100 -> PASS (375 s) results/multi-ap-20261102-201253
+20:19:04 START lane0 gc-s2-pf0-s102
+20:19:24 gc-s2-pf0-s101 -> PASS (378 s) results/multi-ap-20261102-201308
+20:19:24 START lane1 gc-s2-pf1-s100
+20:25:13 gc-s2-pf0-s102 -> PASS (369 s) results/multi-ap-20261102-201909
+20:25:13 START lane0 gc-s2-pf1-s101
+20:25:44 gc-s2-pf1-s100 -> PASS (379 s) results/multi-ap-20261102-201926
+20:25:44 START lane1 gc-s2-pf1-s102
+20:31:43 gc-s2-pf1-s101 -> PASS (389 s) results/multi-ap-20261102-202516
+20:31:43 START lane0 gc-s2-pf2-train
+20:32:10 gc-s2-pf1-s102 -> PASS (386 s) results/multi-ap-20261102-202547
+20:32:10 START lane1 gc-s5a-beb-s100
+20:39:51 gc-s5a-beb-s100 -> PASS (460 s) results/multi-ap-20261102-203212
+20:39:51 START lane1 gc-s5a-beb-s101
+20:44:39 gc-s2-pf2-train -> PASS (775 s) results/multi-ap-20261102-203146
+20:44:39 START lane0 gc-s2-pf2-s100
+20:47:31 gc-s5a-beb-s101 -> PASS (460 s) results/multi-ap-20261102-203954
+20:47:31 START lane1 gc-s2-pf2-s101
+20:51:14 gc-s2-pf2-s100 -> PASS (395 s) results/multi-ap-20261102-204441
+20:51:14 START lane0 gc-s2-pf2-s102
+20:53:55 gc-s2-pf2-s101 -> PASS (383 s) results/multi-ap-20261102-204735
+20:53:55 START lane1 gc-s5a-beb-s102
+20:57:30 gc-s2-pf2-s102 -> PASS (375 s) results/multi-ap-20261102-205117
+20:57:30 START lane0 gc-s5a-static-128-128-128-s100
+21:01:16 gc-s5a-beb-s102 -> PASS (441 s) results/multi-ap-20261102-205357
+21:01:16 START lane1 gc-s5a-static-128-128-128-s101
+21:04:37 gc-s5a-static-128-128-128-s100 -> PASS (427 s) results/multi-ap-20261102-205732
+21:04:37 START lane0 gc-s5a-static-128-128-128-s102
+21:08:24 gc-s5a-static-128-128-128-s101 -> PASS (427 s) results/multi-ap-20261102-210119
+21:08:24 START lane1 gc-s5a-static-128-64-128-s100
+21:11:46 gc-s5a-static-128-128-128-s102 -> PASS (428 s) results/multi-ap-20261102-210439
+21:11:46 START lane0 gc-s5a-static-128-64-128-s101
+21:15:34 gc-s5a-static-128-64-128-s100 -> PASS (430 s) results/multi-ap-20261102-210826
+21:15:34 START lane1 gc-s5a-static-128-64-128-s102
+21:19:02 gc-s5a-static-128-64-128-s101 -> PASS (435 s) results/multi-ap-20261102-211148
+21:19:02 START lane0 gc-s5a-idlesense-s100
+21:22:46 gc-s5a-static-128-64-128-s102 -> PASS (431 s) results/multi-ap-20261102-211536
+21:22:46 START lane1 gc-s5a-idlesense-s101
+21:26:03 gc-s5a-idlesense-s100 -> PASS (420 s) results/multi-ap-20261102-211904
+21:26:03 START lane0 gc-s5a-idlesense-s102
+21:29:49 gc-s5a-idlesense-s101 -> PASS (423 s) results/multi-ap-20261102-212248
+21:29:49 START lane1 gc-s5a-global-train
+21:33:06 gc-s5a-idlesense-s102 -> PASS (422 s) results/multi-ap-20261102-212605
+21:33:06 START lane0 gc-s5a-oscar-train
+21:45:30 gc-s5a-global-train -> PASS (940 s) results/multi-ap-20261102-212951
+21:45:30 START lane1 gc-s5a-global-s100
+21:49:36 gc-s5a-oscar-train -> PASS (990 s) results/multi-ap-20261102-213308
+21:49:36 START lane0 gc-s5a-global-s101
+21:53:22 gc-s5a-global-s100 -> PASS (472 s) results/multi-ap-20261102-214533
+21:53:22 START lane1 gc-s5a-global-s102
+21:57:17 gc-s5a-global-s101 -> PASS (461 s) results/multi-ap-20261102-214938
+21:57:17 START lane0 gc-s5a-oscar-s100
+22:01:04 gc-s5a-global-s102 -> PASS (461 s) results/multi-ap-20261102-215324
+22:01:04 START lane1 gc-s5a-oscar-s101
+22:05:12 gc-s5a-oscar-s100 -> PASS (474 s) results/multi-ap-20261102-215720
+22:05:12 START lane0 gc-s5a-oscar-s102
+22:08:57 gc-s5a-oscar-s101 -> PASS (473 s) results/multi-ap-20261102-220106
+22:08:57 START lane1 gc-s5a-pf0-train
+22:13:07 gc-s5a-oscar-s102 -> PASS (474 s) results/multi-ap-20261102-220514
+22:13:07 START lane0 gc-s5a-pf1-train
+22:24:50 gc-s5a-pf0-train -> PASS (952 s) results/multi-ap-20261102-220859
+22:24:50 START lane1 gc-s5a-pf0-s100
+22:28:55 gc-s5a-pf1-train -> PASS (948 s) results/multi-ap-20261102-221309
+22:28:55 START lane0 gc-s5a-pf0-s101
+22:32:33 gc-s5a-pf0-s100 -> PASS (463 s) results/multi-ap-20261102-222452
+22:32:33 START lane1 gc-s5a-pf0-s102
+22:36:36 gc-s5a-pf0-s101 -> PASS (461 s) results/multi-ap-20261102-222857
+22:36:36 START lane0 gc-s5a-pf1-s100
+22:40:11 gc-s5a-pf0-s102 -> PASS (458 s) results/multi-ap-20261102-223235
+22:40:11 START lane1 gc-s5a-pf1-s101
+22:44:13 gc-s5a-pf1-s100 -> PASS (457 s) results/multi-ap-20261102-223638
+22:44:13 START lane0 gc-s5a-pf1-s102
+22:47:54 gc-s5a-pf1-s101 -> PASS (462 s) results/multi-ap-20261102-224014
+22:47:54 START lane1 gc-s5a-pf2-train
+22:52:00 gc-s5a-pf1-s102 -> PASS (466 s) results/multi-ap-20261102-224415
+23:00:51 gc-s5a-pf2-train -> PASS (777 s) results/multi-ap-20261102-224756
+23:00:51 START lane1 gc-s5a-pf2-s100
+23:01:01 START lane0 gc-s5a-pf2-s101
+23:08:26 gc-s5a-pf2-s100 -> PASS (454 s) results/multi-ap-20261102-230053
+23:08:26 START lane1 gc-s5a-pf2-s102
+23:08:30 gc-s5a-pf2-s101 -> PASS (449 s) results/multi-ap-20261102-230102
+23:14:17 gc-s5a-pf2-s102 -> PASS (351 s) results/multi-ap-20261102-230827
+23:14:21 DONE

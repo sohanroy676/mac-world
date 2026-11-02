@@ -4,7 +4,7 @@
 
 ## Current focus
 
-**UPDATE 2026-11-02 (M1 / v3.6.0 mostly done, branch `feature/v3.6.0-idle-trace`, merged to `feature/v4`; NOT tagged):** grids (A1+A2, 222 jobs PASS), oracles, G0a/G0b, IdleSense convergence (not settled in 3 s), S4 GC table done, S2 partial, S5a GC not run (A3 stopped at 48/96 by the 06:45 IST STOP). Problem: S7-S4 load design infeasible for the middle AP (needs `--apLoads` redesign). Details `docs/results/m1-oracle-grids-v3.6.0.md`. Resume A3 by re-running `batch_driver_v3_5_0.py docs/figures/v3.6.0-grids/a3_jobs.json 2 docs/figures/v3.6.0-grids/a3` (manifest resumes; delete the STOP file first). Run dirs not committed (needs approval).
+**UPDATE 2026-11-02 (M1 / v3.6.0 mostly done, branch `feature/v3.6.0-idle-trace`, merged to `feature/v4`; NOT tagged):** grids (A1+A2, 222 jobs PASS), oracles, G0a/G0b, IdleSense convergence (not settled in 3 s), GC tables for S4, S2, S5a all done (A3 96/96 PASS after resume, 2026-11-02 23:14 IST). Problem: S7-S4 load design infeasible for the middle AP (needs `--apLoads` redesign). Details `docs/results/m1-oracle-grids-v3.6.0.md`. Run dirs not committed (needs approval).
 
 **UPDATE 2026-11-01 (HANDOFF, branch `docs/v3.5.0-handoff`):** M0 closed and tagged `v3.5.0` (annotated) on `feature/v4`; `dev` deliberately NOT updated. Run dirs (load test 40 + pool 24) committed with manifests, job lists and logs in `docs/figures/v3.5.0-loadtest/` and `-pool/`. Nothing running. Next: M1 (v3.6.0) oracle grids + first GC table; start from `sessionPrompt.md`.
 
