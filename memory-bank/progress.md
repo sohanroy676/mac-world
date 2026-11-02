@@ -13,6 +13,8 @@
 
 ## Done
 
+- **M1 v3.6.0 grids + partial GC table (2026-11-02, branch `feature/v3.6.0-idle-trace`)** — A1/A2 222 jobs PASS, A3 48/96 PASS. `docs/results/m1-oracle-grids-v3.6.0.md`. Open: S7-S4 load redesign, A3 remainder (S2, S5a, learners), S8p3 lower edge grid, tag v3.6.0 after approval.
+
 - **v3.5.0 TAGGED + HANDOFF (2026-11-01)** — tag `v3.5.0` on `feature/v4`, run dirs committed, `sessionPrompt.md` rewritten for M1.
 - **M0 foundations v3.5.0 (2026-11-01, branch `feature/v4`)** — code + load test done, pool BEB references done (CSV committed), run dirs not committed, not tagged. `docs/results/m0-foundations-v3.5.0.md`.
 
