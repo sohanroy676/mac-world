@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **m1**: Grids, gates, partial GC table
 - **changelog**: Regenerate with git-cliff
 - **m1**: Complete GC tables for S2, S4, S5a
+- **changelog**: Regenerate with git-cliff
+- **handoff**: Commit v3.6.0 runs, rewrite prompt
 
 ## [3.5.0] - 2026-11-01
 
