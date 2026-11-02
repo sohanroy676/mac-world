@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **plan**: Revision 6, 5 % fair-floor slack
 - **m1**: Grids, gates, partial GC table
+- **changelog**: Regenerate with git-cliff
+- **m1**: Complete GC tables for S2, S4, S5a
 
 ## [3.5.0] - 2026-11-01
 
