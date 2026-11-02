@@ -34,8 +34,8 @@ PyTorch 1.13.1+cu117 (GTX 1650 Ti 4 GB) · Gym 0.26.2 · NumPy 1.21.6 · protobu
 - Distinguish project changes from upstream ns-3/ns3-gym code. Touch upstream only when necessary, and say so.
 
 ## Roadmap (ROADMAP.md, details in docs/planning/detailed_roadmap.md)
-v0.1–v3.4 ✅ (core, benchmarks, scaling, central critic, robustness, report, audit, beat-Global attempt, ceiling, fair protocol, per-AP hidden-chain scenario, sensing + IdleSense; latest tag `v3.3.1`) ·
-**Next: v3.5.0 to v4.5.0 per the final plan `docs/planning/mac-world-v4-plan.html` (revision 5, 2026-11-01): M0 foundations first**; open: Bianchi baseline (only from a readable source), tags for later work.
+v0.1–v3.4 ✅ (core, benchmarks, scaling, central critic, robustness, report, audit, beat-Global attempt, ceiling, fair protocol, per-AP hidden-chain scenario, sensing + IdleSense; latest tag `v3.6.0` on `feature/v4`) ·
+**Next: M2 (v3.7.0) onward per the final plan `docs/planning/mac-world-v4-plan.html` (revision 6, 2026-11-01); M0 (v3.5.0) and M1 (v3.6.0) done; v4 work lives on `feature/v4`, not `dev`**; open: Bianchi baseline (only from a readable source), tags for later work.
 Plan: `docs/research-beat-oscar.md` §6.
 - Priority: Tier 1 (v0.1–v1.0) → Tier 2 (v1.1–v1.6) → central critic → rest.
 - When v1.0 works: tag it, run baselines, collect 2-AP results, THEN scale, THEN central critic.
