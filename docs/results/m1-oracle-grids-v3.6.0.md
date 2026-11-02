@@ -46,3 +46,9 @@ Fact: in the one-domain S2 cell IdleSense and Global are both near the ceiling (
 
 ## Not done / next
 GC table at eval seeds 100-107 (only 100-102 run); S8p3 lower edge CW grid. S7-S4 redesign. G0a/G0b definitions need your sign-off.
+
+## Update v3.6.1 (2026-11-03): leftovers
+Decisions (user, 2026-11-02): G0a, G0b and the IdleSense "settled" criterion approved as defined above. S7-S4 redone with `--apLoads 1.93,1.0,1.93` (tag `s7-s4b`; the old uniform-load runs stay as `s7-s4`). Jobs and analysis: `docs/figures/v3.6.1-leftovers/` (`a4gate_jobs.json`, `a4_jobs.json`, `a4_analysis.md`); 51 + 4 jobs PASS.
+- **S7-S4b (fact):** every setting delivers its offered load except 16,16,16. Oracle by the plan rule (lowest worst-AP p99 at >= 99 % delivered): 128,64,128 at 9.3 ms, tied with 64,64,64 (9.3 ms); BEB 10.7 ms (ln gap 0.141). The worst-AP metric is set by the middle AP (about 9-10 ms in all settings); edge-AP p99 differs more (64,64,64: 5.0/4.8 ms vs BEB 7.8). Inference: the cell separates methods weakly; the oracle choice between 128,64,128 and 64,64,64 is within noise.
+- **S8 phase 3 lower edges (fact):** alpha 0 oracle is now 32,64,32 (U gap 1.09, BEB SD 0.28, no longer degenerate; 16,128,16 is worse, so 32 is interior). Alpha 1 stays 64,64,64 and alpha 2 stays 64,32,64; edge 32 and 16 did not beat them. Not run: middle CW 16 with edge 64.
+- **Rule violation found (fact):** the first GC tables (seeds 100-102) ran every cell at simTime 15, including IdleSense, which settles at 13-15 s. Plan rule: cells with IdleSense run 30 s for all methods. Re-evaluation of S2/S4/S5a at 30 s and seeds 100-109 is batch `a5` (270 jobs, learners reload the saved actors, trained at 15 s); it supersedes the 15 s tables.

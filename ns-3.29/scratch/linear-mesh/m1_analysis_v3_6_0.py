@@ -131,11 +131,12 @@ def idlesense_convergence(results, out):
 
 
 def delays(batch, results, load, out):
-    """S7: GC_D per cell from the DELAY lines of the logs in batch dirs."""
+    """S7: worst-AP p99 per setting from the DELAY lines of the job logs; oracle = static with the lowest mean worst-AP p99
+    among those that deliver >= 99 % on every AP. Delivered is judged against the largest packet count n seen for that AP
+    and seed over all settings of the cell (inference: the config stores no offered packet count). GC_D on ln p99."""
     import re
-    out.append("## S7 delay (p99 ms, worst AP; load %s Mbps per STA)\n" % load)
-    for cell, counts in (("s7-s4", [10, 10, 10]), ("s7-s2", [20, 40])):
-        topo = ",".join(map(str, counts))
+    out.append("## S7 delay (p99 ms, worst AP; %s)\n" % load)
+    for cell, counts in (("s7-s4", [10, 10, 10]), ("s7-s4b", [10, 10, 10]), ("s7-s2", [20, 40])):
         rows = {}
         for log in glob.glob(os.path.join(batch, "**", "%s-*.log" % cell), recursive=True):
             jid = os.path.basename(log)[:-4]
@@ -146,12 +147,25 @@ def delays(batch, results, load, out):
             if dl:
                 rows.setdefault(m.group(1), {})[int(m.group(2))] = [(int(n), float(p99)) for _, n, _, _, p99 in dl]
         if "beb" not in rows:
-            out.append("%s: no BEB delay yet\n" % cell)
             continue
-        out.append("| %s method | worst-AP p99 ms (mean over seeds) | seeds |\n|---|---|---|" % cell)
+        maxn = {}
+        for k in rows:
+            for sd, v in rows[k].items():
+                maxn[sd] = [max(a_, n) for a_, (n, _) in zip(maxn.get(sd, [0] * len(v)), v)]
+        res = {}
         for k in sorted(rows):
-            out.append("| %s | %.1f | %d |" % (k, np.mean([max(p for _, p in rows[k][s]) for s in rows[k]]), len(rows[k])))
-        out.append("")
+            ok = all(n >= 0.99 * maxn[sd][i] for sd, v in rows[k].items() for i, (n, _) in enumerate(v))
+            res[k] = (float(np.mean([max(p for _, p in rows[k][sd]) for sd in rows[k]])), ok, len(rows[k]))
+        out.append("| %s method | worst-AP p99 ms (mean over seeds) | delivered >= 99 %% | seeds |\n|---|---|---|---|" % cell)
+        for k, (v, ok, n) in sorted(res.items(), key=lambda kv: kv[1][0]):
+            out.append("| %s | %.1f | %s | %d |" % (k, v, "yes" if ok else "NO", n))
+        cand = {k: v for k, v in res.items() if k != "beb" and v[1] and v[2] == 3}
+        if cand:
+            o = min(cand, key=lambda k: cand[k][0])
+            out.append("\nOracle (lowest p99, delivered >= 99 %%): **%s** p99 %.1f ms vs BEB %.1f ms (ln gap %.3f)\n" % (
+                o, cand[o][0], res["beb"][0], math.log(res["beb"][0]) - math.log(cand[o][0])))
+        else:
+            out.append("\nNo static delivers >= 99 % on all APs: no oracle.\n")
 
 
 def main():
@@ -159,7 +173,7 @@ def main():
     ap.add_argument("--batch", default="../../../docs/figures/v3.6.0-grids")
     ap.add_argument("--results", default="results")
     ap.add_argument("--cells", default="s4,s5a,s8p3,s2")
-    ap.add_argument("--s7load", type=float, default=0.0)
+    ap.add_argument("--s7load", default="", help="text for the S7 heading, e.g. 's7-s4 1.93 per STA; s7-s4b 1.93,1.0,1.93; s7-s2 0.37'")
     ap.add_argument("--out", default="")
     a = ap.parse_args()
     out = ["# M1 selection-seed analysis (python seeds 0-2)\n"]
