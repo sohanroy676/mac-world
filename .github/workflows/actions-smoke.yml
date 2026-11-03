@@ -69,19 +69,20 @@ jobs:
             dpkg -s libzmq3-dev | grep Version
             echo '```'
           } | tee -a "$GITHUB_STEP_SUMMARY"
-      - name: Configure and build ns-3 (default profile, as used in the lab)
+      - name: Configure ns-3 (default profile, as used in the lab)
         working-directory: ns-3.29
         run: |
           start=$SECONDS
           ./waf configure 2>&1 | tail -40
-          ./waf build --target=linear-mesh 2>&1 | tail -40
-          echo "ns-3 configure+build: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
-      - name: ns-3 dry run (no gym, BEB)
+          echo "ns-3 configure: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
+      # 'waf --run' builds the program and first generates the ns3/*.h headers. Run 3 showed that
+      # 'waf build --target=linear-mesh' on a clean tree fails ("ns3/event-id.h: No such file").
+      - name: Build ns-3 and run the dry run (no gym, BEB)
         working-directory: ns-3.29
         run: |
           start=$SECONDS
-          ./waf --run "scratch/linear-mesh/linear-mesh --dryRun=true --disableGym=true --apStaCounts=20,40 --simTime=2" 2>&1 | tail -30
-          echo "ns-3 dry run 20,40 simTime=2: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
+          ./waf --run "scratch/linear-mesh/linear-mesh --dryRun=true --disableGym=true --apStaCounts=20,40 --simTime=2" 2>&1 | tail -60
+          echo "ns-3 build + dry run 20,40 simTime=2: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Python 3.7 and pinned requirements
         run: |
           for m in deadsnakes uv micromamba; do
