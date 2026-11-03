@@ -1,0 +1,105 @@
+# Smoke test: can GitHub-hosted runners build and run this project?
+# Runs only for pushes to feature/actions-compute (and manual dispatch once on the default branch).
+# Records CPU, build time and run time so we can decide whether to scale out sweeps.
+name: actions-smoke
+
+on:
+  push:
+    branches: [feature/actions-compute]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DEBIAN_FRONTEND: noninteractive
+  TZ: Etc/UTC
+
+jobs:
+  python37-probe:
+    name: python 3.7 via ${{ matrix.method }}
+    runs-on: ubuntu-24.04
+    container: ubuntu:22.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        method: [uv, micromamba, deadsnakes]
+    steps:
+      - name: Base packages
+        run: apt-get update && apt-get install -y --no-install-recommends curl ca-certificates bzip2 tar git
+      - uses: actions/checkout@v4
+      - name: Install Python 3.7 and pinned requirements
+        run: |
+          start=$SECONDS
+          bash .github/scripts/install_py37.sh "${{ matrix.method }}" /opt/venv37
+          /opt/venv37/bin/python -m pip install --quiet "pip<24.1"
+          apt-get install -y --no-install-recommends build-essential
+          /opt/venv37/bin/pip install -r .github/ci/requirements-py37.txt
+          /opt/venv37/bin/python -c "import torch, numpy, gym, wandb, zmq, google.protobuf as p; print('torch', torch.__version__, 'cuda', torch.cuda.is_available(), 'numpy', numpy.__version__, 'gym', gym.__version__, 'wandb', wandb.__version__, 'pyzmq', zmq.__version__, 'protobuf', p.__version__)"
+          echo "python37 via ${{ matrix.method }}: OK in $((SECONDS-start)) s" >> "$GITHUB_STEP_SUMMARY"
+
+  build-and-run:
+    name: build ns-3 and run one short training cell
+    runs-on: ubuntu-24.04
+    container: ubuntu:22.04
+    timeout-minutes: 150
+    steps:
+      - name: Base packages
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends build-essential git curl ca-certificates bzip2 tar pkg-config \
+            python3 python3-dev libprotobuf-dev protobuf-compiler libzmq3-dev libxml2-dev libsqlite3-dev sqlite3
+      - uses: actions/checkout@v4
+      - name: Machine info
+        run: |
+          {
+            echo "### Machine"
+            echo '```'
+            lscpu | grep -E "Model name|^CPU\(s\)|Thread|Core|Socket|MHz" || true
+            nproc
+            free -g | head -2
+            df -h / | tail -1
+            gcc --version | head -1
+            protoc --version
+            dpkg -s libzmq3-dev | grep Version
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Configure and build ns-3 (default profile, as used in the lab)
+        working-directory: ns-3.29
+        run: |
+          start=$SECONDS
+          ./waf configure 2>&1 | tail -40
+          ./waf build --target=linear-mesh 2>&1 | tail -40
+          echo "ns-3 configure+build: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: ns-3 dry run (no gym, BEB)
+        working-directory: ns-3.29
+        run: |
+          start=$SECONDS
+          ./waf --run "scratch/linear-mesh/linear-mesh --dryRun=true --disableGym=true --apStaCounts=20,40 --simTime=2" 2>&1 | tail -30
+          echo "ns-3 dry run 20,40 simTime=2: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Python 3.7 and pinned requirements
+        run: |
+          for m in uv micromamba deadsnakes; do
+            if bash .github/scripts/install_py37.sh "$m" /opt/venv37; then echo "python37 via $m" | tee -a "$GITHUB_STEP_SUMMARY"; break; fi
+            rm -rf /opt/venv37 /opt/venv37-conda
+          done
+          /opt/venv37/bin/python -m pip install --quiet "pip<24.1"
+          /opt/venv37/bin/pip install -r .github/ci/requirements-py37.txt
+          /opt/venv37/bin/pip install --no-deps ./ns-3.29/contrib/opengym/model/ns3gym
+      - name: Train one short cell (2,3 APs, independent, --check)
+        working-directory: ns-3.29/scratch/linear-mesh
+        run: |
+          start=$SECONDS
+          /opt/venv37/bin/python OSCAR_multi_ap_train.py --apStaCounts 2,3 --mode independent --simTime 2 --start_timesteps 50 --seed 0 --check 2>&1 | tail -40
+          echo "trainer 2,3 independent simTime=2 --check: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Upload logs and run outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-run-output
+          path: |
+            ns-3.29/scratch/linear-mesh/results/
+            ns-3.29/scratch/linear-mesh/cw.csv
+          if-no-files-found: ignore
+          retention-days: 7
