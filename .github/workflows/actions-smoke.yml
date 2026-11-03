@@ -11,6 +11,10 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash   # bash -eo pipefail, so a failing command before "| tail" fails the step
+
 env:
   DEBIAN_FRONTEND: noninteractive
   TZ: Etc/UTC
@@ -24,7 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        method: [uv, micromamba, deadsnakes]
+        method: [deadsnakes]   # run 1: uv failed at install, micromamba's pip could not build gym; deadsnakes passed
     steps:
       - name: Base packages
         run: apt-get update && apt-get install -y --no-install-recommends curl ca-certificates bzip2 tar git
@@ -80,7 +84,7 @@ jobs:
           echo "ns-3 dry run 20,40 simTime=2: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Python 3.7 and pinned requirements
         run: |
-          for m in uv micromamba deadsnakes; do
+          for m in deadsnakes uv micromamba; do
             if bash .github/scripts/install_py37.sh "$m" /opt/venv37; then echo "python37 via $m" | tee -a "$GITHUB_STEP_SUMMARY"; break; fi
             rm -rf /opt/venv37 /opt/venv37-conda
           done
