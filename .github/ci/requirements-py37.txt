@@ -8,3 +8,4 @@ wandb==0.18.7
 protobuf==3.20.3
 pyzmq==26.2.1
 tqdm
+matplotlib<3.6   # imported by agents/our_ddpg/preprocessor.py; not in the repo pin table; 3.5.x is the last series for Python 3.7
