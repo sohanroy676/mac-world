@@ -6,6 +6,7 @@ name: actions-smoke
 on:
   push:
     branches: [feature/actions-compute]
+    paths-ignore: ['.github/workflows/actions-timing.yml', 'docs/**']
   workflow_dispatch:
 
 permissions:
