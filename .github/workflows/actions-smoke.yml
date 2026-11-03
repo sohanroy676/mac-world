@@ -53,7 +53,7 @@ jobs:
         run: |
           apt-get update
           apt-get install -y --no-install-recommends build-essential git curl ca-certificates bzip2 tar pkg-config \
-            python3 python3-dev libprotobuf-dev protobuf-compiler libzmq3-dev libxml2-dev libsqlite3-dev sqlite3
+            python3 python3-dev python-is-python3 libprotobuf-dev protobuf-compiler libzmq3-dev libxml2-dev libsqlite3-dev sqlite3
       - uses: actions/checkout@v4
       - name: Machine info
         run: |
@@ -94,16 +94,21 @@ jobs:
       - name: Train one short cell (2,3 APs, independent, --check)
         working-directory: ns-3.29/scratch/linear-mesh
         run: |
+          touch /tmp/before-train
           start=$SECONDS
           /opt/venv37/bin/python OSCAR_multi_ap_train.py --apStaCounts 2,3 --mode independent --simTime 2 --start_timesteps 50 --seed 0 --check 2>&1 | tail -40
           echo "trainer 2,3 independent simTime=2 --check: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
-      - name: Upload logs and run outputs
+      - name: Collect files written by the training cell
+        if: always()
+        run: |
+          mkdir -p /tmp/out
+          find ns-3.29/scratch/linear-mesh -newer /tmp/before-train -type f ! -name '*.pyc' -print0 2>/dev/null | tar --null -T - -czf /tmp/out/train-outputs.tgz || true
+          ls -la /tmp/out
+      - name: Upload run outputs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: smoke-run-output
-          path: |
-            ns-3.29/scratch/linear-mesh/results/
-            ns-3.29/scratch/linear-mesh/cw.csv
+          path: /tmp/out/
           if-no-files-found: ignore
           retention-days: 7
