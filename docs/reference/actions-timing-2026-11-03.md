@@ -5,7 +5,7 @@ Workflow `.github/workflows/actions-timing.yml` on branch `feature/actions-compu
 ## Results (fact)
 | Cell | Trainer wall time | Result | W&B rows | Job total | Clean build in job |
 |---|---|---|---|---|---|
-| 20,40 `beb` seed 0 | 1037 s (17 min 17 s) | `RESULT: PASS`, 1500 steps | 1500 x 19 keys | 24 min 59 s | 6 min 20 s |
+| 20,40 `beb` seed 0 | 1037 s (17 min 17 s) | `RESULT: PASS`, 1500 steps | 1500 x 19 keys | 25 min 7 s | 6 min 20 s |
 | 20,40 `independent` seed 0 | 1531 s (25 min 31 s) | `RESULT: PASS`, 1500 steps | 1500 x 19 keys | 34 min 55 s | 7 min 32 s |
 
 Whole workflow: 17:31:18 to 18:06:15 UTC (about 35 min), both cells in parallel. Output files (log, W&B offline run, CSVs) were uploaded as artifacts `timing-beb` (652 KB) and `timing-independent` (928 KB), kept 7 days.
