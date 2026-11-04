@@ -162,9 +162,28 @@ def a5(statics, seeds, sim_time, cells=("s4", "s2", "s5a"), pf_seeds=(0, 1, 2)):
     return jobs
 
 
+def a6():
+    """v3.7.0 M2: BEB + RTS/CTS (`--mode beb --useRts`). Selection seeds 0-2 at 15 s (S8p3 and both S7 delay cells; tags
+    m2-<cell>-rts, run dirs compare to m1-<cell>-beb) and GC evaluation on S2/S4/S5a, seeds 100-109 at 30 s (tag m2gc30-<cell>-rts)."""
+    jobs = []
+    s7 = {"s7-s4b": S7B, "s7-s2": ["--apStaCounts", "20,40", "--offeredLoad", "0.37", "--rewardNorm", "150"]}
+    for cell in ("s8p3", "s7-s4b", "s7-s2"):
+        for sd in SEEDS:
+            j = job(cell, "beb", sd, s7.get(cell))
+            j["id"] = "m2-%s-rts-s%d" % (cell, sd)
+            j["args"] = [a if a != "m1-%s-beb" % cell else "m2-%s-rts" % cell for a in j["args"]] + ["--useRts"]
+            jobs.append(j)
+    for cell in ("s4", "s2", "s5a"):
+        for sd in range(100, 110):
+            jobs.append({"id": "m2gc30-%s-rts-s%d" % (cell, sd), "deps": [],
+                         "args": list(CELLS[cell]) + ["--simTime", "30", "--stepTime", "0.01", "--check", "--mode", "beb", "--useRts",
+                                                       "--seed", str(sd), "--tag", "m2gc30-%s-rts" % cell]})
+    return jobs
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("which", choices=["a1", "a2", "a3", "a4", "a4gate", "a5"])
+    ap.add_argument("which", choices=["a1", "a2", "a3", "a4", "a4gate", "a5", "a6"])
     ap.add_argument("out")
     ap.add_argument("--s7loadS4", type=float, default=0.0, help="Mbps per STA = 0.8 x BEB aggregate / STAs (A1: 1.93)")
     ap.add_argument("--s7loadS2", type=float, default=0.0, help="(A1: 0.37)")
@@ -180,6 +199,8 @@ if __name__ == "__main__":
     elif a.which == "a5":
         st = {kv.split("=")[0]: kv.split("=")[1].split("+") for kv in a.statics.split(";") if kv}
         jobs = a5(st, [int(x) for x in a.evalSeeds.split(",")], a.simTime)
+    elif a.which == "a6":
+        jobs = a6()
     elif a.which in ("a4", "a4gate"):
         jobs = a4(a.which == "a4gate")
     else:

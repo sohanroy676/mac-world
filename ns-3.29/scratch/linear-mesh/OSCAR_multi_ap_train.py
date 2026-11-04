@@ -50,7 +50,7 @@ parser.add_argument("--tag", default="", help="variant label stored in config.js
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense"], default="independent")
+parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense", "kw", "ucb"], default="independent")
 parser.add_argument("--apCws", default="", help="static mode only: fixed CW per AP, e.g. 64,512 (no agent; cw.cc applies it from t=0)")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 parser.add_argument("--algo", choices=["ddpg", "td3"], default="ddpg", help="learner for independent/global/shared (td3: twin critics, delayed actor, target smoothing)")
@@ -69,6 +69,10 @@ parser.add_argument("--useRts", action="store_true", help="cw.cc --useRts: RTS/C
 parser.add_argument("--rewardNorm", type=float, default=0.0, help="cw.cc --rewardNorm: fixed per-STA reward divisor in Mbps (0 = per-AP offered load)")
 parser.add_argument("--extraTraces", action="store_true", help="cw.cc --extraTraces: add retry, active, txfail, idle columns (idle = AP-sensed mean backoff idle slots per step) to trace.csv")
 parser.add_argument("--obsIdle", action="store_true", help="independent/shared: state = the AP's own mean idle slots / 20 (clipped to 1) instead of its loss ratio (cw.cc --obsIdle)")
+parser.add_argument("--ctrlTau", type=float, default=0.2, help="kw/ucb: probe / pull window in seconds (paper: 0.2)")
+parser.add_argument("--kwDelta", type=float, default=0.2, help="kw: probe size in y = log(lam/(1-lam)) (paper: 0.2)")
+parser.add_argument("--kwEta", type=float, default=0.1, help="kw: step size (paper: 0.1)")
+parser.add_argument("--ucbC", type=float, default=0.3, help="ucb: exploration constant")
 args = parser.parse_args()
 
 # W&B mode must be decided before wandb is imported.
@@ -86,6 +90,7 @@ from agents.our_ddpg.central import CentralDDPG  # noqa: E402
 from agents.our_ddpg.utils import JointReplayBuffer, ReplayBuffer  # noqa: E402
 from config import wandb_entity  # noqa: E402
 from exceptions import AlreadyRunningException  # noqa: E402
+from ap_controllers import KW, UCB, parse_hidden  # noqa: E402
 from multi_ap import PAYLOAD_BITS, jain, parse_ap_info, reshape_obs, step_metrics  # noqa: E402
 from wrappers import EnvWrapper  # noqa: E402
 
@@ -148,7 +153,7 @@ if args.residual:
     sim_args["residual"] = "true"
 if args.obsIdle:
     sim_args["obsIdle"] = "true"
-n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
+n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0, "kw": 0, "ucb": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
 LOCAL_MODES = ("independent", "shared")
 assert args.obs == "loss" or args.mode in LOCAL_MODES, "--obs hist only for independent/shared"
 assert args.alpha == 1.0 or args.mode in LOCAL_MODES, "--alpha only for independent/shared"
@@ -213,7 +218,7 @@ def scalar(x):
 
 def agent_loss(i, name):
     """Loss of the agent that acts for AP i (independent: own; global: the shared one; beb: none -> 0)."""
-    if args.mode in ("beb", "static", "idlesense"):
+    if args.mode in ("beb", "static", "idlesense", "kw", "ucb"):
         return 0.0
     if args.mode == "central":
         return scalar(central.actor_losses[i] if name == "actor_loss" else central.critic_loss)
@@ -312,6 +317,10 @@ try:
             env.run()
         except AlreadyRunningException:
             pass
+        if args.mode == "kw":
+            ctrl = KW(counts, parse_hidden(args.apHidden), args.stepTime, args.ctrlTau, args.kwDelta, args.kwEta, seed=args.seed + episode)
+        elif args.mode == "ucb":
+            ctrl = UCB(counts, NORM_LOADS, args.stepTime, args.ctrlTau, args.ucbC, seed=args.seed + episode)
         S = reshape_obs(env.reset()[0], n)
         prev_acts = np.full(n, -1.0, dtype=np.float32)  # CW starts at BEB 16 = real action 0 = act -1
         L = local_states(S, prev_acts)
@@ -332,6 +341,8 @@ try:
                         acts[i] = np.clip(a, -max_action, max_action)[0]
                 if args.mode == "central" and args.check:
                     exec_probe["expect"] = None
+            elif args.mode in ("kw", "ucb"):
+                acts[:] = 2.0 * ctrl.cw_exponents() / real_max_action - 1.0  # real = real_max * (acts + 1) / 2 = the controller exponent
             elif args.mode == "global":
                 if learning and time_step < args.start_timesteps:
                     acts[:] = np.random.uniform(-max_action, max_action)
@@ -343,6 +354,8 @@ try:
             obs, _, done, info = env.step(np.array([real], dtype=np.float32))
             S2 = reshape_obs(obs[0], n)
             recs = parse_ap_info(info[0], n)
+            if args.mode in ("kw", "ucb"):
+                ctrl.observe(recs)
             L2 = local_states(S2, acts)
             r_net = global_reward(recs) if args.mode in LOCAL_MODES and args.alpha < 1.0 else 0.0
             r_pf = pf_reward([x["reward"] for x in recs]) if args.reward == "pf" else 0.0
