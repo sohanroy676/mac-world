@@ -52,3 +52,21 @@ Decisions (user, 2026-11-02): G0a, G0b and the IdleSense "settled" criterion app
 - **S7-S4b (fact):** every setting delivers its offered load except 16,16,16. Oracle by the plan rule (lowest worst-AP p99 at >= 99 % delivered): 128,64,128 at 9.3 ms, tied with 64,64,64 (9.3 ms); BEB 10.7 ms (ln gap 0.141). The worst-AP metric is set by the middle AP (about 9-10 ms in all settings); edge-AP p99 differs more (64,64,64: 5.0/4.8 ms vs BEB 7.8). Inference: the cell separates methods weakly; the oracle choice between 128,64,128 and 64,64,64 is within noise.
 - **S8 phase 3 lower edges (fact):** alpha 0 oracle is now 32,64,32 (U gap 1.09, BEB SD 0.28, no longer degenerate; 16,128,16 is worse, so 32 is interior). Alpha 1 stays 64,64,64 and alpha 2 stays 64,32,64; edge 32 and 16 did not beat them. Not run: middle CW 16 with edge 64.
 - **Rule violation found (fact):** the first GC tables (seeds 100-102) ran every cell at simTime 15, including IdleSense, which settles at 13-15 s. Plan rule: cells with IdleSense run 30 s for all methods. Re-evaluation of S2/S4/S5a at 30 s and seeds 100-109 is batch `a5` (270 jobs, learners reload the saved actors, trained at 15 s); it supersedes the 15 s tables.
+
+## GC tables at 30 s, eval seeds 100-109 (v3.6.1, batch `a5`, 270 jobs PASS, 2026-11-04)
+Plan rule applied: all methods in the three cells run 30 s (the 15 s tables above are superseded). Learners reload the actors trained at 15 s (2 episodes, 1 seed Global/OSCAR, 3 PF seeds shown separately); statics are the selection-seed oracles. n=10, 95 % CI, 5 % floor slack. Full tables: `docs/figures/v3.6.1-leftovers/gc30_table_{s4,s2,s5a}.md`.
+| Cell | Method | GC a0 | GC a1 | GC a2 | Floor |
+|---|---|---|---|---|---|
+| S2 | Global | 0.98 ± 0.03 | 0.97 ± 0.04 | 0.96 ± 0.04 | ok |
+| S2 | IdleSense | 0.92 ± 0.06 | 0.91 ± 0.06 | 0.91 ± 0.05 | ok |
+| S2 | OSCAR per AP | -0.40 | -0.78 | -1.38 | infeasible |
+| S2 | PF learner t0 / t1 / t2 | 0.95 / 0.97 / 0.86 | 0.43 / 0.74 / 0.53 | 0.04 / 0.60 / 0.30 | infeasible / ok / infeasible |
+| S4 | Global | 0.64 ± 0.14 | 0.33 ± 0.07 | raw U -61.3 | ok |
+| S4 | IdleSense | 0.16 ± 0.12 | -0.09 ± 0.03 | raw U -116.8 | infeasible |
+| S4 | OSCAR per AP | 1.14 | -0.55 | raw U -260.4 | infeasible |
+| S4 | PF learner t0 / t1 / t2 | -2.30 / -4.43 / -2.22 | 0.95 / 0.76 / 0.95 | raw U -20.3 / -20.0 / -19.1 | ok / infeasible / ok |
+| S5a | Global | 0.94 ± 0.01 | 0.94 ± 0.01 | 0.88 ± 0.02 | ok |
+| S5a | IdleSense | 0.47 | -0.10 | -0.47 | infeasible |
+| S5a | OSCAR per AP | -3.09 | -3.02 | -3.13 | infeasible |
+| S5a | PF learner t0 / t1 / t2 | 0.94 / 0.89 / 0.75 | 1.04 / 1.07 / 0.90 | 1.01 / 1.08 / 0.91 | ok |
+Facts: (1) the 15 s conclusions hold at 30 s: IdleSense is infeasible in S4 and S5a, OSCAR per AP is infeasible in every cell, Global is near the ceiling in S2 and S5a and 0.33 in S4 at alpha 1, the PF learner reaches 0.95 in S4 at alpha 1 for 2 of 3 seeds. (2) S4 alpha 2 is now a degenerate cell by the plan rule (U gap 84.5 vs BEB SD 81.8; the middle AP's goodput sits near the 0.01 Mbps floor in some seeds), so it is reported as raw U: static 256,128,256 -16.2, PF learners -19 to -20, Global -61, BEB -101. (3) PF learner GC is below 0 at S4 alpha 0 (-2.2 to -4.4): it was trained for fairness and gives up aggregate. Caveats: PF-learner CIs are eval-seed variance only; Global/OSCAR have one training seed; GC > 1 for learners in S5a is within the oracle's noise (static CI about ±0.03); no multiplicity correction.
