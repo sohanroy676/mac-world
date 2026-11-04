@@ -50,7 +50,7 @@ parser.add_argument("--tag", default="", help="variant label stored in config.js
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense", "kw", "ucb"], default="independent")
+parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense", "kw", "ucb", "ccod"], default="independent")
 parser.add_argument("--apCws", default="", help="static mode only: fixed CW per AP, e.g. 64,512 (no agent; cw.cc applies it from t=0)")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 parser.add_argument("--algo", choices=["ddpg", "td3"], default="ddpg", help="learner for independent/global/shared (td3: twin critics, delayed actor, target smoothing)")
@@ -73,6 +73,7 @@ parser.add_argument("--ctrlTau", type=float, default=0.2, help="kw/ucb: probe / 
 parser.add_argument("--kwDelta", type=float, default=0.2, help="kw: probe size in y = log(lam/(1-lam)) (paper: 0.2)")
 parser.add_argument("--kwEta", type=float, default=0.1, help="kw: step size (paper: 0.1)")
 parser.add_argument("--ucbC", type=float, default=0.3, help="ucb: exploration constant")
+parser.add_argument("--ccodHist", type=int, default=300, help="ccod: loss-history length fed to the CCOD agent (agents/ddpg, RLinWiFi; CCOD_train.py: 300)")
 args = parser.parse_args()
 
 # W&B mode must be decided before wandb is imported.
@@ -153,7 +154,7 @@ if args.residual:
     sim_args["residual"] = "true"
 if args.obsIdle:
     sim_args["obsIdle"] = "true"
-n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0, "kw": 0, "ucb": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
+n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0, "kw": 0, "ucb": 0, "ccod": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
 LOCAL_MODES = ("independent", "shared")
 assert args.obs == "loss" or args.mode in LOCAL_MODES, "--obs hist only for independent/shared"
 assert args.alpha == 1.0 or args.mode in LOCAL_MODES, "--alpha only for independent/shared"
@@ -162,7 +163,7 @@ assert 0.0 <= args.alpha <= 1.0 and 1 <= args.obsWindow <= args.historyLength
 local_dim = 4 if args.obs == "hist" else 1
 AGENT_MODES = ("independent", "global", "shared")
 assert args.algo == "ddpg" or args.mode in AGENT_MODES, "--algo td3 only for independent/global/shared"
-assert not (args.saveActor or args.loadActor or args.eval) or args.mode in AGENT_MODES, "--saveActor/--loadActor/--eval only for independent/global/shared"
+assert not (args.saveActor or args.loadActor or args.eval) or args.mode in AGENT_MODES + ("ccod",), "--saveActor/--loadActor/--eval only for independent/global/shared"
 assert args.eval == bool(args.loadActor), "--eval needs --loadActor (and --loadActor needs --eval)"
 assert not (args.eval and args.saveActor), "--eval does not train, so there is nothing to --saveActor"
 assert not args.cwMinOnly or args.mode in AGENT_MODES + ("central",), "--cwMinOnly only for agent modes"
@@ -207,6 +208,16 @@ if args.loadActor:
     for i, a in enumerate(agents):
         a.load(os.path.join(args.loadActor, "agent%d" % i))
 replays = [ReplayBuffer(local_dim, action_dim) for _ in range(n_agents)]
+ccod_agent = None
+if args.mode == "ccod":  # CCOD as in CCOD_train.py (RLinWiFi agent), one CW for all APs (Global form); calls follow agents/ddpg/teacher.py train()
+    from agents.ddpg.agent import Agent as CcodAgent, Config as CcodConfig  # noqa: E402
+    from agents.ddpg.preprocessor import Preprocessor as CcodPre  # noqa: E402
+    ccod_pre = CcodPre(False).preprocess
+    ccod_agent = CcodAgent(args.ccodHist, action_size=1, config=CcodConfig(buffer_size=4 * steps_per_ep, batch_size=32, gamma=0.7, tau=1e-3,
+                           lr_actor=4e-4, lr_critic=4e-3, update_every=1), actor_layers=[8, 128, 16], critic_layers=[8, 128, 16])
+    if args.loadActor:
+        ccod_agent.actor_local.load_state_dict(torch.load(os.path.join(args.loadActor, "ccod_actor.pt"), map_location="cpu"))
+        ccod_agent.critic_local.load_state_dict(torch.load(os.path.join(args.loadActor, "ccod_critic.pt"), map_location="cpu"))
 central = CentralDDPG(n, max_action, args.discount, args.tau) if args.mode == "central" else None
 joint = JointReplayBuffer(n) if args.mode == "central" else None
 preprocess = Preprocessor(False).preprocess
@@ -218,7 +229,7 @@ def scalar(x):
 
 def agent_loss(i, name):
     """Loss of the agent that acts for AP i (independent: own; global: the shared one; beb: none -> 0)."""
-    if args.mode in ("beb", "static", "idlesense", "kw", "ucb"):
+    if args.mode in ("beb", "static", "idlesense", "kw", "ucb", "ccod"):
         return 0.0
     if args.mode == "central":
         return scalar(central.actor_losses[i] if name == "actor_loss" else central.critic_loss)
@@ -322,6 +333,11 @@ try:
         elif args.mode == "ucb":
             ctrl = UCB(counts, NORM_LOADS, args.stepTime, args.ctrlTau, args.ucbC, seed=args.seed + episode)
         S = reshape_obs(env.reset()[0], n)
+        if args.mode == "ccod":
+            ccod_hist = np.zeros(args.ccodHist, dtype=np.float32)  # network loss history, newest first, 0 before the first step
+            ccod_obs = ccod_pre(ccod_hist.reshape(-1, 1, 1))
+            ccod_last = None
+            ccod_noise = learning and episode < args.episodes * 4 / 5  # CCOD turns noise off for the last fifth of the episodes
         prev_acts = np.full(n, -1.0, dtype=np.float32)  # CW starts at BEB 16 = real action 0 = act -1
         L = local_states(S, prev_acts)
         S_g = np.zeros(state_dim, dtype=np.float32)  # global mode: network loss; 0 before the first step
@@ -341,6 +357,9 @@ try:
                         acts[i] = np.clip(a, -max_action, max_action)[0]
                 if args.mode == "central" and args.check:
                     exec_probe["expect"] = None
+            elif args.mode == "ccod":
+                ccod_act = ccod_agent.act(np.array(ccod_obs, dtype=np.float32), ccod_noise)
+                acts[:] = 2.0 * float(np.clip(ccod_act.reshape(-1)[0], 0.0, 6.0)) / real_max_action - 1.0
             elif args.mode in ("kw", "ucb"):
                 acts[:] = 2.0 * ctrl.cw_exponents() / real_max_action - 1.0  # real = real_max * (acts + 1) / 2 = the controller exponent
             elif args.mode == "global":
@@ -356,6 +375,17 @@ try:
             recs = parse_ap_info(info[0], n)
             if args.mode in ("kw", "ucb"):
                 ctrl.observe(recs)
+            if args.mode == "ccod":
+                tx_c, rx_c = sum(q["tx"] for q in recs), sum(q["rx"] for q in recs)
+                ccod_hist = np.roll(ccod_hist, 1)
+                ccod_hist[0] = (tx_c - rx_c) / tx_c if tx_c else 0.0
+                ccod_next = ccod_pre(ccod_hist.reshape(-1, 1, 1))
+                if learning and ccod_last is not None and step > args.ccodHist and episode < args.episodes - 1:
+                    # deviation from teacher.train: it stores the RAW next obs as the state, which cannot feed the LSTM (expects mean/std pairs);
+                    # we store the processed previous and next observation
+                    ccod_agent.step(ccod_obs, ccod_act, np.array([global_reward(recs)]), ccod_next, [done[0]], 2)
+                ccod_last = ccod_act
+                ccod_obs = ccod_next
             L2 = local_states(S2, acts)
             r_net = global_reward(recs) if args.mode in LOCAL_MODES and args.alpha < 1.0 else 0.0
             r_pf = pf_reward([x["reward"] for x in recs]) if args.reward == "pf" else 0.0
@@ -470,8 +500,15 @@ try:
             if done[0]:
                 break
         print("episode %d cumulative reward per AP: %s" % (episode, np.round(ep_reward, 3).tolist()))
+        if args.mode == "ccod":
+            ccod_agent.reset()
         env.close()
-    if args.saveActor:
+    if args.saveActor and args.mode == "ccod":
+        os.makedirs(args.saveActor, exist_ok=True)
+        torch.save(ccod_agent.actor_local.state_dict(), os.path.join(args.saveActor, "ccod_actor.pt"))
+        torch.save(ccod_agent.critic_local.state_dict(), os.path.join(args.saveActor, "ccod_critic.pt"))
+        print("saved ccod agent to %s" % args.saveActor)
+    elif args.saveActor:
         os.makedirs(args.saveActor, exist_ok=True)
         for i, a in enumerate(agents):
             a.save(os.path.join(args.saveActor, "agent%d" % i))
