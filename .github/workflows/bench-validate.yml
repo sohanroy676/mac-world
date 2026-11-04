@@ -1,0 +1,31 @@
+# Validates tools/bench/run_bench.sh in an ubuntu:22.04 container (smoke cell + 2 parallel seeds).
+# Runs only on pushes to bench/common that touch the script or this file.
+name: bench-validate
+on:
+  push:
+    branches: [bench/common]
+    paths: ['tools/bench/**', '.github/workflows/bench-validate.yml']
+permissions:
+  contents: read
+defaults:
+  run:
+    shell: bash
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    container: ubuntu:22.04
+    timeout-minutes: 60
+    steps:
+      - run: apt-get update && apt-get install -y --no-install-recommends git ca-certificates curl
+      - uses: actions/checkout@v4
+      - name: Run script (smoke + 2 parallel)
+        run: bash tools/bench/run_bench.sh actions-validate --smoke --parallel 2
+      - name: Show report
+        if: always()
+        run: cat bench-results/*.md || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bench-validate
+          path: bench-results/
+          retention-days: 7
