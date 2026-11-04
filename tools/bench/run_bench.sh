@@ -93,6 +93,7 @@ else
 fi
 "$VENV/bin/python" -m pip install --quiet "pip<24.1" "setuptools<66" wheel
 # torch from the PyTorch index only; everything else from PyPI (avoids a broken mixed-index resolve)
+"$VENV/bin/pip" install --quiet "typing-extensions==4.7.1"
 "$VENV/bin/pip" install --quiet torch==1.13.1+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
 "$VENV/bin/pip" install --quiet numpy==1.21.6 gym==0.26.2 wandb==0.18.7 protobuf==3.20.3 pyzmq==26.2.1 tqdm "matplotlib<3.6"
 "$VENV/bin/pip" install --quiet --no-deps "$ROOT/ns-3.29/contrib/opengym/model/ns3gym"
