@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**UPDATE 2026-11-05 (revision 6):** reviewed three mentor papers (IntelliNull, DDPG multi-AP VTC2023, transformer ICL IEEE TMC). Extended-tier additions only: S8 ramp variant, noise test, S10 with STA A-MPDU on (opt-in flag), optional RAFA-adapt, deployability table. Core M0-M4 unchanged. See `docs/reference/mentor-papers-review-2026-11-05.md`.
+
 **UPDATE 2026-11-01 (revision 5 = final check):** fair floor applies to every method (infeasible results flagged), degenerate-cell and delay scoring rules, eps in u_alpha, 6 RAFA seeds as two ensembles, fixed training pool with BEB references, intersection-union Claim 1 + Holm-over-all Claim 2, compute ~210 h for M0-M4. Details: ROADMAP "v3.5.0 to v4.5.0".
 
 **UPDATE 2026-11-01 (FINAL v4 plan, revision 4; branch `claude/project-thread-p80xpo` from dev 33708ff):** `docs/planning/mac-world-v4-plan.html` (https://claude.ai/artifact/QZmPYcMVgPhZgJXJUDp3Ax). Rebuilt on v3.3.0-v3.4.2. Claim = robustness across the suite (GC metric). RAFA = shared DDPG + idle/Retry/loss/load obs + STA-weighted alpha-fair reward (alpha input, relabelled) + STA-weighted fair floor + scenario randomisation + 3-seed ensemble; residual/TD3/backoff-mode dropped. Code facts found: PF reward (ADR-0005) is unweighted over APs (equal per-AP shares); `useRts` exists but is hard-coded false; trainer re-crafts only the seed per episode; STAs read CW from EDCA as 2^ECW-1; BEB job time is about the same as a learned job (ns-3 dominates); reward normalised by offered load (cw.cc:549); port seeded by --seed (wrappers.py:19, trainer:100). Next: M0 on `feature/v3.5.0-foundations`.

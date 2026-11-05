@@ -99,9 +99,9 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
 <div class="wrap">
 
 <header>
-  <div class="eyebrow">mac-world · final research plan · revision 5 · 1 Nov 2026</div>
+  <div class="eyebrow">mac-world · final research plan · revision 6 · 5 Nov 2026</div>
   <h1>mac-world v4 plan: one controller that is near-optimal in every scenario</h1>
-  <p class="lede">The final plan for the rest of the project. Built on the v3.3.0 to v3.4.2 results, with every assumption checked against the code on dev 33708ff. Revision 5 is the last check before implementation: it fixes 14 problems found in revision 4 (listed below) and replaces revisions 1 to 4.</p>
+  <p class="lede">The final plan for the rest of the project. Built on the v3.3.0 to v3.4.2 results, with every assumption checked against the code on dev 33708ff. Revision 6 adds the findings from three papers given by the mentor (new section below, extended tier only; the core path is unchanged). Revision 5 was the last check before implementation: it fixes 14 problems found in revision 4 (listed below) and replaces revisions 1 to 4.</p>
   <div class="meta"><span>Based on: dev 33708ff (results v3.1.0 to v3.4.2, corrected IdleSense v3.3.1), the 27 Oct research note, the 29 Oct Contention Window Atlas, the OSCAR metrics note</span><span>No new runs were made for this plan</span></div>
   <div class="labels"><span class="tag fact">fact</span> read from code or committed results <span class="tag inf">inference</span> reasoning, untested <span class="tag lit">lit</span> reported by a paper <span class="tag dec">decision</span> choice made in this plan <span class="tag unk">unknown</span> needs a run</div>
 </header>
@@ -115,6 +115,20 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
     <li><b>The method is simplified to the parts that survived testing</b> (working name RAFA): one shared DDPG actor fed by the AP's own idle-slot, retry and load readings; a fairness reward weighted by station count, with the fairness level as an input; a fair floor against BEB; training over a fixed pool of randomised scenarios; and 3-seed ensembles at deployment. The analytic-prior residual, TD3 and the backoff-mode action are dropped, because v3.3 and v3.4 showed no stable benefit from them <span class="tag fact">fact</span>.</li>
     <li><b>The largest risk is variance between training seeds, not compute.</b> One-seed rankings flipped three times in v3.4.0 <span class="tag fact">fact</span>. So every comparison uses 3 training seeds, and RAFA is trained as 6 seeds forming two independent 3-seed ensembles; every claim must hold for both.</li>
   </ol>
+</section>
+
+<section>
+  <h2>Revision 6: what the mentor's three papers add</h2>
+  <p>Full review: <code>docs/reference/mentor-papers-review-2026-11-05.md</code>. The core path M0 to M4 (about 210 h) is unchanged. All additions below are extended or optional.</p>
+  <div class="table"><table>
+    <thead><tr><th>Source</th><th>Use</th><th>Where</th></tr></thead>
+    <tbody>
+      <tr><td>IntelliNull (beamforming)</td><td class="w">Off-topic for CW. Only the learning-curve habit transfers: plot GC against training episode.</td><td class="w">M3, 1 h</td></tr>
+      <tr><td>DDPG multi-AP (VTC 2023)</td><td class="w">Ramp test. S8 gets a staggered-start variant (scenario.h already takes per-generator start and end times <span class="tag fact">fact</span>) plus a best-single-static reference. Optional RAFA-adapt (online fine-tuning) on S8 and S9. OBSS_PD is not adopted: ns-3.29 has none and PHY changes are out of scope.</td><td class="w">M5, about 6.5 h</td></tr>
+      <tr><td>Transformer in-context learning (IEEE TMC)</td><td class="w">Observation-noise test (±20 %, ±40 %) on RAFA inputs; deployability and cost table (compute, memory, signalling) for the write-up; S10 = S4 (and S2 if affordable) with STA A-MPDU on, because the paper finds methods converge with aggregation off and our STAs have <code>BE_MaxAmpduSize</code> = 0 <span class="tag fact">fact</span>. S10 needs an opt-in <code>--staAmpdu</code> flag and its own oracle grid (about 17 h); it is dropped first if job time explodes. Citation fixes: venue is IEEE TMC; BLADE is NSDI 2026.</td><td class="w">M5 (noise 4 h, S10 17 h), M7 (table 2 h)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Not adopted: the transformer method (single domain, needs pre-collected data), beamforming, OBSS_PD, hyper-parameter changes (weak evidence), Bianchi pre-training. Unknown: whether STA A-MPDU = 0 came from OSCAR or was chosen here.</p>
 </section>
 
 <section>
@@ -361,6 +375,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
     <div class="phase core">
       <div class="head"><h3>M7 · Write-up</h3><span class="ver">v4.5.0 · ~1 week</span></div>
       <ul>
+        <li>Deployability and cost table (compute, memory, signalling) for RAFA against the baselines.</li>
         <li>Report and deck: robustness claim, GC table, flow-in-the-middle naming, drlCW and Gawłowicz as closest work, ties stated, reproducibility commands.</li>
       </ul>
     </div>
