@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**UPDATE 2026-11-05 (HANDOFF, branch `docs/v3.7.0-handoff`):** M2 closed and TAGGED `v3.7.0` on `feature/v4`; run dirs (520 jobs), batch logs, manifests and trained actors committed under `docs/figures/v3.6.1-leftovers/` and `docs/figures/v3.7.0-baselines/`. Nothing running. `sessionPrompt.md` rewritten for M3 (RAFA). `dev` still untouched.
+
 **UPDATE 2026-11-05 (M2 / v3.7.0 done, branch `feature/v4`; NOT tagged):** M1 leftovers closed (S7-S4b with `--apLoads 1.93,1.0,1.93`: oracle 128,64,128 p99 9.3 ms vs BEB 10.7; S8p3 alpha-0 oracle 32,64,32; GC tables redone at 30 s, seeds 100-109, 270 jobs). M2: BEB+RTS/CTS (worse than BEB everywhere), KW (strong in S2/S4, S4 floor missed by 0.7 %), UCB (infeasible in S2), CCOD Global form (feasible everywhere, 12 training episodes vs 2 for Global). Not built: drlCW, Patras PI, BLADE-style. Details `docs/results/m2-baselines-v3.7.0.md`. Next: M3 RAFA (shared actor, gate G0b). Run dirs not committed (needs approval). Trainer modes added: kw, ucb, ccod (existing modes byte-identical: 2,3 reference trace).
 
 **UPDATE 2026-11-02 (M1 / v3.6.0 mostly done, branch `feature/v3.6.0-idle-trace`, merged to `feature/v4`; NOT tagged):** grids (A1+A2, 222 jobs PASS), oracles, G0a/G0b, IdleSense convergence (not settled in 3 s), GC tables for S4, S2, S5a all done (A3 96/96 PASS after resume, 2026-11-02 23:14 IST). Problem: S7-S4 load design infeasible for the middle AP (needs `--apLoads` redesign). Details `docs/results/m1-oracle-grids-v3.6.0.md`. Run dirs not committed (needs approval).
