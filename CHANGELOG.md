@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **changelog**: Regenerate with git-cliff
 - **changelog**: Regenerate with git-cliff
 - **claude**: Point roadmap status to the v4 plan
+- **changelog**: Regenerate with git-cliff
+- **plan**: Add revision 6 from mentor papers
 
 ## [3.3.1] - 2026-11-01
 
