@@ -1,0 +1,85 @@
+07:44:00 START lane0 tune-s4-kw-0.2-0.1-s0
+07:44:04 START lane1 tune-s4-kw-0.7-0.1-s0
+07:51:09 tune-s4-kw-0.2-0.1-s0 -> PASS (429 s) results/multi-ap-20261104-074403
+07:51:09 START lane0 tune-s4-kw-0.7-0.03-s0
+07:51:24 tune-s4-kw-0.7-0.1-s0 -> PASS (440 s) results/multi-ap-20261104-074406
+07:51:24 START lane1 tune-s4-kw-0.7-0.01-s0
+07:58:40 tune-s4-kw-0.7-0.03-s0 -> PASS (450 s) results/multi-ap-20261104-075112
+07:58:40 START lane0 tune-s4-ucb-0.1-s0
+07:59:11 tune-s4-kw-0.7-0.01-s0 -> PASS (466 s) results/multi-ap-20261104-075127
+07:59:11 START lane1 tune-s4-ucb-0.3-s0
+08:06:28 tune-s4-ucb-0.1-s0 -> PASS (467 s) results/multi-ap-20261104-075842
+08:06:28 START lane0 tune-s4-ucb-1-s0
+08:06:56 tune-s4-ucb-0.3-s0 -> PASS (465 s) results/multi-ap-20261104-075913
+08:06:56 START lane1 tune-s4-kw-0.2-0.1-s1
+08:14:06 tune-s4-ucb-1-s0 -> PASS (458 s) results/multi-ap-20261104-080630
+08:14:06 START lane0 tune-s4-kw-0.7-0.1-s1
+08:14:19 tune-s4-kw-0.2-0.1-s1 -> PASS (443 s) results/multi-ap-20261104-080658
+08:14:19 START lane1 tune-s4-kw-0.7-0.03-s1
+08:21:27 tune-s4-kw-0.7-0.1-s1 -> PASS (440 s) results/multi-ap-20261104-081408
+08:21:27 START lane0 tune-s4-kw-0.7-0.01-s1
+08:21:50 tune-s4-kw-0.7-0.03-s1 -> PASS (451 s) results/multi-ap-20261104-081421
+08:21:50 START lane1 tune-s4-ucb-0.1-s1
+08:29:22 tune-s4-kw-0.7-0.01-s1 -> PASS (474 s) results/multi-ap-20261104-082129
+08:29:22 START lane0 tune-s4-ucb-0.3-s1
+08:29:42 tune-s4-ucb-0.1-s1 -> PASS (471 s) results/multi-ap-20261104-082153
+08:29:42 START lane1 tune-s4-ucb-1-s1
+08:37:09 tune-s4-ucb-0.3-s1 -> PASS (467 s) results/multi-ap-20261104-082924
+08:37:09 START lane0 tune-s4-kw-0.2-0.1-s2
+08:37:32 tune-s4-ucb-1-s1 -> PASS (470 s) results/multi-ap-20261104-082944
+08:37:32 START lane1 tune-s4-kw-0.7-0.1-s2
+08:44:25 tune-s4-kw-0.2-0.1-s2 -> PASS (435 s) results/multi-ap-20261104-083711
+08:44:25 START lane0 tune-s4-kw-0.7-0.03-s2
+08:45:00 tune-s4-kw-0.7-0.1-s2 -> PASS (447 s) results/multi-ap-20261104-083734
+08:45:00 START lane1 tune-s4-kw-0.7-0.01-s2
+08:52:04 tune-s4-kw-0.7-0.03-s2 -> PASS (459 s) results/multi-ap-20261104-084427
+08:52:04 START lane0 tune-s4-ucb-0.1-s2
+08:53:05 tune-s4-kw-0.7-0.01-s2 -> PASS (484 s) results/multi-ap-20261104-084502
+08:53:05 START lane1 tune-s4-ucb-0.3-s2
+08:59:58 tune-s4-ucb-0.1-s2 -> PASS (473 s) results/multi-ap-20261104-085206
+08:59:58 START lane0 tune-s4-ucb-1-s2
+09:00:55 tune-s4-ucb-0.3-s2 -> PASS (470 s) results/multi-ap-20261104-085307
+09:00:55 START lane1 tune-s2-kw-0.2-0.1-s0
+09:07:46 tune-s4-ucb-1-s2 -> PASS (468 s) results/multi-ap-20261104-090000
+09:07:46 START lane0 tune-s2-kw-0.7-0.1-s0
+09:12:40 tune-s2-kw-0.2-0.1-s0 -> PASS (704 s) results/multi-ap-20261104-090057
+09:12:40 START lane1 tune-s2-kw-0.7-0.03-s0
+09:19:33 tune-s2-kw-0.7-0.1-s0 -> PASS (706 s) results/multi-ap-20261104-090749
+09:19:33 START lane0 tune-s2-kw-0.7-0.01-s0
+09:24:39 tune-s2-kw-0.7-0.03-s0 -> PASS (718 s) results/multi-ap-20261104-091242
+09:24:39 START lane1 tune-s2-ucb-0.1-s0
+09:32:47 tune-s2-kw-0.7-0.01-s0 -> PASS (794 s) results/multi-ap-20261104-091935
+09:32:47 START lane0 tune-s2-ucb-0.3-s0
+09:38:28 tune-s2-ucb-0.1-s0 -> PASS (829 s) results/multi-ap-20261104-092441
+09:38:28 START lane1 tune-s2-ucb-1-s0
+09:45:43 tune-s2-ucb-0.3-s0 -> PASS (776 s) results/multi-ap-20261104-093250
+09:45:43 START lane0 tune-s2-kw-0.2-0.1-s1
+09:51:07 tune-s2-ucb-1-s0 -> PASS (758 s) results/multi-ap-20261104-093830
+09:51:07 START lane1 tune-s2-kw-0.7-0.1-s1
+09:57:55 tune-s2-kw-0.2-0.1-s1 -> PASS (731 s) results/multi-ap-20261104-094545
+09:57:55 START lane0 tune-s2-kw-0.7-0.03-s1
+10:03:05 tune-s2-kw-0.7-0.1-s1 -> PASS (717 s) results/multi-ap-20261104-095109
+10:03:05 START lane1 tune-s2-kw-0.7-0.01-s1
+10:09:32 tune-s2-kw-0.7-0.03-s1 -> PASS (697 s) results/multi-ap-20261104-095757
+10:09:32 START lane0 tune-s2-ucb-0.1-s1
+10:14:58 tune-s2-kw-0.7-0.01-s1 -> PASS (713 s) results/multi-ap-20261104-100307
+10:14:58 START lane1 tune-s2-ucb-0.3-s1
+10:22:03 tune-s2-ucb-0.1-s1 -> PASS (750 s) results/multi-ap-20261104-100934
+10:22:03 START lane0 tune-s2-ucb-1-s1
+10:27:29 tune-s2-ucb-0.3-s1 -> PASS (750 s) results/multi-ap-20261104-101501
+10:27:29 START lane1 tune-s2-kw-0.2-0.1-s2
+10:34:24 tune-s2-ucb-1-s1 -> PASS (741 s) results/multi-ap-20261104-102205
+10:34:24 START lane0 tune-s2-kw-0.7-0.1-s2
+10:39:29 tune-s2-kw-0.2-0.1-s2 -> PASS (719 s) results/multi-ap-20261104-102731
+10:39:29 START lane1 tune-s2-kw-0.7-0.03-s2
+10:46:11 tune-s2-kw-0.7-0.1-s2 -> PASS (706 s) results/multi-ap-20261104-103426
+10:46:11 START lane0 tune-s2-kw-0.7-0.01-s2
+10:51:08 tune-s2-kw-0.7-0.03-s2 -> PASS (698 s) results/multi-ap-20261104-103931
+10:51:08 START lane1 tune-s2-ucb-0.1-s2
+10:58:40 tune-s2-kw-0.7-0.01-s2 -> PASS (749 s) results/multi-ap-20261104-104613
+10:58:40 START lane0 tune-s2-ucb-0.3-s2
+11:04:29 tune-s2-ucb-0.1-s2 -> PASS (801 s) results/multi-ap-20261104-105110
+11:04:29 START lane1 tune-s2-ucb-1-s2
+11:12:26 tune-s2-ucb-0.3-s2 -> PASS (825 s) results/multi-ap-20261104-105843
+11:17:10 tune-s2-ucb-1-s2 -> PASS (760 s) results/multi-ap-20261104-110433
+11:17:17 DONE
