@@ -1,0 +1,17 @@
+topo,mode,seed,run_dir,result,returncode,seconds
+"10,10,10",beb,100,results/multi-ap-20261030-224721,PASS,0,413
+"10,10,10",independent,100,results/multi-ap-20261030-225414,PASS,0,406
+"10,10,10",beb,101,results/multi-ap-20261030-230100,PASS,0,417
+"10,10,10",independent,101,results/multi-ap-20261030-230757,PASS,0,422
+"10,10,10",beb,102,results/multi-ap-20261030-231500,PASS,0,418
+"10,10,10",independent,102,results/multi-ap-20261030-232159,PASS,0,412
+"10,10,10",beb,103,results/multi-ap-20261030-232851,PASS,0,414
+"10,10,10",independent,103,results/multi-ap-20261030-233546,PASS,0,406
+"10,10,10",beb,104,results/multi-ap-20261030-234233,PASS,0,415
+"10,10,10",independent,104,results/multi-ap-20261030-234928,PASS,0,409
+"10,10,10",beb,105,results/multi-ap-20261030-235617,PASS,0,412
+"10,10,10",independent,105,results/multi-ap-20261031-000310,PASS,0,409
+"10,10,10",beb,106,results/multi-ap-20261031-000959,PASS,0,413
+"10,10,10",independent,106,results/multi-ap-20261031-001653,PASS,0,405
+"10,10,10",beb,107,results/multi-ap-20261031-002338,PASS,0,411
+"10,10,10",independent,107,results/multi-ap-20261031-003029,PASS,0,426

@@ -15,6 +15,8 @@ Files are grouped by purpose. Version numbers in file names match the roadmap (`
 ## planning/
 - `project_description.md`: full spec and terminology.
 - `detailed_roadmap.md`: per-version completion criteria.
+- `mac-world-v4-plan.html`: final plan for v3.5.0 to v4.5.0 (revision 6, 2026-11-05): RAFA, GC suite metric, baselines, scenarios, milestones M0-M7.
+- `reference/mentor-papers-review-2026-11-05.md`: review of three mentor-supplied papers and what revision 6 of the plan adopts.
 
 ## design/
 - `multi-ap-design-v0.2.0.md`: multi-AP design specification (v0.2.0).
@@ -37,6 +39,7 @@ Files are grouped by purpose. Version numbers in file names match the roadmap (`
 - `robustness-v2.0.0.md`: robustness experiments.
 - `final-results-v2.2.0.md`: final result set (81 runs, n=3).
 - `improvement-v3.0.0.md`: attempt to beat Global-CW OSCAR (neutral result).
+- (v3.1.0+ reports follow here; the plan behind them is `../research-beat-oscar.md`.)
 
 ## reports/
 - `technical-report-v2.3.0.md`: full write-up.

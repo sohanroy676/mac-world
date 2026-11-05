@@ -1,0 +1,16 @@
+14 jobs to run, 0 already PASS, 1 lane(s)
+seed 0 10,10,10 cw=64,64,64 -> PASS (509 s) results/multi-ap-20261028-204711 | 13 left
+seed 0 10,10,10 cw=128,128,128 -> PASS (482 s) results/multi-ap-20261028-205544 | 12 left
+seed 0 10,10,10 cw=256,256,256 -> PASS (456 s) results/multi-ap-20261028-210349 | 11 left
+seed 0 10,10,10 cw=512,512,512 -> PASS (432 s) results/multi-ap-20261028-211129 | 10 left
+seed 0 10,10,10 cw=768,768,768 -> PASS (428 s) results/multi-ap-20261028-211845 | 9 left
+seed 0 10,10,10 cw=1023,1023,1023 -> PASS (397 s) results/multi-ap-20261028-212555 | 8 left
+seed 0 10,10,10 cw=256,64,256 -> PASS (457 s) results/multi-ap-20261028-213235 | 7 left
+seed 0 10,10,10 cw=256,128,256 -> PASS (455 s) results/multi-ap-20261028-214016 | 6 left
+seed 0 10,10,10 cw=512,64,512 -> PASS (443 s) results/multi-ap-20261028-214754 | 5 left
+seed 0 10,10,10 cw=512,128,512 -> PASS (440 s) results/multi-ap-20261028-215521 | 4 left
+seed 0 10,10,10 cw=512,256,512 -> PASS (436 s) results/multi-ap-20261028-220244 | 3 left
+seed 0 10,10,10 cw=1023,64,1023 -> PASS (441 s) results/multi-ap-20261028-221004 | 2 left
+seed 0 10,10,10 cw=1023,128,1023 -> PASS (466 s) results/multi-ap-20261028-221729 | 1 left
+seed 0 10,10,10 cw=1023,256,1023 -> PASS (447 s) results/multi-ap-20261028-222520 | 0 left
+batch complete

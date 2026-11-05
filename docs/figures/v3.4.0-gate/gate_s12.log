@@ -1,0 +1,10 @@
+8 jobs to run, 14 already PASS, 1 lane(s)
+seed 1 10,10,10 cw=256,256,256 -> PASS (515 s) results/multi-ap-20261028-223310 | 7 left
+seed 1 10,10,10 cw=512,512,512 -> PASS (543 s) results/multi-ap-20261028-224148 | 6 left
+seed 1 10,10,10 cw=256,128,256 -> PASS (526 s) results/multi-ap-20261028-225054 | 5 left
+seed 1 10,10,10 cw=256,64,256 -> PASS (485 s) results/multi-ap-20261028-225943 | 4 left
+seed 2 10,10,10 cw=256,256,256 -> PASS (499 s) results/multi-ap-20261028-230752 | 3 left
+seed 2 10,10,10 cw=512,512,512 -> PASS (448 s) results/multi-ap-20261028-231614 | 2 left
+seed 2 10,10,10 cw=256,128,256 -> PASS (455 s) results/multi-ap-20261028-232345 | 1 left
+seed 2 10,10,10 cw=256,64,256 -> PASS (458 s) results/multi-ap-20261028-233126 | 0 left
+batch complete

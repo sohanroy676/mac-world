@@ -38,6 +38,10 @@ parser.add_argument("--cwReadbackEvery", type=float, default=0.0, help="diagnost
 parser.add_argument("--trafficStart", type=float, default=0.0, help="diagnostic: time (s) the data sources start (0 = cw.cc default)")
 parser.add_argument("--staMaxMissedBeacons", type=int, default=0, help="diagnostic: StaWifiMac MaxMissedBeacons (0 = ns-3 default 10)")
 parser.add_argument("--offeredLoad", type=float, default=150.0, help="per-STA offered load in Mbps (cw.cc offeredLoad)")
+parser.add_argument("--apHidden", default="", help="v3.4.0 scenario: 1-based AP pairs whose BSSs cannot hear each other, e.g. 1-3 (cw.cc --apHidden)")
+parser.add_argument("--hiddenLoss", type=float, default=0.0, help="path loss in dB between hidden pairs (0 = cw.cc default 200)")
+parser.add_argument("--apLoads", default="", help="v3.4.0 scenario: per-STA offered load in Mbps per AP, e.g. 150,150,5 (cw.cc --apLoads; default every AP uses --offeredLoad)")
+parser.add_argument("--reward", choices=["local", "pf"], default="local", help="independent/shared replay reward: local = own goodput (alpha mixes in network goodput); pf = proportional fair, 1 + mean_i log(eps + r_i) / -log(eps), same value for every agent")
 parser.add_argument("--rewardScale", type=float, default=1.0, help="multiplies the reward stored in replay (central/global/independent/shared; 1 = unchanged)")
 parser.add_argument("--alpha", type=float, default=1.0, help="independent/shared: replay reward = alpha*own + (1-alpha)*network goodput reward (1 = strictly local)")
 parser.add_argument("--obs", choices=["loss", "hist"], default="loss", help="independent/shared state: loss = newest own loss; hist = [newest, mean, std over --obsWindow own steps, own previous action]")
@@ -46,8 +50,20 @@ parser.add_argument("--tag", default="", help="variant label stored in config.js
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared"], default="independent")
+parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense"], default="independent")
+parser.add_argument("--apCws", default="", help="static mode only: fixed CW per AP, e.g. 64,512 (no agent; cw.cc applies it from t=0)")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
+parser.add_argument("--algo", choices=["ddpg", "td3"], default="ddpg", help="learner for independent/global/shared (td3: twin critics, delayed actor, target smoothing)")
+parser.add_argument("--varySeeds", action="store_true", help="episode e uses ns-3 seed (seed+1)+1000*e instead of the same seed every episode")
+parser.add_argument("--saveActor", default="", help="after training save every agent to DIR/agent<i>_{actor,critic,...}")
+parser.add_argument("--loadActor", default="", help="load agents from DIR/agent<i>_* before the run (use with --eval)")
+parser.add_argument("--eval", action="store_true", help="frozen evaluation: needs --loadActor; no exploration noise, no warm-up, no replay, no training")
+parser.add_argument("--cwMinOnly", action="store_true", help="agent action sets CWmin only; CWmax stays 1023 so BEB doubling is kept (multi-AP agent modes)")
+parser.add_argument("--idleTarget", type=float, default=0.0, help="idlesense / --residual: target mean idle slots per backoff gap (0 = cw.cc default 5.68)")
+parser.add_argument("--idleEps", type=float, default=0.0, help="idlesense / --residual: eps in CW = 2 CW / (2 + eps CW) (0 = cw.cc default 0.001)")
+parser.add_argument("--idleUp", type=float, default=0.0, help="idlesense / --residual: multiplicative CW increase 1/alpha (0 = cw.cc default 1.2)")
+parser.add_argument("--residual", action="store_true", help="independent/shared: action = Delta log2 CW in [-2, 2] around the per-AP IdleSense CW (cw.cc --residual)")
+parser.add_argument("--obsIdle", action="store_true", help="independent/shared: state = the AP's own mean idle slots / 20 (clipped to 1) instead of its loss ratio (cw.cc --obsIdle)")
 args = parser.parse_args()
 
 # W&B mode must be decided before wandb is imported.
@@ -59,6 +75,7 @@ import torch  # noqa: E402
 import wandb  # noqa: E402
 
 from agents.our_ddpg.Our_DDPG import DDPG  # noqa: E402
+from agents.our_ddpg.TD3 import TD3  # noqa: E402
 from agents.our_ddpg.preprocessor import Preprocessor  # noqa: E402
 from agents.our_ddpg.central import CentralDDPG  # noqa: E402
 from agents.our_ddpg.utils import JointReplayBuffer, ReplayBuffer  # noqa: E402
@@ -75,6 +92,9 @@ state_dim = action_dim = 1
 max_action = 1
 real_max_action = 6
 OFFERED_MBPS = args.offeredLoad  # per-STA offered load, cw.cc offeredLoad
+LOADS = [float(x) for x in args.apLoads.split(",")] if args.apLoads else [OFFERED_MBPS] * len(args.apStaCounts.split(","))  # per-AP, per-STA load
+assert len(LOADS) == n and min(LOADS) > 0, "--apLoads: one positive load per AP"
+OFFERED_TOTAL = sum(c * l for c, l in zip(counts, LOADS))  # network offered load in Mbps (all STAs)
 
 torch.manual_seed(args.seed)
 np.random.seed(args.seed)
@@ -82,20 +102,53 @@ np.random.seed(args.seed)
 sim_args = {"simTime": args.simTime, "envStepTime": args.stepTime, "historyLength": args.historyLength,
             "agentType": "continuous", "scenario": "basic", "apStaCounts": args.apStaCounts,
             "seed": args.seed + 1, "offeredLoad": "%g" % args.offeredLoad}  # ns-3 rejects seed 0, so ns-3 seed = python seed + 1
+if args.apHidden:
+    sim_args["apHidden"] = args.apHidden
+if args.hiddenLoss > 0:
+    sim_args["hiddenLoss"] = args.hiddenLoss
+if args.apLoads:
+    sim_args["apLoads"] = args.apLoads
 if args.cwReadbackEvery > 0:
     sim_args["cwReadbackEvery"] = args.cwReadbackEvery
 if args.trafficStart > 0:
     sim_args["trafficStart"] = args.trafficStart
 if args.staMaxMissedBeacons > 0:
     sim_args["staMaxMissedBeacons"] = args.staMaxMissedBeacons
-if args.mode == "beb":
-    sim_args["dryRun"] = "true"  # cw.cc skips setApCw; every AP keeps BEB CW 16..1024
-n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
+static_cws = [int(c) for c in args.apCws.split(",")] if args.apCws else []
+assert (args.mode == "static") == bool(static_cws), "--mode static needs --apCws (and only static takes it)"
+assert not static_cws or (len(static_cws) == n and all(16 <= c <= 1024 for c in static_cws)), "--apCws: one CW in 16..1024 per AP"
+if static_cws:
+    sim_args["apCws"] = args.apCws
+if args.mode in ("beb", "idlesense"):
+    sim_args["dryRun"] = "true"  # cw.cc skips setApCw for actions; beb keeps CW 16..1024, idlesense moves it by sensing (cw.cc --idleSense)
+assert not (args.residual or args.obsIdle) or args.mode in ("independent", "shared"), "--residual/--obsIdle only for independent/shared"
+if args.mode == "idlesense" or args.residual:
+    sim_args["idleSense"] = "true"
+    for k in ("idleTarget", "idleEps", "idleUp"):
+        if getattr(args, k) > 0:
+            sim_args[k] = getattr(args, k)
+if args.residual:
+    sim_args["residual"] = "true"
+if args.obsIdle:
+    sim_args["obsIdle"] = "true"
+n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
 LOCAL_MODES = ("independent", "shared")
 assert args.obs == "loss" or args.mode in LOCAL_MODES, "--obs hist only for independent/shared"
 assert args.alpha == 1.0 or args.mode in LOCAL_MODES, "--alpha only for independent/shared"
+assert args.reward == "local" or (args.mode in LOCAL_MODES and args.alpha == 1.0), "--reward pf only for independent/shared with --alpha 1 (pf replaces the mix)"
 assert 0.0 <= args.alpha <= 1.0 and 1 <= args.obsWindow <= args.historyLength
 local_dim = 4 if args.obs == "hist" else 1
+AGENT_MODES = ("independent", "global", "shared")
+assert args.algo == "ddpg" or args.mode in AGENT_MODES, "--algo td3 only for independent/global/shared"
+assert not (args.saveActor or args.loadActor or args.eval) or args.mode in AGENT_MODES, "--saveActor/--loadActor/--eval only for independent/global/shared"
+assert args.eval == bool(args.loadActor), "--eval needs --loadActor (and --loadActor needs --eval)"
+assert not (args.eval and args.saveActor), "--eval does not train, so there is nothing to --saveActor"
+assert not args.cwMinOnly or args.mode in AGENT_MODES + ("central",), "--cwMinOnly only for agent modes"
+if args.cwMinOnly:
+    sim_args["cwMinOnly"] = "true"
+learning = not args.eval  # eval: frozen actors, no noise, no warm-up, no replay, no training
+expl_noise = 0.0 if args.eval else args.expl_noise
+ns3_seeds = [args.seed + 1 + (1000 * e if args.varySeeds else 0) for e in range(args.episodes)]
 
 
 def local_states(S_rows, prev_acts):
@@ -114,7 +167,7 @@ except (OSError, subprocess.CalledProcessError):
 out_dir = "results/multi-ap-%s" % time.strftime("%Y%m%d-%H%M%S")
 os.makedirs(out_dir)
 with open(os.path.join(out_dir, "config.json"), "w") as f:
-    json.dump(dict(vars(args), ns3_seed=args.seed + 1, counts=counts, git_rev=git_rev), f)
+    json.dump(dict(vars(args), ns3_seed=args.seed + 1, ns3_seeds=ns3_seeds, counts=counts, git_rev=git_rev), f)
 trace_f = open(os.path.join(out_dir, "trace.csv"), "w", newline="")
 trace = csv.writer(trace_f)
 trace.writerow(["episode", "step", "ap", "state", "action", "real_action", "reward", "next_state", "cw_set",
@@ -124,7 +177,11 @@ run = wandb.init(name="%s %s s%d" % (args.apStaCounts, args.mode, args.seed), en
                  project=args.wandb_project, tags=["multi-ap", "mode-" + args.mode, git_rev], reinit=True,
                  config=dict(vars(args), AP_Count=n, Stations_Per_AP=counts))
 
-agents = [DDPG(local_dim, action_dim, max_action, args.discount, args.tau) for _ in range(n_agents)]
+Learner = TD3 if args.algo == "td3" else DDPG
+agents = [Learner(local_dim, action_dim, max_action, args.discount, args.tau) for _ in range(n_agents)]
+if args.loadActor:
+    for i, a in enumerate(agents):
+        a.load(os.path.join(args.loadActor, "agent%d" % i))
 replays = [ReplayBuffer(local_dim, action_dim) for _ in range(n_agents)]
 central = CentralDDPG(n, max_action, args.discount, args.tau) if args.mode == "central" else None
 joint = JointReplayBuffer(n) if args.mode == "central" else None
@@ -137,7 +194,7 @@ def scalar(x):
 
 def agent_loss(i, name):
     """Loss of the agent that acts for AP i (independent: own; global: the shared one; beb: none -> 0)."""
-    if args.mode == "beb":
+    if args.mode in ("beb", "static", "idlesense"):
         return 0.0
     if args.mode == "central":
         return scalar(central.actor_losses[i] if name == "actor_loss" else central.critic_loss)
@@ -147,7 +204,16 @@ def agent_loss(i, name):
 def global_reward(recs):
     """Network goodput normalized by offered load of all STAs (global and central modes)."""
     rx_g = sum(r["rx"] for r in recs)
-    return min(1.0, max(0.0, rx_g * PAYLOAD_BITS / 1e6 / (OFFERED_MBPS * sum(counts) * args.stepTime)))
+    return min(1.0, max(0.0, rx_g * PAYLOAD_BITS / 1e6 / (OFFERED_TOTAL * args.stepTime)))
+
+
+PF_EPS = 1e-3
+
+
+def pf_reward(r_own):
+    """Proportional-fair team reward from the per-AP normalized goodputs: 0 at zero goodput, about 1 at full load."""
+    r_own = np.asarray(r_own, dtype=np.float64)
+    return float(min(1.0, max(0.0, 1.0 + np.log(PF_EPS + r_own).mean() / -np.log(PF_EPS))))
 
 
 fails = []
@@ -195,6 +261,9 @@ reward_cols = [[] for _ in range(n)]
 logged = []
 try:
     for episode in range(args.episodes):
+        if args.varySeeds and episode > 0:
+            env.commands = env._craft_commands(dict(sim_args, seed=ns3_seeds[episode]))
+        print("episode %d ns-3 seed %d" % (episode, ns3_seeds[episode]), flush=True)
         try:
             env.run()
         except AlreadyRunningException:
@@ -210,20 +279,20 @@ try:
                 if args.mode == "central" and args.check:
                     exec_probe["expect"] = S[:, 0]
                 for i in range(n):
-                    if time_step < args.start_timesteps:
+                    if learning and time_step < args.start_timesteps:
                         acts[i] = np.random.uniform(-max_action, max_action)
                     else:
                         sel = agents[i] if args.mode == "independent" else agents[0] if args.mode == "shared" else None
                         a = (sel.select_action(L[i]) if sel else central.select_action(i, S[i, :state_dim])) \
-                            + np.random.normal(0, max_action * args.expl_noise)
+                            + np.random.normal(0, max_action * expl_noise)
                         acts[i] = np.clip(a, -max_action, max_action)[0]
                 if args.mode == "central" and args.check:
                     exec_probe["expect"] = None
             elif args.mode == "global":
-                if time_step < args.start_timesteps:
+                if learning and time_step < args.start_timesteps:
                     acts[:] = np.random.uniform(-max_action, max_action)
                 else:
-                    a = agents[0].select_action(S_g) + np.random.normal(0, max_action * args.expl_noise)
+                    a = agents[0].select_action(S_g) + np.random.normal(0, max_action * expl_noise)
                     acts[:] = np.clip(a, -max_action, max_action)[0]
             real = (real_max_action * (acts + 1) / 2).astype(np.float32)  # beb: ignored by cw.cc (dryRun)
 
@@ -232,45 +301,57 @@ try:
             recs = parse_ap_info(info[0], n)
             L2 = local_states(S2, acts)
             r_net = global_reward(recs) if args.mode in LOCAL_MODES and args.alpha < 1.0 else 0.0
+            r_pf = pf_reward([x["reward"] for x in recs]) if args.reward == "pf" else 0.0
 
             for i in range(n):
                 r = recs[i]["reward"]
                 s_i, s2_i = L[i], L2[i]
-                if args.mode in LOCAL_MODES:
+                if args.mode in LOCAL_MODES and learning:
                     ri = i if args.mode == "independent" else 0
-                    r_rep = args.rewardScale * (args.alpha * r + (1.0 - args.alpha) * r_net)
+                    r_rep = args.rewardScale * (r_pf if args.reward == "pf" else args.alpha * r + (1.0 - args.alpha) * r_net)
                     replays[ri].add(s_i, acts[i], s2_i, r_rep, done[0])
                 if args.check:
-                    if args.mode in LOCAL_MODES:
+                    if args.mode in LOCAL_MODES and learning:
                         k = (replays[ri].ptr - 1) % replays[ri].max_size
                         check(np.allclose(replays[ri].state[k], s_i) and np.allclose(replays[ri].next_state[k], s2_i)
                               and np.isclose(replays[ri].reward[k, 0], r_rep) and np.isclose(replays[ri].action[k, 0], acts[i]),
                               "replay %d row mismatch at t=%d" % (i, time_step))
                     # cw.cc computes pow(2, 4 + a) with a float, so 4 + a is rounded to float32 before pow.
-                    want_cw = 16 if args.mode == "beb" else int(min(1024, max(
-                        16, 2 ** float(np.float32(4) + np.float32(real[i])))))
-                    check(recs[i]["cw_set"] == want_cw and recs[i]["cw_ap"] == want_cw,
-                          "AP%d cw %s/%s != %d at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], want_cw, time_step))
+                    if args.mode == "idlesense" or args.residual:  # CW comes from the AP's own sensing: range and readback only
+                        check(16 <= recs[i]["cw_set"] <= 1024 and recs[i]["cw_set"] == recs[i]["cw_ap"],
+                              "AP%d cw %s/%s out of range or readback mismatch at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], time_step))
+                    else:
+                        want_cw = static_cws[i] if args.mode == "static" else 16 if args.mode == "beb" else int(min(1024, max(
+                            16, 2 ** float(np.float32(4) + np.float32(real[i])))))
+                        check(recs[i]["cw_set"] == want_cw and recs[i]["cw_ap"] == want_cw,
+                              "AP%d cw %s/%s != %d at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], want_cw, time_step))
                     check(0.0 <= r <= 1.0, "AP%d reward %s out of [0,1]" % (i + 1, r))
                     # Test A: obs is this AP's own loss, recomputed from its own tx/rx counters
                     own_loss = (recs[i]["tx"] - recs[i]["rx"]) / recs[i]["tx"] if recs[i]["tx"] else 0.0
                     if args.obs == "hist":  # state recomputed from this AP's own row and own previous action only
                         w = S2[i, :args.obsWindow]
                         check(np.allclose(s2_i, [S2[i, 0], w.mean(), w.std(), acts[i]], atol=1e-5), "AP%d hist state mismatch at t=%d" % (i + 1, time_step))
-                    check(np.isclose(s2_i[0], own_loss, atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
-                          "AP%d obs %s / loss %s != own (tx-rx)/tx %s at t=%d" % (i + 1, s2_i[0], recs[i]["loss"], own_loss, time_step))
+                    if args.obsIdle:  # state is the AP's own sensed idle slots, scaled like cw.cc does
+                        check(np.isclose(s2_i[0], min(1.0, recs[i]["idle"] / 20.0), atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
+                              "AP%d obs %s != own idle/20 (idle %s) at t=%d" % (i + 1, s2_i[0], recs[i]["idle"], time_step))
+                    else:
+                        check(np.isclose(s2_i[0], own_loss, atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
+                              "AP%d obs %s / loss %s != own (tx-rx)/tx %s at t=%d" % (i + 1, s2_i[0], recs[i]["loss"], own_loss, time_step))
                     # Test D: reward = own goodput / (offered load * own STAs * step), clamped to [0,1]
-                    want_r = min(1.0, max(0.0, recs[i]["rx"] * PAYLOAD_BITS / 1e6 / (OFFERED_MBPS * counts[i] * args.stepTime)))
+                    want_r = min(1.0, max(0.0, recs[i]["rx"] * PAYLOAD_BITS / 1e6 / (LOADS[i] * counts[i] * args.stepTime)))
                     check(abs(r - want_r) < 1e-4, "AP%d reward %s != recomputed %s at t=%d" % (i + 1, r, want_r, time_step))
+                    if args.reward == "pf" and i == 0:  # Test D2: pf reward recomputed from every AP's own rx counter
+                        want_pf = pf_reward([min(1.0, max(0.0, q["rx"] * PAYLOAD_BITS / 1e6 / (LOADS[j] * counts[j] * args.stepTime))) for j, q in enumerate(recs)])
+                        check(abs(r_pf - want_pf) < 1e-4 and 0.0 <= r_pf <= 1.0, "pf reward %s != recomputed %s at t=%d" % (r_pf, want_pf, time_step))
                 reward_cols[i].append(r)
                 ep_reward[i] += r
                 pp = preprocess(S2[i].reshape(-1, 1, 1))[0][0]  # this AP's history only; logging only
                 trace.writerow([episode, step, i + 1, float(s_i[0]), float(acts[i]), float(real[i]), r, float(s2_i[0]),
                                 recs[i]["cw_set"], recs[i]["cw_ap"], recs[i]["loss"], recs[i]["rx"], recs[i]["tx"],
                                 float(pp[0]), float(pp[1]), agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")])
-                if args.mode == "independent" and time_step >= args.start_timesteps:
+                if args.mode == "independent" and learning and time_step >= args.start_timesteps:
                     agents[i].train(replays[i], args.batch_size)
-            if args.mode == "shared" and time_step >= args.start_timesteps:
+            if args.mode == "shared" and learning and time_step >= args.start_timesteps:
                 agents[0].train(replays[0], args.batch_size)  # one update per env step, same count as global
             if args.mode == "global":
                 # one agent: network-wide loss as state, network goodput (normalized by all STAs) as reward
@@ -278,16 +359,18 @@ try:
                 rx_g = sum(r["rx"] for r in recs)
                 s2_g = np.array([(tx_g - rx_g) / tx_g if tx_g else 0.0], dtype=np.float32)
                 r_g = global_reward(recs) * args.rewardScale
-                replays[0].add(S_g, acts[0], s2_g, r_g, done[0])
+                if learning:
+                    replays[0].add(S_g, acts[0], s2_g, r_g, done[0])
                 if args.check:
-                    k = (replays[0].ptr - 1) % replays[0].max_size
-                    check(np.allclose(replays[0].state[k], S_g) and np.allclose(replays[0].next_state[k], s2_g)
-                          and np.isclose(replays[0].reward[k, 0], r_g) and np.isclose(replays[0].action[k, 0], acts[0]),
-                          "global replay row mismatch at t=%d" % time_step)
+                    if learning:
+                        k = (replays[0].ptr - 1) % replays[0].max_size
+                        check(np.allclose(replays[0].state[k], S_g) and np.allclose(replays[0].next_state[k], s2_g)
+                              and np.isclose(replays[0].reward[k, 0], r_g) and np.isclose(replays[0].action[k, 0], acts[0]),
+                              "global replay row mismatch at t=%d" % time_step)
                     check(len({r["cw_set"] for r in recs}) == 1 and len({r["cw_ap"] for r in recs}) == 1,
                           "global mode: APs got different CWs at t=%d" % time_step)
                 S_g = s2_g
-                if time_step >= args.start_timesteps:
+                if learning and time_step >= args.start_timesteps:
                     agents[0].train(replays[0], args.batch_size)
             if args.mode == "central":
                 # joint row: (s, a, r_g, r_local, s'); one critic update then N actor updates
@@ -330,6 +413,11 @@ try:
                 break
         print("episode %d cumulative reward per AP: %s" % (episode, np.round(ep_reward, 3).tolist()))
         env.close()
+    if args.saveActor:
+        os.makedirs(args.saveActor, exist_ok=True)
+        for i, a in enumerate(agents):
+            a.save(os.path.join(args.saveActor, "agent%d" % i))
+        print("saved %d agent(s) to %s" % (len(agents), args.saveActor))
 finally:
     trace_f.close()
     wandb.finish()
@@ -354,7 +442,7 @@ if args.check:
         print("central: critic_loss %.5f  Q_mean %.4f  actor_losses %s" % (
             scalar(central.critic_loss), scalar(central.q_mean), [round(scalar(x), 4) for x in central.actor_losses]))
     for i in range(n_agents):
-        check(replays[i].size == time_step * (n if args.mode == "shared" else 1), "replay %d size %d != steps %d" % (i, replays[i].size, time_step))
+        check(replays[i].size == (time_step * (n if args.mode == "shared" else 1) if learning else 0), "replay %d size %d != steps %d" % (i, replays[i].size, time_step))
         check(all(np.isfinite([scalar(agents[i].actor_loss), scalar(agents[i].critic_loss)])), "agent %d non-finite loss" % (i + 1))
     # v0.8.0: read the logged history back from the run's .wandb file
     from wandb.proto import wandb_internal_pb2 as pb

@@ -7,12 +7,137 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **planning**: Add final v4 plan (revision 4)
+- **planning**: Add v4 plan to beat all baselines
+- **changelog**: Regenerate with git-cliff
+- **planning**: Revise v4 plan and take decisions
+- **changelog**: Regenerate with git-cliff
+- **planning**: Apply second review to v4 plan
+- **changelog**: Regenerate with git-cliff
+- **changelog**: Regenerate with git-cliff
+- **planning**: Apply final check to v4 plan
+- **changelog**: Regenerate with git-cliff
+- **handoff**: Update session prompt and memory bank for v3.3.1
+- **changelog**: Regenerate with git-cliff
+- **changelog**: Regenerate with git-cliff
+- **claude**: Point roadmap status to the v4 plan
+- **changelog**: Regenerate with git-cliff
+- **plan**: Add revision 6 from mentor papers
+
+## [3.3.1] - 2026-11-01
+
+### Added
+
+- **sensing**: Add per-AP idle-slot sensing and IdleSense
+
+### Documentation
+
+- **report**: Add v3.4.0 hidden-chain results
+- **results**: Add TD3 and cwMinOnly policy seed 2
+- **v3.3.0**: Add sensing and IdleSense results
+- **report**: Add v3.3.0 sensing section
+- **changelog**: Regenerate with git-cliff
+- **v3.3.0**: Add run dirs for seed 2, sensing and calibration
+- **v3.3.0**: Flag IdleSense rule as a variant
+- **v3.3.1**: Add corrected IdleSense results
+- **changelog**: Regenerate with git-cliff
+- **v3.3.1**: Add IdleSense results on 20,40
+- **changelog**: Regenerate with git-cliff
+- **v3.3.1**: Add run dirs for corrected IdleSense arms
+- **claude**: Update roadmap status to v3.3.1
+- **changelog**: Regenerate with git-cliff
+
+### Fixed
+
+- **sensing**: Use the published Idle Sense AIMD rule
+
+## [3.4.1] - 2026-10-31
+
+### Documentation
+
+- **v3.4.0**: Mark milestone tagged
+- **v3.4.0**: Add paired static oracle at eval seeds
+- **changelog**: Regenerate with git-cliff
+- **v3.4.0**: Add oracle run dirs and handoff prompt
+- **changelog**: Regenerate with git-cliff
+- **v3.4.0**: Add trainSeed 1 policy-seed variance
+- **changelog**: Regenerate with git-cliff
+- **v3.4.0**: Add trainSeed 1 run dirs
+- **changelog**: Regenerate with git-cliff
+- **v3.4.0**: Add trainSeed 2 policy-seed results
+- **changelog**: Regenerate with git-cliff
+- **v3.4.0**: Add trainSeed 2 run dirs (G, H)
+- **changelog**: Regenerate with git-cliff
+- **v3.4.0**: Add TD3, cwMinOnly and apLoads results
+- **changelog**: Regenerate with git-cliff
+- **v3.4.0**: Add unsaturated uneven-load result
+- **changelog**: Regenerate with git-cliff
+- **v3.4.0**: Add TD3/cwMinOnly second policy seed
+- **changelog**: Regenerate with git-cliff
+- **v3.4.1**: Add run dirs for algo, seed 1 and load arms
+- **handoff**: Update session prompt and memory bank for v3.4.1
+- **changelog**: Regenerate with git-cliff
+
+## [3.4.0] - 2026-10-29
+
+### Added
+
+- **cw**: Opt-in hidden BSS pairs and per-AP loads
+- **trainer**: Scenario flags and proportional-fair reward
+- **bench**: Chain3 grid, PF/min-AP and Wilcoxon tables
+- **bench**: Runner --variant, custom static grid, ADR-0005
+
+### Documentation
+
+- **v3.4.0**: Add chain3 static gate result
+- **v3.4.0**: Add n=8 frozen-eval batch results
+- **handoff**: Rewrite session prompt for v3.4.0 follow-ups
+- **v3.4.0**: Add run dirs, logs, manifests and actors
+- **changelog**: Regenerate with git-cliff
+
+## [3.2.0] - 2026-10-28
+
+### Added
+
+- **cw**: Add --cwMinOnly for agent actions
+- **agents**: Add TD3 learner
+- **trainer**: Add fair-protocol flags
+- **runner**: Add v3.2.0 fair-protocol runner
+
+### Documentation
+
+- **ceiling**: Add paired 6x10 BEB/Global refs
+- **results**: Add 6x10 refs and 20,40 fair-protocol pilot runs
+- **v3.2.0**: Add fair-protocol report and handoff
+
+### Fixed
+
+- **runner**: Keep learner flags away from BEB jobs
+
+## [3.1.0] - 2026-10-28
+
+### Added
+
+- **sweep**: Add static CW mode and ceiling sweep pilot
+
+### Documentation
+
+- **research**: Add plan to beat OSCAR and BEB
+- **workflow**: Adopt dev branch and push rule
+- **ceiling**: Add v3.1.0 static CW sweep results
+- **handoff**: Commit v3.1.0 runs and next-session prompt
+
+## [main-at-v3.4.1] - 2026-10-27
+
 ### Changed
 
 - **scratch**: Drop two unused names
 - **changelog**: Add git-cliff config and generate
 - **changelog**: Regenerate
 - Remove unused pre-deploy checklist
+- **changelog**: Regenerate
 
 ### Documentation
 
@@ -23,6 +148,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Group docs/ into topic folders
 - Add v3.0.0 report section, fill refs, fix stale status
 - **memory**: Record restructure and cleanup state
+- **memory**: Mark restructure merged and pushed
 
 ## [3.0.0] - 2026-10-26
 
@@ -379,37 +505,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **design**: Define multi-ap v0.2.0
 - Add CLAUDE.md and close v0.3.0 handoff
 
-[unreleased]: https://github.com///compare/v3.0.0..HEAD
-[3.0.0]: https://github.com///compare/v2.7.2..v3.0.0
-[2.7.2]: https://github.com///compare/v2.7.1..v2.7.2
-[2.7.1]: https://github.com///compare/v2.7.0..v2.7.1
-[2.7.0]: https://github.com///compare/v2.6.1..v2.7.0
-[2.6.1]: https://github.com///compare/v2.6.0..v2.6.1
-[2.6.0]: https://github.com///compare/v2.5.2..v2.6.0
-[2.5.2]: https://github.com///compare/v2.5.1..v2.5.2
-[2.5.1]: https://github.com///compare/v2.5.0..v2.5.1
-[2.5.0]: https://github.com///compare/v2.4.0..v2.5.0
-[2.4.0]: https://github.com///compare/v2.3.0..v2.4.0
-[2.3.0]: https://github.com///compare/v2.2.0..v2.3.0
-[2.2.0]: https://github.com///compare/v2.1.0..v2.2.0
-[2.1.0]: https://github.com///compare/v2.0.0..v2.1.0
-[2.0.0]: https://github.com///compare/v1.9.0..v2.0.0
-[1.9.0]: https://github.com///compare/v1.8.0..v1.9.0
-[1.8.0]: https://github.com///compare/v1.7.0..v1.8.0
-[1.7.0]: https://github.com///compare/v1.6.0..v1.7.0
-[1.6.0]: https://github.com///compare/v1.5.0..v1.6.0
-[1.5.0]: https://github.com///compare/v1.4.0..v1.5.0
-[1.4.0]: https://github.com///compare/v1.3.0..v1.4.0
-[1.3.0]: https://github.com///compare/v1.2.0..v1.3.0
-[1.2.0]: https://github.com///compare/v1.1.0..v1.2.0
-[1.1.0]: https://github.com///compare/v1.0.0..v1.1.0
-[1.0.0]: https://github.com///compare/v0.9.0..v1.0.0
-[0.9.0]: https://github.com///compare/v0.8.0..v0.9.0
-[0.8.0]: https://github.com///compare/v0.7.0..v0.8.0
-[0.7.0]: https://github.com///compare/v0.6.0..v0.7.0
-[0.6.0]: https://github.com///compare/v0.5.0..v0.6.0
-[0.5.0]: https://github.com///compare/v0.4.0..v0.5.0
-[0.4.0]: https://github.com///compare/v0.3.0..v0.4.0
-[0.3.0]: https://github.com///tree/v0.3.0
+[unreleased]: https://github.com/sohanroy676/mac-world/compare/v3.3.1..HEAD
+[3.3.1]: https://github.com/sohanroy676/mac-world/compare/v3.4.1..v3.3.1
+[3.4.1]: https://github.com/sohanroy676/mac-world/compare/v3.4.0..v3.4.1
+[3.4.0]: https://github.com/sohanroy676/mac-world/compare/v3.2.0..v3.4.0
+[3.2.0]: https://github.com/sohanroy676/mac-world/compare/v3.1.0..v3.2.0
+[3.1.0]: https://github.com/sohanroy676/mac-world/compare/main-at-v3.4.1..v3.1.0
+[main-at-v3.4.1]: https://github.com/sohanroy676/mac-world/compare/v3.0.0..main-at-v3.4.1
+[3.0.0]: https://github.com/sohanroy676/mac-world/compare/v2.7.2..v3.0.0
+[2.7.2]: https://github.com/sohanroy676/mac-world/compare/v2.7.1..v2.7.2
+[2.7.1]: https://github.com/sohanroy676/mac-world/compare/v2.7.0..v2.7.1
+[2.7.0]: https://github.com/sohanroy676/mac-world/compare/v2.6.1..v2.7.0
+[2.6.1]: https://github.com/sohanroy676/mac-world/compare/v2.6.0..v2.6.1
+[2.6.0]: https://github.com/sohanroy676/mac-world/compare/v2.5.2..v2.6.0
+[2.5.2]: https://github.com/sohanroy676/mac-world/compare/v2.5.1..v2.5.2
+[2.5.1]: https://github.com/sohanroy676/mac-world/compare/v2.5.0..v2.5.1
+[2.5.0]: https://github.com/sohanroy676/mac-world/compare/v2.4.0..v2.5.0
+[2.4.0]: https://github.com/sohanroy676/mac-world/compare/v2.3.0..v2.4.0
+[2.3.0]: https://github.com/sohanroy676/mac-world/compare/v2.2.0..v2.3.0
+[2.2.0]: https://github.com/sohanroy676/mac-world/compare/v2.1.0..v2.2.0
+[2.1.0]: https://github.com/sohanroy676/mac-world/compare/v2.0.0..v2.1.0
+[2.0.0]: https://github.com/sohanroy676/mac-world/compare/v1.9.0..v2.0.0
+[1.9.0]: https://github.com/sohanroy676/mac-world/compare/v1.8.0..v1.9.0
+[1.8.0]: https://github.com/sohanroy676/mac-world/compare/v1.7.0..v1.8.0
+[1.7.0]: https://github.com/sohanroy676/mac-world/compare/v1.6.0..v1.7.0
+[1.6.0]: https://github.com/sohanroy676/mac-world/compare/v1.5.0..v1.6.0
+[1.5.0]: https://github.com/sohanroy676/mac-world/compare/v1.4.0..v1.5.0
+[1.4.0]: https://github.com/sohanroy676/mac-world/compare/v1.3.0..v1.4.0
+[1.3.0]: https://github.com/sohanroy676/mac-world/compare/v1.2.0..v1.3.0
+[1.2.0]: https://github.com/sohanroy676/mac-world/compare/v1.1.0..v1.2.0
+[1.1.0]: https://github.com/sohanroy676/mac-world/compare/v1.0.0..v1.1.0
+[1.0.0]: https://github.com/sohanroy676/mac-world/compare/v0.9.0..v1.0.0
+[0.9.0]: https://github.com/sohanroy676/mac-world/compare/v0.8.0..v0.9.0
+[0.8.0]: https://github.com/sohanroy676/mac-world/compare/v0.7.0..v0.8.0
+[0.7.0]: https://github.com/sohanroy676/mac-world/compare/v0.6.0..v0.7.0
+[0.6.0]: https://github.com/sohanroy676/mac-world/compare/v0.5.0..v0.6.0
+[0.5.0]: https://github.com/sohanroy676/mac-world/compare/v0.4.0..v0.5.0
+[0.4.0]: https://github.com/sohanroy676/mac-world/compare/v0.3.0..v0.4.0
+[0.3.0]: https://github.com/sohanroy676/mac-world/tree/v0.3.0
 
 <!-- generated by git-cliff -->

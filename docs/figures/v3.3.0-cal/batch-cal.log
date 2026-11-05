@@ -1,0 +1,21 @@
+START target 3 at 13:15:35
+idlesense-t3 seed=0 ...
+   -> PASS (rc=0, 651 s) results/multi-ap-20261031-131538
+batch complete
+START target 5.68 at 13:26:27
+idlesense-t5.68 seed=0 ...
+   -> PASS (rc=0, 578 s) results/multi-ap-20261031-132631
+batch complete
+START target 8 at 13:36:06
+idlesense-t8 seed=0 ...
+   -> PASS (rc=0, 506 s) results/multi-ap-20261031-133608
+batch complete
+START target 12 at 13:44:33
+idlesense-t12 seed=0 ...
+   -> PASS (rc=0, 478 s) results/multi-ap-20261031-134434
+batch complete
+START target 20 at 13:52:31
+idlesense-t20 seed=0 ...
+   -> PASS (rc=0, 448 s) results/multi-ap-20261031-135232
+batch complete
+DONE
