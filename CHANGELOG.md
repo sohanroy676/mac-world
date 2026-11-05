@@ -16,11 +16,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **m2**: Tuning analysis, KW and UCB eval jobs
 - **m2**: Ccod trainer mode (Global form)
 
+### Data
+
+- **m1**: 30 s GC evaluation runs (a5)
+- **m2**: KW, UCB, RTS and CCOD runs
+- **m1,m2**: S7-S4b, S8p3 and tuning runs
+
 ### Documentation
 
 - **m1**: GC tables at 30 s, seeds 100-109
 - **m2**: GC tables with KW, UCB and RTS at 30 s
 - **m2**: Baselines result, roadmap and memory bank
+- **changelog**: Regenerate with git-cliff
+- **m2**: Batch logs, manifests and actors
+- **handoff**: V3.7.0 handoff, prompt for M3
 
 ## [3.6.0] - 2026-11-02
 
