@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**UPDATE 2026-11-06 (revision 8, critical check):** 12 fixes: S4/S5a low-CW grid {16..128} for the alpha=0 oracle (old grid all below BEB), power rule (n=20 or inconclusive), Claim 2 on fresh seeds 103-109 with Holm over baselines, Wilcoxon descriptive only, round-robin pool with 24 episodes, Gumbel test on S4+S5a with seed-paired rule, 3 Global seeds on S2/S4, one-load rule, S11a/b topologies, compute recount. Core about 265 h (88 h on 3 lanes), all about 334 h.
+
 **UPDATE 2026-11-06 (revision 7):** second batch of 15 mentor papers. Adopted: Gumbel exploration ablation in M3 step 1 (`--noiseDist`, centred and variance-matched; adopt only if GC +0.02 on S4 and S2), drlCW from its paper definitions, contextual UCB, S11 legacy-BEB coexistence, grid-edge check. Core path now about 223 h. See `docs/reference/mentor-papers-review-2-2026-11-06.md`.
 
 **UPDATE 2026-11-05 (revision 6):** reviewed three mentor papers (IntelliNull, DDPG multi-AP VTC2023, transformer ICL IEEE TMC). Extended-tier additions only: S8 ramp variant, noise test, S10 with STA A-MPDU on (opt-in flag), optional RAFA-adapt, deployability table. Core M0-M4 unchanged. See `docs/reference/mentor-papers-review-2026-11-05.md`.
