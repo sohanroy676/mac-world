@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **plan**: Add revision 7 Gumbel noise ablation
 - **changelog**: Regenerate with git-cliff
 - **plan**: Add revision 8 critical check fixes
+- **changelog**: Regenerate with git-cliff
+- **plan**: Add revision 9 second critical pass
 
 ## [3.3.1] - 2026-11-01
 
