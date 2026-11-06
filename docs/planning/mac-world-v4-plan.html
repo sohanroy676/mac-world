@@ -99,9 +99,9 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
 <div class="wrap">
 
 <header>
-  <div class="eyebrow">mac-world · final research plan · revision 6 · 5 Nov 2026</div>
+  <div class="eyebrow">mac-world · final research plan · revision 7 · 6 Nov 2026</div>
   <h1>mac-world v4 plan: one controller that is near-optimal in every scenario</h1>
-  <p class="lede">The final plan for the rest of the project. Built on the v3.3.0 to v3.4.2 results, with every assumption checked against the code on dev 33708ff. Revision 6 adds the findings from three papers given by the mentor (new section below, extended tier only; the core path is unchanged). Revision 5 was the last check before implementation: it fixes 14 problems found in revision 4 (listed below) and replaces revisions 1 to 4.</p>
+  <p class="lede">The final plan for the rest of the project. Built on the v3.3.0 to v3.4.2 results, with every assumption checked against the code on dev 33708ff. Revisions 6 and 7 add the findings from 18 papers given by the mentor (two sections below). Revision 7 adds a Gumbel-noise exploration ablation to M3, so the core path grows by about 13 h. Revision 5 was the last check before implementation: it fixes 14 problems found in revision 4 (listed below) and replaces revisions 1 to 4.</p>
   <div class="meta"><span>Based on: dev 33708ff (results v3.1.0 to v3.4.2, corrected IdleSense v3.3.1), the 27 Oct research note, the 29 Oct Contention Window Atlas, the OSCAR metrics note</span><span>No new runs were made for this plan</span></div>
   <div class="labels"><span class="tag fact">fact</span> read from code or committed results <span class="tag inf">inference</span> reasoning, untested <span class="tag lit">lit</span> reported by a paper <span class="tag dec">decision</span> choice made in this plan <span class="tag unk">unknown</span> needs a run</div>
 </header>
@@ -115,6 +115,22 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
     <li><b>The method is simplified to the parts that survived testing</b> (working name RAFA): one shared DDPG actor fed by the AP's own idle-slot, retry and load readings; a fairness reward weighted by station count, with the fairness level as an input; a fair floor against BEB; training over a fixed pool of randomised scenarios; and 3-seed ensembles at deployment. The analytic-prior residual, TD3 and the backoff-mode action are dropped, because v3.3 and v3.4 showed no stable benefit from them <span class="tag fact">fact</span>.</li>
     <li><b>The largest risk is variance between training seeds, not compute.</b> One-seed rankings flipped three times in v3.4.0 <span class="tag fact">fact</span>. So every comparison uses 3 training seeds, and RAFA is trained as 6 seeds forming two independent 3-seed ensembles; every claim must hold for both.</li>
   </ol>
+</section>
+
+<section>
+  <h2>Revision 7: the mentor's second batch and the Gumbel-noise test</h2>
+  <p>Full review: <code>docs/reference/mentor-papers-review-2-2026-11-06.md</code> (15 papers).</p>
+  <div class="table"><table>
+    <thead><tr><th>Change</th><th>Why</th><th>Where</th></tr></thead>
+    <tbody>
+      <tr><td><b>Gumbel exploration ablation</b>: trainer flag <code>--noiseDist {gaussian, gumbel, gumbel-raw}</code>. <code>gumbel</code> is centred and has the same standard deviation as the Gaussian; <code>gumbel-raw</code> is the paper's uncentred form</td><td class="w">Tu and Ma (CMC 2025) replace ε-greedy with Gumbel-max sampling in a discrete DDQN and report +2 % <span class="tag lit">lit</span>, with no seeds or CIs. Our DDPG is continuous with Gaussian N(0, 0.1) noise <span class="tag fact">fact</span>, so only the noise shape transfers. Gumbel's right tail explores larger CWs more often, which may help where the oracle CW is large <span class="tag inf">inference</span>. Centring separates the tail shape from an upward bias.</td><td class="w">M3 step 1, S4 and S2, 3 seeds, about 10 to 12 h. Adopt only if mean GC is ≥ 0.02 higher on both and the seed spread is no wider; otherwise keep Gaussian and report the null result <span class="tag dec">decision</span></td></tr>
+      <tr><td><b>drlCW from the paper's own definitions</b></td><td class="w">The PDF gives its observation [CW, PER, throughput, delay, delay CDF] and its reward relative to CSMA <span class="tag fact">fact</span></td><td class="w">M2, no extra time</td></tr>
+      <tr><td><b>Contextual UCB variant</b></td><td class="w">In the Wi-Fi MAB study, context consistently helps. Its CW arms 2^(i+4) − 1, i = 0..6, match our range <span class="tag lit">lit</span></td><td class="w">M2, about 3 h</td></tr>
+      <tr><td><b>S11: learners next to one legacy BEB AP</b>, scored on the legacy AP</td><td class="w">The same study finds greedy learners degrade legacy BSSs and chase each other's policies <span class="tag lit">lit</span>. This tests our fair floor against a non-learning neighbour. It needs a per-AP BEB flag in cw.cc</td><td class="w">M5 extended, about 6 h</td></tr>
+      <tr><td><b>Grid-edge check</b></td><td class="w">The IEICE p-persistent letter shows that dense cells can hit the CW cap <span class="tag lit">lit</span>. If an oracle CW is at 1024, the cap limits GC, not the controller</td><td class="w">M1, no extra time</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Not adopted: Gumbel-max over discrete CW levels (it would make RAFA a DQN), p-persistent access, MLO, OFDMA random access, mobility (all MAC/PHY changes or features ns-3.29 lacks, or out of scope). New related work: M2I-CWO and CIPD-BiDQN (ICT Express), the Wi-Fi MAB study, the Nunez MAPC paper (now IEEE TMLCN 2026), two VANET CW papers, and the 802.11ah energy model. Threat to validity: all our traffic is UDP; TCP may change rankings.</p>
 </section>
 
 <section>
@@ -345,9 +361,9 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
       </ul>
     </div>
     <div class="phase core">
-      <div class="head"><h3>M3 · RAFA in 3 steps, 3 seeds each, then 6 final seeds</h3><span class="ver">v4.0.0 · ~2 weeks · ~40 h compute</span></div>
+      <div class="head"><h3>M3 · RAFA in 3 steps, 3 seeds each, then 6 final seeds</h3><span class="ver">v4.0.0 · ~2 weeks · ~53 h compute</span></div>
       <ol>
-        <li>Shared actor + new observation + STA-weighted PF reward on S4 and S5, fixed α = 1. Question: do shared CWs now separate per AP?</li>
+        <li>Shared actor + new observation + STA-weighted PF reward on S4 and S5, fixed α = 1. Question: do shared CWs now separate per AP? Also the Gumbel exploration ablation (revision 7) on S4 and S2.</li>
         <li>+ α input with relabelling + fair floor + more episodes (6 vs 12, pick by selection seeds).</li>
         <li>+ scenario randomisation over the fixed pool. Then train the 6 final seeds and form the two ensembles.</li>
       </ol>
@@ -393,7 +409,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
       <tr><td>M3 RAFA (3 steps × 3 seeds, then 6 final seeds × ~12 episodes)</td><td class="num">~250</td><td class="num">~40</td></tr>
       <tr><td>M4 core suite (Stage 1 ~335, Stage 2 ~275, RAFA α = 0 and 2 ~120, minus reuse)</td><td class="num">~650</td><td class="num">~105</td></tr>
       <tr><td>M5 extended</td><td class="num">~220</td><td class="num">~35</td></tr>
-      <tr class="hl"><td><b>Total</b> (minimum complete result: M0 to M4)</td><td class="num">~1560 (~1340)</td><td class="num">~245 (~210)</td></tr>
+      <tr class="hl"><td><b>Total</b> (minimum complete result: M0 to M4)</td><td class="num">~1560 (~1340)</td><td class="num">~258 (~223)</td></tr>
     </tbody>
   </table></div>
   <p class="note">Based on committed job times of 350 to 600 s at 10,10,10 and 800 to 880 s at 20,40, about 0.16 h on average <span class="tag fact">fact</span>; totals are estimates <span class="tag inf">inference</span>. With 3 working lanes the minimum complete result is about 70 h wall-clock. The lower-load test, if it holds, cuts more, because ns-3 dominates job time <span class="tag fact">fact</span>. If time is short, drop in this order: M5 except S1; the S2 runs of PI, UCB, CCOD and BLADE-style; RAFA at α = 0 and 2 on S2; the S7 configuration at 20,40. Never dropped: S4, S5a, S8, both RAFA ensembles, n=10 in Stage 2. Long batches still need your go-ahead each session, per the repo rules.</p>
@@ -408,7 +424,7 @@ footer { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; }
       <tr><td>Scenario randomisation costs accuracy</td><td class="w">Kill rule in M3; the claim narrows to per-scenario robustness.</td></tr>
       <tr><td>Ensemble does not cut variance</td><td class="w">Report individual seeds; claims already require each seed to agree.</td></tr>
       <tr><td>A new baseline (Gawłowicz) matches RAFA in the chain</td><td class="w">Claim 2 still holds if RAFA beats it elsewhere (one domain, dynamics); state the tie.</td></tr>
-      <tr><td>Lanes or lower load fail</td><td class="w">Trim order above; the minimum complete result is about 210 serial hours.</td></tr>
+      <tr><td>Lanes or lower load fail</td><td class="w">Trim order above; the minimum complete result is about 223 serial hours.</td></tr>
       <tr><td>The two RAFA ensembles disagree</td><td class="w">Claims need both, so a disagreement is reported as an unstable result rather than hidden; more seeds only if time allows.</td></tr>
       <tr><td>The fair floor is judged arbitrary</td><td class="w">Unconstrained results are shown beside every constrained one, so a reader can apply their own rule.</td></tr>
       <tr><td>Papers cannot be fetched (Bianchi, Patras, BLADE)</td><td class="w">Implement only from a source that was read; otherwise drop the baseline and say why. No code from memory.</td></tr>

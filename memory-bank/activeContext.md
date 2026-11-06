@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**UPDATE 2026-11-06 (revision 7):** second batch of 15 mentor papers. Adopted: Gumbel exploration ablation in M3 step 1 (`--noiseDist`, centred and variance-matched; adopt only if GC +0.02 on S4 and S2), drlCW from its paper definitions, contextual UCB, S11 legacy-BEB coexistence, grid-edge check. Core path now about 223 h. See `docs/reference/mentor-papers-review-2-2026-11-06.md`.
+
 **UPDATE 2026-11-05 (revision 6):** reviewed three mentor papers (IntelliNull, DDPG multi-AP VTC2023, transformer ICL IEEE TMC). Extended-tier additions only: S8 ramp variant, noise test, S10 with STA A-MPDU on (opt-in flag), optional RAFA-adapt, deployability table. Core M0-M4 unchanged. See `docs/reference/mentor-papers-review-2026-11-05.md`.
 
 **UPDATE 2026-11-01 (revision 5 = final check):** fair floor applies to every method (infeasible results flagged), degenerate-cell and delay scoring rules, eps in u_alpha, 6 RAFA seeds as two ensembles, fixed training pool with BEB references, intersection-union Claim 1 + Holm-over-all Claim 2, compute ~210 h for M0-M4. Details: ROADMAP "v3.5.0 to v4.5.0".
