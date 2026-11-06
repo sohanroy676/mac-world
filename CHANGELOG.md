@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **claude**: Point roadmap status to the v4 plan
 - **changelog**: Regenerate with git-cliff
 - **plan**: Add revision 6 from mentor papers
+- **changelog**: Regenerate with git-cliff
+- **plan**: Add revision 7 Gumbel noise ablation
 
 ## [3.3.1] - 2026-11-01
 
