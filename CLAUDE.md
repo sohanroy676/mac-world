@@ -35,7 +35,7 @@ PyTorch 1.13.1+cu117 (GTX 1650 Ti 4 GB) · Gym 0.26.2 · NumPy 1.21.6 · protobu
 
 ## Roadmap (ROADMAP.md, details in docs/planning/detailed_roadmap.md)
 v0.1–v3.4 ✅ (core, benchmarks, scaling, central critic, robustness, report, audit, beat-Global attempt, ceiling, fair protocol, per-AP hidden-chain scenario, sensing + IdleSense; latest tag `v3.3.1`) ·
-**Next: v3.5.0 to v4.5.0 per the final plan `docs/planning/mac-world-v4-plan.html` (revision 8, 2026-11-06): M0 foundations first**; open: Bianchi baseline (only from a readable source), tags for later work.
+**Next: v3.5.0 to v4.5.0 per the final plan `docs/planning/mac-world-v4-plan.html` (revision 9, 2026-11-06): M0 foundations first**; open: Bianchi baseline (only from a readable source), tags for later work.
 Plan: `docs/research-beat-oscar.md` §6.
 - Priority: Tier 1 (v0.1–v1.0) → Tier 2 (v1.1–v1.6) → central critic → rest.
 - When v1.0 works: tag it, run baselines, collect 2-AP results, THEN scale, THEN central critic.

@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**UPDATE 2026-11-06 (revision 9, second pass):** fixed floor penalty weight lambda in {1,3,10} picked in M3 step 2 (not an input); setApCw writes STAs directly every 10 ms (cw.cc:228), so a beacon-rate exponent-only check moves to M5; feasibility on the mean over eval seeds; n_i = active stations; S8 GC uses per-phase BEB and static oracle; online OSCAR descriptive only. Deadline still unknown.
+
 **UPDATE 2026-11-06 (revision 8, critical check):** 12 fixes: S4/S5a low-CW grid {16..128} for the alpha=0 oracle (old grid all below BEB), power rule (n=20 or inconclusive), Claim 2 on fresh seeds 103-109 with Holm over baselines, Wilcoxon descriptive only, round-robin pool with 24 episodes, Gumbel test on S4+S5a with seed-paired rule, 3 Global seeds on S2/S4, one-load rule, S11a/b topologies, compute recount. Core about 265 h (88 h on 3 lanes), all about 334 h.
 
 **UPDATE 2026-11-06 (revision 7):** second batch of 15 mentor papers. Adopted: Gumbel exploration ablation in M3 step 1 (`--noiseDist`, centred and variance-matched; adopt only if GC +0.02 on S4 and S2), drlCW from its paper definitions, contextual UCB, S11 legacy-BEB coexistence, grid-edge check. Core path now about 223 h. See `docs/reference/mentor-papers-review-2-2026-11-06.md`.
