@@ -7,6 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **m1**: S7-S4b, S8p3 edge grid, a5 jobs
+- **m2**: KW and UCB per-AP controllers
+- **m2**: BEB+RTS/CTS job list (a6)
+- **m2**: Kw and ucb trainer modes, tuning jobs
+- **m2**: Tuning analysis, KW and UCB eval jobs
+- **m2**: Ccod trainer mode (Global form)
+
+### Data
+
+- **m1**: 30 s GC evaluation runs (a5)
+- **m2**: KW, UCB, RTS and CCOD runs
+- **m1,m2**: S7-S4b, S8p3 and tuning runs
+
+### Documentation
+
+- **m1**: GC tables at 30 s, seeds 100-109
+- **m2**: GC tables with KW, UCB and RTS at 30 s
+- **m2**: Baselines result, roadmap and memory bank
+- **changelog**: Regenerate with git-cliff
+- **m2**: Batch logs, manifests and actors
+- **handoff**: V3.7.0 handoff, prompt for M3
+
+## [3.6.0] - 2026-11-02
+
+### Added
+
+- **trace**: Idle column and gym-safe DELAY with extraTraces
+- **m1**: Job generator and selection-seed analysis
+- **m1**: GC-table job generator (a3)
+
+### Documentation
+
+- **plan**: Revision 6, 5 % fair-floor slack
+- **m1**: Grids, gates, partial GC table
+- **changelog**: Regenerate with git-cliff
+- **m1**: Complete GC tables for S2, S4, S5a
+- **changelog**: Regenerate with git-cliff
+- **handoff**: Commit v3.6.0 runs, rewrite prompt
+- **changelog**: Regenerate with git-cliff
+
+## [3.5.0] - 2026-11-01
+
+### Added
+
+- **cw**: Add useRts, rewardNorm, extraTraces flags
+- **sim**: Add staSchedule, scenarioPool, delay stats
+- **analysis**: Add GC tables, ADR-0006/0007, pool
+
 ### Documentation
 
 - **planning**: Add final v4 plan (revision 4)
@@ -24,13 +74,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **changelog**: Regenerate with git-cliff
 - **claude**: Point roadmap status to the v4 plan
 - **changelog**: Regenerate with git-cliff
-- **plan**: Add revision 6 from mentor papers
+- **m0**: Record v3.5.0 results, add tagPrefix
+- **m0**: Add pool BEB reference table
 - **changelog**: Regenerate with git-cliff
-- **plan**: Add revision 7 Gumbel noise ablation
+- **handoff**: Commit v3.5.0 runs, rewrite prompt
 - **changelog**: Regenerate with git-cliff
-- **plan**: Add revision 8 critical check fixes
-- **changelog**: Regenerate with git-cliff
-- **plan**: Add revision 9 second critical pass
+
+### Fixed
+
+- **lanes**: Unseeded free ports, unique run dirs
+- **trainer**: Per-run leftover check, floor slack
 
 ## [3.3.1] - 2026-11-01
 
@@ -511,7 +564,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **design**: Define multi-ap v0.2.0
 - Add CLAUDE.md and close v0.3.0 handoff
 
-[unreleased]: https://github.com/sohanroy676/mac-world/compare/v3.3.1..HEAD
+[unreleased]: https://github.com/sohanroy676/mac-world/compare/v3.6.0..HEAD
+[3.6.0]: https://github.com/sohanroy676/mac-world/compare/v3.5.0..v3.6.0
+[3.5.0]: https://github.com/sohanroy676/mac-world/compare/v3.3.1..v3.5.0
 [3.3.1]: https://github.com/sohanroy676/mac-world/compare/v3.4.1..v3.3.1
 [3.4.1]: https://github.com/sohanroy676/mac-world/compare/v3.4.0..v3.4.1
 [3.4.0]: https://github.com/sohanroy676/mac-world/compare/v3.2.0..v3.4.0

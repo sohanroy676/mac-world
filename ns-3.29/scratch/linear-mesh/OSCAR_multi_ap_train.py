@@ -50,7 +50,7 @@ parser.add_argument("--tag", default="", help="variant label stored in config.js
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense"], default="independent")
+parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense", "kw", "ucb", "ccod"], default="independent")
 parser.add_argument("--apCws", default="", help="static mode only: fixed CW per AP, e.g. 64,512 (no agent; cw.cc applies it from t=0)")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 parser.add_argument("--algo", choices=["ddpg", "td3"], default="ddpg", help="learner for independent/global/shared (td3: twin critics, delayed actor, target smoothing)")
@@ -63,7 +63,17 @@ parser.add_argument("--idleTarget", type=float, default=0.0, help="idlesense / -
 parser.add_argument("--idleEps", type=float, default=0.0, help="idlesense / --residual: eps in CW = 2 CW / (2 + eps CW) (0 = cw.cc default 0.001)")
 parser.add_argument("--idleUp", type=float, default=0.0, help="idlesense / --residual: multiplicative CW increase 1/alpha (0 = cw.cc default 1.2)")
 parser.add_argument("--residual", action="store_true", help="independent/shared: action = Delta log2 CW in [-2, 2] around the per-AP IdleSense CW (cw.cc --residual)")
+parser.add_argument("--staSchedule", default="", help="cw.cc --staSchedule: per-STA on/off windows ap:first-last:start:stop[/...]")
+parser.add_argument("--scenarioPool", default="", help="JSON list of scenario dicts (apStaCounts, optional apLoads/apHidden/hiddenLoss/staSchedule/rewardNorm); episode e draws one at random (seeded by --seed). Mode shared only, no --check")
+parser.add_argument("--useRts", action="store_true", help="cw.cc --useRts: RTS/CTS for every frame")
+parser.add_argument("--rewardNorm", type=float, default=0.0, help="cw.cc --rewardNorm: fixed per-STA reward divisor in Mbps (0 = per-AP offered load)")
+parser.add_argument("--extraTraces", action="store_true", help="cw.cc --extraTraces: add retry, active, txfail, idle columns (idle = AP-sensed mean backoff idle slots per step) to trace.csv")
 parser.add_argument("--obsIdle", action="store_true", help="independent/shared: state = the AP's own mean idle slots / 20 (clipped to 1) instead of its loss ratio (cw.cc --obsIdle)")
+parser.add_argument("--ctrlTau", type=float, default=0.2, help="kw/ucb: probe / pull window in seconds (paper: 0.2)")
+parser.add_argument("--kwDelta", type=float, default=0.2, help="kw: probe size in y = log(lam/(1-lam)) (paper: 0.2)")
+parser.add_argument("--kwEta", type=float, default=0.1, help="kw: step size (paper: 0.1)")
+parser.add_argument("--ucbC", type=float, default=0.3, help="ucb: exploration constant")
+parser.add_argument("--ccodHist", type=int, default=300, help="ccod: loss-history length fed to the CCOD agent (agents/ddpg, RLinWiFi; CCOD_train.py: 300)")
 args = parser.parse_args()
 
 # W&B mode must be decided before wandb is imported.
@@ -81,6 +91,7 @@ from agents.our_ddpg.central import CentralDDPG  # noqa: E402
 from agents.our_ddpg.utils import JointReplayBuffer, ReplayBuffer  # noqa: E402
 from config import wandb_entity  # noqa: E402
 from exceptions import AlreadyRunningException  # noqa: E402
+from ap_controllers import KW, UCB, parse_hidden  # noqa: E402
 from multi_ap import PAYLOAD_BITS, jain, parse_ap_info, reshape_obs, step_metrics  # noqa: E402
 from wrappers import EnvWrapper  # noqa: E402
 
@@ -95,6 +106,8 @@ OFFERED_MBPS = args.offeredLoad  # per-STA offered load, cw.cc offeredLoad
 LOADS = [float(x) for x in args.apLoads.split(",")] if args.apLoads else [OFFERED_MBPS] * len(args.apStaCounts.split(","))  # per-AP, per-STA load
 assert len(LOADS) == n and min(LOADS) > 0, "--apLoads: one positive load per AP"
 OFFERED_TOTAL = sum(c * l for c, l in zip(counts, LOADS))  # network offered load in Mbps (all STAs)
+NORM_LOADS = [args.rewardNorm] * n if args.rewardNorm > 0 else LOADS  # per-STA reward divisor, mirrors cw.cc --rewardNorm
+NORM_TOTAL = sum(c * l for c, l in zip(counts, NORM_LOADS))
 
 torch.manual_seed(args.seed)
 np.random.seed(args.seed)
@@ -108,6 +121,16 @@ if args.hiddenLoss > 0:
     sim_args["hiddenLoss"] = args.hiddenLoss
 if args.apLoads:
     sim_args["apLoads"] = args.apLoads
+if args.staSchedule:
+    sim_args["staSchedule"] = args.staSchedule
+pool = json.load(open(args.scenarioPool)) if args.scenarioPool else []
+assert not pool or (args.mode == "shared" and not args.check), "--scenarioPool: mode shared only, and not with --check"
+if args.useRts:
+    sim_args["useRts"] = "true"
+if args.rewardNorm > 0:
+    sim_args["rewardNorm"] = "%g" % args.rewardNorm
+if args.extraTraces:
+    sim_args["extraTraces"] = "true"
 if args.cwReadbackEvery > 0:
     sim_args["cwReadbackEvery"] = args.cwReadbackEvery
 if args.trafficStart > 0:
@@ -131,7 +154,7 @@ if args.residual:
     sim_args["residual"] = "true"
 if args.obsIdle:
     sim_args["obsIdle"] = "true"
-n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
+n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0, "kw": 0, "ucb": 0, "ccod": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
 LOCAL_MODES = ("independent", "shared")
 assert args.obs == "loss" or args.mode in LOCAL_MODES, "--obs hist only for independent/shared"
 assert args.alpha == 1.0 or args.mode in LOCAL_MODES, "--alpha only for independent/shared"
@@ -140,7 +163,7 @@ assert 0.0 <= args.alpha <= 1.0 and 1 <= args.obsWindow <= args.historyLength
 local_dim = 4 if args.obs == "hist" else 1
 AGENT_MODES = ("independent", "global", "shared")
 assert args.algo == "ddpg" or args.mode in AGENT_MODES, "--algo td3 only for independent/global/shared"
-assert not (args.saveActor or args.loadActor or args.eval) or args.mode in AGENT_MODES, "--saveActor/--loadActor/--eval only for independent/global/shared"
+assert not (args.saveActor or args.loadActor or args.eval) or args.mode in AGENT_MODES + ("ccod",), "--saveActor/--loadActor/--eval only for independent/global/shared"
 assert args.eval == bool(args.loadActor), "--eval needs --loadActor (and --loadActor needs --eval)"
 assert not (args.eval and args.saveActor), "--eval does not train, so there is nothing to --saveActor"
 assert not args.cwMinOnly or args.mode in AGENT_MODES + ("central",), "--cwMinOnly only for agent modes"
@@ -165,13 +188,15 @@ except (OSError, subprocess.CalledProcessError):
     git_rev = "unknown"
 
 out_dir = "results/multi-ap-%s" % time.strftime("%Y%m%d-%H%M%S")
+if os.path.exists(out_dir):  # parallel lanes can start in the same second
+    out_dir += "-p%d" % os.getpid()
 os.makedirs(out_dir)
 with open(os.path.join(out_dir, "config.json"), "w") as f:
     json.dump(dict(vars(args), ns3_seed=args.seed + 1, ns3_seeds=ns3_seeds, counts=counts, git_rev=git_rev), f)
 trace_f = open(os.path.join(out_dir, "trace.csv"), "w", newline="")
 trace = csv.writer(trace_f)
 trace.writerow(["episode", "step", "ap", "state", "action", "real_action", "reward", "next_state", "cw_set",
-                "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"])
+                "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"] + (["retry", "active", "txfail", "idle"] if args.extraTraces else []))
 
 run = wandb.init(name="%s %s s%d" % (args.apStaCounts, args.mode, args.seed), entity=os.environ.get("WANDB_ENTITY", wandb_entity),
                  project=args.wandb_project, tags=["multi-ap", "mode-" + args.mode, git_rev], reinit=True,
@@ -183,6 +208,16 @@ if args.loadActor:
     for i, a in enumerate(agents):
         a.load(os.path.join(args.loadActor, "agent%d" % i))
 replays = [ReplayBuffer(local_dim, action_dim) for _ in range(n_agents)]
+ccod_agent = None
+if args.mode == "ccod":  # CCOD as in CCOD_train.py (RLinWiFi agent), one CW for all APs (Global form); calls follow agents/ddpg/teacher.py train()
+    from agents.ddpg.agent import Agent as CcodAgent, Config as CcodConfig  # noqa: E402
+    from agents.ddpg.preprocessor import Preprocessor as CcodPre  # noqa: E402
+    ccod_pre = CcodPre(False).preprocess
+    ccod_agent = CcodAgent(args.ccodHist, action_size=1, config=CcodConfig(buffer_size=4 * steps_per_ep, batch_size=32, gamma=0.7, tau=1e-3,
+                           lr_actor=4e-4, lr_critic=4e-3, update_every=1), actor_layers=[8, 128, 16], critic_layers=[8, 128, 16])
+    if args.loadActor:
+        ccod_agent.actor_local.load_state_dict(torch.load(os.path.join(args.loadActor, "ccod_actor.pt"), map_location="cpu"))
+        ccod_agent.critic_local.load_state_dict(torch.load(os.path.join(args.loadActor, "ccod_critic.pt"), map_location="cpu"))
 central = CentralDDPG(n, max_action, args.discount, args.tau) if args.mode == "central" else None
 joint = JointReplayBuffer(n) if args.mode == "central" else None
 preprocess = Preprocessor(False).preprocess
@@ -194,7 +229,7 @@ def scalar(x):
 
 def agent_loss(i, name):
     """Loss of the agent that acts for AP i (independent: own; global: the shared one; beb: none -> 0)."""
-    if args.mode in ("beb", "static", "idlesense"):
+    if args.mode in ("beb", "static", "idlesense", "kw", "ucb", "ccod"):
         return 0.0
     if args.mode == "central":
         return scalar(central.actor_losses[i] if name == "actor_loss" else central.critic_loss)
@@ -204,7 +239,7 @@ def agent_loss(i, name):
 def global_reward(recs):
     """Network goodput normalized by offered load of all STAs (global and central modes)."""
     rx_g = sum(r["rx"] for r in recs)
-    return min(1.0, max(0.0, rx_g * PAYLOAD_BITS / 1e6 / (OFFERED_TOTAL * args.stepTime)))
+    return min(1.0, max(0.0, rx_g * PAYLOAD_BITS / 1e6 / (NORM_TOTAL * args.stepTime)))
 
 
 PF_EPS = 1e-3
@@ -254,21 +289,55 @@ if args.mode == "central" and args.check:
             check(not (ids[i] & ids[j]), "central actors %d,%d share parameters" % (i, j))
         check(not (ids[i] & {p.data_ptr() for p in central.critic.parameters()}), "actor %d shares critic parameters" % i)
 
-env = EnvWrapper(1, **sim_args)
+picks = []
+if pool:
+    _rng = np.random.RandomState(args.seed + 7)
+    picks = [int(_rng.randint(len(pool))) for _ in range(args.episodes)]
+
+
+def apply_cfg(cfg, episode):
+    """Switch the per-AP globals to scenario cfg for this episode and return the cw.cc args for it."""
+    global counts, n, LOADS, NORM_LOADS, NORM_TOTAL
+    ep_args = {k: v for k, v in sim_args.items() if k not in ("apStaCounts", "apLoads", "apHidden", "hiddenLoss", "staSchedule")}
+    ep_args.update({k: v for k, v in cfg.items() if k != "name"})
+    ep_args["seed"] = ns3_seeds[episode]
+    counts = [int(c) for c in str(cfg["apStaCounts"]).split(",")]
+    n = len(counts)
+    LOADS = [float(x) for x in str(cfg["apLoads"]).split(",")] if "apLoads" in cfg else [OFFERED_MBPS] * n
+    norm = float(cfg.get("rewardNorm", args.rewardNorm))
+    NORM_LOADS = [norm] * n if norm > 0 else LOADS
+    NORM_TOTAL = sum(c * l for c, l in zip(counts, NORM_LOADS))
+    return ep_args
+
+
+env = EnvWrapper(1, **(apply_cfg(pool[picks[0]], 0) if pool else sim_args))
 print("APs:", counts, "steps/ep:", steps_per_ep, "out:", out_dir)
 time_step = 0
 reward_cols = [[] for _ in range(n)]
 logged = []
 try:
     for episode in range(args.episodes):
-        if args.varySeeds and episode > 0:
+        if pool:
+            if episode > 0:
+                env.commands = env._craft_commands(apply_cfg(pool[picks[episode]], episode))
+            print("episode %d scenario %s" % (episode, pool[picks[episode]].get("name", pool[picks[episode]]["apStaCounts"])), flush=True)
+        elif args.varySeeds and episode > 0:
             env.commands = env._craft_commands(dict(sim_args, seed=ns3_seeds[episode]))
         print("episode %d ns-3 seed %d" % (episode, ns3_seeds[episode]), flush=True)
         try:
             env.run()
         except AlreadyRunningException:
             pass
+        if args.mode == "kw":
+            ctrl = KW(counts, parse_hidden(args.apHidden), args.stepTime, args.ctrlTau, args.kwDelta, args.kwEta, seed=args.seed + episode)
+        elif args.mode == "ucb":
+            ctrl = UCB(counts, NORM_LOADS, args.stepTime, args.ctrlTau, args.ucbC, seed=args.seed + episode)
         S = reshape_obs(env.reset()[0], n)
+        if args.mode == "ccod":
+            ccod_hist = np.zeros(args.ccodHist, dtype=np.float32)  # network loss history, newest first, 0 before the first step
+            ccod_obs = ccod_pre(ccod_hist.reshape(-1, 1, 1))
+            ccod_last = None
+            ccod_noise = learning and episode < args.episodes * 4 / 5  # CCOD turns noise off for the last fifth of the episodes
         prev_acts = np.full(n, -1.0, dtype=np.float32)  # CW starts at BEB 16 = real action 0 = act -1
         L = local_states(S, prev_acts)
         S_g = np.zeros(state_dim, dtype=np.float32)  # global mode: network loss; 0 before the first step
@@ -288,6 +357,11 @@ try:
                         acts[i] = np.clip(a, -max_action, max_action)[0]
                 if args.mode == "central" and args.check:
                     exec_probe["expect"] = None
+            elif args.mode == "ccod":
+                ccod_act = ccod_agent.act(np.array(ccod_obs, dtype=np.float32), ccod_noise)
+                acts[:] = 2.0 * float(np.clip(ccod_act.reshape(-1)[0], 0.0, 6.0)) / real_max_action - 1.0
+            elif args.mode in ("kw", "ucb"):
+                acts[:] = 2.0 * ctrl.cw_exponents() / real_max_action - 1.0  # real = real_max * (acts + 1) / 2 = the controller exponent
             elif args.mode == "global":
                 if learning and time_step < args.start_timesteps:
                     acts[:] = np.random.uniform(-max_action, max_action)
@@ -299,6 +373,19 @@ try:
             obs, _, done, info = env.step(np.array([real], dtype=np.float32))
             S2 = reshape_obs(obs[0], n)
             recs = parse_ap_info(info[0], n)
+            if args.mode in ("kw", "ucb"):
+                ctrl.observe(recs)
+            if args.mode == "ccod":
+                tx_c, rx_c = sum(q["tx"] for q in recs), sum(q["rx"] for q in recs)
+                ccod_hist = np.roll(ccod_hist, 1)
+                ccod_hist[0] = (tx_c - rx_c) / tx_c if tx_c else 0.0
+                ccod_next = ccod_pre(ccod_hist.reshape(-1, 1, 1))
+                if learning and ccod_last is not None and step > args.ccodHist and episode < args.episodes - 1:
+                    # deviation from teacher.train: it stores the RAW next obs as the state, which cannot feed the LSTM (expects mean/std pairs);
+                    # we store the processed previous and next observation
+                    ccod_agent.step(ccod_obs, ccod_act, np.array([global_reward(recs)]), ccod_next, [done[0]], 2)
+                ccod_last = ccod_act
+                ccod_obs = ccod_next
             L2 = local_states(S2, acts)
             r_net = global_reward(recs) if args.mode in LOCAL_MODES and args.alpha < 1.0 else 0.0
             r_pf = pf_reward([x["reward"] for x in recs]) if args.reward == "pf" else 0.0
@@ -338,17 +425,18 @@ try:
                         check(np.isclose(s2_i[0], own_loss, atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
                               "AP%d obs %s / loss %s != own (tx-rx)/tx %s at t=%d" % (i + 1, s2_i[0], recs[i]["loss"], own_loss, time_step))
                     # Test D: reward = own goodput / (offered load * own STAs * step), clamped to [0,1]
-                    want_r = min(1.0, max(0.0, recs[i]["rx"] * PAYLOAD_BITS / 1e6 / (LOADS[i] * counts[i] * args.stepTime)))
+                    want_r = min(1.0, max(0.0, recs[i]["rx"] * PAYLOAD_BITS / 1e6 / (NORM_LOADS[i] * counts[i] * args.stepTime)))
                     check(abs(r - want_r) < 1e-4, "AP%d reward %s != recomputed %s at t=%d" % (i + 1, r, want_r, time_step))
                     if args.reward == "pf" and i == 0:  # Test D2: pf reward recomputed from every AP's own rx counter
-                        want_pf = pf_reward([min(1.0, max(0.0, q["rx"] * PAYLOAD_BITS / 1e6 / (LOADS[j] * counts[j] * args.stepTime))) for j, q in enumerate(recs)])
+                        want_pf = pf_reward([min(1.0, max(0.0, q["rx"] * PAYLOAD_BITS / 1e6 / (NORM_LOADS[j] * counts[j] * args.stepTime))) for j, q in enumerate(recs)])
                         check(abs(r_pf - want_pf) < 1e-4 and 0.0 <= r_pf <= 1.0, "pf reward %s != recomputed %s at t=%d" % (r_pf, want_pf, time_step))
                 reward_cols[i].append(r)
                 ep_reward[i] += r
                 pp = preprocess(S2[i].reshape(-1, 1, 1))[0][0]  # this AP's history only; logging only
                 trace.writerow([episode, step, i + 1, float(s_i[0]), float(acts[i]), float(real[i]), r, float(s2_i[0]),
                                 recs[i]["cw_set"], recs[i]["cw_ap"], recs[i]["loss"], recs[i]["rx"], recs[i]["tx"],
-                                float(pp[0]), float(pp[1]), agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")])
+                                float(pp[0]), float(pp[1]), agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")]
+                               + ([recs[i]["retry"], recs[i]["active"], recs[i]["txfail"], recs[i]["idle"]] if args.extraTraces else []))
                 if args.mode == "independent" and learning and time_step >= args.start_timesteps:
                     agents[i].train(replays[i], args.batch_size)
             if args.mode == "shared" and learning and time_step >= args.start_timesteps:
@@ -412,8 +500,15 @@ try:
             if done[0]:
                 break
         print("episode %d cumulative reward per AP: %s" % (episode, np.round(ep_reward, 3).tolist()))
+        if args.mode == "ccod":
+            ccod_agent.reset()
         env.close()
-    if args.saveActor:
+    if args.saveActor and args.mode == "ccod":
+        os.makedirs(args.saveActor, exist_ok=True)
+        torch.save(ccod_agent.actor_local.state_dict(), os.path.join(args.saveActor, "ccod_actor.pt"))
+        torch.save(ccod_agent.critic_local.state_dict(), os.path.join(args.saveActor, "ccod_critic.pt"))
+        print("saved ccod agent to %s" % args.saveActor)
+    elif args.saveActor:
         os.makedirs(args.saveActor, exist_ok=True)
         for i, a in enumerate(agents):
             a.save(os.path.join(args.saveActor, "agent%d" % i))
@@ -487,7 +582,8 @@ if args.check:
                   "episode %d cumulative reward != sum of that episode's rewards" % ep)
         else:
             check(False, "episode %d has no cumulative reward row" % ep)
-    left = os.popen("pgrep -x linear-mesh || true").read().split()
+    # only this run's ns-3 processes (matched by their gym port), so parallel lanes do not see each other
+    left = sorted({p for port in env.ports for p in os.popen("pgrep -f '[o]penGymPort=%d' || true" % port).read().split()})
     check(not left, "leftover ns-3 process(es): %s" % left)
     print("W&B check: %d rows, %d keys each" % (len(hist), len(keys)))
     for i in range(n):

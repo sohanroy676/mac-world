@@ -1,0 +1,4 @@
+id,run_dir,result,returncode,seconds
+kw-d0.2-e0.1,results/multi-ap-20261104-072119,PASS,0,718
+kw-d0.7-e0.3,results/multi-ap-20261104-072122,PASS,0,726
+ucb-c0.3,results/multi-ap-20261104-073318,PASS,0,582

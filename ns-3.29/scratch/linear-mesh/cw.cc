@@ -22,6 +22,7 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <set>
 #include "scenario.h"
 
 using namespace std;
@@ -82,6 +83,15 @@ std::vector<uint64_t> g_apSumSlots, g_apNTrans;    // per-AP sums since the last
 std::vector<uint64_t> g_apIdleSlots, g_apIdleGaps; // backoff-idle slots and gaps seen by AP i since the last step
 std::vector<float> g_apIdleMean;                   // mean idle slots per gap in the last step (held when no gap)
 std::vector<double> g_idleCw;                      // IdleSense CW state per AP
+std::vector<float> g_apRetryRate;                  // --extraTraces: Retry-bit share of data frames decoded by the AP last step
+std::vector<uint32_t> g_apActive, g_apTxFailStep;  // --extraTraces: active STAs / failed data attempts last step
+
+// v3.5.0 (M0): opt-in diagnostics/normaliser. All off by default (defaults stay byte-identical).
+double g_rewardNormMbps = 0.0; // --rewardNorm: fixed per-STA reward divisor in Mbps; 0 = per-AP offered load (old behaviour)
+bool g_extraTraces = false;    // --extraTraces: append retry,active,txfail to each per-AP info record
+std::vector<uint64_t> g_apDataRx, g_apRetryRx, g_apTxFail; // data frames addressed to AP i / of those with Retry bit / failed data attempts in BSS i, this step
+std::vector<std::set<Mac48Address>> g_apActiveSta;         // STAs whose data frames AP i decoded this step
+std::vector<Mac48Address> g_apMac;                         // MAC address of AP i
 
 uint32_t history_length = 20;
 deque<float> history;
@@ -210,6 +220,8 @@ std::string MyGetExtraInfo(void)
                       to_string(g_apReward.at(ap)) + "," + to_string(g_apLoss.at(ap)) + "," +
                       to_string(g_apRxDelta.at(ap)) + "," + to_string(g_apTxDelta.at(ap)) + "," +
                       to_string(g_apIdleMean.at(ap));
+            if (g_extraTraces)
+                myInfo += "," + to_string(g_apRetryRate.at(ap)) + "," + to_string(g_apActive.at(ap)) + "," + to_string(g_apTxFailStep.at(ap));
         }
     }
 
@@ -546,9 +558,18 @@ void recordHistory()
             g_apLastTx[ap] = g_apPhyTxPkt[ap];
             g_apLoss[ap] = g_apTxDelta[ap] ? (float)((double)g_apTxDelta[ap] - (double)g_apRxDelta[ap]) / g_apTxDelta[ap] : 0.0f;
             double goodputMbit = g_apRxDelta[ap] * (1500 - 20 - 8 - 8) * 8.0 / 1e6;
-            double r = goodputMbit / ((g_apLoadMbps.empty() ? g_offeredLoadMbps : g_apLoadMbps[ap]) * g_apStaCounts[ap] * envStepTime);
+            double perStaMbps = g_rewardNormMbps > 0 ? g_rewardNormMbps : (g_apLoadMbps.empty() ? g_offeredLoadMbps : g_apLoadMbps[ap]);
+            double r = goodputMbit / (perStaMbps * g_apStaCounts[ap] * envStepTime);
+            if (g_extraTraces)
+            {
+                g_apRetryRate[ap] = g_apDataRx[ap] ? (float)g_apRetryRx[ap] / g_apDataRx[ap] : 0.0f;
+                g_apActive[ap] = (uint32_t)g_apActiveSta[ap].size();
+                g_apTxFailStep[ap] = (uint32_t)g_apTxFail[ap];
+                g_apDataRx[ap] = g_apRetryRx[ap] = g_apTxFail[ap] = 0;
+                g_apActiveSta[ap].clear();
+            }
             g_apReward[ap] = (float)std::min(1.0, std::max(0.0, r));
-            if (g_idleSense || g_obsIdle)
+            if (g_idleSense || g_obsIdle || g_extraTraces)
             {
                 if (g_apIdleGaps[ap])
                     g_apIdleMean[ap] = (float)((double)g_apIdleSlots[ap] / g_apIdleGaps[ap]);
@@ -582,6 +603,46 @@ void recordHistory()
         std::fill(g_apLastTx.begin(), g_apLastTx.end(), 0);
         last_rx = 0;
         last_tx = 0;
+    }
+}
+
+// v3.6.0: per-AP delay summary (mean/p50/p99, ms) from the flow monitor. In gym runs the trainer's stop request ends the
+// process before the end-of-main summary, so main schedules this at the end of the traffic. Only with --extraTraces.
+void printDelaySummary()
+{
+    std::map<Ipv4Address, uint32_t> apIp;
+    for (uint32_t ap = 0; ap < g_apBss.size(); ++ap)
+        apIp[g_apBss.at(ap).Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal()] = ap;
+    std::vector<std::map<uint32_t, uint64_t>> bins(g_apBss.size());
+    std::vector<double> sum(g_apBss.size(), 0.0);
+    Ptr<Ipv4FlowClassifier> cls = DynamicCast<Ipv4FlowClassifier>(flowmon.GetClassifier());
+    std::map<FlowId, FlowMonitor::FlowStats> st = monitor->GetFlowStats();
+    for (const auto &f : st)
+    {
+        auto d = apIp.find(cls->FindFlow(f.first).destinationAddress);
+        if (d == apIp.end())
+            continue;
+        sum[d->second] += f.second.delaySum.GetSeconds();
+        Histogram h = f.second.delayHistogram;
+        for (uint32_t b = 0; b < h.GetNBins(); ++b)
+            bins[d->second][b] += h.GetBinCount(b);
+    }
+    for (uint32_t ap = 0; ap < g_apBss.size(); ++ap)
+    {
+        uint64_t total = 0, acc = 0;
+        for (const auto &b : bins[ap])
+            total += b.second;
+        double p50 = 0, p99 = 0;
+        for (const auto &b : bins[ap])
+        {
+            acc += b.second;
+            if (!p50 && acc >= 0.5 * total)
+                p50 = (b.first + 1) * 0.0002;
+            if (!p99 && acc >= 0.99 * total)
+                p99 = (b.first + 1) * 0.0002;
+        }
+        NS_LOG_UNCOND("DELAY AP" << ap + 1 << " n=" << total << " mean_ms=" << (total ? 1000.0 * sum[ap] / total : 0.0)
+                                 << " p50_ms=" << 1000.0 * p50 << " p99_ms=" << 1000.0 * p99);
     }
 }
 
@@ -635,6 +696,29 @@ void apPhyState(uint32_t ap, Time start, Time duration, WifiPhyState state)
     }
 }
 
+// --extraTraces: data frames decoded by AP radio `apIndex` and addressed to it (Retry bit, sender).
+void apSnifferRx(uint32_t apIndex, Ptr<const Packet> packet, uint16_t, WifiTxVector, MpduInfo, SignalNoiseDbm)
+{
+    WifiMacHeader hdr;
+    Ptr<Packet> copy = packet->Copy();
+    uint8_t delim[4] = {0, 0, 0, 0};
+    if (copy->GetSize() > 4)
+        copy->CopyData(delim, 4);
+    if (delim[3] == 0x4e)
+        copy->RemoveAtStart(4); // A-MPDU subframe delimiter (4 bytes, signature 0x4e) precedes the MAC header in the sniffer packet
+    if (copy->GetSize() < hdr.GetSerializedSize() || copy->PeekHeader(hdr) == 0 || !hdr.IsData() || hdr.GetAddr1() != g_apMac[apIndex])
+        return;
+    g_apDataRx[apIndex]++;
+    if (hdr.IsRetry())
+        g_apRetryRx[apIndex]++;
+    g_apActiveSta[apIndex].insert(hdr.GetAddr2());
+}
+
+void apTxDataFailed(uint32_t apIndex, Mac48Address)
+{
+    g_apTxFail[apIndex]++;
+}
+
 // Hook the per-AP counters. Sinks live on the AP node, OnOff sources on its STAs, and every
 // wifi device belongs to exactly one BSS, so each trace source maps to exactly one AP index.
 void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apStaNodes)
@@ -652,6 +736,14 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
     g_apIdleSlots.assign(wifiApNode.GetN(), 0);
     g_apIdleGaps.assign(wifiApNode.GetN(), 0);
     g_apIdleMean.assign(wifiApNode.GetN(), 0.0f);
+    g_apDataRx.assign(wifiApNode.GetN(), 0);
+    g_apRetryRx.assign(wifiApNode.GetN(), 0);
+    g_apTxFail.assign(wifiApNode.GetN(), 0);
+    g_apActiveSta.assign(wifiApNode.GetN(), std::set<Mac48Address>());
+    g_apMac.assign(wifiApNode.GetN(), Mac48Address());
+    g_apRetryRate.assign(wifiApNode.GetN(), 0.0f);
+    g_apActive.assign(wifiApNode.GetN(), 0);
+    g_apTxFailStep.assign(wifiApNode.GetN(), 0);
     g_idleCw.assign(wifiApNode.GetN(), 16.0);
     g_apSumSlots.assign(wifiApNode.GetN(), 0);
     g_apNTrans.assign(wifiApNode.GetN(), 0);
@@ -677,7 +769,16 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
                 if (dev)
                 {
                     dev->GetPhy()->TraceConnectWithoutContext("PhyTxBegin", MakeBoundCallback(&packetSentPhyAp, apIndex));
-                    if (n == 0 && (g_idleSense || g_obsIdle)) // AP radio only: sensing stays local to the AP
+                    if (g_extraTraces)
+                    {
+                        if (n == 0)
+                        {
+                            g_apMac[apIndex] = Mac48Address::ConvertFrom(dev->GetAddress());
+                            dev->GetPhy()->TraceConnectWithoutContext("MonitorSnifferRx", MakeBoundCallback(&apSnifferRx, apIndex));
+                        }
+                        dev->GetRemoteStationManager()->TraceConnectWithoutContext("MacTxDataFailed", MakeBoundCallback(&apTxDataFailed, apIndex));
+                    }
+                    if (n == 0 && (g_idleSense || g_obsIdle || g_extraTraces)) // AP radio only: sensing stays local to the AP
                     {
                         PointerValue st;
                         dev->GetPhy()->GetAttribute("State", st);
@@ -903,6 +1004,28 @@ std::vector<std::pair<uint32_t, uint32_t>> parseApHidden(std::string apHidden, s
 }
 
 // --apLoads: exactly one per-STA offered load (Mbps) per AP.
+// --staSchedule=ap:first-last:start:stop/...  (0-based AP and STA indices, STA range inclusive, seconds)
+std::vector<StaWindow> g_staSchedule;
+std::vector<StaWindow> parseStaSchedule(std::string arg, const std::vector<uint32_t> &counts)
+{
+    std::vector<StaWindow> out;
+    std::stringstream ss(arg);
+    std::string tok;
+    while (std::getline(ss, tok, '/'))
+    {
+        unsigned ap, first, last;
+        double start, stop;
+        if (sscanf(tok.c_str(), "%u:%u-%u:%lf:%lf", &ap, &first, &last, &start, &stop) != 5 || ap >= counts.size() || first > last ||
+            last >= counts[ap] || start < 0 || stop <= start)
+        {
+            std::cout << "Invalid --staSchedule entry '" << tok << "' (want ap:first-last:start:stop within the AP's STAs)." << endl;
+            exit(1);
+        }
+        out.push_back({ap, first, last, start, stop});
+    }
+    return out;
+}
+
 std::vector<double> parseApLoads(std::string apLoads, size_t apCount)
 {
     std::vector<double> loads;
@@ -1099,6 +1222,8 @@ void set_nodes(int channelWidth,
 
 void set_sim(bool tracing, bool dry_run, bool disableGym, int warmup, uint32_t openGymPort, YansWifiPhyHelper phy, NetDeviceContainer apDevice, int end_delay, Ptr<FlowMonitor> &monitor, FlowMonitorHelper &flowmon)
 {
+    if (g_extraTraces)
+        flowmon.SetMonitorAttribute("DelayBinWidth", DoubleValue(0.0002)); // 0.2 ms bins for the per-AP delay percentiles
     monitor = flowmon.InstallAll();
     monitor->SetAttribute("StartTime", TimeValue(Seconds(warmup)));
 
@@ -1231,6 +1356,7 @@ int main(int argc, char *argv[])
     int nWifi = 5;
     bool tracing = false;
     bool useRts = false;
+    string staScheduleArg;
     int mcs = 11;
     int channelWidth = 20;
     int guardInterval = 800;
@@ -1279,6 +1405,10 @@ int main(int argc, char *argv[])
     cmd.AddValue("idleUp", "IdleSense multiplicative CW increase 1/alpha (applied when idle < target). Default: 1.2", g_idleUp);
     cmd.AddValue("idleMaxTrans", "IdleSense observed transmission attempts per CW update. Default: 5", g_idleMaxTrans);
     cmd.AddValue("residual", "v3.3.0: agent action is a Delta log2(CW) in [-2, 2] around the IdleSense CW (needs --idleSense and an agent). Default: false", g_residual);
+    cmd.AddValue("staSchedule", "v3.5.0: per-STA on/off windows ap:first-last:start:stop[/...] (0-based, simulated seconds; outside the window those STAs are silent). Default: empty = always on", staScheduleArg);
+    cmd.AddValue("useRts", "v3.5.0: enable RTS/CTS for every frame (RtsCtsThreshold=0). Default: false", useRts);
+    cmd.AddValue("rewardNorm", "v3.5.0: fixed per-STA reward divisor in Mbps (multi-AP). Default: 0 = per-AP offered load", g_rewardNormMbps);
+    cmd.AddValue("extraTraces", "v3.5.0: append retry rate, active STAs and failed data attempts to each per-AP info record. Default: false", g_extraTraces);
     cmd.AddValue("obsIdle", "v3.3.0: per-AP observation = mean idle slots / 20 (clipped to 1) instead of the loss ratio. Default: false", g_obsIdle);
     cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);
     cmd.AddValue("seed", "Random seed", simSeed);
@@ -1293,6 +1423,7 @@ int main(int argc, char *argv[])
     g_apCwOverride = parseApCws(apCwsArg, apStaCounts.size());
     g_hiddenPairs = parseApHidden(apHiddenArg, apStaCounts.size());
     g_apLoadMbps = parseApLoads(apLoadsArg, apStaCounts.size());
+    g_staSchedule = parseStaSchedule(staScheduleArg, apStaCounts);
     nWifi = 0;
     for (uint32_t count : apStaCounts)
     {
@@ -1399,6 +1530,8 @@ int main(int argc, char *argv[])
     if (g_cwReadbackEvery > 0)
         Simulator::Schedule(Seconds(warmup + g_cwReadbackEvery), &periodicCwReadback);
 
+    if (g_extraTraces && !disable_gym)
+        Simulator::Schedule(Seconds((non_zero_start ? end_delay : 1.0) + simulationTime - 1.5 * envStepTime), &printDelaySummary); // state reads run from that start for simTime; the last one is a step before the end
     set_sim(tracing, dry_run, disable_gym, warmup, openGymPort, phy, apDevice, end_delay, monitor, flowmon);
 
     double flowThr;
@@ -1423,6 +1556,8 @@ int main(int argc, char *argv[])
     std::vector<uint64_t> apRxPackets(wifiApNode.GetN(), 0);
     std::vector<double> apThroughput(wifiApNode.GetN(), 0.0);
     uint32_t crossApFlows = 0;
+    std::vector<std::map<uint32_t, uint64_t>> apDelayBins(wifiApNode.GetN()); // --extraTraces: merged delay histogram per AP
+    std::vector<double> apDelaySum(wifiApNode.GetN(), 0.0);
 
     Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowmon.GetClassifier());
     std::map<FlowId, FlowMonitor::FlowStats> stats = monitor->GetFlowStats();
@@ -1446,8 +1581,36 @@ int main(int argc, char *argv[])
         apFlowCount[dstAp->second]++;
         apRxPackets[dstAp->second] += i->second.rxPackets;
         apThroughput[dstAp->second] += flowThr;
+        if (g_extraTraces)
+        {
+            apDelaySum[dstAp->second] += i->second.delaySum.GetSeconds();
+            Histogram h = i->second.delayHistogram; // copy: the accessors are non-const
+            for (uint32_t b = 0; b < h.GetNBins(); ++b)
+                apDelayBins[dstAp->second][b] += h.GetBinCount(b);
+        }
     }
     myfile.close();
+    if (g_extraTraces)
+    {
+        for (uint32_t ap = 0; ap < wifiApNode.GetN(); ++ap)
+        {
+            uint64_t total = 0;
+            for (const auto &b : apDelayBins[ap])
+                total += b.second;
+            double p50 = 0, p99 = 0;
+            uint64_t acc = 0;
+            for (const auto &b : apDelayBins[ap]) // bin upper edge = (index + 1) * width
+            {
+                acc += b.second;
+                if (!p50 && acc >= 0.5 * total)
+                    p50 = (b.first + 1) * 0.0002;
+                if (!p99 && acc >= 0.99 * total)
+                    p99 = (b.first + 1) * 0.0002;
+            }
+            NS_LOG_UNCOND("DELAY AP" << ap + 1 << " n=" << total << " mean_ms=" << (total ? 1000.0 * apDelaySum[ap] / total : 0.0)
+                                     << " p50_ms=" << 1000.0 * p50 << " p99_ms=" << 1000.0 * p99);
+        }
+    }
 
     NS_LOG_UNCOND("Per-AP sink check (flow-monitor, v0.3.0 validation only):");
     for (uint32_t apIndex = 0; apIndex < wifiApNode.GetN(); ++apIndex)

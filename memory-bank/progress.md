@@ -13,6 +13,13 @@
 
 ## Done
 
+- **M2 v3.7.0 baselines (2026-11-05, `feature/v4`)** — BEB+RTS/CTS, KW, UCB, CCOD scored at 30 s, seeds 100-109 (S2/S4/S5a); M1 leftovers (v3.6.1) closed. `docs/results/m2-baselines-v3.7.0.md`. Not tagged. drlCW/PI/BLADE not built.
+
+- **M1 v3.6.0 grids + partial GC table (2026-11-02, branch `feature/v3.6.0-idle-trace`)** — A1/A2 222 jobs PASS, A3 96/96 PASS (GC tables S4, S2, S5a). `docs/results/m1-oracle-grids-v3.6.0.md`. Open: S7-S4 load redesign, S8p3 lower edge grid, tag v3.6.0 after approval.
+
+- **v3.5.0 TAGGED + HANDOFF (2026-11-01)** — tag `v3.5.0` on `feature/v4`, run dirs committed, `sessionPrompt.md` rewritten for M1.
+- **M0 foundations v3.5.0 (2026-11-01, branch `feature/v4`)** — code + load test done, pool BEB references done (CSV committed), run dirs not committed, not tagged. `docs/results/m0-foundations-v3.5.0.md`.
+
 - **Final v4 plan, revision 4 (2026-11-01)** — docs only, no runs. `docs/planning/mac-world-v4-plan.html`; ROADMAP "v3.5.0 to v4.5.0". Next: M0.
 
 - **v3.3.1 TAGGED + HANDOFF (2026-11-01)** — tag `v3.3.1` pushed (ddc1913); run dirs committed; session handoff in `sessionPrompt.md`.
