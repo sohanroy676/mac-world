@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **plan**: Add revision 6 from mentor papers
+- **changelog**: Regenerate with git-cliff
+- **plan**: Add revision 7 Gumbel noise ablation
+- **changelog**: Regenerate with git-cliff
+- **plan**: Add revision 8 critical check fixes
+- **changelog**: Regenerate with git-cliff
+- **plan**: Add revision 9 second critical pass
+- **changelog**: Regenerate with git-cliff
+- **plan**: Rebuild plan as revision 10 on feature/v4
+
+## [3.7.0] - 2026-11-05
+
 ### Added
 
 - **m1**: S7-S4b, S8p3 edge grid, a5 jobs
@@ -30,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **changelog**: Regenerate with git-cliff
 - **m2**: Batch logs, manifests and actors
 - **handoff**: V3.7.0 handoff, prompt for M3
+- **changelog**: Regenerate with git-cliff
 
 ## [3.6.0] - 2026-11-02
 
@@ -564,7 +579,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **design**: Define multi-ap v0.2.0
 - Add CLAUDE.md and close v0.3.0 handoff
 
-[unreleased]: https://github.com/sohanroy676/mac-world/compare/v3.6.0..HEAD
+[unreleased]: https://github.com/sohanroy676/mac-world/compare/v3.7.0..HEAD
+[3.7.0]: https://github.com/sohanroy676/mac-world/compare/v3.6.0..v3.7.0
 [3.6.0]: https://github.com/sohanroy676/mac-world/compare/v3.5.0..v3.6.0
 [3.5.0]: https://github.com/sohanroy676/mac-world/compare/v3.3.1..v3.5.0
 [3.3.1]: https://github.com/sohanroy676/mac-world/compare/v3.4.1..v3.3.1
