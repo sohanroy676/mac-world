@@ -1,0 +1,11 @@
+# Python 3.7 pins for CI smoke runs. Source: docs/reference/reproducibility-v2.1.0.md
+# torch is the CPU wheel (runners have no GPU); the lab runs used +cu117.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==1.13.1+cpu
+numpy==1.21.6
+gym==0.26.2
+wandb==0.18.7
+protobuf==3.20.3
+pyzmq==26.2.1
+tqdm
+matplotlib<3.6   # imported by agents/our_ddpg/preprocessor.py; not in the repo pin table; 3.5.x is the last series for Python 3.7

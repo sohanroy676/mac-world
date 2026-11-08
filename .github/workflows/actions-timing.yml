@@ -1,0 +1,83 @@
+# Timing test: one full-size cell (20,40 APs, 1500 steps, seed 0) per mode on a hosted runner,
+# to compare with the lab timings in docs/results/. Runs only when this file is pushed to feature/actions-compute.
+name: actions-timing
+
+on:
+  push:
+    branches: [feature/actions-compute]
+    paths: ['.github/workflows/actions-timing.yml']
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  DEBIAN_FRONTEND: noninteractive
+  TZ: Etc/UTC
+
+jobs:
+  full-cell:
+    name: 20,40 ${{ matrix.mode }} seed 0
+    runs-on: ubuntu-24.04
+    container: ubuntu:22.04
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [beb, independent]
+    steps:
+      - name: Base packages
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends build-essential git curl ca-certificates bzip2 tar pkg-config \
+            python3 python3-dev python-is-python3 libprotobuf-dev protobuf-compiler libzmq3-dev libxml2-dev libsqlite3-dev sqlite3
+      - uses: actions/checkout@v4
+      - name: Machine info
+        run: |
+          {
+            echo "### Machine (${{ matrix.mode }})"
+            echo '```'
+            lscpu | grep -E "Model name|^CPU\(s\)|Thread|Core|Socket|MHz" || true
+            free -g | head -2
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Configure and build ns-3 (waf --run builds on a clean tree)
+        working-directory: ns-3.29
+        run: |
+          start=$SECONDS
+          ./waf configure 2>&1 | tail -5
+          ./waf --run "scratch/linear-mesh/linear-mesh --dryRun=true --disableGym=true --apStaCounts=20,40 --simTime=1" 2>&1 | tail -15
+          echo "build: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Python 3.7 and pinned requirements
+        run: |
+          bash .github/scripts/install_py37.sh deadsnakes /opt/venv37
+          /opt/venv37/bin/python -m pip install --quiet "pip<24.1"
+          /opt/venv37/bin/pip install -r .github/ci/requirements-py37.txt
+          /opt/venv37/bin/pip install --no-deps ./ns-3.29/contrib/opengym/model/ns3gym
+      - name: Full cell (20,40 APs, 1500 steps)
+        working-directory: ns-3.29/scratch/linear-mesh
+        run: |
+          touch /tmp/before-train
+          start=$SECONDS
+          /opt/venv37/bin/python OSCAR_multi_ap_train.py --apStaCounts 20,40 --mode ${{ matrix.mode }} --seed 0 --check > /tmp/train.log 2>&1 || rc=$?
+          echo "trainer 20,40 ${{ matrix.mode }} seed 0 --check: $((SECONDS-start)) s (exit ${rc:-0})" | tee -a "$GITHUB_STEP_SUMMARY"
+          tail -40 /tmp/train.log
+          exit ${rc:-0}
+      - name: Collect outputs
+        if: always()
+        run: |
+          mkdir -p /tmp/out
+          cp /tmp/train.log /tmp/out/ 2>/dev/null || true
+          find ns-3.29/scratch/linear-mesh -newer /tmp/before-train -type f ! -name '*.pyc' -print0 2>/dev/null | tar --null -T - -czf /tmp/out/outputs.tgz || true
+          ls -la /tmp/out
+      - name: Upload outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timing-${{ matrix.mode }}
+          path: /tmp/out/
+          if-no-files-found: ignore
+          retention-days: 7
