@@ -5,6 +5,8 @@
      For the forward-looking feature plan, see ROADMAP.md instead —
      don't duplicate the full plan here, just what's actually in motion. -->
 
+- 2026-11-08: Actions runner merged into feature/v4; platform check PASS (3 non-learned runs byte-identical to lab; see docs/results/actions-comparability-2026-11-08.md). Next M3 step 0.
+
 - **v3.4.0 second seeds + unsaturated load DONE (2026-10-31, branch `docs/v3.4.0-seed1-algo`)** — `--apLoads 150,150,1` (BEB, independent pf, static 256,128,256; 25 jobs) and `--trainSeed 1` for TD3 and `--cwMinOnly` (18 jobs), all PASS. Independent pf ties the static oracle on PF in the unsaturated load. Seed 1 reverses the seed-0 TD3/cwMinOnly rankings. Report §4g-§4h, tables `docs/figures/v3.4.0-{apload1,algo}/`.
 
 - **v3.4.0 backlog runs DONE (2026-10-31, branch `docs/v3.4.0-backlog-runs`)** — independent pf TD3 and `--cwMinOnly` (trainSeed 0), and `--apLoads 150,150,20` (BEB + independent pf + static 256,128,256), eval seeds 100-107, 51 jobs PASS. TD3: PF 8.78, min-AP 13.75, level with the oracle on min-AP. cwMinOnly: PF 8.39, min-AP 4.38. apLoads run is non-informative (AP3 still saturated). Report §4e-§4f. Also 2026-10-30: `v3.2.0` tagged, G/H run dirs committed.
