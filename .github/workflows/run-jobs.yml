@@ -1,0 +1,84 @@
+# Runs a batch of trainer jobs (one matrix job each) on hosted runners. The batch is a JSON list of
+# {id, args, ref?} in .github/jobs/<name>.json; push to a feature/v4* branch touching .github/jobs/current.json,
+# or dispatch with input `batch`. Every job must end with --check PASS. Outputs are uploaded as artifacts (7 days).
+# No schedule, no loops. Contents are read-only: results are committed by hand.
+name: run-jobs
+
+on:
+  push:
+    branches: ['feature/v4*']
+    paths: ['.github/jobs/current.json']
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: 'Job list path'
+        default: '.github/jobs/current.json'
+
+permissions:
+  contents: read
+
+env:
+  DEBIAN_FRONTEND: noninteractive
+  TZ: Etc/UTC
+  BATCH: ${{ github.event.inputs.batch || '.github/jobs/current.json' }}
+
+jobs:
+  prep:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: echo "matrix=$(python3 .github/scripts/make_matrix.py "$BATCH")" >> "$GITHUB_OUTPUT"
+
+  run:
+    needs: prep
+    name: ${{ matrix.id }}
+    runs-on: ubuntu-24.04
+    container: ubuntu:22.04
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: ${{ fromJSON(needs.prep.outputs.matrix) }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Base packages
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends build-essential git curl ca-certificates bzip2 tar pkg-config \
+            python3 python3-dev python-is-python3 libprotobuf-dev protobuf-compiler libzmq3-dev libxml2-dev libsqlite3-dev sqlite3
+      - uses: actions/checkout@v4
+      - name: Machine info
+        run: |
+          { echo "### Machine"; echo '```'; lscpu | grep -E "Model name|^CPU\(s\)|Thread|Core"; free -g | head -2; echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Build ns-3 (waf --run builds a clean tree)
+        working-directory: ns-3.29
+        run: |
+          start=$SECONDS
+          ./waf configure 2>&1 | tail -3
+          ./waf --run "scratch/linear-mesh/linear-mesh --nWifi=5 --dryRun=true --disableGym=true --seed=1 --simTime=2" 2>&1 | tail -15 | tee /tmp/dry5.log
+          echo "build+dry: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Python 3.7 and pins
+        run: |
+          bash .github/scripts/install_py37.sh deadsnakes /opt/venv37
+          /opt/venv37/bin/python -m pip install --quiet "pip<24.1"
+          /opt/venv37/bin/pip install -r .github/ci/requirements-py37.txt
+          /opt/venv37/bin/pip install --no-deps ./ns-3.29/contrib/opengym/model/ns3gym
+      - name: Run job
+        working-directory: ns-3.29/scratch/linear-mesh
+        env:
+          JOB_ARGS: ${{ matrix.args }}
+        run: |
+          /opt/venv37/bin/python ../../../.github/scripts/run_job.py /opt/venv37/bin/python "${{ matrix.id }}" "$JOB_ARGS" "${{ matrix.ref }}" /tmp/out
+      - name: Upload outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: job-${{ matrix.id }}
+          path: /tmp/out/
+          if-no-files-found: ignore
+          retention-days: 7
