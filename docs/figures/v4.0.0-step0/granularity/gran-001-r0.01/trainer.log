@@ -1,0 +1,3182 @@
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+Users of this version of Gym should be able to simply replace 'import gym' with 'import gymnasium as gym' in the vast majority of cases.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+git root error: Cmd('git') failed due to: exit code(128)
+  cmdline: git rev-parse --show-toplevel
+  stderr: 'fatal: detected dubious ownership in repository at '/__w/mac-world/mac-world'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /__w/mac-world/mac-world'
+git root error: Cmd('git') failed due to: exit code(128)
+  cmdline: git rev-parse --show-toplevel
+  stderr: 'fatal: detected dubious ownership in repository at '/__w/mac-world/mac-world'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /__w/mac-world/mac-world'
+wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
+wandb: Tracking run with wandb version 0.18.7
+wandb: W&B syncing is set to `offline` in this directory.  
+wandb: Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+Waf: Entering directory `/__w/mac-world/mac-world/ns-3.29/build'
+Waf: Leaving directory `/__w/mac-world/mac-world/ns-3.29/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (2.009s)
+Ns3Env parameters:
+--nWifi: 5
+--apStaCounts: 2,3
+--apCws: (none, every AP uses CW)
+--cwMinOnly: 0
+--apHidden: (none, one collision domain) hiddenLoss=200
+--apLoads: (none, every AP uses offeredLoad)
+--simulationTime: 6
+--openGymPort: 37821
+--envStepTime: 0.01
+--seed: 101
+--agentType: continuous
+--scenario: basic
+--dryRun: 0
+--disableGym: 0
+Multi-AP topology:
+--apCount: 2
+--totalStaCount: 5
+AP1 nodeId=5 staCount=2
+AP1 STA1 nodeId=0
+AP1 STA2 nodeId=1
+AP2 nodeId=6 staCount=3
+AP2 STA1 nodeId=2
+AP2 STA2 nodeId=3
+AP2 STA3 nodeId=4
+Gym map: AP1 nodeId=5 stas=2 obsRow=0 actionIdx=0 rewardIdx=0
+Gym map: AP2 nodeId=6 stas=3 obsRow=1 actionIdx=1 rewardIdx=1
+Simulation started
+CW readback [start] t=0 s:
+  AP1 set=16/1024 ap=16/1024 stas: exact=2 edcaRounded(15/1023)=0 other=0 missing=0
+  AP2 set=16/1024 ap=16/1024 stas: exact=3 edcaRounded(15/1023)=0 other=0 missing=0
+CW readback [warmup] t=1 s:
+  AP1 set=16/1024 ap=16/1024 stas: exact=0 edcaRounded(15/1023)=2 other=0 missing=0
+  AP2 set=16/1024 ap=16/1024 stas: exact=0 edcaRounded(15/1023)=3 other=0 missing=0
+Simulation process id: 11119 (parent (waf shell) id: 11110)
+Waiting for Python process to connect on port: tcp://localhost:37821
+Please start proper Python Gym Agent
+Waiting for simulation script to connect on port: tcp://localhost:37821
+Please start proper ns-3 simulation script using ./waf --run "..."
+APs: [2, 3] steps/ep: 600 out: results/multi-ap-20261109-170914
+episode 0 ns-3 seed 101
+CW readback [periodic] t=1.01 s:
+  AP1 set=153/153 ap=153/153 stas: exact=0 edcaRounded(127/127)=2 other=0 missing=0
+  AP2 set=50/50 ap=50/50 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step    1 | AP1 cw= 153 r=0.031 loss=0.556 aL=0.000 cL=0.0000 | AP2 cw=  50 r=0.065 loss=0.519 aL=0.000 cL=0.0000
+CW readback [periodic] t=1.02 s:
+  AP1 set=93/93 ap=93/93 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=536/536 ap=536/536 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.03 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.04 s:
+  AP1 set=260/260 ap=260/260 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=496/496 ap=496/496 stas: exact=0 edcaRounded(255/255)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.05 s:
+  AP1 set=28/28 ap=28/28 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=174/174 ap=174/174 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.06 s:
+  AP1 set=651/651 ap=651/651 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=38/38 ap=38/38 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.07 s:
+  AP1 set=34/34 ap=34/34 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.08 s:
+  AP1 set=39/39 ap=39/39 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=936/936 ap=936/936 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.09 s:
+  AP1 set=467/467 ap=467/467 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=32/32 ap=32/32 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.1 s:
+  AP1 set=476/476 ap=476/476 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=50/50 ap=50/50 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step   10 | AP1 cw= 476 r=0.012 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw=  50 r=0.081 loss=0.508 aL=0.000 cL=0.0000
+CW readback [periodic] t=1.11 s:
+  AP1 set=96/96 ap=96/96 stas: exact=0 edcaRounded(63/63)=2 other=0 missing=0
+  AP2 set=797/797 ap=797/797 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.12 s:
+  AP1 set=479/479 ap=479/479 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=64/64 ap=64/64 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.13 s:
+  AP1 set=33/33 ap=33/33 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=75/75 ap=75/75 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.14 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=45/45 ap=45/45 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.15 s:
+  AP1 set=437/437 ap=437/437 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.16 s:
+  AP1 set=193/193 ap=193/193 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=197/197 ap=197/197 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.17 s:
+  AP1 set=24/24 ap=24/24 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=78/78 ap=78/78 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.18 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=649/649 ap=649/649 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.19 s:
+  AP1 set=945/945 ap=945/945 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.2 s:
+  AP1 set=649/649 ap=649/649 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=176/176 ap=176/176 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step   20 | AP1 cw= 649 r=0.016 loss=0.556 aL=0.000 cL=0.0000 | AP2 cw= 176 r=0.052 loss=0.487 aL=0.000 cL=0.0000
+CW readback [periodic] t=1.21 s:
+  AP1 set=350/350 ap=350/350 stas: exact=0 edcaRounded(255/255)=2 other=0 missing=0
+  AP2 set=219/219 ap=219/219 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.22 s:
+  AP1 set=179/179 ap=179/179 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.23 s:
+  AP1 set=38/38 ap=38/38 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=154/154 ap=154/154 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.24 s:
+  AP1 set=391/391 ap=391/391 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=45/45 ap=45/45 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.25 s:
+  AP1 set=52/52 ap=52/52 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=554/554 ap=554/554 stas: exact=0 edcaRounded(511/511)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.26 s:
+  AP1 set=922/922 ap=922/922 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=634/634 ap=634/634 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.27 s:
+  AP1 set=71/71 ap=71/71 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=193/193 ap=193/193 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.28 s:
+  AP1 set=69/69 ap=69/69 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=65/65 ap=65/65 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.29 s:
+  AP1 set=33/33 ap=33/33 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=42/42 ap=42/42 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.3 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=130/130 ap=130/130 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step   30 | AP1 cw=  19 r=0.109 loss=0.525 aL=0.000 cL=0.0000 | AP2 cw= 130 r=0.021 loss=0.529 aL=0.000 cL=0.0000
+CW readback [periodic] t=1.31 s:
+  AP1 set=76/76 ap=76/76 stas: exact=0 edcaRounded(63/63)=2 other=0 missing=0
+  AP2 set=188/188 ap=188/188 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.32 s:
+  AP1 set=219/219 ap=219/219 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=28/28 ap=28/28 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.33 s:
+  AP1 set=777/777 ap=777/777 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=819/819 ap=819/819 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.34 s:
+  AP1 set=195/195 ap=195/195 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=80/80 ap=80/80 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.35 s:
+  AP1 set=72/72 ap=72/72 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=37/37 ap=37/37 stas: exact=0 edcaRounded(31/31)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.36 s:
+  AP1 set=50/50 ap=50/50 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=44/44 ap=44/44 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.37 s:
+  AP1 set=32/32 ap=32/32 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=891/891 ap=891/891 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.38 s:
+  AP1 set=856/856 ap=856/856 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=192/192 ap=192/192 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.39 s:
+  AP1 set=334/334 ap=334/334 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=65/65 ap=65/65 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.4 s:
+  AP1 set=23/23 ap=23/23 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=109/109 ap=109/109 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step   40 | AP1 cw=  23 r=0.086 loss=0.522 aL=0.000 cL=0.0000 | AP2 cw= 109 r=0.031 loss=0.538 aL=0.000 cL=0.0000
+CW readback [periodic] t=1.41 s:
+  AP1 set=132/132 ap=132/132 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.42 s:
+  AP1 set=143/143 ap=143/143 stas: exact=0 edcaRounded(127/127)=2 other=0 missing=0
+  AP2 set=991/991 ap=991/991 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.43 s:
+  AP1 set=82/82 ap=82/82 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=64/64 ap=64/64 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.44 s:
+  AP1 set=455/455 ap=455/455 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=368/368 ap=368/368 stas: exact=3 edcaRounded(255/255)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.45 s:
+  AP1 set=58/58 ap=58/58 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=223/223 ap=223/223 stas: exact=0 edcaRounded(127/127)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.46 s:
+  AP1 set=151/151 ap=151/151 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=54/54 ap=54/54 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.47 s:
+  AP1 set=25/25 ap=25/25 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=58/58 ap=58/58 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.48 s:
+  AP1 set=107/107 ap=107/107 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=247/247 ap=247/247 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.49 s:
+  AP1 set=46/46 ap=46/46 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=230/230 ap=230/230 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.5 s:
+  AP1 set=36/36 ap=36/36 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=246/246 ap=246/246 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step   50 | AP1 cw=  36 r=0.094 loss=0.529 aL=0.000 cL=0.0000 | AP2 cw= 246 r=0.013 loss=0.667 aL=0.000 cL=0.0000
+CW readback [periodic] t=1.51 s:
+  AP1 set=407/407 ap=407/407 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=409/409 ap=409/409 stas: exact=3 edcaRounded(255/255)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.52 s:
+  AP1 set=202/202 ap=202/202 stas: exact=0 edcaRounded(127/127)=2 other=0 missing=0
+  AP2 set=57/57 ap=57/57 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.53 s:
+  AP1 set=291/291 ap=291/291 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=571/571 ap=571/571 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.54 s:
+  AP1 set=215/215 ap=215/215 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=951/951 ap=951/951 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.55 s:
+  AP1 set=928/928 ap=928/928 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=32/32 ap=32/32 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.56 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=31/31 ap=31/31 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.57 s:
+  AP1 set=744/744 ap=744/744 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=844/844 ap=844/844 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.58 s:
+  AP1 set=38/38 ap=38/38 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=71/71 ap=71/71 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.59 s:
+  AP1 set=157/157 ap=157/157 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=49/49 ap=49/49 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.6 s:
+  AP1 set=108/108 ap=108/108 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=289/289 ap=289/289 stas: exact=3 edcaRounded(255/255)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step   60 | AP1 cw= 108 r=0.062 loss=0.515 aL=0.000 cL=0.0000 | AP2 cw= 289 r=0.018 loss=0.533 aL=0.000 cL=0.0000
+CW readback [periodic] t=1.61 s:
+  AP1 set=128/128 ap=128/128 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=314/314 ap=314/314 stas: exact=3 edcaRounded(255/255)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.62 s:
+  AP1 set=142/142 ap=142/142 stas: exact=0 edcaRounded(127/127)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.63 s:
+  AP1 set=82/82 ap=82/82 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=123/123 ap=123/123 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.64 s:
+  AP1 set=85/85 ap=85/85 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=69/69 ap=69/69 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.65 s:
+  AP1 set=128/128 ap=128/128 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=101/101 ap=101/101 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.66 s:
+  AP1 set=23/23 ap=23/23 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=49/49 ap=49/49 stas: exact=0 edcaRounded(31/31)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.67 s:
+  AP1 set=809/809 ap=809/809 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.68 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=51/51 ap=51/51 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.69 s:
+  AP1 set=180/180 ap=180/180 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=985/985 ap=985/985 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.7 s:
+  AP1 set=993/993 ap=993/993 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=995/995 ap=995/995 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step   70 | AP1 cw= 993 r=0.023 loss=0.400 aL=0.000 cL=0.0000 | AP2 cw= 995 r=0.013 loss=0.500 aL=0.000 cL=0.0000
+CW readback [periodic] t=1.71 s:
+  AP1 set=25/25 ap=25/25 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=253/253 ap=253/253 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.72 s:
+  AP1 set=141/141 ap=141/141 stas: exact=0 edcaRounded(127/127)=2 other=0 missing=0
+  AP2 set=32/32 ap=32/32 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.73 s:
+  AP1 set=807/807 ap=807/807 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=43/43 ap=43/43 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.74 s:
+  AP1 set=1019/1019 ap=1019/1019 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=180/180 ap=180/180 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.75 s:
+  AP1 set=34/34 ap=34/34 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=79/79 ap=79/79 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.76 s:
+  AP1 set=35/35 ap=35/35 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=88/88 ap=88/88 stas: exact=0 edcaRounded(63/63)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.77 s:
+  AP1 set=189/189 ap=189/189 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=315/315 ap=315/315 stas: exact=3 edcaRounded(255/255)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.78 s:
+  AP1 set=121/121 ap=121/121 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=57/57 ap=57/57 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.79 s:
+  AP1 set=176/176 ap=176/176 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=100/100 ap=100/100 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.8 s:
+  AP1 set=71/71 ap=71/71 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=60/60 ap=60/60 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step   80 | AP1 cw=  71 r=0.051 loss=0.536 aL=0.000 cL=0.0000 | AP2 cw=  60 r=0.055 loss=0.500 aL=0.000 cL=0.0000
+CW readback [periodic] t=1.81 s:
+  AP1 set=38/38 ap=38/38 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=104/104 ap=104/104 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.82 s:
+  AP1 set=123/123 ap=123/123 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=672/672 ap=672/672 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.83 s:
+  AP1 set=332/332 ap=332/332 stas: exact=0 edcaRounded(255/255)=2 other=0 missing=0
+  AP2 set=393/393 ap=393/393 stas: exact=3 edcaRounded(255/255)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.84 s:
+  AP1 set=76/76 ap=76/76 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=66/66 ap=66/66 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.85 s:
+  AP1 set=243/243 ap=243/243 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=307/307 ap=307/307 stas: exact=3 edcaRounded(255/255)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.86 s:
+  AP1 set=25/25 ap=25/25 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.87 s:
+  AP1 set=106/106 ap=106/106 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=31/31 ap=31/31 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.88 s:
+  AP1 set=873/873 ap=873/873 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=521/521 ap=521/521 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.89 s:
+  AP1 set=139/139 ap=139/139 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=39/39 ap=39/39 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.9 s:
+  AP1 set=28/28 ap=28/28 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=938/938 ap=938/938 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step   90 | AP1 cw=  28 r=0.125 loss=0.500 aL=0.000 cL=0.0000 | AP2 cw= 938 r=0.010 loss=0.500 aL=0.000 cL=0.0000
+CW readback [periodic] t=1.91 s:
+  AP1 set=302/302 ap=302/302 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=571/571 ap=571/571 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.92 s:
+  AP1 set=80/80 ap=80/80 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=45/45 ap=45/45 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.93 s:
+  AP1 set=55/55 ap=55/55 stas: exact=0 edcaRounded(31/31)=2 other=0 missing=0
+  AP2 set=564/564 ap=564/564 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.94 s:
+  AP1 set=114/114 ap=114/114 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=252/252 ap=252/252 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.95 s:
+  AP1 set=456/456 ap=456/456 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=45/45 ap=45/45 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.96 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=336/336 ap=336/336 stas: exact=3 edcaRounded(255/255)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.97 s:
+  AP1 set=872/872 ap=872/872 stas: exact=2 edcaRounded(511/511)=0 other=0 missing=0
+  AP2 set=845/845 ap=845/845 stas: exact=0 edcaRounded(511/511)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.98 s:
+  AP1 set=123/123 ap=123/123 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=221/221 ap=221/221 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=1.99 s:
+  AP1 set=337/337 ap=337/337 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=682/682 ap=682/682 stas: exact=3 edcaRounded(511/511)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2 s:
+  AP1 set=31/31 ap=31/31 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=86/86 ap=86/86 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  100 | AP1 cw=  31 r=0.090 loss=0.521 aL=0.000 cL=0.0000 | AP2 cw=  86 r=0.023 loss=0.500 aL=0.000 cL=0.0000
+CW readback [periodic] t=2.01 s:
+  AP1 set=298/298 ap=298/298 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=95/95 ap=95/95 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.02 s:
+  AP1 set=263/263 ap=263/263 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=72/72 ap=72/72 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.03 s:
+  AP1 set=316/316 ap=316/316 stas: exact=0 edcaRounded(255/255)=2 other=0 missing=0
+  AP2 set=92/92 ap=92/92 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.04 s:
+  AP1 set=214/214 ap=214/214 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=116/116 ap=116/116 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.05 s:
+  AP1 set=332/332 ap=332/332 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=102/102 ap=102/102 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.06 s:
+  AP1 set=281/281 ap=281/281 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=107/107 ap=107/107 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.07 s:
+  AP1 set=207/207 ap=207/207 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=110/110 ap=110/110 stas: exact=0 edcaRounded(63/63)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.08 s:
+  AP1 set=224/224 ap=224/224 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=206/206 ap=206/206 stas: exact=3 edcaRounded(127/127)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.09 s:
+  AP1 set=300/300 ap=300/300 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=78/78 ap=78/78 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.1 s:
+  AP1 set=313/313 ap=313/313 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=80/80 ap=80/80 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  110 | AP1 cw= 313 r=0.012 loss=0.500 aL=-0.166 cL=0.0079 | AP2 cw=  80 r=0.073 loss=0.500 aL=-0.064 cL=0.0051
+CW readback [periodic] t=2.11 s:
+  AP1 set=202/202 ap=202/202 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=90/90 ap=90/90 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.12 s:
+  AP1 set=191/191 ap=191/191 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=64/64 ap=64/64 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.13 s:
+  AP1 set=215/215 ap=215/215 stas: exact=0 edcaRounded(127/127)=2 other=0 missing=0
+  AP2 set=80/80 ap=80/80 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.14 s:
+  AP1 set=288/288 ap=288/288 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=76/76 ap=76/76 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.15 s:
+  AP1 set=184/184 ap=184/184 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=51/51 ap=51/51 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.16 s:
+  AP1 set=350/350 ap=350/350 stas: exact=2 edcaRounded(255/255)=0 other=0 missing=0
+  AP2 set=85/85 ap=85/85 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.17 s:
+  AP1 set=158/158 ap=158/158 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=42/42 ap=42/42 stas: exact=0 edcaRounded(31/31)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.18 s:
+  AP1 set=179/179 ap=179/179 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=57/57 ap=57/57 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.19 s:
+  AP1 set=192/192 ap=192/192 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=54/54 ap=54/54 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.2 s:
+  AP1 set=116/116 ap=116/116 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=47/47 ap=47/47 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  120 | AP1 cw= 116 r=0.023 loss=0.500 aL=-0.033 cL=0.0024 | AP2 cw=  47 r=0.070 loss=0.526 aL=0.041 cL=0.0022
+CW readback [periodic] t=2.21 s:
+  AP1 set=190/190 ap=190/190 stas: exact=2 edcaRounded(127/127)=0 other=0 missing=0
+  AP2 set=42/42 ap=42/42 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.22 s:
+  AP1 set=117/117 ap=117/117 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=36/36 ap=36/36 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.23 s:
+  AP1 set=105/105 ap=105/105 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=42/42 ap=42/42 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.24 s:
+  AP1 set=126/126 ap=126/126 stas: exact=0 edcaRounded(63/63)=2 other=0 missing=0
+  AP2 set=34/34 ap=34/34 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.25 s:
+  AP1 set=118/118 ap=118/118 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=30/30 ap=30/30 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.26 s:
+  AP1 set=86/86 ap=86/86 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=28/28 ap=28/28 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.27 s:
+  AP1 set=106/106 ap=106/106 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.28 s:
+  AP1 set=96/96 ap=96/96 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.29 s:
+  AP1 set=86/86 ap=86/86 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.3 s:
+  AP1 set=92/92 ap=92/92 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  130 | AP1 cw=  92 r=0.012 loss=0.625 aL=-0.089 cL=0.0007 | AP2 cw=  25 r=0.088 loss=0.521 aL=-0.016 cL=0.0009
+CW readback [periodic] t=2.31 s:
+  AP1 set=62/62 ap=62/62 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=38/38 ap=38/38 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.32 s:
+  AP1 set=74/74 ap=74/74 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.33 s:
+  AP1 set=89/89 ap=89/89 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.34 s:
+  AP1 set=62/62 ap=62/62 stas: exact=0 edcaRounded(31/31)=2 other=0 missing=0
+  AP2 set=37/37 ap=37/37 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.35 s:
+  AP1 set=64/64 ap=64/64 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=28/28 ap=28/28 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.36 s:
+  AP1 set=62/62 ap=62/62 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.37 s:
+  AP1 set=61/61 ap=61/61 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.38 s:
+  AP1 set=70/70 ap=70/70 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.39 s:
+  AP1 set=73/73 ap=73/73 stas: exact=2 edcaRounded(63/63)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.4 s:
+  AP1 set=62/62 ap=62/62 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  140 | AP1 cw=  62 r=0.027 loss=0.562 aL=-0.074 cL=0.0012 | AP2 cw=  16 r=0.068 loss=0.600 aL=-0.003 cL=0.0004
+CW readback [periodic] t=2.41 s:
+  AP1 set=44/44 ap=44/44 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=28/28 ap=28/28 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.42 s:
+  AP1 set=61/61 ap=61/61 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.43 s:
+  AP1 set=40/40 ap=40/40 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.44 s:
+  AP1 set=36/36 ap=36/36 stas: exact=0 edcaRounded(31/31)=2 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.45 s:
+  AP1 set=60/60 ap=60/60 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.46 s:
+  AP1 set=27/27 ap=27/27 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.47 s:
+  AP1 set=32/32 ap=32/32 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.48 s:
+  AP1 set=46/46 ap=46/46 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.49 s:
+  AP1 set=25/25 ap=25/25 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.5 s:
+  AP1 set=47/47 ap=47/47 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  150 | AP1 cw=  47 r=0.035 loss=0.550 aL=-0.088 cL=0.0003 | AP2 cw=  16 r=0.065 loss=0.590 aL=-0.030 cL=0.0002
+CW readback [periodic] t=2.51 s:
+  AP1 set=38/38 ap=38/38 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.52 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.53 s:
+  AP1 set=26/26 ap=26/26 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.54 s:
+  AP1 set=27/27 ap=27/27 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.55 s:
+  AP1 set=39/39 ap=39/39 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.56 s:
+  AP1 set=27/27 ap=27/27 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.57 s:
+  AP1 set=26/26 ap=26/26 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.58 s:
+  AP1 set=34/34 ap=34/34 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.59 s:
+  AP1 set=26/26 ap=26/26 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=29/29 ap=29/29 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.6 s:
+  AP1 set=26/26 ap=26/26 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  160 | AP1 cw=  26 r=0.062 loss=0.529 aL=-0.102 cL=0.0006 | AP2 cw=  18 r=0.047 loss=0.609 aL=-0.021 cL=0.0001
+CW readback [periodic] t=2.61 s:
+  AP1 set=25/25 ap=25/25 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.62 s:
+  AP1 set=24/24 ap=24/24 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=28/28 ap=28/28 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.63 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.64 s:
+  AP1 set=28/28 ap=28/28 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.65 s:
+  AP1 set=22/22 ap=22/22 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.66 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.67 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.68 s:
+  AP1 set=32/32 ap=32/32 stas: exact=2 edcaRounded(31/31)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.69 s:
+  AP1 set=24/24 ap=24/24 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.7 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  170 | AP1 cw=  17 r=0.059 loss=0.595 aL=-0.107 cL=0.0006 | AP2 cw=  20 r=0.049 loss=0.578 aL=-0.009 cL=0.0003
+CW readback [periodic] t=2.71 s:
+  AP1 set=30/30 ap=30/30 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.72 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.73 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.74 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.75 s:
+  AP1 set=28/28 ap=28/28 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.76 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.77 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.78 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.79 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.8 s:
+  AP1 set=27/27 ap=27/27 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  180 | AP1 cw=  27 r=0.051 loss=0.536 aL=-0.115 cL=0.0004 | AP2 cw=  16 r=0.060 loss=0.582 aL=-0.004 cL=0.0002
+CW readback [periodic] t=2.81 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.82 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.83 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.84 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.85 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.86 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.87 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.88 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.89 s:
+  AP1 set=24/24 ap=24/24 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.9 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=24/24 ap=24/24 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  190 | AP1 cw=  22 r=0.051 loss=0.519 aL=-0.094 cL=0.0004 | AP2 cw=  24 r=0.062 loss=0.556 aL=-0.006 cL=0.0002
+CW readback [periodic] t=2.91 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.92 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.93 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.94 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.95 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.96 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.97 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.98 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=2.99 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=24/24 ap=24/24 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3 s:
+  AP1 set=24/24 ap=24/24 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  200 | AP1 cw=  24 r=0.062 loss=0.556 aL=-0.086 cL=0.0003 | AP2 cw=  27 r=0.052 loss=0.556 aL=-0.004 cL=0.0002
+CW readback [periodic] t=3.01 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.02 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.03 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.04 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.05 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.06 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.07 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.08 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.09 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=31/31 ap=31/31 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.1 s:
+  AP1 set=25/25 ap=25/25 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  210 | AP1 cw=  25 r=0.062 loss=0.515 aL=-0.115 cL=0.0002 | AP2 cw=  23 r=0.052 loss=0.583 aL=-0.011 cL=0.0002
+CW readback [periodic] t=3.11 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.12 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.13 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.14 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.15 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.16 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.17 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=34/34 ap=34/34 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.18 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.19 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.2 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  220 | AP1 cw=  16 r=0.078 loss=0.535 aL=-0.093 cL=0.0003 | AP2 cw=  20 r=0.036 loss=0.659 aL=-0.013 cL=0.0002
+CW readback [periodic] t=3.21 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.22 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.23 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.24 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.25 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.26 s:
+  AP1 set=18/18 ap=18/18 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.27 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.28 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.29 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.3 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  230 | AP1 cw=  20 r=0.055 loss=0.576 aL=-0.103 cL=0.0007 | AP2 cw=  26 r=0.047 loss=0.625 aL=-0.009 cL=0.0001
+CW readback [periodic] t=3.31 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.32 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.33 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.34 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.35 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.36 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.37 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=32/32 ap=32/32 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.38 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=31/31 ap=31/31 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.39 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=31/31 ap=31/31 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.4 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=36/36 ap=36/36 stas: exact=0 edcaRounded(31/31)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  240 | AP1 cw=  21 r=0.062 loss=0.515 aL=-0.112 cL=0.0002 | AP2 cw=  36 r=0.055 loss=0.543 aL=-0.011 cL=0.0001
+CW readback [periodic] t=3.41 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.42 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=24/24 ap=24/24 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.43 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.44 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=41/41 ap=41/41 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.45 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=47/47 ap=47/47 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.46 s:
+  AP1 set=17/17 ap=17/17 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=39/39 ap=39/39 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.47 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=37/37 ap=37/37 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.48 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=41/41 ap=41/41 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.49 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=51/51 ap=51/51 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.5 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  250 | AP1 cw=  16 r=0.074 loss=0.525 aL=-0.110 cL=0.0001 | AP2 cw=  22 r=0.034 loss=0.667 aL=-0.022 cL=0.0002
+CW readback [periodic] t=3.51 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=35/35 ap=35/35 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.52 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=35/35 ap=35/35 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.53 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=73/73 ap=73/73 stas: exact=3 edcaRounded(63/63)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.54 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=36/36 ap=36/36 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.55 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=36/36 ap=36/36 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.56 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=48/48 ap=48/48 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.57 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=37/37 ap=37/37 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.58 s:
+  AP1 set=23/23 ap=23/23 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.59 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=37/37 ap=37/37 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.6 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=41/41 ap=41/41 stas: exact=0 edcaRounded(31/31)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  260 | AP1 cw=  17 r=0.066 loss=0.575 aL=-0.091 cL=0.0003 | AP2 cw=  41 r=0.042 loss=0.590 aL=-0.024 cL=0.0002
+CW readback [periodic] t=3.61 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=48/48 ap=48/48 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.62 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=46/46 ap=46/46 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.63 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=41/41 ap=41/41 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.64 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.65 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=28/28 ap=28/28 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.66 s:
+  AP1 set=24/24 ap=24/24 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=48/48 ap=48/48 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.67 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=29/29 ap=29/29 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.68 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=35/35 ap=35/35 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.69 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.7 s:
+  AP1 set=23/23 ap=23/23 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=38/38 ap=38/38 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  270 | AP1 cw=  23 r=0.070 loss=0.538 aL=-0.111 cL=0.0003 | AP2 cw=  38 r=0.044 loss=0.575 aL=-0.012 cL=0.0002
+CW readback [periodic] t=3.71 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.72 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=30/30 ap=30/30 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.73 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=30/30 ap=30/30 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.74 s:
+  AP1 set=26/26 ap=26/26 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=30/30 ap=30/30 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.75 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=39/39 ap=39/39 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.76 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=24/24 ap=24/24 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.77 s:
+  AP1 set=19/19 ap=19/19 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.78 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.79 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=30/30 ap=30/30 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.8 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=34/34 ap=34/34 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  280 | AP1 cw=  16 r=0.090 loss=0.566 aL=-0.116 cL=0.0003 | AP2 cw=  34 r=0.026 loss=0.643 aL=-0.009 cL=0.0004
+CW readback [periodic] t=3.81 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=37/37 ap=37/37 stas: exact=0 edcaRounded(31/31)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.82 s:
+  AP1 set=25/25 ap=25/25 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.83 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=35/35 ap=35/35 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.84 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.85 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=37/37 ap=37/37 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.86 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=51/51 ap=51/51 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.87 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=29/29 ap=29/29 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.88 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.89 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=36/36 ap=36/36 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.9 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=31/31 ap=31/31 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  290 | AP1 cw=  16 r=0.090 loss=0.549 aL=-0.103 cL=0.0005 | AP2 cw=  31 r=0.034 loss=0.581 aL=-0.009 cL=0.0002
+CW readback [periodic] t=3.91 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=29/29 ap=29/29 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.92 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=43/43 ap=43/43 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.93 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=31/31 ap=31/31 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.94 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=42/42 ap=42/42 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.95 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=33/33 ap=33/33 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.96 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.97 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=29/29 ap=29/29 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.98 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=37/37 ap=37/37 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=3.99 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  300 | AP1 cw=  16 r=0.055 loss=0.576 aL=-0.099 cL=0.0002 | AP2 cw=  22 r=0.060 loss=0.558 aL=0.004 cL=0.0002
+CW readback [periodic] t=4.01 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=30/30 ap=30/30 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.02 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.03 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=33/33 ap=33/33 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.04 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=42/42 ap=42/42 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.05 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=24/24 ap=24/24 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.06 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.07 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.08 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.09 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=34/34 ap=34/34 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.1 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=28/28 ap=28/28 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  310 | AP1 cw=  16 r=0.070 loss=0.550 aL=-0.111 cL=0.0004 | AP2 cw=  28 r=0.049 loss=0.558 aL=-0.002 cL=0.0005
+CW readback [periodic] t=4.11 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=30/30 ap=30/30 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.12 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.13 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.14 s:
+  AP1 set=25/25 ap=25/25 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=24/24 ap=24/24 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.15 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.16 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=32/32 ap=32/32 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.17 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.18 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=34/34 ap=34/34 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.19 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.2 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  320 | AP1 cw=  20 r=0.066 loss=0.564 aL=-0.113 cL=0.0003 | AP2 cw=  20 r=0.034 loss=0.705 aL=-0.010 cL=0.0001
+CW readback [periodic] t=4.21 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.22 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.23 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=29/29 ap=29/29 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.24 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=28/28 ap=28/28 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.25 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=28/28 ap=28/28 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.26 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.27 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.28 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.29 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=29/29 ap=29/29 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.3 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  330 | AP1 cw=  16 r=0.078 loss=0.512 aL=-0.112 cL=0.0001 | AP2 cw=  27 r=0.052 loss=0.524 aL=-0.031 cL=0.0004
+CW readback [periodic] t=4.31 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.32 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.33 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.34 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.35 s:
+  AP1 set=24/24 ap=24/24 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.36 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.37 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.38 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.39 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=24/24 ap=24/24 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.4 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  340 | AP1 cw=  16 r=0.070 loss=0.561 aL=-0.106 cL=0.0001 | AP2 cw=  22 r=0.047 loss=0.561 aL=-0.016 cL=0.0002
+CW readback [periodic] t=4.41 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=28/28 ap=28/28 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.42 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=30/30 ap=30/30 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.43 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.44 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.45 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.46 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.47 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.48 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.49 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.5 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  350 | AP1 cw=  16 r=0.066 loss=0.564 aL=-0.129 cL=0.0005 | AP2 cw=  20 r=0.047 loss=0.600 aL=-0.018 cL=0.0002
+CW readback [periodic] t=4.51 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.52 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.53 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.54 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=28/28 ap=28/28 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.55 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.56 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.57 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.58 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.59 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.6 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  360 | AP1 cw=  16 r=0.062 loss=0.568 aL=-0.129 cL=0.0003 | AP2 cw=  19 r=0.049 loss=0.587 aL=-0.020 cL=0.0002
+CW readback [periodic] t=4.61 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.62 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.63 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.64 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.65 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=33/33 ap=33/33 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.66 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.67 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.68 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.69 s:
+  AP1 set=18/18 ap=18/18 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.7 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  370 | AP1 cw=  19 r=0.055 loss=0.600 aL=-0.104 cL=0.0003 | AP2 cw=  21 r=0.049 loss=0.604 aL=-0.014 cL=0.0003
+CW readback [periodic] t=4.71 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=24/24 ap=24/24 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.72 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.73 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.74 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.75 s:
+  AP1 set=24/24 ap=24/24 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.76 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.77 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.78 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=35/35 ap=35/35 stas: exact=3 edcaRounded(31/31)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.79 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.8 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=24/24 ap=24/24 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  380 | AP1 cw=  16 r=0.062 loss=0.628 aL=-0.108 cL=0.0007 | AP2 cw=  24 r=0.036 loss=0.600 aL=-0.014 cL=0.0001
+CW readback [periodic] t=4.81 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.82 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.83 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.84 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.85 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.86 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.87 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.88 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.89 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.9 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  390 | AP1 cw=  16 r=0.039 loss=0.655 aL=-0.107 cL=0.0002 | AP2 cw=  16 r=0.057 loss=0.585 aL=-0.019 cL=0.0003
+CW readback [periodic] t=4.91 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.92 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.93 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.94 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.95 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.96 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.97 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.98 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=29/29 ap=29/29 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=4.99 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  400 | AP1 cw=  16 r=0.059 loss=0.559 aL=-0.126 cL=0.0006 | AP2 cw=  17 r=0.057 loss=0.542 aL=-0.020 cL=0.0002
+CW readback [periodic] t=5.01 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.02 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=30/30 ap=30/30 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.03 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.04 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.05 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.06 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.07 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.08 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.09 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.1 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  410 | AP1 cw=  16 r=0.062 loss=0.619 aL=-0.125 cL=0.0005 | AP2 cw=  23 r=0.036 loss=0.622 aL=-0.022 cL=0.0002
+CW readback [periodic] t=5.11 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.12 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.13 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.14 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.15 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=24/24 ap=24/24 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.16 s:
+  AP1 set=26/26 ap=26/26 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.17 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.18 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.19 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.2 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  420 | AP1 cw=  16 r=0.059 loss=0.545 aL=-0.128 cL=0.0002 | AP2 cw=  16 r=0.052 loss=0.623 aL=-0.020 cL=0.0001
+CW readback [periodic] t=5.21 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=26/26 ap=26/26 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.22 s:
+  AP1 set=29/29 ap=29/29 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.23 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.24 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.25 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.26 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=24/24 ap=24/24 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.27 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.28 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.29 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.3 s:
+  AP1 set=26/26 ap=26/26 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  430 | AP1 cw=  26 r=0.047 loss=0.571 aL=-0.122 cL=0.0001 | AP2 cw=  16 r=0.060 loss=0.582 aL=-0.012 cL=0.0002
+CW readback [periodic] t=5.31 s:
+  AP1 set=19/19 ap=19/19 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.32 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.33 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.34 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.35 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.36 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.37 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.38 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.39 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.4 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  440 | AP1 cw=  20 r=0.051 loss=0.581 aL=-0.116 cL=0.0002 | AP2 cw=  18 r=0.052 loss=0.600 aL=-0.015 cL=0.0001
+CW readback [periodic] t=5.41 s:
+  AP1 set=20/20 ap=20/20 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.42 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.43 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.44 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.45 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.46 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.47 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.48 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.49 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.5 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  450 | AP1 cw=  16 r=0.055 loss=0.622 aL=-0.108 cL=0.0016 | AP2 cw=  16 r=0.044 loss=0.646 aL=-0.022 cL=0.0002
+CW readback [periodic] t=5.51 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=25/25 ap=25/25 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.52 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.53 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.54 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.55 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.56 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.57 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.58 s:
+  AP1 set=30/30 ap=30/30 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.59 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.6 s:
+  AP1 set=26/26 ap=26/26 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  460 | AP1 cw=  26 r=0.051 loss=0.552 aL=-0.104 cL=0.0002 | AP2 cw=  16 r=0.060 loss=0.574 aL=-0.029 cL=0.0001
+CW readback [periodic] t=5.61 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.62 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.63 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.64 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.65 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.66 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.67 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.68 s:
+  AP1 set=27/27 ap=27/27 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.69 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.7 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  470 | AP1 cw=  19 r=0.051 loss=0.581 aL=-0.116 cL=0.0002 | AP2 cw=  23 r=0.057 loss=0.551 aL=-0.033 cL=0.0001
+CW readback [periodic] t=5.71 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.72 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.73 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.74 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.75 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.76 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.77 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.78 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.79 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.8 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  480 | AP1 cw=  16 r=0.047 loss=0.613 aL=-0.129 cL=0.0004 | AP2 cw=  16 r=0.052 loss=0.623 aL=-0.026 cL=0.0005
+CW readback [periodic] t=5.81 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.82 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.83 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.84 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.85 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.86 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.87 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.88 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.89 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.9 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  490 | AP1 cw=  16 r=0.062 loss=0.543 aL=-0.121 cL=0.0002 | AP2 cw=  17 r=0.044 loss=0.630 aL=-0.025 cL=0.0004
+CW readback [periodic] t=5.91 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.92 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.93 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.94 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.95 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.96 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.97 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.98 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=5.99 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  500 | AP1 cw=  21 r=0.043 loss=0.607 aL=-0.121 cL=0.0003 | AP2 cw=  16 r=0.062 loss=0.556 aL=-0.025 cL=0.0001
+CW readback [periodic] t=6.01 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.02 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.03 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.04 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.05 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.06 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.07 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.08 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.09 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.1 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  510 | AP1 cw=  16 r=0.055 loss=0.533 aL=-0.123 cL=0.0006 | AP2 cw=  16 r=0.052 loss=0.615 aL=-0.029 cL=0.0003
+CW readback [periodic] t=6.11 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.12 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.13 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.14 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.15 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.16 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.17 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.18 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.19 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.2 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  520 | AP1 cw=  16 r=0.055 loss=0.548 aL=-0.146 cL=0.0010 | AP2 cw=  16 r=0.057 loss=0.577 aL=-0.029 cL=0.0002
+CW readback [periodic] t=6.21 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.22 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.23 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.24 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.25 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.26 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.27 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.28 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.29 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.3 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  530 | AP1 cw=  17 r=0.062 loss=0.568 aL=-0.119 cL=0.0003 | AP2 cw=  18 r=0.044 loss=0.605 aL=-0.032 cL=0.0001
+CW readback [periodic] t=6.31 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.32 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.33 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.34 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.35 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.36 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.37 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.38 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=27/27 ap=27/27 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.39 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.4 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  540 | AP1 cw=  22 r=0.039 loss=0.615 aL=-0.124 cL=0.0003 | AP2 cw=  16 r=0.060 loss=0.589 aL=-0.042 cL=0.0003
+CW readback [periodic] t=6.41 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.42 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.43 s:
+  AP1 set=20/20 ap=20/20 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.44 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.45 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.46 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=22/22 ap=22/22 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.47 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.48 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.49 s:
+  AP1 set=21/21 ap=21/21 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.5 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  550 | AP1 cw=  22 r=0.062 loss=0.543 aL=-0.119 cL=0.0003 | AP2 cw=  20 r=0.052 loss=0.574 aL=-0.042 cL=0.0002
+CW readback [periodic] t=6.51 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.52 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.53 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.54 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.55 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.56 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.57 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=23/23 ap=23/23 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.58 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.59 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.6 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  560 | AP1 cw=  17 r=0.043 loss=0.633 aL=-0.117 cL=0.0003 | AP2 cw=  16 r=0.055 loss=0.604 aL=-0.037 cL=0.0001
+CW readback [periodic] t=6.61 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.62 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.63 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.64 s:
+  AP1 set=23/23 ap=23/23 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.65 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.66 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.67 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.68 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.69 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.7 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  570 | AP1 cw=  16 r=0.059 loss=0.595 aL=-0.121 cL=0.0005 | AP2 cw=  18 r=0.052 loss=0.574 aL=-0.029 cL=0.0001
+CW readback [periodic] t=6.71 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.72 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=24/24 ap=24/24 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.73 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.74 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.75 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.76 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.77 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.78 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.79 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.8 s:
+  AP1 set=19/19 ap=19/19 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  580 | AP1 cw=  19 r=0.055 loss=0.588 aL=-0.127 cL=0.0001 | AP2 cw=  19 r=0.057 loss=0.551 aL=-0.033 cL=0.0000
+CW readback [periodic] t=6.81 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.82 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.83 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.84 s:
+  AP1 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.85 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.86 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.87 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.88 s:
+  AP1 set=20/20 ap=20/20 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.89 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=17/17 ap=17/17 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.9 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=21/21 ap=21/21 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  590 | AP1 cw=  16 r=0.070 loss=0.550 aL=-0.119 cL=0.0003 | AP2 cw=  21 r=0.044 loss=0.595 aL=-0.028 cL=0.0003
+CW readback [periodic] t=6.91 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.92 s:
+  AP1 set=17/17 ap=17/17 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=18/18 ap=18/18 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.93 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.94 s:
+  AP1 set=18/18 ap=18/18 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.95 s:
+  AP1 set=18/18 ap=18/18 stas: exact=0 edcaRounded(15/15)=2 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.96 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.97 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=19/19 ap=19/19 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.98 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=0 edcaRounded(15/15)=3 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=6.99 s:
+  AP1 set=22/22 ap=22/22 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=20/20 ap=20/20 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+CW readback [periodic] t=7 s:
+  AP1 set=16/16 ap=16/16 stas: exact=2 edcaRounded(15/15)=0 other=0 missing=0
+  AP2 set=16/16 ap=16/16 stas: exact=3 edcaRounded(15/15)=0 other=0 missing=0
+  AP1 sinks with rx>0: 2/2
+  AP2 sinks with rx>0: 3/3
+ep0 step  600 | AP1 cw=  16 r=0.051 loss=0.567 aL=-0.120 cL=0.0002 | AP2 cw=  16 r=0.060 loss=0.566 aL=-0.025 cL=0.0002
+wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:           AP1/ActorLoss ███▁█▄▄▃▄▃▃▃▃▃▃▃▃▃▃▃▃▂▃▃▃▂▂▂▃▃▃▃▃▂▃▃▃▃▃▃
+wandb:                  AP1/CW ▄▁▄▁▁█▆█▆▃▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          AP1/CriticLoss ▁▁▁▁▁▁▇▂▅█▅▃▃█▃▄▂▄▃▂▄▂▃▄▃▄▃▃▄▃▃▃▂▂▅▂▃▄▃▃
+wandb:    AP1/CumulativeReward ▁
+wandb:           AP1/LossRatio ▁▃▄▄▁▂▂▁▄▁▇▇▆▄▇▄▃▄▅▄▄▄▆▃▇▆█▄▇▄▄▆▆▇▅▇▇▇▃▇
+wandb:         AP1/Observation ▄▂▇▁▄▃▂▃▆▆▁▃▄▅▃▅▂▄▄▃▅▃█▃▃▆▆▇▃▅▃▅▆▃▂▄▆▄▃▄
+wandb:              AP1/Reward ▁▅▁▆▅▂▅▃▃▆▅▇█▇▅▇▆▆▆▆▆▅▆▇▅▆▅▆▄▄▅▃▄▄▅▃▆▃▄▄
+wandb:          AP1/Throughput ▇▃▃▂▁▄▃▃▅▅▅▆▆█▅▄▆▄▇▆▄▅▆▄▄▄▄▅▄▃▄▄▃▄▄▅▅▄▃▃
+wandb:           AP2/ActorLoss ▇▇▇▇▇▇▄█▁▄▅▇▆▅▃▅▄▂▃▃▅▅▄▄▄▄▃▃▄▃▂▃▂▂▂▁▂▁▁▃
+wandb:                  AP2/CW ▂▂▁█▁▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          AP2/CriticLoss ▁▁▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    AP2/CumulativeReward ▁
+wandb:           AP2/LossRatio ▃▁▃▅▃▃▄▅▅▅▅▆▇▄▅▅▅▅▄▅▅▅▅▅█▇▆▅▅▅▆▇▆▆▅▆▆▅▆▆
+wandb:         AP2/Observation ▃▃▄▁▂▃▁▁▃▂▁▄▅▅▅▄▄▅▅▅▃▄▇▄▅▇▇█▄▅▄▅▇▆▅▃▇▅▃▄
+wandb:              AP2/Reward ▄▂▂█▃▆▅▆▅▃▅▄▁▃▄▄▃▃▄▄▄▃▄▄▄▄▄▄▆▃▄▅▄▅▅▅▅▅▆▅
+wandb:          AP2/Throughput ▇▃▆▅▆▄▁▆▇█▅▅▄▅▅▁▅▅▅▃▃▅▄▄▄▄▄▄▄▄▄▄▅▆▅▄▄▅▆▄
+wandb:                 Episode ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: Global/CumulativeReward ▁
+wandb:         Global/Fairness ▂▁▃▇▅▆█▂▃▇▆███▆█▇█▇██████▆█▆▇█▇▇█▆█▆▆▇▇▇
+wandb:        Global/LossRatio ▃▂▂▃▄▁▂▄▄▄▅▄▄▃▆▄▅▄▅▃▄▄▄▃██▄▄▆▄▄▅▄▇▅▆▄▅▄▃
+wandb:       Global/Throughput ▄▃▁▅▁▅▆▆▆▇█▇▇▇▇▇▇▇▇▆▇█▆▇▆█▆▆▇▆▆▇▆▇▇▅▇▆▇▇
+wandb:                    Step ▁▁▁▁▁▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▅▅▅▅▆▆▆▆▇▇▇▇██
+wandb: 
+wandb: Run summary:
+wandb:           AP1/ActorLoss -0.11986
+wandb:                  AP1/CW 16
+wandb:          AP1/CriticLoss 0.00019
+wandb:    AP1/CumulativeReward 33.22694
+wandb:           AP1/LossRatio 0.56667
+wandb:         AP1/Observation 0.56667
+wandb:              AP1/Reward 0.05075
+wandb:          AP1/Throughput 15.2256
+wandb:           AP2/ActorLoss -0.02536
+wandb:                  AP2/CW 16
+wandb:          AP2/CriticLoss 0.00015
+wandb:    AP2/CumulativeReward 29.60273
+wandb:           AP2/LossRatio 0.56604
+wandb:         AP2/Observation 0.56604
+wandb:              AP2/Reward 0.05986
+wandb:          AP2/Throughput 26.9376
+wandb:                 Episode 0
+wandb: Global/CumulativeReward 62.82967
+wandb:         Global/Fairness 0.92837
+wandb:        Global/LossRatio 0.56627
+wandb:       Global/Throughput 42.1632
+wandb:                    Step 600
+wandb: 
+wandb: You can sync this run to the cloud by running:
+wandb: wandb sync /__w/mac-world/mac-world/ns-3.29/scratch/linear-mesh/wandb/offline-run-20261109_170914-018wjql7
+wandb: Find logs at: ./wandb/offline-run-20261109_170914-018wjql7/logs
+episode 0 cumulative reward per AP: [33.227, 29.603]
+W&B check: 600 rows, 19 keys each
+RESULT: PASS | steps: 600
