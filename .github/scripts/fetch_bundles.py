@@ -16,7 +16,7 @@ for j in jobs:
     if j["name"] == "prep":
         continue
     log = subprocess.check_output(["gh", "api", "repos/%s/actions/jobs/%d/logs" % (repo, j["id"])]).decode("utf-8", "replace")
-    res = [re.sub(r"^\S+ ", "", l) for l in log.splitlines() if re.match(r"\S+ (job |sha256|check|cmp with)", l)]
+    res = [re.sub(r"^\S+ ", "", l) for l in log.splitlines() if re.match(r"\S+ (\S+/\S+: exit|\s+sha256|\s+check|\s+cmp with)", l)]
     print("%s [%s]" % (j["name"], j["conclusion"]))
     for l in res:
         print("   " + l)

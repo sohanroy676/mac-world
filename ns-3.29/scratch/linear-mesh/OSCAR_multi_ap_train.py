@@ -45,7 +45,7 @@ parser.add_argument("--apLoads", default="", help="v3.4.0 scenario: per-STA offe
 parser.add_argument("--reward", choices=["local", "pf", "spf"], default="local", help="independent/shared replay reward: local = own goodput (alpha mixes in network goodput); pf = proportional fair, 1 + mean_i log(eps + r_i) / -log(eps), same value for every agent; spf (v4.0.0, RAFA) = station-weighted PF: mean over STAs of ln(max(0.01, Mbps per STA)), mapped affinely so 0.01 Mbps -> 0 and 10 Mbps -> 1 (ADR-0007)")
 parser.add_argument("--rewardScale", type=float, default=1.0, help="multiplies the reward stored in replay (central/global/independent/shared; 1 = unchanged)")
 parser.add_argument("--alpha", type=float, default=1.0, help="independent/shared: replay reward = alpha*own + (1-alpha)*network goodput reward (1 = strictly local)")
-parser.add_argument("--obs", choices=["loss", "hist", "rafa"], default="loss", help="independent/shared state: loss = newest own loss; hist = [newest, mean, std over --obsWindow own steps, own previous action]; rafa (v4.0.0) = own [idle/20, Retry rate, goodput per active STA / offered load, active STAs/50, CW exponent/6], no loss (forces --extraTraces)")
+parser.add_argument("--obs", choices=["loss", "hist", "rafa"], default="loss", help="independent/shared state: loss = newest own loss; hist = [newest, mean, std over --obsWindow own steps, own previous action]; rafa (v4.0.0) = own [idle/20, Retry rate, goodput per active STA / min(offered load, 10 Mbps), active STAs/50, CW exponent/6], no loss (forces --extraTraces)")
 parser.add_argument("--obsWindow", type=int, default=50, help="steps of the AP's own loss history used by --obs hist")
 parser.add_argument("--tag", default="", help="variant label stored in config.json (used by aggregate_bench.py)")
 parser.add_argument("--print_every", type=int, default=10)
@@ -278,7 +278,7 @@ def rafa_states(recs, acts_prev, loads=None):
     for i, r in enumerate(recs):
         act = max(1.0, r["active"])
         gp = r["rx"] * PAYLOAD_BITS / 1e6 / args.stepTime / act
-        out[i] = [min(1.0, r["idle"] / RAFA_IDLE_SCALE), min(1.0, max(0.0, r["retry"])), min(1.0, gp / loads[i]),
+        out[i] = [min(1.0, r["idle"] / RAFA_IDLE_SCALE), min(1.0, max(0.0, r["retry"])), min(1.0, gp / min(loads[i], SPF_TOP_MBPS)),
                   min(1.0, r["active"] / RAFA_ACTIVE_SCALE), (acts_prev[i] + 1.0) / 2.0]
     return out
 
