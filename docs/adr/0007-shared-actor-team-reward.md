@@ -12,6 +12,9 @@ ADR-0002 fixed one agent, one buffer and one reward per AP. ADR-0004 already rel
 ## Decision
 The v4 main method (RAFA) uses one shared DDPG actor, applied by each AP to its own local inputs (idle-slot mean, Retry-bit rate, loss, load, active-station count), trained on a team reward: a station-weighted alpha-fair utility with alpha as an input, plus a training-only fair-floor penalty. Execution stays local: no AP reads another AP's observation. Neighbour summaries only appear in a separate variant (RAFA-N). Independent per-AP agents stay as baselines. Scenarios are drawn per episode from a fixed pool (`--scenarioPool`).
 
+## Input and reward scales (added with M3 step 0, 2026-11-09)
+Inputs per AP, all from its own record, each in [0, 1]: mean idle slots / 20 (clipped), Retry-bit rate, goodput per active station / offered per-station load (clipped), active stations / 50 (clipped), own CW exponent (previous action + 1) / 2. The loss scalar is not an input (`--obs rafa`). The reward is the station-weighted PF utility, the mean over all stations of ln(max(0.01 Mbps, per-station Mbps)), mapped affinely so 0.01 Mbps gives 0 and 10 Mbps gives 1 (`--reward spf`); alpha and the fair-floor penalty come in step 2. Exploration noise is Gaussian by default; `--noiseDist gumbel|gumbel-raw` is the step 1 test. Evidence for the Retry/idle choice: M1 gate G0b. Platform note: learners are trained on CPU on GitHub Actions; same-seed reruns are identical only within a CPU vendor (`docs/results/m3-step0-checks-v4.0.0.md`).
+
 ## Alternatives considered
 - Keep independent actors per AP: not stable across training seeds (v3.4.0 section 4c to 4i), and cannot be trained on varying AP counts.
 - Central critic or MAPPO: collapsed at N=10 (v1.9.0) and needs more episodes than 10-minute ns-3 jobs allow.
