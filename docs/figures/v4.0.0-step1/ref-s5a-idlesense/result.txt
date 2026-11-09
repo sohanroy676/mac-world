@@ -1,0 +1,9 @@
+ref-s5a-idlesense/seed0: exit 0, 1057 s, pin=False, run dirs ['results/multi-ap-20261109-175019']
+  sha256 trace.csv: 106c8a14bb3aca8f3d7a7170c0caf633a7960a91004dd8335e1b3ebb08828239
+  check: PASS
+ref-s5a-idlesense/seed1: exit 0, 1046 s, pin=False, run dirs ['results/multi-ap-20261109-180756']
+  sha256 trace.csv: f25324400279ad5d4e12a600a5079f6a42aeda4a3aed45e32f05ac04a51d8266
+  check: PASS
+ref-s5a-idlesense/seed2: exit 0, 1063 s, pin=False, run dirs ['results/multi-ap-20261109-182523']
+  sha256 trace.csv: fd2e29376db9495b69e70416b112ba0376741ec56feabeef5e0a3ee71802aa98
+  check: PASS

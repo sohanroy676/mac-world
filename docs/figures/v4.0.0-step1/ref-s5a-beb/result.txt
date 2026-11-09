@@ -1,0 +1,9 @@
+ref-s5a-beb/seed0: exit 0, 1059 s, pin=False, run dirs ['results/multi-ap-20261109-175011']
+  sha256 trace.csv: b34601b05481f25ceee39f2798299951d787f7eaf3297296789f6a4b41b169f3
+  check: PASS
+ref-s5a-beb/seed1: exit 0, 1062 s, pin=False, run dirs ['results/multi-ap-20261109-180751']
+  sha256 trace.csv: 2bb62b091f10390dfac944bd646767b12e5c6892ba78bb6268d5f2f7121e14be
+  check: PASS
+ref-s5a-beb/seed2: exit 0, 1070 s, pin=False, run dirs ['results/multi-ap-20261109-182534']
+  sha256 trace.csv: ed8d05dd49997cc9798b65eb41f86daf2c84ef8056ddbfa37c0c6204e7e3e5ce
+  check: PASS
