@@ -1,0 +1,6 @@
+episode 0 acting alpha 1
+episode 1 acting alpha 0
+episode 2 acting alpha 2
+episode 3 acting alpha 2
+episode 4 acting alpha 0.5
+episode 5 acting alpha 2
