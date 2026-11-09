@@ -79,6 +79,7 @@ parser.add_argument("--alphaInput", action="store_true", help="v4.0.0 RAFA step 
 parser.add_argument("--alphaSet", default="0,0.5,1,2,4", help="alphas used with --alphaInput")
 parser.add_argument("--floorLambda", type=float, default=0.0, help="v4.0.0 --reward fair: training-only floor penalty lambda * sum_i max(0, floor_i - xbar_i) / sum_i floor_i (xbar = EMA of AP Mbps, 50-step time constant)")
 parser.add_argument("--floors", default="", help="per-AP floors in Mbps for --floorLambda (comma-separated, from the BEB references)")
+parser.add_argument("--poolRR", action="store_true", help="v4.0.0 --scenarioPool: round-robin without replacement (a fresh random order every len(pool) episodes); pool entries may carry per-AP \"floors\" for --floorLambda")
 parser.add_argument("--noiseDist", choices=["gaussian", "gumbel", "gumbel-raw"], default="gaussian", help="v4.0.0 exploration noise on the action, scale max_action*expl_noise: gaussian = N(0,s); gumbel = Gumbel centred to mean 0 with SD s; gumbel-raw = Gumbel(0, scale s), not centred")
 parser.add_argument("--ccodHist", type=int, default=300, help="ccod: loss-history length fed to the CCOD agent (agents/ddpg, RLinWiFi; CCOD_train.py: 300)")
 args = parser.parse_args()
@@ -133,7 +134,7 @@ if args.apLoads:
 if args.staSchedule:
     sim_args["staSchedule"] = args.staSchedule
 pool = json.load(open(args.scenarioPool)) if args.scenarioPool else []
-assert not pool or (args.mode == "shared" and not args.check), "--scenarioPool: mode shared only, and not with --check"
+assert not pool or (args.mode == "shared" and (args.poolRR or not args.check)), "--scenarioPool: mode shared only; --check only with --poolRR (v4.0.0)"
 if args.useRts:
     sim_args["useRts"] = "true"
 if args.rewardNorm > 0:
@@ -291,12 +292,12 @@ def rafa_states(recs, acts_prev, loads=None):
 ALPHA_SET = [float(a) for a in args.alphaSet.split(",")]
 assert args.reward != "fair" or (args.mode == "shared" and args.obs == "rafa"), "--reward fair: --mode shared --obs rafa only"
 assert not args.alphaInput or args.reward == "fair", "--alphaInput needs --reward fair"
-assert args.floorLambda == 0 or args.floors, "--floorLambda needs --floors"
+assert args.floorLambda == 0 or args.floors or args.scenarioPool, "--floorLambda needs --floors (or pool entries with floors)"
 FLOORS = [float(f) for f in args.floors.split(",")] if args.floors else []
 MAXAP = 4
 CUR_ALPHA = args.fairAlpha  # alpha used for acting (input) and for the stored reward this episode
 alpha_rng = np.random.RandomState(args.seed + 11)
-assert not FLOORS or len(FLOORS) == n, "--floors: one value per AP"
+assert not FLOORS or len(FLOORS) == n or args.scenarioPool, "--floors: one value per AP"
 
 
 def fair_reward_batch(x, cnt, alphas):
@@ -401,14 +402,26 @@ if args.mode == "central" and args.check:
 picks = []
 if pool:
     _rng = np.random.RandomState(args.seed + 7)
-    picks = [int(_rng.randint(len(pool))) for _ in range(args.episodes)]
+    if args.poolRR:
+        picks = []
+        while len(picks) < args.episodes:
+            picks += [int(k) for k in _rng.permutation(len(pool))]
+        picks = picks[:args.episodes]
+    else:
+        picks = [int(_rng.randint(len(pool))) for _ in range(args.episodes)]
 
 
 def apply_cfg(cfg, episode):
     """Switch the per-AP globals to scenario cfg for this episode and return the cw.cc args for it."""
-    global counts, n, LOADS, NORM_LOADS, NORM_TOTAL
-    ep_args = {k: v for k, v in sim_args.items() if k not in ("apStaCounts", "apLoads", "apHidden", "hiddenLoss", "staSchedule")}
-    ep_args.update({k: v for k, v in cfg.items() if k != "name"})
+    global counts, n, LOADS, NORM_LOADS, NORM_TOTAL, FLOORS
+    ep_args = {k: v for k, v in sim_args.items() if k not in ("apStaCounts", "apLoads", "apHidden", "hiddenLoss", "staSchedule", "rewardNorm")}
+    ep_args.update({k: v for k, v in cfg.items() if k not in ("name", "floors")})
+    if float(cfg.get("rewardNorm", args.rewardNorm)) > 0:
+        ep_args["rewardNorm"] = "%g" % float(cfg.get("rewardNorm", args.rewardNorm))
+    else:
+        ep_args.pop("rewardNorm", None)
+    if "floors" in cfg:
+        FLOORS = [float(f) for f in str(cfg["floors"]).split(",")]
     ep_args["seed"] = ns3_seeds[episode]
     counts = [int(c) for c in str(cfg["apStaCounts"]).split(",")]
     n = len(counts)
@@ -422,7 +435,7 @@ def apply_cfg(cfg, episode):
 env = EnvWrapper(1, **(apply_cfg(pool[picks[0]], 0) if pool else sim_args))
 print("APs:", counts, "steps/ep:", steps_per_ep, "out:", out_dir)
 time_step = 0
-reward_cols = [[] for _ in range(n)]
+reward_cols = [[] for _ in range(max([n] + [len(str(c["apStaCounts"]).split(",")) for c in pool]))]
 logged = []
 try:
     for episode in range(args.episodes):

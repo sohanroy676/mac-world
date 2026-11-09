@@ -1,0 +1,149 @@
+[
+ {
+  "name": "one-domain-20,40",
+  "apStaCounts": "20,40",
+  "floors": "9.35,16.90"
+ },
+ {
+  "name": "one-domain-10,30",
+  "apStaCounts": "10,30",
+  "floors": "7.59,21.63"
+ },
+ {
+  "name": "one-domain-30,30",
+  "apStaCounts": "30,30",
+  "floors": "13.57,13.17"
+ },
+ {
+  "name": "one-domain-15,45",
+  "apStaCounts": "15,45",
+  "floors": "7.10,19.66"
+ },
+ {
+  "name": "one-domain-5,15",
+  "apStaCounts": "5,15",
+  "floors": "8.59,25.18"
+ },
+ {
+  "name": "one-domain-40,20",
+  "apStaCounts": "40,20",
+  "floors": "17.60,9.11"
+ },
+ {
+  "name": "one-domain-10,10",
+  "apStaCounts": "10,10",
+  "floors": "17.35,17.32"
+ },
+ {
+  "name": "one-domain-25,25",
+  "apStaCounts": "25,25",
+  "floors": "14.16,13.95"
+ },
+ {
+  "name": "chain-10,10,10",
+  "apStaCounts": "10,10,10",
+  "apHidden": "1-3",
+  "floors": "24.40,0.30,24.40"
+ },
+ {
+  "name": "chain-5,10,5",
+  "apStaCounts": "5,10,5",
+  "apHidden": "1-3",
+  "floors": "19.12,2.34,19.12"
+ },
+ {
+  "name": "chain-10,5,10",
+  "apStaCounts": "10,5,10",
+  "apHidden": "1-3",
+  "floors": "28.64,0.98,28.64"
+ },
+ {
+  "name": "chain-15,10,15",
+  "apStaCounts": "15,10,15",
+  "apHidden": "1-3",
+  "floors": "26.05,1.12,26.05"
+ },
+ {
+  "name": "chain-8,8,8",
+  "apStaCounts": "8,8,8",
+  "apHidden": "1-3",
+  "floors": "24.41,1.68,24.41"
+ },
+ {
+  "name": "chain-12,6,12",
+  "apStaCounts": "12,6,12",
+  "apHidden": "1-3",
+  "floors": "28.81,0.90,28.81"
+ },
+ {
+  "name": "chain-10,10,10-load150,150,1",
+  "apStaCounts": "10,10,10",
+  "apHidden": "1-3",
+  "apLoads": "150,150,1",
+  "floors": "15.10,11.53,10.00",
+  "rewardNorm": 0
+ },
+ {
+  "name": "chain-10,10,10-load1,150,150",
+  "apStaCounts": "10,10,10",
+  "apHidden": "1-3",
+  "apLoads": "1,150,150",
+  "floors": "10.00,11.46,15.05",
+  "rewardNorm": 0
+ },
+ {
+  "name": "chain-10,10,10-load150,150,20",
+  "apStaCounts": "10,10,10",
+  "apHidden": "1-3",
+  "apLoads": "150,150,20",
+  "floors": "24.21,1.27,24.21",
+  "rewardNorm": 0
+ },
+ {
+  "name": "chain-5,10,5-load150,150,1",
+  "apStaCounts": "5,10,5",
+  "apHidden": "1-3",
+  "apLoads": "150,150,1",
+  "floors": "10.20,18.86,5.00",
+  "rewardNorm": 0
+ },
+ {
+  "name": "chain-15,10,15-load150,150,1",
+  "apStaCounts": "15,10,15",
+  "apHidden": "1-3",
+  "apLoads": "150,150,1",
+  "floors": "18.42,6.81,14.99",
+  "rewardNorm": 0
+ },
+ {
+  "name": "chain-10,10,10-halfedge-off",
+  "apStaCounts": "10,10,10",
+  "apHidden": "1-3",
+  "staSchedule": "0:0-4:0:7.5/2:0-4:0:7.5",
+  "floors": "21.25,1.57,21.25"
+ },
+ {
+  "name": "chain-15,10,15-halfedge-off",
+  "apStaCounts": "15,10,15",
+  "apHidden": "1-3",
+  "staSchedule": "0:0-7:0:7.5/2:0-7:0:7.5",
+  "floors": "21.23,1.41,21.23"
+ },
+ {
+  "name": "chain-8,8,8-halfedge-off",
+  "apStaCounts": "8,8,8",
+  "apHidden": "1-3",
+  "staSchedule": "0:0-3:0:7.5/2:0-3:0:7.5",
+  "floors": "22.49,2.06,22.49"
+ },
+ {
+  "name": "three-domain-10,10,10",
+  "apStaCounts": "10,10,10",
+  "floors": "10.50,10.85,10.83"
+ },
+ {
+  "name": "three-domain-5,10,15",
+  "apStaCounts": "5,10,15",
+  "floors": "5.44,10.89,15.20"
+ }
+]
