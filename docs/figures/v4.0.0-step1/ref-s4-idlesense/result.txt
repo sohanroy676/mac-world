@@ -1,0 +1,9 @@
+ref-s4-idlesense/seed0: exit 0, 450 s, pin=False, run dirs ['results/multi-ap-20261109-174956']
+  sha256 trace.csv: 651ad4424eeefbb5d9f1e771961d269de3492c9d89cc09a8bad08092a0b31dc1
+  check: PASS
+ref-s4-idlesense/seed1: exit 0, 451 s, pin=False, run dirs ['results/multi-ap-20261109-175726']
+  sha256 trace.csv: c45931967f078e1ce6f864f3fb04c416f371f0d75ce123725e6945879b49d574
+  check: PASS
+ref-s4-idlesense/seed2: exit 0, 450 s, pin=False, run dirs ['results/multi-ap-20261109-180458']
+  sha256 trace.csv: 9162a8e9c8001596cdb534f793f30f9185771d09518edd361276c6539f1ac763
+  check: PASS

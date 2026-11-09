@@ -1,0 +1,12 @@
+s1-s4-gaussian-t2/train: exit 0, 1429 s, pin=False, run dirs ['results/multi-ap-20261109-174955']
+  sha256 trace.csv: 5aeb0cf9d2faf5726bfdb0e158fa1d8700ea049f4405de5e13abed35b52a4cc1
+  check: PASS
+s1-s4-gaussian-t2/eval0: exit 0, 442 s, pin=False, run dirs ['results/multi-ap-20261109-181344']
+  sha256 trace.csv: 98d1693c2d5e03a0657e1802be0fad7d58a3641f4ae7595a252bda8b1591db75
+  check: PASS
+s1-s4-gaussian-t2/eval1: exit 0, 445 s, pin=False, run dirs ['results/multi-ap-20261109-182107']
+  sha256 trace.csv: f1bcee26de1e7e7944a95f47b9be6cbbe2ab5268af5102b2af548307fac28283
+  check: PASS
+s1-s4-gaussian-t2/eval2: exit 0, 448 s, pin=False, run dirs ['results/multi-ap-20261109-182832']
+  sha256 trace.csv: 01d0e098c8ea3e8661ac5f83596d344ec3761104ade8be3c9498d4cae736a42c
+  check: PASS

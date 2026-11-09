@@ -1,0 +1,12 @@
+s1-s4-gumbel-raw-t2/train: exit 0, 995 s, pin=False, run dirs ['results/multi-ap-20261109-182522']
+  sha256 trace.csv: 285c46cc96b1bee62bd70abc1ec93eef59b1778d2a0bffda1306d5dd4c19cf80
+  check: PASS
+s1-s4-gumbel-raw-t2/eval0: exit 0, 315 s, pin=False, run dirs ['results/multi-ap-20261109-184157']
+  sha256 trace.csv: 21442d9ef7a26875d496b95c3d909b9d00c98f35d76d20016a30b3617e90e639
+  check: PASS
+s1-s4-gumbel-raw-t2/eval1: exit 0, 319 s, pin=False, run dirs ['results/multi-ap-20261109-184712']
+  sha256 trace.csv: c96ced64bce736d9bf540a28900d03c757ace21f964ef178d9230b91a903a15f
+  check: PASS
+s1-s4-gumbel-raw-t2/eval2: exit 0, 320 s, pin=False, run dirs ['results/multi-ap-20261109-185232']
+  sha256 trace.csv: 037315cedc9f8050303056d94a6476b1d2f2d98e991e6b274a6bd7726a26740f
+  check: PASS

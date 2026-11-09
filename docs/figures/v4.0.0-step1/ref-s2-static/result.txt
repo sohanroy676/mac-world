@@ -1,0 +1,9 @@
+ref-s2-static/seed0: exit 0, 313 s, pin=False, run dirs ['results/multi-ap-20261109-174757']
+  sha256 trace.csv: 690ca14aeb76813bd440b8fd3a9ff68098e51dce38d18a4c113db9d953231b99
+  check: PASS
+ref-s2-static/seed1: exit 0, 311 s, pin=False, run dirs ['results/multi-ap-20261109-175310']
+  sha256 trace.csv: ba6ea5e9471dbfa661ba150b149249320e0338e69c67c9d32b94fb87d7052227
+  check: PASS
+ref-s2-static/seed2: exit 0, 323 s, pin=False, run dirs ['results/multi-ap-20261109-175823']
+  sha256 trace.csv: a464ef199324489f86f27eb991cbbbdbfcb9cdf45251e9e316959e892575e109
+  check: PASS
