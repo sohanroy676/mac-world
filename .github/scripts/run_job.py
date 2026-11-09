@@ -15,11 +15,14 @@ start_marker = time.time() - 1
 log = os.path.join(out, jid + ".log")
 os.makedirs(out, exist_ok=True)
 with open(log, "w") as lf:
-    rc = subprocess.call([py, "OSCAR_multi_ap_train.py"] + args, stdout=lf, stderr=subprocess.STDOUT)
+    env = dict(os.environ)
+    if os.environ.get("PIN") == "1":  # same float results on every CPU model: no ISA-specific torch/MKL kernels, one thread
+        env.update(ATEN_CPU_CAPABILITY="default", MKL_CBWR="COMPATIBLE", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1")
+    rc = subprocess.call([py, "OSCAR_multi_ap_train.py"] + args, stdout=lf, stderr=subprocess.STDOUT, env=env)
 secs = int(time.time() - t0)
 runs = [d for d in glob.glob("results/multi-ap-*") if os.path.getmtime(d) >= start_marker]
 runs.sort(key=os.path.getmtime)
-lines = ["job %s: exit %d, %d s, run dirs %s" % (jid, rc, secs, runs)]
+lines = ["job %s: exit %d, %d s, pin=%s, run dirs %s" % (jid, rc, secs, os.environ.get("PIN") == "1", runs)]
 res = "FAIL"
 if rc == 0 and len(runs) == 1:
     d = runs[0]

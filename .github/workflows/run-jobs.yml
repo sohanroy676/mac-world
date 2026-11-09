@@ -72,6 +72,7 @@ jobs:
         working-directory: ns-3.29/scratch/linear-mesh
         env:
           JOB_ARGS: ${{ matrix.args }}
+          PIN: ${{ matrix.pin }}
         run: |
           /opt/venv37/bin/python ../../../.github/scripts/run_job.py /opt/venv37/bin/python "${{ matrix.id }}" "$JOB_ARGS" "${{ matrix.ref }}" /tmp/out
       - name: Upload outputs
