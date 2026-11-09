@@ -32,11 +32,11 @@ for c in cmds:
     if args and args[0].endswith(".py"):  # probe jobs: first arg is a script in scratch/linear-mesh
         script, args = args[0], args[1:]
     t0 = time.time()
-    marker = t0 - 1
+    before = set(glob.glob("results/multi-ap-*"))
     log = os.path.join(dst_root, name + ".log")
     with open(log, "w") as lf:
         rc = subprocess.call([py, script] + args, stdout=lf, stderr=subprocess.STDOUT, env=env)
-    runs = sorted((d for d in glob.glob("results/multi-ap-*") if os.path.getmtime(d) >= marker), key=os.path.getmtime)
+    runs = sorted(set(glob.glob("results/multi-ap-*")) - before, key=os.path.getmtime)
     res = "FAIL"
     msg = "%s/%s: exit %d, %d s, pin=%s, run dirs %s" % (jid, name, rc, int(time.time() - t0), env.get("PIN") == "1", runs)
     if rc == 0 and script != "OSCAR_multi_ap_train.py":
