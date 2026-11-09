@@ -18,13 +18,19 @@ with open(log, "w") as lf:
     env = dict(os.environ)
     if os.environ.get("PIN") == "1":  # same float results on every CPU model: no ISA-specific torch/MKL kernels, one thread
         env.update(ATEN_CPU_CAPABILITY="default", MKL_CBWR="COMPATIBLE", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1")
-    rc = subprocess.call([py, "OSCAR_multi_ap_train.py"] + args, stdout=lf, stderr=subprocess.STDOUT, env=env)
+    script = "OSCAR_multi_ap_train.py"
+    if args and args[0].endswith(".py"):  # probe jobs: first arg is a script in scratch/linear-mesh
+        script, args = args[0], args[1:]
+    rc = subprocess.call([py, script] + args, stdout=lf, stderr=subprocess.STDOUT, env=env)
 secs = int(time.time() - t0)
 runs = [d for d in glob.glob("results/multi-ap-*") if os.path.getmtime(d) >= start_marker]
 runs.sort(key=os.path.getmtime)
 lines = ["job %s: exit %d, %d s, pin=%s, run dirs %s" % (jid, rc, secs, os.environ.get("PIN") == "1", runs)]
 res = "FAIL"
-if rc == 0 and len(runs) == 1:
+if rc == 0 and script != "OSCAR_multi_ap_train.py":
+    res = "PASS"
+    lines.append("script exit 0")
+elif rc == 0 and len(runs) == 1:
     d = runs[0]
     dst = os.path.join(out, jid)
     os.makedirs(dst)
