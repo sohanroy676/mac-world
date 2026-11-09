@@ -543,7 +543,7 @@ try:
                         w = S2[i, :args.obsWindow]
                         check(np.allclose(s2_i, [S2[i, 0], w.mean(), w.std(), acts[i]], atol=1e-5), "AP%d hist state mismatch at t=%d" % (i + 1, time_step))
                     if args.obs == "rafa":  # state recomputed from this AP's own record and own action only
-                        check(np.allclose(s2_i, rafa_states([recs[i]], [acts[i]], [LOADS[i]])[0], atol=1e-6) and s2_i.shape == (5,),
+                        check(np.allclose(s2_i, rafa_states([recs[i]], [acts[i]], [LOADS[i]])[0], atol=1e-6) and s2_i.shape == (local_dim,),
                               "AP%d rafa state mismatch at t=%d" % (i + 1, time_step))
                     elif args.obsIdle:  # state is the AP's own sensed idle slots, scaled like cw.cc does
                         check(np.isclose(s2_i[0], min(1.0, recs[i]["idle"] / 20.0), atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
