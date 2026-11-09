@@ -42,7 +42,7 @@ parser.add_argument("--offeredLoad", type=float, default=150.0, help="per-STA of
 parser.add_argument("--apHidden", default="", help="v3.4.0 scenario: 1-based AP pairs whose BSSs cannot hear each other, e.g. 1-3 (cw.cc --apHidden)")
 parser.add_argument("--hiddenLoss", type=float, default=0.0, help="path loss in dB between hidden pairs (0 = cw.cc default 200)")
 parser.add_argument("--apLoads", default="", help="v3.4.0 scenario: per-STA offered load in Mbps per AP, e.g. 150,150,5 (cw.cc --apLoads; default every AP uses --offeredLoad)")
-parser.add_argument("--reward", choices=["local", "pf", "spf"], default="local", help="independent/shared replay reward: local = own goodput (alpha mixes in network goodput); pf = proportional fair, 1 + mean_i log(eps + r_i) / -log(eps), same value for every agent; spf (v4.0.0, RAFA) = station-weighted PF: mean over STAs of ln(max(0.01, Mbps per STA)), mapped affinely so 0.01 Mbps -> 0 and 10 Mbps -> 1 (ADR-0007)")
+parser.add_argument("--reward", choices=["local", "pf", "spf", "fair"], default="local", help="independent/shared replay reward: local = own goodput (alpha mixes in network goodput); pf = proportional fair, 1 + mean_i log(eps + r_i) / -log(eps), same value for every agent; spf (v4.0.0, RAFA) = station-weighted PF: mean over STAs of ln(max(0.01, Mbps per STA)), mapped affinely so 0.01 Mbps -> 0 and 10 Mbps -> 1 (ADR-0007)")
 parser.add_argument("--rewardScale", type=float, default=1.0, help="multiplies the reward stored in replay (central/global/independent/shared; 1 = unchanged)")
 parser.add_argument("--alpha", type=float, default=1.0, help="independent/shared: replay reward = alpha*own + (1-alpha)*network goodput reward (1 = strictly local)")
 parser.add_argument("--obs", choices=["loss", "hist", "rafa"], default="loss", help="independent/shared state: loss = newest own loss; hist = [newest, mean, std over --obsWindow own steps, own previous action]; rafa (v4.0.0) = own [idle/20, Retry rate, goodput per active STA / min(offered load, 10 Mbps), active STAs/50, CW exponent/6], no loss (forces --extraTraces)")
@@ -74,6 +74,11 @@ parser.add_argument("--ctrlTau", type=float, default=0.2, help="kw/ucb: probe / 
 parser.add_argument("--kwDelta", type=float, default=0.2, help="kw: probe size in y = log(lam/(1-lam)) (paper: 0.2)")
 parser.add_argument("--kwEta", type=float, default=0.1, help="kw: step size (paper: 0.1)")
 parser.add_argument("--ucbC", type=float, default=0.3, help="ucb: exploration constant")
+parser.add_argument("--fairAlpha", type=float, default=1.0, help="v4.0.0 --reward fair: alpha of the station-weighted alpha-fair reward when acting/evaluating (with --alphaInput it is also the input)")
+parser.add_argument("--alphaInput", action="store_true", help="v4.0.0 RAFA step 2: alpha/4 is an extra actor input; training draws alpha per episode from --alphaSet and relabels every replay batch with fresh alphas")
+parser.add_argument("--alphaSet", default="0,0.5,1,2,4", help="alphas used with --alphaInput")
+parser.add_argument("--floorLambda", type=float, default=0.0, help="v4.0.0 --reward fair: training-only floor penalty lambda * sum_i max(0, floor_i - xbar_i) / sum_i floor_i (xbar = EMA of AP Mbps, 50-step time constant)")
+parser.add_argument("--floors", default="", help="per-AP floors in Mbps for --floorLambda (comma-separated, from the BEB references)")
 parser.add_argument("--noiseDist", choices=["gaussian", "gumbel", "gumbel-raw"], default="gaussian", help="v4.0.0 exploration noise on the action, scale max_action*expl_noise: gaussian = N(0,s); gumbel = Gumbel centred to mean 0 with SD s; gumbel-raw = Gumbel(0, scale s), not centred")
 parser.add_argument("--ccodHist", type=int, default=300, help="ccod: loss-history length fed to the CCOD agent (agents/ddpg, RLinWiFi; CCOD_train.py: 300)")
 args = parser.parse_args()
@@ -164,7 +169,7 @@ assert args.obs == "loss" or args.mode in LOCAL_MODES, "--obs hist only for inde
 assert args.alpha == 1.0 or args.mode in LOCAL_MODES, "--alpha only for independent/shared"
 assert args.reward == "local" or (args.mode in LOCAL_MODES and args.alpha == 1.0), "--reward pf only for independent/shared with --alpha 1 (pf replaces the mix)"
 assert 0.0 <= args.alpha <= 1.0 and 1 <= args.obsWindow <= args.historyLength
-local_dim = {"hist": 4, "rafa": 5}.get(args.obs, 1)
+local_dim = {"hist": 4, "rafa": 6 if args.alphaInput else 5}.get(args.obs, 1)
 AGENT_MODES = ("independent", "global", "shared")
 assert args.algo == "ddpg" or args.mode in AGENT_MODES, "--algo td3 only for independent/global/shared"
 assert not (args.saveActor or args.loadActor or args.eval) or args.mode in AGENT_MODES + ("ccod",), "--saveActor/--loadActor/--eval only for independent/global/shared"
@@ -211,7 +216,7 @@ agents = [Learner(local_dim, action_dim, max_action, args.discount, args.tau) fo
 if args.loadActor:
     for i, a in enumerate(agents):
         a.load(os.path.join(args.loadActor, "agent%d" % i))
-replays = [ReplayBuffer(local_dim, action_dim) for _ in range(n_agents)]
+replays = [ReplayBuffer(local_dim, action_dim) for _ in range(n_agents)]  # --reward fair: replaced by TeamReplay below
 ccod_agent = None
 if args.mode == "ccod":  # CCOD as in CCOD_train.py (RLinWiFi agent), one CW for all APs (Global form); calls follow agents/ddpg/teacher.py train()
     from agents.ddpg.agent import Agent as CcodAgent, Config as CcodConfig  # noqa: E402
@@ -274,13 +279,76 @@ def rafa_states(recs, acts_prev, loads=None):
     """Per-AP RAFA input from that AP's own record only (idle slots, Retry rate, goodput per active STA / offered load,
     active STAs, own CW exponent). acts in [-1, 1]; CW exponent = 3 (acts + 1) = real action / 6 after scaling."""
     loads = LOADS if loads is None else loads
-    out = np.zeros((len(recs), 5), dtype=np.float32)
+    out = np.zeros((len(recs), local_dim), dtype=np.float32)
     for i, r in enumerate(recs):
         act = max(1.0, r["active"])
         gp = r["rx"] * PAYLOAD_BITS / 1e6 / args.stepTime / act
         out[i] = [min(1.0, r["idle"] / RAFA_IDLE_SCALE), min(1.0, max(0.0, r["retry"])), min(1.0, gp / min(loads[i], SPF_TOP_MBPS)),
-                  min(1.0, r["active"] / RAFA_ACTIVE_SCALE), (acts_prev[i] + 1.0) / 2.0]
+                  min(1.0, r["active"] / RAFA_ACTIVE_SCALE), (acts_prev[i] + 1.0) / 2.0] + ([CUR_ALPHA / 4.0] if args.alphaInput else [])
     return out
+
+
+ALPHA_SET = [float(a) for a in args.alphaSet.split(",")]
+assert args.reward != "fair" or (args.mode == "shared" and args.obs == "rafa"), "--reward fair: --mode shared --obs rafa only"
+assert not args.alphaInput or args.reward == "fair", "--alphaInput needs --reward fair"
+assert args.floorLambda == 0 or args.floors, "--floorLambda needs --floors"
+FLOORS = [float(f) for f in args.floors.split(",")] if args.floors else []
+MAXAP = 4
+CUR_ALPHA = args.fairAlpha  # alpha used for acting (input) and for the stored reward this episode
+alpha_rng = np.random.RandomState(args.seed + 11)
+assert not FLOORS or len(FLOORS) == n, "--floors: one value per AP"
+
+
+def fair_reward_batch(x, cnt, alphas):
+    """Station-weighted alpha-fair team reward for a batch. x, cnt: [B, MAXAP] AP Mbps and station counts (0 = no AP);
+    alphas: [B]. The reward maps the alpha-fair certainty equivalent per station, M = (mean_s y_s^(1-a))^(1/(1-a))
+    (geometric mean at a = 1), affinely in ln M so 0.01 Mbps -> 0 and 10 Mbps -> 1. Monotone in U_alpha for fixed counts;
+    equal to --reward spf at alpha 1."""
+    x, cnt, alphas = np.asarray(x, np.float64), np.asarray(cnt, np.float64), np.asarray(alphas, np.float64)
+    y = np.maximum(SPF_EPS_MBPS, x / np.maximum(cnt, 1.0))
+    w = cnt / cnt.sum(1, keepdims=True)
+    ln_m = np.empty(len(x))
+    one = np.isclose(alphas, 1.0)
+    ln_m[one] = (w[one] * np.log(y[one])).sum(1)
+    a = alphas[~one][:, None]
+    if (~one).any():
+        ln_m[~one] = np.log((w[~one] * y[~one] ** (1.0 - a)).sum(1)) / (1.0 - a[:, 0])
+    lo, hi = math.log(SPF_EPS_MBPS), math.log(SPF_TOP_MBPS)
+    return np.clip((ln_m - lo) / (hi - lo), 0.0, 1.0)
+
+
+class TeamReplay(ReplayBuffer):
+    """Shared-actor replay that also keeps every AP's Mbps and station count, so a batch can be relabelled with fresh
+    alphas (alpha input = last state column) and its reward recomputed; the floor penalty is stored and not relabelled."""
+    def __init__(self, state_dim, action_dim, max_size=int(1e6)):
+        ReplayBuffer.__init__(self, state_dim, action_dim, max_size)
+        self.x = np.zeros((max_size, MAXAP))
+        self.cnt = np.zeros((max_size, MAXAP))
+        self.pen = np.zeros((max_size, 1))
+
+    def add_team(self, state, action, next_state, reward, done, x, cnt, pen):
+        k = self.ptr
+        self.add(state, action, next_state, reward, done)
+        self.x[k] = 0.0
+        self.cnt[k] = 0.0
+        self.x[k, :len(x)] = x
+        self.cnt[k, :len(cnt)] = cnt
+        self.pen[k] = pen
+
+    def sample(self, batch_size):
+        ind = np.random.randint(0, self.size, size=batch_size)
+        st, nst, rw = self.state[ind].copy(), self.next_state[ind].copy(), self.reward[ind].copy()
+        if args.alphaInput:
+            al = np.array(ALPHA_SET)[np.random.randint(0, len(ALPHA_SET), size=batch_size)]
+            st[:, -1] = al / 4.0
+            nst[:, -1] = al / 4.0
+            rw = (args.rewardScale * (fair_reward_batch(self.x[ind], self.cnt[ind], al) - self.pen[ind, 0]))[:, None]
+        f = lambda v: torch.FloatTensor(v).to(self.device)
+        return f(st), f(self.action[ind]), f(nst), f(rw), f(self.not_done[ind])
+
+
+if args.reward == "fair":
+    replays = [TeamReplay(local_dim, action_dim) for _ in range(n_agents)]
 
 
 def explore_noise(scale):
@@ -380,7 +448,13 @@ try:
             ccod_last = None
             ccod_noise = learning and episode < args.episodes * 4 / 5  # CCOD turns noise off for the last fifth of the episodes
         prev_acts = np.full(n, -1.0, dtype=np.float32)  # CW starts at BEB 16 = real action 0 = act -1
-        L = np.zeros((n, 5), dtype=np.float32) if args.obs == "rafa" else local_states(S, prev_acts)  # rafa: zeros, CW exponent 0 = BEB 16
+        if args.alphaInput and learning:  # one alpha per training episode, own stream so other draws are unchanged
+            CUR_ALPHA = ALPHA_SET[alpha_rng.randint(len(ALPHA_SET))]
+            print("episode %d acting alpha %g" % (episode, CUR_ALPHA), flush=True)
+        xbar = np.array(FLOORS if FLOORS else [0.0] * n, dtype=np.float64)  # EMA of AP Mbps for the floor penalty, starts at the floor
+        L = np.zeros((n, local_dim), dtype=np.float32) if args.obs == "rafa" else local_states(S, prev_acts)
+        if args.alphaInput:
+            L[:, -1] = CUR_ALPHA / 4.0  # rafa: zeros, CW exponent 0 = BEB 16
         S_g = np.zeros(state_dim, dtype=np.float32)  # global mode: network loss; 0 before the first step
         ep_reward = np.zeros(n)
         for step in range(1, steps_per_ep + 1):
@@ -431,14 +505,22 @@ try:
             r_net = global_reward(recs) if args.mode in LOCAL_MODES and args.alpha < 1.0 else 0.0
             r_pf = pf_reward([x["reward"] for x in recs]) if args.reward == "pf" else 0.0
             r_spf = spf_reward(recs) if args.reward == "spf" else 0.0
+            if args.reward == "fair":
+                x_now = [q["rx"] * PAYLOAD_BITS / 1e6 / args.stepTime for q in recs]
+                xbar += 0.02 * (np.array(x_now) - xbar)
+                pen = args.floorLambda * float(np.maximum(0.0, np.array(FLOORS) - xbar).sum() / sum(FLOORS)) if args.floorLambda > 0 else 0.0
+                r_spf = float(fair_reward_batch([x_now], [counts], [CUR_ALPHA])[0]) - pen
 
             for i in range(n):
                 r = recs[i]["reward"]
                 s_i, s2_i = L[i], L2[i]
                 if args.mode in LOCAL_MODES and learning:
                     ri = i if args.mode == "independent" else 0
-                    r_rep = args.rewardScale * (r_pf if args.reward == "pf" else r_spf if args.reward == "spf" else args.alpha * r + (1.0 - args.alpha) * r_net)
-                    replays[ri].add(s_i, acts[i], s2_i, r_rep, done[0])
+                    r_rep = args.rewardScale * (r_pf if args.reward == "pf" else r_spf if args.reward in ("spf", "fair") else args.alpha * r + (1.0 - args.alpha) * r_net)
+                    if args.reward == "fair":
+                        replays[ri].add_team(s_i, acts[i], s2_i, r_rep, done[0], x_now, counts, pen)
+                    else:
+                        replays[ri].add(s_i, acts[i], s2_i, r_rep, done[0])
                 if args.check:
                     if args.mode in LOCAL_MODES and learning:
                         k = (replays[ri].ptr - 1) % replays[ri].max_size
