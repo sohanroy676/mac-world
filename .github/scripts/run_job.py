@@ -42,6 +42,25 @@ else:
     lines.append("run dirs found: %d" % len(runs))
 text = "\n".join(lines)
 print(text)
+# Transport: the agent cannot download artifact blobs, so print a base64 tar.gz of the run dir + trainer log in the job log.
+import base64
+import io
+import tarfile
+bio = io.BytesIO()
+with tarfile.open(fileobj=bio, mode="w:gz") as tf:
+    if len(runs) == 1:
+        for root, _, files in os.walk(runs[0]):
+            for fn in files:
+                if fn.endswith(".wandb"):
+                    continue
+                full = os.path.join(root, fn)
+                tf.add(full, arcname=os.path.join(jid, os.path.relpath(full, runs[0])))
+    tf.add(log, arcname=os.path.join(jid, "trainer.log"))
+b64 = base64.b64encode(bio.getvalue()).decode()
+print("BUNDLE-BEGIN %s %d" % (jid, len(b64)))
+for i in range(0, len(b64), 4000):
+    print("B64 " + b64[i:i + 4000])
+print("BUNDLE-END %s" % jid)
 open(os.path.join(out, jid + ".result.txt"), "w").write(text + "\n")
 with open(os.environ.get("GITHUB_STEP_SUMMARY", os.devnull), "a") as s:
     s.write("### %s\n```\n%s\n```\n" % (jid, text))
