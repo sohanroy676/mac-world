@@ -1,0 +1,21 @@
+s2b-s4-l1e12-t0/train: exit 0, 3185 s, pin=False, run dirs ['results/multi-ap-20261109-220623']
+  sha256 trace.csv: 8426726f369b912bc8b6fa8a621fafbed057b6081b611736a8fcb2e488d8e13b
+  check: PASS
+s2b-s4-l1e12-t0/eval0-a1: exit 0, 447 s, pin=False, run dirs ['results/multi-ap-20261109-225929']
+  sha256 trace.csv: a491b6b737404eac03c0af548fa5b9c10cae733e0b26c7c14058d898bf1240b1
+  check: PASS
+s2b-s4-l1e12-t0/eval1-a1: exit 0, 448 s, pin=False, run dirs ['results/multi-ap-20261109-230656']
+  sha256 trace.csv: 44e1386db2eca7b088b06a7226ed1188e604c32bd9a29627b7b89d6afc2f3b37
+  check: PASS
+s2b-s4-l1e12-t0/eval2-a1: exit 0, 445 s, pin=False, run dirs ['results/multi-ap-20261109-231425']
+  sha256 trace.csv: 307c34078904d46974231595ae036da3dd571034cae7eba547a0f3269fd39d9a
+  check: PASS
+s2b-s4-l1e12-t0/eval0-a0: exit 0, 546 s, pin=False, run dirs ['results/multi-ap-20261109-232150']
+  sha256 trace.csv: 99e28468fe648c49151a9147c645e4694ec359bf932f22812991476b7394b201
+  check: PASS
+s2b-s4-l1e12-t0/eval1-a0: exit 0, 554 s, pin=False, run dirs ['results/multi-ap-20261109-233056']
+  sha256 trace.csv: cee3818f41360b9e45262ef33244aaa3994a731879bf74ba0545af374744ccac
+  check: PASS
+s2b-s4-l1e12-t0/eval2-a0: exit 0, 550 s, pin=False, run dirs ['results/multi-ap-20261109-234010']
+  sha256 trace.csv: ca50f3448b07aa29652f3a8ebf8487879a35408092ee98fa050d8c7780164032
+  check: PASS
