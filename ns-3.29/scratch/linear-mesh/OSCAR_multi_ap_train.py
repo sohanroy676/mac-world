@@ -572,7 +572,7 @@ try:
                     if args.reward == "pf" and i == 0:  # Test D2: pf reward recomputed from every AP's own rx counter
                         want_pf = pf_reward([min(1.0, max(0.0, q["rx"] * PAYLOAD_BITS / 1e6 / (NORM_LOADS[j] * counts[j] * args.stepTime))) for j, q in enumerate(recs)])
                         check(abs(r_pf - want_pf) < 1e-4 and 0.0 <= r_pf <= 1.0, "pf reward %s != recomputed %s at t=%d" % (r_pf, want_pf, time_step))
-                reward_cols[i].append(r)
+                reward_cols[i].append((time_step, r))  # keyed by global step: pool episodes vary the AP count
                 ep_reward[i] += r
                 pp = preprocess(S2[i].reshape(-1, 1, 1))[0][0]  # this AP's history only; logging only
                 trace.writerow([episode, step, i + 1, float(s_i[0]), float(acts[i]), float(real[i]), r, float(s2_i[0]),
@@ -734,8 +734,13 @@ if args.check:
     left = sorted({p for port in env.ports for p in os.popen("pgrep -f '[o]penGymPort=%d' || true" % port).read().split()})
     check(not left, "leftover ns-3 process(es): %s" % left)
     print("W&B check: %d rows, %d keys each" % (len(hist), len(keys)))
-    for i in range(n):
-        for j in range(i + 1, n):
-            check(not np.allclose(reward_cols[i], reward_cols[j]), "reward columns identical for AP%d and AP%d" % (i + 1, j + 1))
+    for i in range(len(reward_cols)):
+        for j in range(i + 1, len(reward_cols)):
+            ri, rj = dict(reward_cols[i]), dict(reward_cols[j])
+            both = sorted(set(ri) & set(rj))
+            if not both:  # APs never active in the same episode
+                continue
+            check(not np.allclose([ri[t] for t in both], [rj[t] for t in both]),
+                  "reward columns identical for AP%d and AP%d" % (i + 1, j + 1))
     print("RESULT:", "FAIL (%d)" % len(fails) if fails else "PASS", "| steps:", time_step)
     sys.exit(1 if fails else 0)
