@@ -5,6 +5,7 @@
      For the forward-looking feature plan, see ROADMAP.md instead —
      don't duplicate the full plan here, just what's actually in motion. -->
 
+- 2026-11-10: M3 step 2 done (lambda 1, 6 episodes); step 3 G3 FAILS (pooled far below per-scenario in S2/S4/S5a), so RAFA = per-scenario. Docs: m3-step2-results-v4.0.0.md, m3-step3-results-v4.0.0.md. M3 not tagged.
 - 2026-11-09: M3 step 0 done; step 1 done (G1 fail, G2 pass, Gumbel not adopted, continue to step 2 with the shared actor). Docs: docs/results/m3-step0-checks-v4.0.0.md, m3-step1-results-v4.0.0.md.
 
 - 2026-11-08: Actions runner merged into feature/v4; platform check PASS (3 non-learned runs byte-identical to lab; see docs/results/actions-comparability-2026-11-08.md). Next M3 step 0.
