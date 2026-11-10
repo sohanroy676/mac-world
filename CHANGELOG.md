@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **trainer**: Add RAFA inputs, station-weighted PF reward, noise dist
+- **ci**: Sequence jobs and step 1 batch; pre-register step 1
+- **trainer**: Add alpha input with relabelling and floor penalty
+- **trainer**: Round-robin pool with per-scenario floors
+
 ### Documentation
 
 - **plan**: Add revision 6 from mentor papers
@@ -18,6 +25,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **plan**: Add revision 9 second critical pass
 - **changelog**: Regenerate with git-cliff
 - **plan**: Rebuild plan as revision 10 on feature/v4
+- **changelog**: Regenerate with git-cliff
+- **actions**: Record GitHub Actions smoke test results
+- **actions**: Record full-cell timing results
+- **actions**: Correct beb job total time
+- **results**: Record Actions vs lab comparability
+- **memory-bank**: Record Actions comparability check
+- **m3**: Record step 0 checks, input scales, pool refs
+- **m3**: Record step 1 results and the G1 decision
+- **m3**: Record step 2 lambda batch, pick lambda 1
+- **m3**: Record step 2b (12 episodes, alpha-0 evals)
+- **m3**: Record step 3 results, G3 fails
+
+### Fixed
+
+- **ci**: Pick the new run dir by set difference
+- **trainer**: Rafa state check uses the input size
+- **trainer**: End-of-run checks follow per-episode AP count
+- **train**: Align pool reward check by step
+
+### Other
+
+- **actions**: Add smoke-test workflow for hosted runners
+- **actions**: Fail steps on pipe errors, prefer deadsnakes
+- **actions**: Install python shim and trim artifact
+- **actions**: Build through waf --run on a clean tree
+- **actions**: Add matplotlib to Python 3.7 pins
+- **actions**: Add full-cell timing workflow
+- **actions**: Merge Actions groundwork into v4
+- **actions**: Add job-list runner with reference cmp
+- **actions**: Ship run dirs in job logs, add step 0 batch
+- **actions**: Pin torch/MKL kernels, add determinism batch
+- **actions**: Add float probe job to find the CPU-vendor difference
+- Rerun micro check
+- Launch M3 step 1 batch (30 jobs)
+- Pre-register and launch M3 step 2 lambda batch
+- Launch step 2b (12 episodes at lambda 1, alpha-0 evals)
+- Pre-register and launch M3 step 3 (pooled RAFA, gate G3)
 
 ## [3.7.0] - 2026-11-05
 
@@ -579,46 +623,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **design**: Define multi-ap v0.2.0
 - Add CLAUDE.md and close v0.3.0 handoff
 
-[unreleased]: https://github.com/sohanroy676/mac-world/compare/v3.7.0..HEAD
-[3.7.0]: https://github.com/sohanroy676/mac-world/compare/v3.6.0..v3.7.0
-[3.6.0]: https://github.com/sohanroy676/mac-world/compare/v3.5.0..v3.6.0
-[3.5.0]: https://github.com/sohanroy676/mac-world/compare/v3.3.1..v3.5.0
-[3.3.1]: https://github.com/sohanroy676/mac-world/compare/v3.4.1..v3.3.1
-[3.4.1]: https://github.com/sohanroy676/mac-world/compare/v3.4.0..v3.4.1
-[3.4.0]: https://github.com/sohanroy676/mac-world/compare/v3.2.0..v3.4.0
-[3.2.0]: https://github.com/sohanroy676/mac-world/compare/v3.1.0..v3.2.0
-[3.1.0]: https://github.com/sohanroy676/mac-world/compare/main-at-v3.4.1..v3.1.0
-[main-at-v3.4.1]: https://github.com/sohanroy676/mac-world/compare/v3.0.0..main-at-v3.4.1
-[3.0.0]: https://github.com/sohanroy676/mac-world/compare/v2.7.2..v3.0.0
-[2.7.2]: https://github.com/sohanroy676/mac-world/compare/v2.7.1..v2.7.2
-[2.7.1]: https://github.com/sohanroy676/mac-world/compare/v2.7.0..v2.7.1
-[2.7.0]: https://github.com/sohanroy676/mac-world/compare/v2.6.1..v2.7.0
-[2.6.1]: https://github.com/sohanroy676/mac-world/compare/v2.6.0..v2.6.1
-[2.6.0]: https://github.com/sohanroy676/mac-world/compare/v2.5.2..v2.6.0
-[2.5.2]: https://github.com/sohanroy676/mac-world/compare/v2.5.1..v2.5.2
-[2.5.1]: https://github.com/sohanroy676/mac-world/compare/v2.5.0..v2.5.1
-[2.5.0]: https://github.com/sohanroy676/mac-world/compare/v2.4.0..v2.5.0
-[2.4.0]: https://github.com/sohanroy676/mac-world/compare/v2.3.0..v2.4.0
-[2.3.0]: https://github.com/sohanroy676/mac-world/compare/v2.2.0..v2.3.0
-[2.2.0]: https://github.com/sohanroy676/mac-world/compare/v2.1.0..v2.2.0
-[2.1.0]: https://github.com/sohanroy676/mac-world/compare/v2.0.0..v2.1.0
-[2.0.0]: https://github.com/sohanroy676/mac-world/compare/v1.9.0..v2.0.0
-[1.9.0]: https://github.com/sohanroy676/mac-world/compare/v1.8.0..v1.9.0
-[1.8.0]: https://github.com/sohanroy676/mac-world/compare/v1.7.0..v1.8.0
-[1.7.0]: https://github.com/sohanroy676/mac-world/compare/v1.6.0..v1.7.0
-[1.6.0]: https://github.com/sohanroy676/mac-world/compare/v1.5.0..v1.6.0
-[1.5.0]: https://github.com/sohanroy676/mac-world/compare/v1.4.0..v1.5.0
-[1.4.0]: https://github.com/sohanroy676/mac-world/compare/v1.3.0..v1.4.0
-[1.3.0]: https://github.com/sohanroy676/mac-world/compare/v1.2.0..v1.3.0
-[1.2.0]: https://github.com/sohanroy676/mac-world/compare/v1.1.0..v1.2.0
-[1.1.0]: https://github.com/sohanroy676/mac-world/compare/v1.0.0..v1.1.0
-[1.0.0]: https://github.com/sohanroy676/mac-world/compare/v0.9.0..v1.0.0
-[0.9.0]: https://github.com/sohanroy676/mac-world/compare/v0.8.0..v0.9.0
-[0.8.0]: https://github.com/sohanroy676/mac-world/compare/v0.7.0..v0.8.0
-[0.7.0]: https://github.com/sohanroy676/mac-world/compare/v0.6.0..v0.7.0
-[0.6.0]: https://github.com/sohanroy676/mac-world/compare/v0.5.0..v0.6.0
-[0.5.0]: https://github.com/sohanroy676/mac-world/compare/v0.4.0..v0.5.0
-[0.4.0]: https://github.com/sohanroy676/mac-world/compare/v0.3.0..v0.4.0
-[0.3.0]: https://github.com/sohanroy676/mac-world/tree/v0.3.0
+[unreleased]: https://github.com///compare/v3.7.0..HEAD
+[3.7.0]: https://github.com///compare/v3.6.0..v3.7.0
+[3.6.0]: https://github.com///compare/v3.5.0..v3.6.0
+[3.5.0]: https://github.com///compare/v3.3.1..v3.5.0
+[3.3.1]: https://github.com///compare/v3.4.1..v3.3.1
+[3.4.1]: https://github.com///compare/v3.4.0..v3.4.1
+[3.4.0]: https://github.com///compare/v3.2.0..v3.4.0
+[3.2.0]: https://github.com///compare/v3.1.0..v3.2.0
+[3.1.0]: https://github.com///compare/main-at-v3.4.1..v3.1.0
+[main-at-v3.4.1]: https://github.com///compare/v3.0.0..main-at-v3.4.1
+[3.0.0]: https://github.com///compare/v2.7.2..v3.0.0
+[2.7.2]: https://github.com///compare/v2.7.1..v2.7.2
+[2.7.1]: https://github.com///compare/v2.7.0..v2.7.1
+[2.7.0]: https://github.com///compare/v2.6.1..v2.7.0
+[2.6.1]: https://github.com///compare/v2.6.0..v2.6.1
+[2.6.0]: https://github.com///compare/v2.5.2..v2.6.0
+[2.5.2]: https://github.com///compare/v2.5.1..v2.5.2
+[2.5.1]: https://github.com///compare/v2.5.0..v2.5.1
+[2.5.0]: https://github.com///compare/v2.4.0..v2.5.0
+[2.4.0]: https://github.com///compare/v2.3.0..v2.4.0
+[2.3.0]: https://github.com///compare/v2.2.0..v2.3.0
+[2.2.0]: https://github.com///compare/v2.1.0..v2.2.0
+[2.1.0]: https://github.com///compare/v2.0.0..v2.1.0
+[2.0.0]: https://github.com///compare/v1.9.0..v2.0.0
+[1.9.0]: https://github.com///compare/v1.8.0..v1.9.0
+[1.8.0]: https://github.com///compare/v1.7.0..v1.8.0
+[1.7.0]: https://github.com///compare/v1.6.0..v1.7.0
+[1.6.0]: https://github.com///compare/v1.5.0..v1.6.0
+[1.5.0]: https://github.com///compare/v1.4.0..v1.5.0
+[1.4.0]: https://github.com///compare/v1.3.0..v1.4.0
+[1.3.0]: https://github.com///compare/v1.2.0..v1.3.0
+[1.2.0]: https://github.com///compare/v1.1.0..v1.2.0
+[1.1.0]: https://github.com///compare/v1.0.0..v1.1.0
+[1.0.0]: https://github.com///compare/v0.9.0..v1.0.0
+[0.9.0]: https://github.com///compare/v0.8.0..v0.9.0
+[0.8.0]: https://github.com///compare/v0.7.0..v0.8.0
+[0.7.0]: https://github.com///compare/v0.6.0..v0.7.0
+[0.6.0]: https://github.com///compare/v0.5.0..v0.6.0
+[0.5.0]: https://github.com///compare/v0.4.0..v0.5.0
+[0.4.0]: https://github.com///compare/v0.3.0..v0.4.0
+[0.3.0]: https://github.com///tree/v0.3.0
 
 <!-- generated by git-cliff -->
