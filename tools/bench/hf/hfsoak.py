@@ -14,6 +14,7 @@ REPO, BRANCH = "sohanroy676/mac-world", "bench/hf-results"
 EV = os.path.join(LOGDIR, "events.jsonl")
 os.makedirs(LOGDIR, exist_ok=True)
 lock = threading.Lock()
+start_lock = threading.Lock()  # output dirs are named to the second: never start two cells in the same second
 
 def boot_id():
     try: return open("/proc/sys/kernel/random/boot_id").read().strip()
@@ -72,7 +73,10 @@ def run_cell(seed, tag):
         cmd = [f"{VENV}/bin/python", "OSCAR_multi_ap_train.py", "--apStaCounts", "20,40", "--mode", "beb", "--seed", str(seed),
                "--simTime", "15", "--start_timesteps", "300"]; cwd = TRAIN
     with open(os.path.join(LOGDIR, f"{tag}-seed{seed}.log"), "w") as f:
-        rc = subprocess.run(cmd, cwd=cwd, stdout=f, stderr=subprocess.STDOUT).returncode
+        with start_lock:
+            proc = subprocess.Popen(cmd, cwd=cwd, stdout=f, stderr=subprocess.STDOUT)
+            time.sleep(2.5)
+        rc = proc.wait()
     log("cell", tag=tag, seed=seed, rc=rc, secs=round(time.time() - s, 1))
 
 def scale(ns):
