@@ -12,10 +12,11 @@
 set -euo pipefail
 
 PROVIDER="${1:?usage: run_bench.sh <provider-label> [--smoke] [--parallel N]}"; shift || true
-SMOKE=0; PAR=0
+SMOKE=0; PAR=0; NOAPT=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --smoke) SMOKE=1 ;;
+    --no-apt) NOAPT=1 ;;   # no root: packages must already be installed (e.g. HF packages.txt)
     --parallel) PAR="${2:?--parallel needs a number}"; shift ;;
     *) echo "unknown option $1" >&2; exit 2 ;;
   esac
@@ -58,10 +59,12 @@ say "hardware"
 
 # ---------- system packages ----------
 say "apt packages"; tick apt
+if [ "$NOAPT" = 0 ]; then
 $SUDO apt-get update -y >/dev/null
 $SUDO apt-get install -y --no-install-recommends build-essential git curl ca-certificates bzip2 tar pkg-config \
   python3 python3-dev python-is-python3 libprotobuf-dev protobuf-compiler libzmq3-dev libxml2-dev libsqlite3-dev sqlite3 \
   software-properties-common >/dev/null
+fi
 T_APT=$(elapsed apt)
 
 # ---------- ns-3 build ----------
@@ -75,7 +78,7 @@ T_BUILD=$(elapsed build)
 say "python 3.7 + pinned packages"; tick py
 if [ ! -x "$VENV/bin/python" ]; then
   . /etc/os-release
-  if [ "${ID:-}" = ubuntu ] && $SUDO add-apt-repository -y ppa:deadsnakes/ppa >/dev/null 2>&1 \
+  if [ "$NOAPT" = 0 ] && [ "${ID:-}" = ubuntu ] && $SUDO add-apt-repository -y ppa:deadsnakes/ppa >/dev/null 2>&1 \
      && $SUDO apt-get update -y >/dev/null 2>&1 \
      && $SUDO apt-get install -y python3.7 python3.7-venv python3.7-dev >/dev/null 2>&1; then
     PYSRC=deadsnakes
