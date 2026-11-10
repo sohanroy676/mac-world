@@ -3,6 +3,15 @@ Space files needed at the Space root: app.py, packages.txt, requirements.txt (th
 import glob, os, subprocess, threading
 import gradio as gr
 
+try:  # ZeroGPU Spaces refuse to start without at least one @spaces.GPU function
+    import spaces
+
+    @spaces.GPU
+    def _gpu_placeholder():
+        return "unused"
+except ImportError:  # plain CPU Space
+    pass
+
 REPO = "https://github.com/sohanroy676/mac-world.git"
 WORK = "/tmp/bench"
 LOG = os.path.join(WORK, "run.log")
