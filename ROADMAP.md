@@ -149,6 +149,7 @@
 - Status: M0 (v3.5.0) code + load test DONE 2026-11-01 on `feature/v4` (revision 6: 5 % floor slack; load 10 + `--rewardNorm 150` adopted for equal-load cells); pool BEB references done; run dirs committed; TAGGED `v3.5.0` on `feature/v4` (not merged into `dev`). `docs/results/m0-foundations-v3.5.0.md`.
 - Status: M1 (v3.6.0) DONE 2026-11-02 on `feature/v4`: oracle grids (S4, S5a, S8 phase 3, S2), gates G0a/G0b, IdleSense convergence, first GC tables S2/S4/S5a (eval seeds 100-102, n=3), 258 jobs PASS, run dirs committed, TAGGED `v3.6.0`. Open: S7-S4 load redesign, S8p3 edge CW below 64, Stage-2 seeds 103-109. Leftovers closed in v3.6.1 (S7-S4b, S8p3 edge CW 16/32, GC at 30 s and seeds 100-109). `docs/results/m1-oracle-grids-v3.6.0.md`.
 - Status: M2 (v3.7.0) DONE 2026-11-05 on `feature/v4`, TAGGED `v3.7.0`: BEB+RTS/CTS, KW, UCB, CCOD (Global form) scored on S2/S4/S5a (n=10, 30 s); drlCW, Patras PI, BLADE-style not built (texts not read). Next: M3 (RAFA). `docs/results/m2-baselines-v3.7.0.md`.
+- Status 2026-11-10: M3 (v4.0.0) steps 0-3 DONE on GitHub Actions; G1 failed (shared actor kept), G2 passed, G3 FAILED so RAFA is per-scenario (lambda 1, 6 episodes). `docs/results/m3-step3-results-v4.0.0.md`. Not tagged. Next: M2b/M2c, then M4.
 - Next (revision 10): M3 step 0 checks, then step 1 with gates G1/G2 and the Gumbel test; M2b/M2c (v3.8.0) after the step-1 gates; then M4.
 
 ## Not Planned for v1
