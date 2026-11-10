@@ -1,0 +1,55 @@
+# Benchmark only (branch bench/actions-scale): how many 20,40 cells fit in one hosted runner, and what the ns-3 build cache saves.
+# Runs on push to bench/actions-scale only. No schedule. Reports go to the job summary and the job log.
+name: bench-actions
+on:
+  push:
+    branches: ['bench/actions-scale']
+    paths: ['.github/workflows/bench-actions.yml', '.github/bench-trigger.txt']
+permissions:
+  contents: read
+env:
+  DEBIAN_FRONTEND: noninteractive
+jobs:
+  par:
+    name: par-${{ matrix.par }}
+    runs-on: ubuntu-24.04
+    container: ubuntu:22.04
+    timeout-minutes: 200
+    strategy:
+      fail-fast: false
+      matrix:
+        par: [2, 4]
+    steps:
+      - run: apt-get update && apt-get install -y --no-install-recommends git ca-certificates
+      - uses: actions/checkout@v4
+      - name: Single cell, then ${{ matrix.par }} at once
+        run: bash tools/bench/run_bench.sh actions-par${{ matrix.par }} --parallel ${{ matrix.par }}
+      - name: Report
+        if: always()
+        run: |
+          { echo '```'; cat bench-results/*.md; echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "=====REPORT-BEGIN====="; cat bench-results/*.md; echo "=====REPORT-END====="
+  cache:
+    name: cache-test
+    runs-on: ubuntu-24.04
+    container: ubuntu:22.04
+    timeout-minutes: 60
+    steps:
+      - run: apt-get update && apt-get install -y --no-install-recommends git ca-certificates build-essential curl bzip2 tar pkg-config python3 python3-dev python-is-python3 libprotobuf-dev protobuf-compiler libzmq3-dev libxml2-dev libsqlite3-dev sqlite3
+      - uses: actions/checkout@v4
+      - name: Restore build cache
+        id: c
+        uses: actions/cache@v4
+        with:
+          path: |
+            ns-3.29/build
+            ns-3.29/.lock-waf_linux_build
+          key: ns3-build-${{ hashFiles('ns-3.29/scratch/linear-mesh/*.cc', 'ns-3.29/scratch/linear-mesh/*.h', 'ns-3.29/contrib/opengym/**') }}
+      - name: Configure and build (timed)
+        working-directory: ns-3.29
+        run: |
+          s=$SECONDS
+          ./waf configure >/dev/null 2>&1
+          ./waf --run "scratch/linear-mesh/linear-mesh --dryRun=true --disableGym=true --apStaCounts=20,40 --simTime=1" 2>&1 | tail -3
+          echo "=====CACHE-RESULT hit=${{ steps.c.outputs.cache-hit }} build_and_dry_run=$((SECONDS-s))s build_dir=$(du -sm build | cut -f1)MB====="
+          echo "cache hit=${{ steps.c.outputs.cache-hit }}, configure+build+dry run $((SECONDS-s)) s" >> "$GITHUB_STEP_SUMMARY"
