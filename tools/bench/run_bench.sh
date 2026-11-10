@@ -37,6 +37,8 @@ if [ "$SMOKE" = 1 ]; then CELL="2,3"; SIMT=2; TS=50; else CELL="20,40"; SIMT=15;
 on_err() {
   echo "[bench] FAILED at line $1; last lines of each log:" >&2
   for f in "$LOGDIR"/*.log; do [ -f "$f" ] && { echo "--- $f" >&2; tail -n 25 "$f" >&2; }; done
+  echo "--- first compiler errors in build.log:" >&2
+  grep -m 15 -E "error:|Error [0-9]|fatal error" "$LOGDIR/build.log" >&2 2>/dev/null || true
   echo "gcc: $(gcc --version 2>&1 | head -1)" >&2
 }
 trap 'on_err $LINENO' ERR
@@ -77,6 +79,8 @@ T_APT=$(elapsed apt)
 # ---------- ns-3 build ----------
 say "ns-3 configure + build (clean tree builds through waf --run)"; tick build
 cd "$ROOT/ns-3.29"
+# No-root mode (e.g. HF) has a newer system GCC than ns-3.29 was tested with: do not turn its warnings into errors.
+[ "$NOAPT" = 1 ] && export CXXFLAGS="${CXXFLAGS:-} -Wno-error"
 ./waf configure > "$LOGDIR/configure.log" 2>&1
 ./waf --run "scratch/linear-mesh/linear-mesh --dryRun=true --disableGym=true --apStaCounts=$CELL --simTime=1" > "$LOGDIR/build.log" 2>&1
 T_BUILD=$(elapsed build)
