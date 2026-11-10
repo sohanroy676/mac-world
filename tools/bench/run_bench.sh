@@ -34,6 +34,13 @@ export DEBIAN_FRONTEND=noninteractive WANDB_MODE=offline
 
 if [ "$SMOKE" = 1 ]; then CELL="2,3"; SIMT=2; TS=50; else CELL="20,40"; SIMT=15; TS=300; fi
 
+on_err() {
+  echo "[bench] FAILED at line $1; last lines of each log:" >&2
+  for f in "$LOGDIR"/*.log; do [ -f "$f" ] && { echo "--- $f" >&2; tail -n 25 "$f" >&2; }; done
+  echo "gcc: $(gcc --version 2>&1 | head -1)" >&2
+}
+trap 'on_err $LINENO' ERR
+
 declare -A T
 tick() { T[$1]=$SECONDS; }
 elapsed() { echo $(( SECONDS - T[$1] )); }
