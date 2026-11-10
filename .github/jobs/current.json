@@ -72,5 +72,55 @@
     ]
    }
   ]
+ },
+ {
+  "id": "reg-ref23-beb",
+  "args": [
+   "--apStaCounts",
+   "2,3",
+   "--stepTime",
+   "0.1",
+   "--historyLength",
+   "20",
+   "--obsWindow",
+   "20",
+   "--start_timesteps",
+   "10",
+   "--batch_size",
+   "8",
+   "--seed",
+   "100",
+   "--check",
+   "--simTime",
+   "3",
+   "--mode",
+   "beb",
+   "--cwReadbackEvery",
+   "0"
+  ]
+ },
+ {
+  "id": "reg-det-ind",
+  "args": [
+   "--apStaCounts",
+   "2,3",
+   "--stepTime",
+   "0.1",
+   "--historyLength",
+   "20",
+   "--obsWindow",
+   "20",
+   "--start_timesteps",
+   "10",
+   "--batch_size",
+   "8",
+   "--seed",
+   "100",
+   "--check",
+   "--simTime",
+   "3",
+   "--mode",
+   "independent"
+  ]
  }
 ]

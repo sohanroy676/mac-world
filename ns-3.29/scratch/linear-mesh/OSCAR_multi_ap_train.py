@@ -435,6 +435,7 @@ def apply_cfg(cfg, episode):
 env = EnvWrapper(1, **(apply_cfg(pool[picks[0]], 0) if pool else sim_args))
 print("APs:", counts, "steps/ep:", steps_per_ep, "out:", out_dir)
 time_step = 0
+ep_ns = []  # APs per episode (the pool changes it)
 reward_cols = [[] for _ in range(max([n] + [len(str(c["apStaCounts"]).split(",")) for c in pool]))]
 logged = []
 try:
@@ -461,6 +462,7 @@ try:
             ccod_last = None
             ccod_noise = learning and episode < args.episodes * 4 / 5  # CCOD turns noise off for the last fifth of the episodes
         prev_acts = np.full(n, -1.0, dtype=np.float32)  # CW starts at BEB 16 = real action 0 = act -1
+        ep_ns.append(n)
         if args.alphaInput and learning:  # one alpha per training episode, own stream so other draws are unchanged
             CUR_ALPHA = ALPHA_SET[alpha_rng.randint(len(ALPHA_SET))]
             print("episode %d acting alpha %g" % (episode, CUR_ALPHA), flush=True)
@@ -677,7 +679,8 @@ if args.check:
         print("central: critic_loss %.5f  Q_mean %.4f  actor_losses %s" % (
             scalar(central.critic_loss), scalar(central.q_mean), [round(scalar(x), 4) for x in central.actor_losses]))
     for i in range(n_agents):
-        check(replays[i].size == (time_step * (n if args.mode == "shared" else 1) if learning else 0), "replay %d size %d != steps %d" % (i, replays[i].size, time_step))
+        want_rows = sum(len([h for h in logged if h["Episode"] == e]) * (ep_ns[e] if args.mode == "shared" else 1) for e in range(len(ep_ns))) if learning else 0
+        check(replays[i].size == want_rows, "replay %d size %d != expected rows %d" % (i, replays[i].size, want_rows))
         check(all(np.isfinite([scalar(agents[i].actor_loss), scalar(agents[i].critic_loss)])), "agent %d non-finite loss" % (i + 1))
     # v0.8.0: read the logged history back from the run's .wandb file
     from wandb.proto import wandb_internal_pb2 as pb
@@ -695,10 +698,13 @@ if args.check:
             hist.append({"/".join(it.nested_key) or it.key: json.loads(it.value_json)
                          for it in rec.history.item})
     check(len(hist) == time_step, "W&B history rows %d != steps %d" % (len(hist), time_step))
-    keys = ["AP%d/%s" % (i + 1, k) for i in range(n) for k in
-            ("CW", "Reward", "Throughput", "LossRatio", "Observation", "ActorLoss", "CriticLoss")]
-    keys += ["Global/Throughput", "Global/Fairness", "Global/LossRatio", "Episode", "Step"]
+    def ep_keys(ne):
+        ks = ["AP%d/%s" % (i + 1, k) for i in range(ne) for k in
+              ("CW", "Reward", "Throughput", "LossRatio", "Observation", "ActorLoss", "CriticLoss")]
+        return ks + ["Global/Throughput", "Global/Fairness", "Global/LossRatio", "Episode", "Step"]
     for h in hist:
+        n = ep_ns[int(h.get("Episode", 0))]
+        keys = ep_keys(n)
         miss = [k for k in keys if k not in h]
         check(not miss, "W&B row missing keys %s" % miss)
         if miss:
@@ -707,15 +713,17 @@ if args.check:
         check(np.isclose(h["Global/Throughput"], sum(thr)), "Global/Throughput != sum of APs")
         check(np.isclose(h["Global/Fairness"], jain(thr)), "Global/Fairness mismatch")
     last = hist[-1] if hist else {}
+    n = ep_ns[-1]
     check(all(k in last for k in ["Global/CumulativeReward"] + ["AP%d/CumulativeReward" % (i + 1) for i in range(n)]),
           "cumulative keys missing on last row")
     for h, m in zip(hist, logged):  # logged values == what the trainer computed this step
-        if not all(np.isclose(h[k], m[k]) for k in keys):
+        if not all(np.isclose(h[k], m[k]) for k in ep_keys(ep_ns[int(m["Episode"])])):
             check(False, "W&B history differs from logged metrics")
             break
     # Test E: each episode restarts (Step 1 present per episode, cumulative reward = that episode only)
     for ep in range(args.episodes):
         rows = [h for h in hist if h["Episode"] == ep]
+        n = ep_ns[ep] if ep < len(ep_ns) else n
         check(bool(rows) and rows[0]["Step"] == 1, "episode %d does not start at Step 1" % ep)
         if rows and "Global/CumulativeReward" in rows[-1]:
             check(np.isclose(rows[-1]["Global/CumulativeReward"], sum(sum(h["AP%d/Reward" % (i + 1)] for i in range(n)) for h in rows)),
