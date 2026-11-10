@@ -1,7 +1,7 @@
-# Hugging Face Space test
+# Hugging Face Space: scaling and soak test (bench/hf-scale)
 
-1. Create a Gradio Space with **CPU basic** hardware.
-2. Copy `app.py`, `packages.txt`, `requirements.txt` from this folder to the Space root and add this README's frontmatter in the Space's own README:
-   `sdk: gradio`, `app_file: app.py`.
-3. Open the Space, press Start (smoke first), then Refresh to see the log and report.
-The benchmark runs without root (`--no-apt`) and uses micromamba for Python 3.7.
+Answers: how many 20,40 cells per hour at 4, 8, 16 at once, are the 16 cores shared, does a 6 h run survive.
+Space root needs: `app.py`, `packages.txt`, `requirements.txt` (unchanged from bench/hf) and a README whose frontmatter has
+`sdk: gradio`, `app_file: app.py`, `python_version: 3.7` (same as the first Space). `hfsoak.py` is fetched by the app from this branch.
+Optional secret `GH_TOKEN` (fine-grained, repo sohanroy676/mac-world only, Contents read and write, 7-day expiry) pushes events to branch `bench/hf-results`.
+Optional variable `AUTOSTART=soak:6:8` re-runs setup + soak on every boot.
