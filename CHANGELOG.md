@@ -36,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **m3**: Record step 2 lambda batch, pick lambda 1
 - **m3**: Record step 2b (12 episodes, alpha-0 evals)
 - **m3**: Record step 3 results, G3 fails
+- **changelog**: Regenerate with git-cliff
+- **handoff**: V4.0.0 handoff prompt and state
 
 ### Fixed
 
@@ -62,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pre-register and launch M3 step 2 lambda batch
 - Launch step 2b (12 episodes at lambda 1, alpha-0 evals)
 - Pre-register and launch M3 step 3 (pooled RAFA, gate G3)
+- **m2c**: Pre-register and launch learned rivals
 
 ## [3.7.0] - 2026-11-05
 
