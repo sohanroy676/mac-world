@@ -36,7 +36,9 @@ jobs:
     needs: prep
     name: ${{ matrix.id }}
     runs-on: ubuntu-24.04
-    container: ubuntu:22.04
+    container:
+      image: ubuntu:22.04
+      options: --dns 8.8.8.8 --dns 1.1.1.1
     timeout-minutes: 345
     strategy:
       fail-fast: false
