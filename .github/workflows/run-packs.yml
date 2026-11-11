@@ -73,8 +73,8 @@ jobs:
           echo "build+dry: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Python 3.7 and pins
         run: |
-          # deadsnakes needs api.launchpad.net, which timed out on 2026-11-11; fall back to uv's CPython 3.7 and say so
-          timeout 120 bash .github/scripts/install_py37.sh deadsnakes /opt/venv37 || { echo "PYTHON-SOURCE: uv fallback"; rm -rf /opt/venv37; bash .github/scripts/install_py37.sh uv /opt/venv37; }
+          # deadsnakes needs api.launchpad.net, which timed out on 2026-11-11; fall back to conda-forge CPython 3.7 and say so
+          timeout 120 bash .github/scripts/install_py37.sh deadsnakes /opt/venv37 || { echo "PYTHON-SOURCE: micromamba fallback"; rm -rf /opt/venv37; bash .github/scripts/install_py37.sh micromamba /opt/venv37; }
           /opt/venv37/bin/python -m pip install --quiet "pip<24.1"
           /opt/venv37/bin/pip install -r .github/ci/requirements-py37.txt
           /opt/venv37/bin/pip install --no-deps ./ns-3.29/contrib/opengym/model/ns3gym
