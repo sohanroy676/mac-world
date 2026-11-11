@@ -1,0 +1,3 @@
+hf-indpin-a/run: exit 0, 30 s, pin=True, run dirs ['results/multi-ap-20261111-102458']
+  sha256 trace.csv: cbde14aabbb25a110949d9d5db6f2943636519f11834b853ce3ae09065a03949
+  check: PASS
