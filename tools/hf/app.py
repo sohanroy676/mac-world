@@ -1,7 +1,7 @@
 """Gradio front end for running v4 jobs on a Hugging Face Space (branch bench/lanes). Space root files: app.py, packages.txt,
 requirements.txt (this folder) and a README with sdk: gradio, app_file: app.py, python_version: 3.7.
 Secret GH_TOKEN (fine-grained, repo sohanroy676/mac-world only, Contents read+write, short expiry) lets the Space push results.
-Variable AUTOSTART = "batch:.github/jobs/packs-current.json" re-runs setup and the batch on every boot (resumes after a restart).
+Variable AUTOSTART = "batch:.github/jobs/lanes-test.json" re-runs setup and the batch on every boot (resumes after a restart).
 Variable REF (default bench/lanes) = branch to clone; LANES (default 16)."""
 import os, subprocess, threading, time
 import gradio as gr
@@ -74,7 +74,7 @@ if a.startswith("batch:"):
 
 with gr.Blocks() as demo:
     gr.Markdown("1 setup (about 10 min), then 2 run batch. Results go to GitHub branch bench/hf-results (needs GH_TOKEN).")
-    path = gr.Textbox(value=".github/jobs/packs-current.json", label="Batch file in the repo")
+    path = gr.Textbox(value=".github/jobs/lanes-test.json", label="Batch file in the repo")
     msg = gr.Textbox(label="Status")
     gr.Button("setup").click(lambda p: start("setup", p), path, msg)
     gr.Button("run batch").click(lambda p: start("batch", p), path, msg)
