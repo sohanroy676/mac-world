@@ -1,6 +1,6 @@
-# M4 analysis spec and re-plan: per-scenario RAFA (v4.1.0) - DRAFT, not approved
+# M4 analysis spec and re-plan: per-scenario RAFA (v4.1.0) - APPROVED 2026-11-11 (D1, D2; D3 default)
 
-Date: 2026-11-11. Status: **DRAFT. No M4 run starts until the user approves this file** (decisions D1-D3 below).
+Date: 2026-11-11. Status: **approved by the user on 2026-11-11: D1 = per-scenario recipe claim, D2 = tune lambda per scenario; D3 = proposed default (not explicitly confirmed).** Committed before any M4 run. Launching any batch still needs the user's go-ahead, and the Section 6 blockers must clear first.
 Labels: **fact** (read from repo), **decision** (proposed here), **inference**, **unknown**.
 Replaces the M4 section of `docs/planning/mac-world-v4-plan.html` (rev 10), which assumed a pooled actor.
 
