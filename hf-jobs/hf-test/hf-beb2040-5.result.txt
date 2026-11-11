@@ -1,0 +1,3 @@
+hf-beb2040-5/run: exit 0, 594 s, pin=False, run dirs ['results/multi-ap-20261111-101516']
+  sha256 trace.csv: fac07cdc55c8534f8b9cd8ab91214b92062dcd75fe1f1b38e790ae594968ddde
+  check: PASS
