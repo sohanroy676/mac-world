@@ -2,10 +2,34 @@
  "total": 22,
  "done": [],
  "failed": [],
- "running": [],
- "skipped": [],
+ "running": [
+  "hf-beb2040-4"
+ ],
+ "skipped": [
+  "hf-beb2040-1",
+  "hf-beb2040-10",
+  "hf-beb2040-0",
+  "hf-beb2040-3",
+  "hf-beb2040-6",
+  "hf-beb2040-9",
+  "hf-beb2040-2",
+  "hf-beb2040-15",
+  "hf-beb2040-7",
+  "hf-beb2040-13",
+  "hf-beb2040-14",
+  "hf-beb2040-11",
+  "hf-beb2040-12",
+  "hf-beb2040-5",
+  "hf-beb2040-8",
+  "hf-ind-b",
+  "hf-ind-a",
+  "hf-indpin-a",
+  "hf-ind-d",
+  "hf-ind-c",
+  "hf-indpin-b"
+ ],
  "boot": "c65bfa31-e913-4e0c-82e7-f28e545f6f18",
- "t": 1794411297.85448,
+ "t": 1794411359.7707238,
  "batch": "hf-test",
  "lanes": 16
 }
