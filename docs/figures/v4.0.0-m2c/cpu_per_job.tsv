@@ -1,0 +1,30 @@
+m2c-ref-s2	INTEL(R) XEON(R) PLATINUM 8573C
+m2c-ref-s4	AMD EPYC 7763 64-Core Processor
+m2c-ref-s5a	AMD EPYC 9V74 80-Core Processor
+m2c-s2-ccod-t0	Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz
+m2c-s2-ccod-t1	AMD EPYC 9V74 80-Core Processor
+m2c-s2-ccod-t2	AMD EPYC 7763 64-Core Processor
+m2c-s2-global-t0	AMD EPYC 7763 64-Core Processor
+m2c-s2-global-t1	AMD EPYC 7763 64-Core Processor
+m2c-s2-global-t2	AMD EPYC 7763 64-Core Processor
+m2c-s2-pf-t0	AMD EPYC 7763 64-Core Processor
+m2c-s2-pf-t1	AMD EPYC 7763 64-Core Processor
+m2c-s2-pf-t2	AMD EPYC 9V45 96-Core Processor
+m2c-s4-ccod-t0	AMD EPYC 9V74 80-Core Processor
+m2c-s4-ccod-t1	AMD EPYC 7763 64-Core Processor
+m2c-s4-ccod-t2	AMD EPYC 7763 64-Core Processor
+m2c-s4-global-t0	AMD EPYC 9V45 96-Core Processor
+m2c-s4-global-t1	AMD EPYC 7763 64-Core Processor
+m2c-s4-global-t2	AMD EPYC 7763 64-Core Processor
+m2c-s4-pf-t0	AMD EPYC 7763 64-Core Processor
+m2c-s4-pf-t1	AMD EPYC 9V45 96-Core Processor
+m2c-s4-pf-t2	Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz
+m2c-s5a-ccod-t0	AMD EPYC 9V45 96-Core Processor
+m2c-s5a-ccod-t1 (rerun, run 43066793808)	AMD EPYC 9V74 80-Core Processor
+m2c-s5a-ccod-t2	AMD EPYC 7763 64-Core Processor
+m2c-s5a-global-t0	AMD EPYC 9V74 80-Core Processor
+m2c-s5a-global-t1	AMD EPYC 7763 64-Core Processor
+m2c-s5a-global-t2	AMD EPYC 9V74 80-Core Processor
+m2c-s5a-pf-t0	AMD EPYC 7763 64-Core Processor
+m2c-s5a-pf-t1	AMD EPYC 7763 64-Core Processor
+m2c-s5a-pf-t2	AMD EPYC 7763 64-Core Processor

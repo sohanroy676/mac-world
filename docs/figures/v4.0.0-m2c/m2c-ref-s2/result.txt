@@ -1,0 +1,27 @@
+m2c-ref-s2/beb-100: exit 0, 389 s, pin=False, run dirs ['results/multi-ap-20261110-072839']
+  sha256 trace.csv: 3069c2ea793152ed5496f3fe32fe9cbf59f328ab92dae486641780acaf67d5ca
+  check: PASS
+m2c-ref-s2/idlesense-100: exit 0, 402 s, pin=False, run dirs ['results/multi-ap-20261110-073508']
+  sha256 trace.csv: 15d22cb7c74308b0fefb98f865791cc424c9563e49e9ccecb4db611ac8997f7c
+  check: PASS
+m2c-ref-s2/static-512-512-100: exit 0, 374 s, pin=False, run dirs ['results/multi-ap-20261110-074151']
+  sha256 trace.csv: 0648e626b23a2976fd6e7860064edac7fe6666d74d448b6a74d191b8d703b82f
+  check: PASS
+m2c-ref-s2/beb-101: exit 0, 391 s, pin=False, run dirs ['results/multi-ap-20261110-074805']
+  sha256 trace.csv: f0158b3d631059caf6eb49720b32a5fcd0c70ca71ad68d1784a512f55fe92ce6
+  check: PASS
+m2c-ref-s2/idlesense-101: exit 0, 405 s, pin=False, run dirs ['results/multi-ap-20261110-075436']
+  sha256 trace.csv: a262b18fea9c2b791ef1c01527517b3303613120fe0ec8dc30dd94d8e04d27db
+  check: PASS
+m2c-ref-s2/static-512-512-101: exit 0, 390 s, pin=False, run dirs ['results/multi-ap-20261110-080122']
+  sha256 trace.csv: b393082d1defdd39bec3e4dae4055caf42472a3e3ff76789bcf2cd2d7ca7b3ff
+  check: PASS
+m2c-ref-s2/beb-102: exit 0, 387 s, pin=False, run dirs ['results/multi-ap-20261110-080752']
+  sha256 trace.csv: 662775eb6b1da0fd1945503c30a6b391f96a7ef9b6f6cef000c9a62d2364ad79
+  check: PASS
+m2c-ref-s2/idlesense-102: exit 0, 405 s, pin=False, run dirs ['results/multi-ap-20261110-081419']
+  sha256 trace.csv: 73e9b966510b3e53d960148bcd9e7986b7043ff0a609ab5b5093041268311766
+  check: PASS
+m2c-ref-s2/static-512-512-102: exit 0, 376 s, pin=False, run dirs ['results/multi-ap-20261110-082104']
+  sha256 trace.csv: a667f2758d5cd3087821ccbcf0cd91669a8f3f7f0efddd50b4c0283de02968b1
+  check: PASS

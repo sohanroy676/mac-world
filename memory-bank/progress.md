@@ -155,3 +155,4 @@
 ## In progress
 
 - v0.9.0 validation (next, not started): 2-AP runs with different STA distributions (e.g. 5,15 / 20,40), longer training, compare vs baseline.
+- **M2c scored (2026-11-11)** - Global, PF learner and CCOD retrained on Actions CPU, 12 episodes x 3 seeds, S2/S4/S5a; strongest seed per method, cell and alpha selected by the pre-registered rule; `docs/results/m2c-results-v4.0.0.md`. Not tagged.

@@ -1,0 +1,12 @@
+m2c-s2-ccod-t0/train: exit 0, 3926 s, pin=False, run dirs ['results/multi-ap-20261110-091455']
+  sha256 trace.csv: 54664a7a6fea66929c97cc68a0a63cdf108c73d7a75c13b1c5b61bee23c5911f
+  check: PASS
+m2c-s2-ccod-t0/eval-100: exit 0, 593 s, pin=False, run dirs ['results/multi-ap-20261110-102022']
+  sha256 trace.csv: 4a71142d619a65ebd57809282fb86ae7ef192c9cb3d8674f2a6b1a5f89bf1691
+  check: PASS
+m2c-s2-ccod-t0/eval-101: exit 0, 583 s, pin=False, run dirs ['results/multi-ap-20261110-103015']
+  sha256 trace.csv: 69677ca490626d87f366b4217facfde878436ea667906857fea49f9fc04aaa0d
+  check: PASS
+m2c-s2-ccod-t0/eval-102: exit 0, 589 s, pin=False, run dirs ['results/multi-ap-20261110-103959']
+  sha256 trace.csv: 906d126b90a25b23ec84be9bc06a6420729c477747a7955574a9294ec45b9d7e
+  check: PASS
