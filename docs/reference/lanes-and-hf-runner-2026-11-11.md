@@ -21,5 +21,12 @@ Status of each claim is in the thread; anything not yet run is marked **untested
 - Space settings: README frontmatter `sdk: gradio`, `app_file: app.py`, `python_version: 3.7`; optional variable `AUTOSTART=batch:.github/jobs/packs-current.json`.
 - Tested here with a stub runner (no token): queue, lanes, resume logic. **Untested on a real Space**: the setup against this branch, real pushes of tarballs, 16 learner jobs at once.
 
-## Not yet verified
-Learner results with 4 lanes per runner (torch threads): compare sha256 of the same job run alone, in a pack, and with `pin`.
+## Actions test result (run 42987319968, 16 jobs, 2 packs x 4 lanes, all PASS, measured)
+| Pack | Runner CPU | 4 heavy cells at once (20,40 beb, 1500 steps) | Pack total |
+|---|---|---|---|
+| pack-00 | AMD EPYC 9V45 | 568-575 s each (single cell on a 9V45 earlier: 310 s) = 25 cells/h | 606 s (incl. 4 small learner jobs) |
+| pack-01 | AMD EPYC 9V74 | 1458-1462 s each = 9.9 cells/h | 1514 s |
+- Lane safety: 4 same-seed `independent` learner jobs at once gave one identical trace sha (`db439d30...`), equal to the earlier single-job Actions result in docs/results/m3-step0-checks-v4.0.0.md; 4 pinned jobs one identical sha (`313f0f68...`). So lanes do not change a small learner cell's result (heavy learner cells **untested**).
+- `fetch_bundles`-style parsing decoded all 8 bundles of each pack log (48 files each).
+- Runner CPU is still random (9V45 vs 9V74 = 2.5x apart); build on a cache miss took 3-4 min on these runners.
+- Not yet verified: cache hit in run-packs (the key was new), 20 packs at once, heavy learner cells with 4 lanes, HF run on this branch (steps sent to the user).
