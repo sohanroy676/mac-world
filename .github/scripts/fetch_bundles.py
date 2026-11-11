@@ -20,6 +20,15 @@ for j in jobs:
     print("%s [%s]" % (j["name"], j["conclusion"]))
     for l in res:
         print("   " + l)
-    parts = [re.sub(r"^\S+ B64 ", "", l) for l in log.splitlines() if re.match(r"\S+ B64 ", l)]
-    if parts:
+    blocks, cur = [], None  # a pack job's log holds one BUNDLE block per job; a plain job's log holds one
+    for l in log.splitlines():
+        l = re.sub(r"^\S+ ", "", l)
+        if l.startswith("BUNDLE-BEGIN"):
+            cur = []
+        elif l.startswith("BUNDLE-END"):
+            blocks.append(cur)
+            cur = None
+        elif l.startswith("B64 ") and cur is not None:
+            cur.append(l[4:])
+    for parts in blocks:
         tarfile.open(fileobj=io.BytesIO(base64.b64decode("".join(parts))), mode="r:gz").extractall(out)
