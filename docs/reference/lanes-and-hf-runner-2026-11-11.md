@@ -30,3 +30,9 @@ Status of each claim is in the thread; anything not yet run is marked **untested
 - `fetch_bundles`-style parsing decoded all 8 bundles of each pack log (48 files each).
 - Runner CPU is still random (9V45 vs 9V74 = 2.5x apart); build on a cache miss took 3-4 min on these runners.
 - Not yet verified: cache hit in run-packs (the key was new), 20 packs at once, heavy learner cells with 4 lanes, HF run on this branch (steps sent to the user).
+
+## HF test result (Space, 2026-11-11, batch hf-test.json, measured)
+- 22 jobs ran 16 at a time on the Xeon 8559C Space, all exit 0 and `--check` PASS. 16 heavy beb cells (20,40, 1500 steps) at once: 593-607 s each (about 96 cells/h).
+- The 8 beb traces with seeds 0-7 are **byte-identical** to the Actions run (same sha256 for the same seed), so non-learned jobs can go to either platform.
+- Learner (`independent`, 2,3): the 4 same-seed jobs on HF give one sha (`f4ddded7...`), different from the AMD Actions sha (`db439d30...`): learner results differ by CPU vendor, as already documented, so keep each comparison on one platform.
+- Push: 21 of 22 result files reached `bench/hf-results`; GitHub answered HTTP 409 to concurrent commits and one `result.txt` exhausted its retries (hf-beb2040-4). Fixed by serialising pushes (not yet re-run on the Space); the resume logic will rerun only jobs without a result file.
