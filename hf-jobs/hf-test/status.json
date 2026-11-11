@@ -1,10 +1,10 @@
 {
  "total": 22,
- "done": [],
- "failed": [],
- "running": [
+ "done": [
   "hf-beb2040-4"
  ],
+ "failed": [],
+ "running": [],
  "skipped": [
   "hf-beb2040-1",
   "hf-beb2040-10",
@@ -29,7 +29,7 @@
   "hf-indpin-b"
  ],
  "boot": "c65bfa31-e913-4e0c-82e7-f28e545f6f18",
- "t": 1794411854.1889849,
+ "t": 1794411886.719248,
  "batch": "hf-test",
  "lanes": 16
 }
