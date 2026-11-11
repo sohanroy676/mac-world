@@ -21,6 +21,7 @@ name = os.path.splitext(os.path.basename(batch_path))[0]
 mine = [j for j in jobs if os.environ.get("ALL") or jobsplit.target(j) == "hf"]
 os.makedirs(OUT, exist_ok=True)
 lock = threading.Lock()
+push_lock = threading.Lock()  # GitHub rejects concurrent commits to one branch (HTTP 409): push one file at a time
 st = {"total": len(mine), "done": [], "failed": [], "running": [], "skipped": [], "boot": open("/proc/sys/kernel/random/boot_id").read().strip() if os.path.exists("/proc/sys/kernel/random/boot_id") else "?"}
 
 
@@ -35,6 +36,11 @@ def api(path, data=None, method="GET"):
 
 
 def put(path, blob):
+    with push_lock:
+        return _put(path, blob)
+
+
+def _put(path, blob):
     for attempt in range(4):
         try:
             sha = None

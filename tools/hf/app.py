@@ -38,7 +38,7 @@ def setup():
 
 
 def run_batch(path):
-    sh(f"cd {SRC} && RUN_LABEL=hfjobs python3 tools/hf/hfjobs.py '{path}' {LANES}")
+    sh(f"cd {SRC} && git pull -q origin {REF}; RUN_LABEL=hfjobs python3 tools/hf/hfjobs.py '{path}' {LANES}")  # pull: pick up script fixes without rebuilding ns-3
 
 
 def start(what, path):
