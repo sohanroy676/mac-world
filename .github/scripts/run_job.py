@@ -9,6 +9,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -36,7 +37,8 @@ for c in cmds:
     log = os.path.join(dst_root, name + ".log")
     with open(log, "w") as lf:
         rc = subprocess.call([py, script] + args, stdout=lf, stderr=subprocess.STDOUT, env=env)
-    runs = sorted(set(glob.glob("results/multi-ap-*")) - before, key=os.path.getmtime)
+    named = re.findall(r"^APs:.* out: (results/multi-ap-\S+)\s*$", open(log).read(), re.M)  # the trainer names its run dir: safe with parallel lanes
+    runs = [named[-1]] if named else sorted(set(glob.glob("results/multi-ap-*")) - before, key=os.path.getmtime)
     res = "FAIL"
     msg = "%s/%s: exit %d, %d s, pin=%s, run dirs %s" % (jid, name, rc, int(time.time() - t0), env.get("PIN") == "1", runs)
     if rc == 0 and script != "OSCAR_multi_ap_train.py":

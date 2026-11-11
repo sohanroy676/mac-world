@@ -1,0 +1,91 @@
+# Like run-jobs.yml, but each matrix entry is a PACK: several jobs run `lanes` at a time on one 4-vCPU runner
+# (measured: 4 cells at once give about 2.4x the throughput of one). Batch file = {"lanes": 4, "packs": 20, "jobs": [...]};
+# only jobs whose target is "actions" run here (see .github/scripts/jobsplit.py); the rest go to the Hugging Face Space.
+# Trigger: push to bench/lanes* or feature/v4* touching .github/jobs/packs-current.json, or workflow_dispatch. No schedule.
+name: run-packs
+
+on:
+  push:
+    branches: ['bench/lanes*', 'feature/v4*']
+    paths: ['.github/jobs/packs-current.json']
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: 'Batch path'
+        default: '.github/jobs/packs-current.json'
+
+permissions:
+  contents: read
+
+env:
+  DEBIAN_FRONTEND: noninteractive
+  TZ: Etc/UTC
+  BATCH: ${{ github.event.inputs.batch || '.github/jobs/packs-current.json' }}
+
+jobs:
+  prep:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: echo "matrix=$(python3 .github/scripts/make_matrix.py "$BATCH")" >> "$GITHUB_OUTPUT"
+
+  run:
+    needs: prep
+    name: ${{ matrix.id }}
+    runs-on: ubuntu-24.04
+    container: ubuntu:22.04
+    timeout-minutes: 345
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: ${{ fromJSON(needs.prep.outputs.matrix) }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Base packages
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends build-essential git curl ca-certificates bzip2 tar pkg-config \
+            python3 python3-dev python-is-python3 libprotobuf-dev protobuf-compiler libzmq3-dev libxml2-dev libsqlite3-dev sqlite3
+      - uses: actions/checkout@v4
+      - name: Machine info
+        run: |
+          { echo "### Machine"; echo '```'; lscpu | grep -E "Model name|^CPU\(s\)|Thread|Core"; free -g | head -2; echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Restore ns-3 build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ns-3.29/build
+            ns-3.29/.lock-waf_linux_build
+          key: ns3-build-${{ hashFiles('ns-3.29/scratch/linear-mesh/*.cc', 'ns-3.29/scratch/linear-mesh/*.h', 'ns-3.29/contrib/opengym/**') }}
+      - name: Build ns-3 (cache hit makes this about 2 min)
+        working-directory: ns-3.29
+        run: |
+          start=$SECONDS
+          ./waf configure 2>&1 | tail -3
+          ./waf --run "scratch/linear-mesh/linear-mesh --nWifi=5 --dryRun=true --disableGym=true --seed=1 --simTime=2" 2>&1 | tail -5
+          echo "build+dry: $((SECONDS-start)) s" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Python 3.7 and pins
+        run: |
+          bash .github/scripts/install_py37.sh deadsnakes /opt/venv37
+          /opt/venv37/bin/python -m pip install --quiet "pip<24.1"
+          /opt/venv37/bin/pip install -r .github/ci/requirements-py37.txt
+          /opt/venv37/bin/pip install --no-deps ./ns-3.29/contrib/opengym/model/ns3gym
+      - name: Run pack
+        working-directory: ns-3.29/scratch/linear-mesh
+        env:
+          PACK: ${{ matrix.pack }}
+        run: |
+          /opt/venv37/bin/python ../../../.github/scripts/run_pack.py /opt/venv37/bin/python "${{ matrix.id }}" /tmp/out "${{ matrix.lanes }}"
+      - name: Upload outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pack-${{ matrix.id }}
+          path: /tmp/out/
+          if-no-files-found: ignore
+          retention-days: 7

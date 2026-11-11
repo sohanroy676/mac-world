@@ -1,0 +1,14 @@
+build-essential
+git
+curl
+ca-certificates
+bzip2
+tar
+pkg-config
+python-is-python3
+libprotobuf-dev
+protobuf-compiler
+libzmq3-dev
+libxml2-dev
+libsqlite3-dev
+sqlite3
