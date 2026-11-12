@@ -1,0 +1,3 @@
+m2b-xcheck-ucbctx-hf-v2/run: exit 0, 104 s, pin=False, run dirs ['results/multi-ap-20261112-130248']
+  sha256 trace.csv: 766a5c38907b90c0a60e54ff5f2a0d9aea230debb34fdef80ce222eb5327c9f5
+  check: PASS
