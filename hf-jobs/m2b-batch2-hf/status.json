@@ -1,13 +1,14 @@
 {
  "total": 11,
- "done": [],
+ "done": [
+  "m2b-xcheck-dac-hf"
+ ],
  "failed": [],
  "running": [
   "m2b-s5a-drlcw-t1",
   "m2b-s2-drlcw-t2",
   "m2b-s4-drlcw-t2",
   "m2b-s4-drlcw-t0",
-  "m2b-xcheck-dac-hf",
   "m2b-s4-drlcw-t1",
   "m2b-s5a-drlcw-t2",
   "m2b-s5a-drlcw-t0",
@@ -17,7 +18,7 @@
  ],
  "skipped": [],
  "boot": "d1748f5f-9f06-4306-bbf0-a3aba071d522",
- "t": 1794485004.4364316,
+ "t": 1794485067.9357538,
  "batch": "m2b-batch2-hf",
  "lanes": 16
 }
