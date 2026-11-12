@@ -29,6 +29,7 @@ Labels: **fact** = read in a source or measured here, **decision** = my choice, 
 ### Contextual UCB
 - UCB1 per (context, arm), arms = CW exponents 4..10, 200 ms pulls, reward = own goodput per STA (as the existing UCB). Context = log2 bucket of the AP's active-STA count (0, 1, 2-3, 4-7, 8-15, 16-31, 32+), from `--extraTraces`.
 - Source: the plan, motivated by the Wi-Fi MAB study (context helps). **Our construction, not from a paper.**
+- **Fix after batch 1 (fact):** the first version tried every arm once per context before using the bound. The context changes from window to window, so it explored at random for the whole run: ucbctx scored the same for c = 0.1, 0.3 and 1 (S2 GC -0.42 at alpha 1 for all three). Now a context with fewer than 7 pulls backs off to context-free UCB1 (**decision**). The six ucbctx tuning jobs and the cross-check were rerun as `m2b-batch1b.json` (ids end in `-v2`).
 - "Active" is the count of distinct STAs whose data frames the AP decoded in a 10 ms step, averaged over the window (fact, cw.cc). It is not the number of backlogged STAs: in the 4 s smoke S2 the means were 5.3 and 9.2 for 20 and 40 STAs. In static cells the context is therefore nearly constant and the controller reduces to plain UCB; its value shows only in the S7/S8 cells (**inference**).
 
 ### drlCW

@@ -169,7 +169,9 @@ def ctx_bucket(active):
 class UCBCtx:
     """v3.8.0 (M2b) contextual UCB per AP: UCB1 statistics are kept per (context, arm); the context is the AP's number of
     active STAs (STAs whose data frames the AP decoded) averaged over the window that just ended, in log2 buckets
-    (ctx_bucket). Same arms (CW exponents 4..10), window tau and reward as UCB. Motivation: the Wi-Fi MAB study (plan
+    (ctx_bucket). A context with fewer than 7 pulls backs off to the context-free UCB1 statistics (decision: the first version tried
+    every arm once per context, and the per-window context changes so often that it explored at random for the whole run, ignoring c).
+    Same arms (CW exponents 4..10), window tau and reward as UCB. Motivation: the Wi-Fi MAB study (plan
     section on rivals) found context helps; the active-STA count as the context key is the plan's choice, not from a paper.
     Needs cw.cc --extraTraces (the `active` field). Our construction, not from a paper."""
 
@@ -186,6 +188,9 @@ class UCBCtx:
         self.ctx = np.zeros(self.n, dtype=int)  # context the current arm was chosen in (0 before the first window)
         self.cur = self.rng.randint(0, 7, size=self.n)
         self.t_ctx = np.zeros((self.n, 7))  # pulls per context
+        self.g_pulls = np.zeros((self.n, 7))  # context-free statistics, used until a context has been pulled once per arm
+        self.g_mean = np.zeros((self.n, 7))
+        self.t_all = np.zeros(self.n)
 
     def observe(self, recs):
         self.rx += np.array([r["rx"] for r in recs], dtype=np.float64)
@@ -202,13 +207,20 @@ class UCBCtx:
             self.pulls[i, c0, a] += 1
             self.t_ctx[i, c0] += 1
             self.mean[i, c0, a] += (reward[i] - self.mean[i, c0, a]) / self.pulls[i, c0, a]
+            self.g_pulls[i, a] += 1
+            self.t_all[i] += 1
+            self.g_mean[i, a] += (reward[i] - self.g_mean[i, a]) / self.g_pulls[i, a]
             c1 = new_ctx[i]
-            untried = np.flatnonzero(self.pulls[i, c1] == 0)
-            if len(untried):  # try every arm once in this context first, in random order
-                self.cur[i] = int(self.rng.choice(untried))
-            else:
-                bonus = self.c * np.sqrt(2.0 * math.log(max(2.0, self.t_ctx[i, c1])) / self.pulls[i, c1])
-                self.cur[i] = int(np.argmax(self.mean[i, c1] + bonus))
+            if self.t_ctx[i, c1] >= 7:  # enough pulls in this context: UCB1 on its own statistics
+                bonus = self.c * np.sqrt(2.0 * math.log(self.t_ctx[i, c1]) / np.maximum(1.0, self.pulls[i, c1]))
+                self.cur[i] = int(np.argmax(np.where(self.pulls[i, c1] > 0, self.mean[i, c1] + bonus, np.inf)))
+            else:  # back off to the context-free UCB1 (every arm once in random order first), as the plain UCB baseline would
+                untried = np.flatnonzero(self.g_pulls[i] == 0)
+                if len(untried):
+                    self.cur[i] = int(self.rng.choice(untried))
+                else:
+                    bonus = self.c * np.sqrt(2.0 * math.log(max(2.0, self.t_all[i])) / self.g_pulls[i])
+                    self.cur[i] = int(np.argmax(self.g_mean[i] + bonus))
             self.ctx[i] = c1
 
     def cw_exponents(self):
