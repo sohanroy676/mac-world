@@ -88,10 +88,13 @@ parser.add_argument("--dacPcol", type=float, default=0.0, help="dac: target coll
 parser.add_argument("--dacCw0", type=float, default=16.0, help="dac: starting CW (not stated in the paper)")
 parser.add_argument("--drlRefThp", default="", help="drlcw: per-AP CSMA (BEB) reference goodput in Mbps, comma-separated (reward baseline, paper Eq. 2)")
 parser.add_argument("--drlRefPer", default="", help="drlcw: per-AP CSMA (BEB) reference packet-error ratio, comma-separated")
+parser.add_argument("--delayWindow", type=float, default=0.0, help="cw.cc --delayWindow: per-AP delay mean/p95 (ms) per window of this many seconds, logged as dmean,dp95,dn in trace.csv (drlcw sets it to --drlInterval; use it on a BEB run to make the drlcw delay reference)")
+parser.add_argument("--drlDelayRef", default="", help="drlcw: CSV from drlcw_refs.py --delay (one BEB mean-over-APs p95 delay in seconds per decision); d_tail is scaled so BEB = 0.1 s, the paper's CSMA value (DECISION, see docs/results/m2b-specs-v4.0.0.md). Empty = the paper's raw d_tail")
+parser.add_argument("--drlRef", default="", help="drlcw: JSON from drlcw_refs.py --write (thp, per, delay of one BEB run); overrides --drlRefThp/--drlRefPer/--drlDelayRef")
 parser.add_argument("--drlInterval", type=float, default=0.5, help="drlcw: decision interval in seconds (paper: 0.5)")
 parser.add_argument("--ccodHist", type=int, default=300, help="ccod: loss-history length fed to the CCOD agent (agents/ddpg, RLinWiFi; CCOD_train.py: 300)")
 args = parser.parse_args()
-if args.obs == "rafa" or args.mode in ("ucbctx", "dac", "drlcw"):
+if args.obs == "rafa" or args.mode in ("ucbctx", "dac", "drlcw") or args.delayWindow > 0:
     args.extraTraces = True  # idle, Retry and active-STA fields come from cw.cc --extraTraces
 
 # W&B mode must be decided before wandb is imported.
@@ -151,7 +154,9 @@ if args.rewardNorm > 0:
 if args.extraTraces:
     sim_args["extraTraces"] = "true"
 if args.mode == "drlcw":
-    sim_args["delayWindow"] = "%g" % args.drlInterval  # cw.cc publishes per-AP delay mean / p95 once per decision interval
+    args.delayWindow = args.drlInterval  # cw.cc publishes per-AP delay mean / p95 once per decision interval
+if args.delayWindow > 0:
+    sim_args["delayWindow"] = "%g" % args.delayWindow
 if args.cwReadbackEvery > 0:
     sim_args["cwReadbackEvery"] = args.cwReadbackEvery
 if args.trafficStart > 0:
@@ -219,7 +224,7 @@ with open(os.path.join(out_dir, "config.json"), "w") as f:
 trace_f = open(os.path.join(out_dir, "trace.csv"), "w", newline="")
 trace = csv.writer(trace_f)
 trace.writerow(["episode", "step", "ap", "state", "action", "real_action", "reward", "next_state", "cw_set",
-                "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"] + (["retry", "active", "txfail", "idle"] if args.extraTraces else []) + (["dmean", "dp95", "dn"] if args.mode == "drlcw" else []))
+                "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"] + (["retry", "active", "txfail", "idle"] if args.extraTraces else []) + (["dmean", "dp95", "dn"] if args.delayWindow > 0 else []))
 
 run = wandb.init(name="%s %s s%d" % (args.apStaCounts, args.mode, args.seed), entity=os.environ.get("WANDB_ENTITY", wandb_entity),
                  project=args.wandb_project, tags=["multi-ap", "mode-" + args.mode, git_rev], reinit=True,
@@ -471,8 +476,11 @@ try:
         elif args.mode == "ucbctx":
             ctrl = UCBCtx(counts, NORM_LOADS, args.stepTime, args.ctrlTau, args.ucbC, seed=args.seed + episode)
         elif args.mode == "drlcw":
-            ctrl = DrlCW(counts, NORM_LOADS, parse_hidden(args.apHidden), [float(v) for v in args.drlRefThp.split(",")],
-                         [float(v) for v in args.drlRefPer.split(",")], args.stepTime, args.drlInterval, learning=learning, seed=args.seed + episode)
+            ref = json.load(open(args.drlRef)) if args.drlRef else {}
+            ctrl = DrlCW(counts, NORM_LOADS, parse_hidden(args.apHidden), ref.get("thp") or [float(v) for v in args.drlRefThp.split(",")],
+                         ref.get("per") or [float(v) for v in args.drlRefPer.split(",")], args.stepTime, args.drlInterval, learning=learning,
+                         seed=args.seed + episode,
+                         delay_ref=ref.get("delay") or ([float(v) for v in open(args.drlDelayRef).read().split(",")] if args.drlDelayRef else None))
             if args.loadActor:
                 ctrl.load(args.loadActor)
         elif args.mode == "dac":
@@ -601,7 +609,7 @@ try:
                                 recs[i]["cw_set"], recs[i]["cw_ap"], recs[i]["loss"], recs[i]["rx"], recs[i]["tx"],
                                 float(pp[0]), float(pp[1]), agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")]
                                + ([recs[i]["retry"], recs[i]["active"], recs[i]["txfail"], recs[i]["idle"]] if args.extraTraces else [])
-                               + ([recs[i]["dmean"], recs[i]["dp95"], recs[i]["dn"]] if args.mode == "drlcw" else []))
+                               + ([recs[i]["dmean"], recs[i]["dp95"], recs[i]["dn"]] if args.delayWindow > 0 else []))
                 if args.mode == "independent" and learning and time_step >= args.start_timesteps:
                     agents[i].train(replays[i], args.batch_size)
             if args.mode == "shared" and learning and time_step >= args.start_timesteps:

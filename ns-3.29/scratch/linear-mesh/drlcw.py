@@ -14,6 +14,9 @@ DECISIONS (not in the text): Adam optimiser; ReLU after the first FC; one indepe
   thp feature = interval Mbps / (offered Mbps per STA * STAs of that AP) (the trainer's reward scale), delay and cdf features =
   min(1.5, ln(1 + ms) / ln(1001)) (the paper gives no scaling); per = (PHY transmissions - receptions) / PHY transmissions (the repo's
   loss definition); d_tail in seconds, and the reward is clipped to [-1, alpha] (the paper says it is normalised to [-1, 1]);
+  --drlDelayRef (DECISION, pending the user's choice): in our saturated cells the queue, and so the p95 delay, grows without bound
+  (smoke run: 0.86 s in the first 0.5 s window, +0.4 s per window), so beta = 10 gives a constant reward of -1. With a reference,
+  d_tail is divided by the BEB d_tail at the same decision index and multiplied by 0.1 s (the paper's CSMA value), so BEB parity gives r = 0.5;
   CSMA references = BEB means on the selection seeds, passed with --drlRefThp / --drlRefPer; delay values are the last completed
   cw.cc --delayWindow 0.5 window (app send to sink receive, matched by packet uid), which includes queueing.
 Deviation by design: neighbour observations come from the simulator's per-AP records (the paper's beacon exchange). This breaks ADR-0002
@@ -50,11 +53,12 @@ class QNet(nn.Module):
 
 class DrlCW:
     def __init__(self, counts, norm_loads, hidden_pairs, ref_thp, ref_per, step_time=0.01, interval=0.5, T=10, learning=True, seed=0,
-                 lr=5e-4, gamma=0.9, tau=0.004, batch=32, memory=500, eps_decay=0.99, eps_min=0.01):
+                 lr=5e-4, gamma=0.9, tau=0.004, batch=32, memory=500, eps_decay=0.99, eps_min=0.01, delay_ref=None):
         self.n = len(counts)
         self.counts = np.asarray(counts, dtype=np.float64)
         self.norm = np.asarray(norm_loads, dtype=np.float64)
         self.step_time, self.T, self.learning = step_time, T, learning
+        self.delay_ref = delay_ref  # BEB mean-over-APs p95 delay (s) per decision, or None for the paper's raw d_tail
         self.steps = max(1, int(round(interval / step_time)))
         self.interval = self.steps * step_time
         hid = {frozenset((a - 1, b - 1)) for a, b in hidden_pairs}
@@ -109,6 +113,8 @@ class DrlCW:
         if self.learning and self.prev_state is not None:
             ok = thp.sum() >= M_THP * self.ref_thp and N_PER * per.sum() <= self.ref_per
             d_tail = float(np.mean(dp95)) / 1000.0
+            if self.delay_ref:  # BEB = 0.1 s (paper Table III CSMA), same elapsed time
+                d_tail = d_tail / max(1e-6, self.delay_ref[min(self.decisions - 1, len(self.delay_ref) - 1)]) * 0.1
             r = ALPHA - BETA * d_tail if ok else -1.0
             r = float(min(ALPHA, max(-1.0, r)))
             self.last_reward = r

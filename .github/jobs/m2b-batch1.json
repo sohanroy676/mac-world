@@ -1,0 +1,1724 @@
+{
+ "lanes": 4,
+ "packs": 20,
+ "jobs": [
+  {
+   "id": "m2b-tune-s2-ucbctx01",
+   "on": "actions",
+   "w": 33,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "0.1",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s2-ucbctx01"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "0.1",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s2-ucbctx01"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "0.1",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s2-ucbctx01"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s2-ucbctx03",
+   "on": "actions",
+   "w": 33,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "0.3",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s2-ucbctx03"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "0.3",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s2-ucbctx03"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "0.3",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s2-ucbctx03"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s2-ucbctx1",
+   "on": "actions",
+   "w": 33,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s2-ucbctx1"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "1",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s2-ucbctx1"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "1",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s2-ucbctx1"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s2-dac128",
+   "on": "actions",
+   "w": 33,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000128",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s2-dac128"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000128",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s2-dac128"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000128",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s2-dac128"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s2-ms128",
+   "on": "actions",
+   "w": 33,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "106,212",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s2-ms128"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "106,212",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s2-ms128"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "106,212",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s2-ms128"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s2-dac257",
+   "on": "actions",
+   "w": 33,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000257",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s2-dac257"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000257",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s2-dac257"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000257",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s2-dac257"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s2-ms257",
+   "on": "actions",
+   "w": 33,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "150,301",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s2-ms257"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "150,301",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s2-ms257"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "150,301",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s2-ms257"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s2-dac514",
+   "on": "actions",
+   "w": 33,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000514",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s2-dac514"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000514",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s2-dac514"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000514",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s2-dac514"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s2-ms514",
+   "on": "actions",
+   "w": 33,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "213,426",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s2-ms514"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "213,426",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s2-ms514"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "213,426",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s2-ms514"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s4-ucbctx01",
+   "on": "actions",
+   "w": 24,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "0.1",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s4-ucbctx01"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "0.1",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s4-ucbctx01"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "0.1",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s4-ucbctx01"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s4-ucbctx03",
+   "on": "actions",
+   "w": 24,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "0.3",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s4-ucbctx03"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "0.3",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s4-ucbctx03"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "0.3",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s4-ucbctx03"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s4-ucbctx1",
+   "on": "actions",
+   "w": 24,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "1",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s4-ucbctx1"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "1",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s4-ucbctx1"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "ucbctx",
+      "--ucbC",
+      "1",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s4-ucbctx1"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s4-dac128",
+   "on": "actions",
+   "w": 24,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000128",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s4-dac128"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000128",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s4-dac128"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000128",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s4-dac128"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s4-ms128",
+   "on": "actions",
+   "w": 24,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "52,52,52",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s4-ms128"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "52,52,52",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s4-ms128"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "52,52,52",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s4-ms128"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s4-dac257",
+   "on": "actions",
+   "w": 24,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000257",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s4-dac257"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000257",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s4-dac257"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000257",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s4-dac257"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s4-ms257",
+   "on": "actions",
+   "w": 24,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "75,75,75",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s4-ms257"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "75,75,75",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s4-ms257"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "75,75,75",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s4-ms257"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s4-dac514",
+   "on": "actions",
+   "w": 24,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000514",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s4-dac514"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000514",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s4-dac514"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "dac",
+      "--dacTc",
+      "0.000514",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s4-dac514"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-tune-s4-ms514",
+   "on": "actions",
+   "w": 24,
+   "cmds": [
+    {
+     "name": "eval-s0",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "106,106,106",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-tune-s4-ms514"
+     ]
+    },
+    {
+     "name": "eval-s1",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "106,106,106",
+      "--seed",
+      "1",
+      "--tag",
+      "m2b-tune-s4-ms514"
+     ]
+    },
+    {
+     "name": "eval-s2",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "30",
+      "--mode",
+      "static",
+      "--apCws",
+      "106,106,106",
+      "--seed",
+      "2",
+      "--tag",
+      "m2b-tune-s4-ms514"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-drlref-s2",
+   "on": "actions",
+   "w": 110,
+   "cmds": [
+    {
+     "name": "beb300",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "300",
+      "--mode",
+      "beb",
+      "--delayWindow",
+      "0.5",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-drlref-s2"
+     ]
+    },
+    {
+     "name": "ref",
+     "args": [
+      "drlcw_refs.py",
+      "--write",
+      "{ACT}/ref.json",
+      "{LAST}/trace.csv"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-drlref-s4",
+   "on": "actions",
+   "w": 80,
+   "cmds": [
+    {
+     "name": "beb300",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "300",
+      "--mode",
+      "beb",
+      "--delayWindow",
+      "0.5",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-drlref-s4"
+     ]
+    },
+    {
+     "name": "ref",
+     "args": [
+      "drlcw_refs.py",
+      "--write",
+      "{ACT}/ref.json",
+      "{LAST}/trace.csv"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-drlref-s5a",
+   "on": "actions",
+   "w": 110,
+   "cmds": [
+    {
+     "name": "beb300",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--apLoads",
+      "150,150,1",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "300",
+      "--mode",
+      "beb",
+      "--delayWindow",
+      "0.5",
+      "--seed",
+      "0",
+      "--tag",
+      "m2b-drlref-s5a"
+     ]
+    },
+    {
+     "name": "ref",
+     "args": [
+      "drlcw_refs.py",
+      "--write",
+      "{ACT}/ref.json",
+      "{LAST}/trace.csv"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-xcheck-dac-actions",
+   "on": "actions",
+   "w": 5,
+   "cmds": [
+    {
+     "name": "run",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "5",
+      "--mode",
+      "dac",
+      "--seed",
+      "100",
+      "--tag",
+      "m2b-xcheck"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-xcheck-dac-hf",
+   "on": "hf",
+   "w": 5,
+   "cmds": [
+    {
+     "name": "run",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "5",
+      "--mode",
+      "dac",
+      "--seed",
+      "100",
+      "--tag",
+      "m2b-xcheck"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-xcheck-ucbctx-actions",
+   "on": "actions",
+   "w": 5,
+   "cmds": [
+    {
+     "name": "run",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "5",
+      "--mode",
+      "ucbctx",
+      "--seed",
+      "100",
+      "--tag",
+      "m2b-xcheck",
+      "--ucbC",
+      "0.1"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m2b-xcheck-ucbctx-hf",
+   "on": "hf",
+   "w": 5,
+   "cmds": [
+    {
+     "name": "run",
+     "args": [
+      "--apStaCounts",
+      "20,40",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--simTime",
+      "5",
+      "--mode",
+      "ucbctx",
+      "--seed",
+      "100",
+      "--tag",
+      "m2b-xcheck",
+      "--ucbC",
+      "0.1"
+     ]
+    }
+   ]
+  }
+ ]
+}

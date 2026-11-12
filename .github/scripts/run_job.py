@@ -1,7 +1,7 @@
 """Run one job on the runner. A job is a list of commands [{name, args}], run in order (e.g. train, then evaluate the
 saved actor). Each command's run dir (config.json, trace.csv) is copied to OUT/<id>/<name>/, the trainer log too, and
 everything is printed as one base64 tar.gz in the job log (artifact blobs are not reachable from the agent container).
-Placeholder {ACT} in args = actor dir shared by the commands of the job.
+Placeholder {ACT} in args = actor dir shared by the commands of the job; {LAST} = absolute path of the previous command's trainer run dir (v3.8.0).
 Usage: run_job.py <python> <id> <cmds-json> <ref-dir-or-empty> <out-dir>   (cwd = ns-3.29/scratch/linear-mesh)"""
 import base64
 import glob
@@ -26,9 +26,9 @@ if os.environ.get("PIN") == "1":  # same float results on every CPU model: no IS
 act_dir = os.path.abspath(os.path.join("results", "actors-" + jid))
 dst_root = os.path.join(out, jid)
 os.makedirs(dst_root, exist_ok=True)
-lines, ok = [], True
+lines, ok, last_run = [], True, ""
 for c in cmds:
-    name, args = c["name"], [a.replace("{ACT}", act_dir) for a in c["args"]]
+    name, args = c["name"], [a.replace("{ACT}", act_dir).replace("{LAST}", last_run) for a in c["args"]]
     script = "OSCAR_multi_ap_train.py"
     if args and args[0].endswith(".py"):  # probe jobs: first arg is a script in scratch/linear-mesh
         script, args = args[0], args[1:]
@@ -39,6 +39,7 @@ for c in cmds:
         rc = subprocess.call([py, script] + args, stdout=lf, stderr=subprocess.STDOUT, env=env)
     named = re.findall(r"^APs:.* out: (results/multi-ap-\S+)\s*$", open(log).read(), re.M)  # the trainer names its run dir: safe with parallel lanes
     runs = [named[-1]] if named else sorted(set(glob.glob("results/multi-ap-*")) - before, key=os.path.getmtime)
+    last_run = os.path.abspath(runs[-1]) if runs else ""
     res = "FAIL"
     msg = "%s/%s: exit %d, %d s, pin=%s, run dirs %s" % (jid, name, rc, int(time.time() - t0), env.get("PIN") == "1", runs)
     if rc == 0 and script != "OSCAR_multi_ap_train.py":
