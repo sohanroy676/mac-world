@@ -1,0 +1,2 @@
+m2b-s4-drlcw-v2-t0/train: exit 1, 3804 s, pin=False, run dirs ['results/multi-ap-20261112-154613']
+  check: FAIL

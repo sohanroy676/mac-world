@@ -1,0 +1,9 @@
+m2b-s5a-drlcw-v2-t2-eval/eval-100: exit 0, 530 s, pin=False, run dirs ['results/multi-ap-20261112-180047']
+  sha256 trace.csv: e8c3e8ae776affcd6843a6b4f9725dc1f67ce253fc552fa115011f6dc3bbff7a
+  check: PASS
+m2b-s5a-drlcw-v2-t2-eval/eval-101: exit 0, 524 s, pin=False, run dirs ['results/multi-ap-20261112-180938']
+  sha256 trace.csv: 876025895ee26735412cd61b7fd1fd3335e3f437733d13b9ec5ddea396da237f
+  check: PASS
+m2b-s5a-drlcw-v2-t2-eval/eval-102: exit 0, 526 s, pin=False, run dirs ['results/multi-ap-20261112-181822']
+  sha256 trace.csv: 29e07e8186cff87ea3a6311bfb4f54b3d958534abf6c28833fdcba5141d7253d
+  check: PASS

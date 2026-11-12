@@ -594,7 +594,7 @@ try:
                         check(np.isclose(s2_i[0], min(1.0, recs[i]["idle"] / 20.0), atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
                               "AP%d obs %s != own idle/20 (idle %s) at t=%d" % (i + 1, s2_i[0], recs[i]["idle"], time_step))
                     else:
-                        check(np.isclose(s2_i[0], own_loss, atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
+                        check(np.isclose(s2_i[0], own_loss if -100 <= own_loss <= 100 else 0.0, atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),  # cw.cc (lines 498, 508) zeroes history values outside [-100, 100]; the raw loss is negative when rx > tx in a step
                               "AP%d obs %s / loss %s != own (tx-rx)/tx %s at t=%d" % (i + 1, s2_i[0], recs[i]["loss"], own_loss, time_step))
                     # Test D: reward = own goodput / (offered load * own STAs * step), clamped to [0,1]
                     want_r = min(1.0, max(0.0, recs[i]["rx"] * PAYLOAD_BITS / 1e6 / (NORM_LOADS[i] * counts[i] * args.stepTime)))
