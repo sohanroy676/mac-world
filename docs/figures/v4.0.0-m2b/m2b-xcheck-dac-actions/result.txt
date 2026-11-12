@@ -1,0 +1,3 @@
+m2b-xcheck-dac-actions/run: exit 0, 152 s, pin=False, run dirs ['results/multi-ap-20261112-035347']
+  sha256 trace.csv: db9144dd22cd9abea097950e3d80095d0b190795e054e5cfbca46bbe18b777da
+  check: PASS

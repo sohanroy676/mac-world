@@ -1,0 +1,9 @@
+m2b-tune-s2-dac128/eval-s0: exit 0, 879 s, pin=False, run dirs ['results/multi-ap-20261112-035415']
+  sha256 trace.csv: cd59bde38df6ab8ffbc9bba5ffbb508f5a4cdfe59f3fee9a74448e2b539d9e99
+  check: PASS
+m2b-tune-s2-dac128/eval-s1: exit 0, 818 s, pin=False, run dirs ['results/multi-ap-20261112-040855']
+  sha256 trace.csv: cb6d6884f8bbb7761a2bcd48d274963a89c50ebe19fa374a97d821681f75e327
+  check: PASS
+m2b-tune-s2-dac128/eval-s2: exit 0, 817 s, pin=False, run dirs ['results/multi-ap-20261112-042232']
+  sha256 trace.csv: 0102f4ea38954501c2f19a08a216f92c13faacd49fa2938ad4b5617d07158773
+  check: PASS
