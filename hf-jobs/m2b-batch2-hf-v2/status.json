@@ -2,10 +2,10 @@
  "total": 9,
  "done": [],
  "failed": [
-  "m2b-s4-drlcw-v2-t1"
+  "m2b-s4-drlcw-v2-t1",
+  "m2b-s4-drlcw-v2-t2"
  ],
  "running": [
-  "m2b-s4-drlcw-v2-t2",
   "m2b-s5a-drlcw-v2-t0",
   "m2b-s5a-drlcw-v2-t2",
   "m2b-s2-drlcw-v2-t1",
@@ -16,7 +16,7 @@
  ],
  "skipped": [],
  "boot": "162802bf-13f5-4044-b9c5-57771630510e",
- "t": 1794498471.2420356,
+ "t": 1794498532.6268272,
  "batch": "m2b-batch2-hf-v2",
  "lanes": 16
 }
