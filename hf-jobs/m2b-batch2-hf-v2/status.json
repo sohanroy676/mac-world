@@ -4,19 +4,19 @@
  "failed": [
   "m2b-s4-drlcw-v2-t1",
   "m2b-s4-drlcw-v2-t2",
-  "m2b-s4-drlcw-v2-t0"
+  "m2b-s4-drlcw-v2-t0",
+  "m2b-s2-drlcw-v2-t0"
  ],
  "running": [
   "m2b-s5a-drlcw-v2-t0",
   "m2b-s5a-drlcw-v2-t2",
   "m2b-s2-drlcw-v2-t1",
   "m2b-s2-drlcw-v2-t2",
-  "m2b-s5a-drlcw-v2-t1",
-  "m2b-s2-drlcw-v2-t0"
+  "m2b-s5a-drlcw-v2-t1"
  ],
  "skipped": [],
  "boot": "162802bf-13f5-4044-b9c5-57771630510e",
- "t": 1794499644.8910353,
+ "t": 1794499706.2832642,
  "batch": "m2b-batch2-hf-v2",
  "lanes": 16
 }
