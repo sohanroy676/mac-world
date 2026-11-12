@@ -13,7 +13,7 @@ From the paper (fact):
 DECISIONS (not in the text): Adam optimiser; ReLU after the first FC; one independent network per AP; epsilon decays per decision;
   thp feature = interval Mbps / (offered Mbps per STA * STAs of that AP) (the trainer's reward scale), delay and cdf features =
   min(1.5, ln(1 + ms) / ln(1001)) (the paper gives no scaling); per = (PHY transmissions - receptions) / PHY transmissions (the repo's
-  loss definition); d_tail in seconds, and the reward is clipped to [-1, alpha] (the paper says it is normalised to [-1, 1]);
+  loss definition), clipped to [0, 1] (rx can exceed tx in a window); d_tail in seconds, and the reward is clipped to [-1, alpha] (the paper says it is normalised to [-1, 1]);
   --drlDelayRef (DECISION, pending the user's choice): in our saturated cells the queue, and so the p95 delay, grows without bound
   (smoke run: 0.86 s in the first 0.5 s window, +0.4 s per window), so beta = 10 gives a constant reward of -1. With a reference,
   d_tail is divided by the BEB d_tail at the same decision index and multiplied by 0.1 s (the paper's CSMA value), so BEB parity gives r = 0.5;
@@ -101,7 +101,7 @@ class DrlCW:
         if self.k < self.steps:
             return
         thp = self.rx * PAYLOAD_BITS / (self.interval * 1e6)
-        per = np.where(self.tx > 0, (self.tx - self.rx) / np.maximum(self.tx, 1.0), 0.0)
+        per = np.clip(np.where(self.tx > 0, (self.tx - self.rx) / np.maximum(self.tx, 1.0), 0.0), 0.0, 1.0)  # rx can exceed tx in a window (queued ACKs), clip like the env's obs
         dp95 = np.array([r["dp95"] for r in recs])
         for i in range(self.n):
             o = np.array([self.b[i] / 6.0, per[i], min(1.5, thp[i] / (self.norm[i] * self.counts[i])),

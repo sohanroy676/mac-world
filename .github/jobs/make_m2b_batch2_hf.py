@@ -19,13 +19,14 @@ for cell, (cargs, w_eval, w_train) in CELLS.items():
     for k in range(3):
         base = cargs + COMMON + ["--drlRef", ref]
         cmds = [{"name": "train", "args": base + ["--simTime", "300", "--episodes", "1", "--seed", str(2000 + k), "--saveActor", "{ACT}",
-                                                  "--tag", "m2b-train-%s-drlt%d" % (cell, k)]}]
+                                                  "--tag", "m2b-train-%s-drlv2t%d" % (cell, k)]}]
         for s in (100, 101, 102):
             cmds.append({"name": "eval-%d" % s, "args": base + ["--simTime", "30", "--eval", "--loadActor", "{ACT}", "--seed", str(s),
-                                                                "--tag", "m2b-%s-drlt%d" % (cell, k)]})
-        jobs.append({"id": "m2b-%s-drlcw-t%d" % (cell, k), "on": "hf", "w": w_train + 3 * w_eval, "cmds": cmds})
+                                                                "--tag", "m2b-%s-drlv2t%d" % (cell, k)]})
+        jobs.append({"id": "m2b-%s-drlcw-v2-t%d" % (cell, k), "on": "hf", "w": w_train + 3 * w_eval, "cmds": cmds})
 x = CELLS["s2"][0] + ["--stepTime", "0.01", "--check", "--simTime", "5", "--seed", "100", "--tag", "m2b-xcheck"]
-jobs.append({"id": "m2b-xcheck-dac-hf", "on": "hf", "w": 5, "cmds": [{"name": "run", "args": x + ["--mode", "dac"]}]})
-jobs.append({"id": "m2b-xcheck-ucbctx-hf-v2", "on": "hf", "w": 5, "cmds": [{"name": "run", "args": x + ["--mode", "ucbctx", "--ucbC", "0.1"]}]})
-json.dump({"lanes": 4, "packs": 20, "jobs": jobs}, open(os.path.join(os.path.dirname(__file__), "m2b-batch2-hf.json"), "w"), indent=1)
+if False:  # the two cross-check jobs passed in the first run (m2b-batch2-hf); v2 reruns only drlCW after the per clip
+  jobs.append({"id": "m2b-xcheck-dac-hf", "on": "hf", "w": 5, "cmds": [{"name": "run", "args": x + ["--mode", "dac"]}]})
+  jobs.append({"id": "m2b-xcheck-ucbctx-hf-v2", "on": "hf", "w": 5, "cmds": [{"name": "run", "args": x + ["--mode", "ucbctx", "--ucbC", "0.1"]}]})
+json.dump({"lanes": 4, "packs": 20, "jobs": jobs}, open(os.path.join(os.path.dirname(__file__), "m2b-batch2-hf-v2.json"), "w"), indent=1)
 print("%d jobs, %.1f lab-hours" % (len(jobs), sum(j["w"] for j in jobs) / 60))
