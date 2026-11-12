@@ -51,7 +51,7 @@ parser.add_argument("--tag", default="", help="variant label stored in config.js
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "ccod"], default="independent")
+parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "drlcw", "ccod"], default="independent")
 parser.add_argument("--apCws", default="", help="static mode only: fixed CW per AP, e.g. 64,512 (no agent; cw.cc applies it from t=0)")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 parser.add_argument("--algo", choices=["ddpg", "td3"], default="ddpg", help="learner for independent/global/shared (td3: twin critics, delayed actor, target smoothing)")
@@ -86,9 +86,12 @@ parser.add_argument("--dacTe", type=float, default=9e-6, help="dac: empty-slot t
 parser.add_argument("--dacTc", type=float, default=257e-6, help="dac: collision duration Tc in seconds (inference for HE 20 MHz MCS 11, see docs/results/m2b-specs-v4.0.0.md)")
 parser.add_argument("--dacPcol", type=float, default=0.0, help="dac: target collision probability (0 = 1 - exp(-sqrt(2 Te / Tc)), paper Eq. 20)")
 parser.add_argument("--dacCw0", type=float, default=16.0, help="dac: starting CW (not stated in the paper)")
+parser.add_argument("--drlRefThp", default="", help="drlcw: per-AP CSMA (BEB) reference goodput in Mbps, comma-separated (reward baseline, paper Eq. 2)")
+parser.add_argument("--drlRefPer", default="", help="drlcw: per-AP CSMA (BEB) reference packet-error ratio, comma-separated")
+parser.add_argument("--drlInterval", type=float, default=0.5, help="drlcw: decision interval in seconds (paper: 0.5)")
 parser.add_argument("--ccodHist", type=int, default=300, help="ccod: loss-history length fed to the CCOD agent (agents/ddpg, RLinWiFi; CCOD_train.py: 300)")
 args = parser.parse_args()
-if args.obs == "rafa" or args.mode in ("ucbctx", "dac"):
+if args.obs == "rafa" or args.mode in ("ucbctx", "dac", "drlcw"):
     args.extraTraces = True  # idle, Retry and active-STA fields come from cw.cc --extraTraces
 
 # W&B mode must be decided before wandb is imported.
@@ -106,6 +109,7 @@ from agents.our_ddpg.central import CentralDDPG  # noqa: E402
 from agents.our_ddpg.utils import JointReplayBuffer, ReplayBuffer  # noqa: E402
 from config import wandb_entity  # noqa: E402
 from exceptions import AlreadyRunningException  # noqa: E402
+from drlcw import DrlCW  # noqa: E402
 from ap_controllers import DAC, KW, UCB, UCBCtx, parse_hidden  # noqa: E402
 from multi_ap import PAYLOAD_BITS, jain, parse_ap_info, reshape_obs, step_metrics  # noqa: E402
 from wrappers import EnvWrapper  # noqa: E402
@@ -146,6 +150,8 @@ if args.rewardNorm > 0:
     sim_args["rewardNorm"] = "%g" % args.rewardNorm
 if args.extraTraces:
     sim_args["extraTraces"] = "true"
+if args.mode == "drlcw":
+    sim_args["delayWindow"] = "%g" % args.drlInterval  # cw.cc publishes per-AP delay mean / p95 once per decision interval
 if args.cwReadbackEvery > 0:
     sim_args["cwReadbackEvery"] = args.cwReadbackEvery
 if args.trafficStart > 0:
@@ -169,7 +175,7 @@ if args.residual:
     sim_args["residual"] = "true"
 if args.obsIdle:
     sim_args["obsIdle"] = "true"
-n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0, "kw": 0, "ucb": 0, "ucbctx": 0, "dac": 0, "ccod": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
+n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0, "kw": 0, "ucb": 0, "ucbctx": 0, "dac": 0, "drlcw": 0, "ccod": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
 LOCAL_MODES = ("independent", "shared")
 assert args.obs == "loss" or args.mode in LOCAL_MODES, "--obs hist only for independent/shared"
 assert args.alpha == 1.0 or args.mode in LOCAL_MODES, "--alpha only for independent/shared"
@@ -178,7 +184,7 @@ assert 0.0 <= args.alpha <= 1.0 and 1 <= args.obsWindow <= args.historyLength
 local_dim = {"hist": 4, "rafa": 6 if args.alphaInput else 5}.get(args.obs, 1)
 AGENT_MODES = ("independent", "global", "shared")
 assert args.algo == "ddpg" or args.mode in AGENT_MODES, "--algo td3 only for independent/global/shared"
-assert not (args.saveActor or args.loadActor or args.eval) or args.mode in AGENT_MODES + ("ccod",), "--saveActor/--loadActor/--eval only for independent/global/shared"
+assert not (args.saveActor or args.loadActor or args.eval) or args.mode in AGENT_MODES + ("ccod", "drlcw"), "--saveActor/--loadActor/--eval only for independent/global/shared"
 assert args.eval == bool(args.loadActor), "--eval needs --loadActor (and --loadActor needs --eval)"
 assert not (args.eval and args.saveActor), "--eval does not train, so there is nothing to --saveActor"
 assert not args.cwMinOnly or args.mode in AGENT_MODES + ("central",), "--cwMinOnly only for agent modes"
@@ -213,7 +219,7 @@ with open(os.path.join(out_dir, "config.json"), "w") as f:
 trace_f = open(os.path.join(out_dir, "trace.csv"), "w", newline="")
 trace = csv.writer(trace_f)
 trace.writerow(["episode", "step", "ap", "state", "action", "real_action", "reward", "next_state", "cw_set",
-                "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"] + (["retry", "active", "txfail", "idle"] if args.extraTraces else []))
+                "cw_ap", "loss", "rx", "tx", "pp_mean", "pp_std", "actor_loss", "critic_loss"] + (["retry", "active", "txfail", "idle"] if args.extraTraces else []) + (["dmean", "dp95", "dn"] if args.mode == "drlcw" else []))
 
 run = wandb.init(name="%s %s s%d" % (args.apStaCounts, args.mode, args.seed), entity=os.environ.get("WANDB_ENTITY", wandb_entity),
                  project=args.wandb_project, tags=["multi-ap", "mode-" + args.mode, git_rev], reinit=True,
@@ -246,7 +252,7 @@ def scalar(x):
 
 def agent_loss(i, name):
     """Loss of the agent that acts for AP i (independent: own; global: the shared one; beb: none -> 0)."""
-    if args.mode in ("beb", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "ccod"):
+    if args.mode in ("beb", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "drlcw", "ccod"):
         return 0.0
     if args.mode == "central":
         return scalar(central.actor_losses[i] if name == "actor_loss" else central.critic_loss)
@@ -464,6 +470,11 @@ try:
             ctrl = UCB(counts, NORM_LOADS, args.stepTime, args.ctrlTau, args.ucbC, seed=args.seed + episode)
         elif args.mode == "ucbctx":
             ctrl = UCBCtx(counts, NORM_LOADS, args.stepTime, args.ctrlTau, args.ucbC, seed=args.seed + episode)
+        elif args.mode == "drlcw":
+            ctrl = DrlCW(counts, NORM_LOADS, parse_hidden(args.apHidden), [float(v) for v in args.drlRefThp.split(",")],
+                         [float(v) for v in args.drlRefPer.split(",")], args.stepTime, args.drlInterval, learning=learning, seed=args.seed + episode)
+            if args.loadActor:
+                ctrl.load(args.loadActor)
         elif args.mode == "dac":
             ctrl = DAC(n, args.stepTime, args.dacBeacon, args.dacTe, args.dacTc, args.dacCw0, args.dacPcol)
         S = reshape_obs(env.reset()[0], n)
@@ -501,7 +512,7 @@ try:
             elif args.mode == "ccod":
                 ccod_act = ccod_agent.act(np.array(ccod_obs, dtype=np.float32), ccod_noise)
                 acts[:] = 2.0 * float(np.clip(ccod_act.reshape(-1)[0], 0.0, 6.0)) / real_max_action - 1.0
-            elif args.mode in ("kw", "ucb", "ucbctx", "dac"):
+            elif args.mode in ("kw", "ucb", "ucbctx", "dac", "drlcw"):
                 acts[:] = 2.0 * ctrl.cw_exponents() / real_max_action - 1.0  # real = real_max * (acts + 1) / 2 = the controller exponent
             elif args.mode == "global":
                 if learning and time_step < args.start_timesteps:
@@ -514,7 +525,7 @@ try:
             obs, _, done, info = env.step(np.array([real], dtype=np.float32))
             S2 = reshape_obs(obs[0], n)
             recs = parse_ap_info(info[0], n)
-            if args.mode in ("kw", "ucb", "ucbctx", "dac"):
+            if args.mode in ("kw", "ucb", "ucbctx", "dac", "drlcw"):
                 ctrl.observe(recs)
             if args.mode == "ccod":
                 tx_c, rx_c = sum(q["tx"] for q in recs), sum(q["rx"] for q in recs)
@@ -589,7 +600,8 @@ try:
                 trace.writerow([episode, step, i + 1, float(s_i[0]), float(acts[i]), float(real[i]), r, float(s2_i[0]),
                                 recs[i]["cw_set"], recs[i]["cw_ap"], recs[i]["loss"], recs[i]["rx"], recs[i]["tx"],
                                 float(pp[0]), float(pp[1]), agent_loss(i, "actor_loss"), agent_loss(i, "critic_loss")]
-                               + ([recs[i]["retry"], recs[i]["active"], recs[i]["txfail"], recs[i]["idle"]] if args.extraTraces else []))
+                               + ([recs[i]["retry"], recs[i]["active"], recs[i]["txfail"], recs[i]["idle"]] if args.extraTraces else [])
+                               + ([recs[i]["dmean"], recs[i]["dp95"], recs[i]["dn"]] if args.mode == "drlcw" else []))
                 if args.mode == "independent" and learning and time_step >= args.start_timesteps:
                     agents[i].train(replays[i], args.batch_size)
             if args.mode == "shared" and learning and time_step >= args.start_timesteps:
@@ -661,6 +673,9 @@ try:
         torch.save(ccod_agent.actor_local.state_dict(), os.path.join(args.saveActor, "ccod_actor.pt"))
         torch.save(ccod_agent.critic_local.state_dict(), os.path.join(args.saveActor, "ccod_critic.pt"))
         print("saved ccod agent to %s" % args.saveActor)
+    elif args.saveActor and args.mode == "drlcw":
+        ctrl.save(args.saveActor)
+        print("saved drlcw agents to %s" % args.saveActor)
     elif args.saveActor:
         os.makedirs(args.saveActor, exist_ok=True)
         for i, a in enumerate(agents):

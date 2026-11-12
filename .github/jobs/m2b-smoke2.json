@@ -1,0 +1,76 @@
+{
+ "lanes": 1,
+ "packs": 1,
+ "jobs": [
+  {
+   "id": "smoke-drlcw-s4",
+   "on": "actions",
+   "w": 8,
+   "cmds": [
+    {
+     "name": "train",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--rewardNorm",
+      "150",
+      "--offeredLoad",
+      "10",
+      "--drlRefThp",
+      "35.433,1.447,35.619",
+      "--drlRefPer",
+      "0.6199,0.6916,0.6177",
+      "--mode",
+      "drlcw",
+      "--simTime",
+      "8",
+      "--episodes",
+      "1",
+      "--seed",
+      "2000",
+      "--saveActor",
+      "{ACT}",
+      "--tag",
+      "smoke-drlcw"
+     ]
+    },
+    {
+     "name": "eval",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--rewardNorm",
+      "150",
+      "--offeredLoad",
+      "10",
+      "--drlRefThp",
+      "35.433,1.447,35.619",
+      "--drlRefPer",
+      "0.6199,0.6916,0.6177",
+      "--mode",
+      "drlcw",
+      "--simTime",
+      "4",
+      "--eval",
+      "--loadActor",
+      "{ACT}",
+      "--seed",
+      "100",
+      "--tag",
+      "smoke-drlcw-eval"
+     ]
+    }
+   ]
+  }
+ ]
+}
