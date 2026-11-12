@@ -156,3 +156,4 @@
 
 - v0.9.0 validation (next, not started): 2-AP runs with different STA distributions (e.g. 5,15 / 20,40), longer training, compare vs baseline.
 - **M2c scored (2026-11-11)** - Global, PF learner and CCOD retrained on Actions CPU, 12 episodes x 3 seeds, S2/S4/S5a; strongest seed per method, cell and alpha selected by the pre-registered rule; `docs/results/m2c-results-v4.0.0.md`. Not tagged.
+- **M2b run (2026-11-12)** - rivals built (contextual UCB, Patras DAC, model-based static, drlCW); finals of dac/ucbctx/model-static (S2/S4/S5a, seeds 100-109) ran on Actions, all checks PASS, unscored; drlCW Stage 1 on HF (3 cells x 3 seeds), floor-infeasible in S5a, below the M2c rivals in S2/S4; dac and ucbctx traces byte-identical on Actions and HF. BLADE not built. `docs/results/m2b-results-v4.0.0.md`. Not tagged.
