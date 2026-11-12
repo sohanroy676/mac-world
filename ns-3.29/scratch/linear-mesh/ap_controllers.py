@@ -158,3 +158,142 @@ class UCB:
 
     def cw_exponents(self):
         return np.array([self.arms[a] - 4 for a in self.cur], dtype=np.float32)
+
+
+def ctx_bucket(active):
+    """UCBCtx context: 0 for no active STA, else 1 + floor(log2(active)) capped at 6 (1, 2-3, 4-7, 8-15, 16-31, 32+)."""
+    a = int(round(active))
+    return 0 if a <= 0 else min(6, 1 + int(math.log2(a)))
+
+
+class UCBCtx:
+    """v3.8.0 (M2b) contextual UCB per AP: UCB1 statistics are kept per (context, arm); the context is the AP's number of
+    active STAs (STAs whose data frames the AP decoded) averaged over the window that just ended, in log2 buckets
+    (ctx_bucket). A context with fewer than 7 pulls backs off to the context-free UCB1 statistics (decision: the first version tried
+    every arm once per context, and the per-window context changes so often that it explored at random for the whole run, ignoring c).
+    Same arms (CW exponents 4..10), window tau and reward as UCB. Motivation: the Wi-Fi MAB study (plan
+    section on rivals) found context helps; the active-STA count as the context key is the plan's choice, not from a paper.
+    Needs cw.cc --extraTraces (the `active` field). Our construction, not from a paper."""
+
+    def __init__(self, counts, norm_loads, step_time=0.01, tau=0.2, c=0.3, seed=0):
+        self.n, self.counts = len(counts), np.asarray(counts, dtype=np.float64)
+        self.norm = np.asarray(norm_loads, dtype=np.float64)
+        self.step_time, self.c = step_time, c
+        self.steps = max(1, int(round(tau / step_time)))
+        self.k, self.rx, self.act = 0, np.zeros(self.n), np.zeros(self.n)
+        self.rng = np.random.RandomState(seed)
+        self.arms = list(range(4, 11))
+        self.pulls = np.zeros((self.n, 7, 7))  # [ap, context, arm]
+        self.mean = np.zeros((self.n, 7, 7))
+        self.ctx = np.zeros(self.n, dtype=int)  # context the current arm was chosen in (0 before the first window)
+        self.cur = self.rng.randint(0, 7, size=self.n)
+        self.t_ctx = np.zeros((self.n, 7))  # pulls per context
+        self.g_pulls = np.zeros((self.n, 7))  # context-free statistics, used until a context has been pulled once per arm
+        self.g_mean = np.zeros((self.n, 7))
+        self.t_all = np.zeros(self.n)
+
+    def observe(self, recs):
+        self.rx += np.array([r["rx"] for r in recs], dtype=np.float64)
+        self.act += np.array([r["active"] for r in recs], dtype=np.float64)
+        self.k += 1
+        if self.k < self.steps:
+            return
+        mbps = self.rx * PAYLOAD_BITS / (self.k * self.step_time * 1e6)
+        reward = np.clip(mbps / (self.norm * self.counts), 0.0, 1.0)
+        new_ctx = [ctx_bucket(a / self.k) for a in self.act]
+        self.k, self.rx, self.act = 0, np.zeros(self.n), np.zeros(self.n)
+        for i in range(self.n):
+            c0, a = self.ctx[i], self.cur[i]
+            self.pulls[i, c0, a] += 1
+            self.t_ctx[i, c0] += 1
+            self.mean[i, c0, a] += (reward[i] - self.mean[i, c0, a]) / self.pulls[i, c0, a]
+            self.g_pulls[i, a] += 1
+            self.t_all[i] += 1
+            self.g_mean[i, a] += (reward[i] - self.g_mean[i, a]) / self.g_pulls[i, a]
+            c1 = new_ctx[i]
+            if self.t_ctx[i, c1] >= 7:  # enough pulls in this context: UCB1 on its own statistics
+                bonus = self.c * np.sqrt(2.0 * math.log(self.t_ctx[i, c1]) / np.maximum(1.0, self.pulls[i, c1]))
+                self.cur[i] = int(np.argmax(np.where(self.pulls[i, c1] > 0, self.mean[i, c1] + bonus, np.inf)))
+            else:  # back off to the context-free UCB1 (every arm once in random order first), as the plain UCB baseline would
+                untried = np.flatnonzero(self.g_pulls[i] == 0)
+                if len(untried):
+                    self.cur[i] = int(self.rng.choice(untried))
+                else:
+                    bonus = self.c * np.sqrt(2.0 * math.log(max(2.0, self.t_all[i])) / self.g_pulls[i])
+                    self.cur[i] = int(np.argmax(self.g_mean[i] + bonus))
+            self.ctx[i] = c1
+
+    def cw_exponents(self):
+        return np.array([self.arms[a] - 4 for a in self.cur], dtype=np.float32)
+
+
+def dac_gains(p_col, m=6):
+    """Patras, Banchs, Serrano, Azcorra, IEEE TMC 10(6) 2011, Eq. 47-49 (typeset PDF read 2026-11-11):
+    Kp = 0.4 * Ku, Ku = 2 / (p^2 (1 + p sum_{k=0..m} (2p)^k)), Ki = Kp / (0.85 Ti) with Ti = 2. m = max backoff stage (16..1024 -> 6)."""
+    d = p_col ** 2 * (1.0 + p_col * sum((2.0 * p_col) ** k for k in range(m + 1)))
+    ku = 2.0 / d
+    kp = 0.4 * ku
+    return kp, kp / (0.85 * 2.0)
+
+
+def dac_pcol(te, tc):
+    """Eq. 20: p_col = 1 - exp(-sqrt(2 Te / Tc))."""
+    return 1.0 - math.exp(-math.sqrt(2.0 * te / tc))
+
+
+class DAC:
+    """v3.8.0 (M2b) Patras et al. DAC, one PI controller per AP (TMC 2011, Sec. 3, Eq. 2-5, 23, 25, 47-49).
+    Error e = 2 p_others - p_own - p_col; CWmin(k) = Kp e(k) + S(k), S(k+1) = S(k) + Ki e(k) (C_PI(z) = Kp + Ki/(z-1));
+    CW limited to [16, 1024]; update once per beacon interval (0.1 s), deferred while the window holds fewer than 20 samples.
+    p_own = F / (F + T) (Eq. 4) and p_others = R / (R + S) (Eq. 5) are read from cw.cc --extraTraces:
+    F = failed data attempts in the BSS (`txfail`), T = `rx`, retry share = `retry` per step weighted by `rx`.
+    Deviations (labelled): (1) AP level: the paper runs one controller per station on that station's own counters; here one
+    controller per BSS uses BSS-aggregate counters, so p_own and p_others are both BSS-wide and the fairness term is about zero;
+    (2) the integrator is clamped to [16, 1024] (anti-windup; the paper clamps the output); (3) start CW = cw0 (not stated in
+    the paper); (4) Te / Tc come from the HE 20 MHz MCS 11 timing computed in docs/results/m2b-specs-v4.0.0.md (inference),
+    not from the paper's 802.11g values."""
+
+    def __init__(self, n_aps, step_time=0.01, beacon=0.1, te=9e-6, tc=257e-6, cw0=16.0, p_col=0.0, min_samples=20):
+        self.n = n_aps
+        self.p_col = p_col if p_col > 0 else dac_pcol(te, tc)
+        self.kp, self.ki = dac_gains(self.p_col)
+        self.steps = max(1, int(round(beacon / step_time)))
+        self.min_samples = min_samples
+        self.s = np.full(n_aps, float(cw0))
+        self.cw = np.full(n_aps, float(cw0))
+        self.k = 0
+        self.t_ok = np.zeros(n_aps)   # successes T (= S + R frames)
+        self.fail = np.zeros(n_aps)   # failed attempts F
+        self.retry = np.zeros(n_aps)  # frames with the retry bit set R
+        self.updates = 0
+
+    def observe(self, recs):
+        for i, r in enumerate(recs):
+            self.t_ok[i] += r["rx"]
+            self.fail[i] += r["txfail"]
+            self.retry[i] += r["retry"] * r["rx"]
+        self.k += 1
+        if self.k < self.steps:
+            return
+        self.k = 0
+        for i in range(self.n):
+            samples_own, samples_oth = self.fail[i] + self.t_ok[i], self.t_ok[i]
+            if samples_own < self.min_samples or samples_oth < self.min_samples:
+                continue  # deferred: keep accumulating until the next beacon
+            p_own = self.fail[i] / samples_own
+            p_oth = self.retry[i] / samples_oth
+            e = 2.0 * p_oth - p_own - self.p_col
+            self.cw[i] = min(CW_MAX, max(CW_MIN, self.kp * e + self.s[i]))
+            self.s[i] = min(CW_MAX, max(CW_MIN, self.s[i] + self.ki * e))
+            self.t_ok[i] = self.fail[i] = self.retry[i] = 0.0
+            self.updates += 1
+
+    def cw_exponents(self):
+        return np.clip(np.log2(self.cw) - 4.0, 0.0, 6.0).astype(np.float32)
+
+
+def model_static_cw(n_stas, te=9e-6, tc=257e-6):
+    """Patras Eq. 18 with tau ~ 2 / (CW + 1): tau_opt = (1/n) sqrt(2 Te / Tc), CW = 2 / tau_opt - 1, clipped to [16, 1024].
+    n = the AP's own number of STAs (local n, plan decision), Te / Tc as in DAC."""
+    tau = (1.0 / n_stas) * math.sqrt(2.0 * te / tc)
+    return float(min(CW_MAX, max(CW_MIN, 2.0 / tau - 1.0)))

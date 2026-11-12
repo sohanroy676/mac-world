@@ -15,6 +15,9 @@ jobs = json.loads(subprocess.check_output(["gh", "api", "repos/%s/actions/runs/%
 for j in jobs:
     if j["name"] == "prep":
         continue
+    if j["status"] != "completed":  # logs of a running job are not available yet
+        print("%s [%s, skipped]" % (j["name"], j["status"]))
+        continue
     log = subprocess.check_output(["gh", "api", "repos/%s/actions/jobs/%d/logs" % (repo, j["id"])]).decode("utf-8", "replace")
     res = [re.sub(r"^\S+ ", "", l) for l in log.splitlines() if re.match(r"\S+ (\S+/\S+: exit|\s+sha256|\s+check|\s+cmp with)", l)]
     print("%s [%s]" % (j["name"], j["conclusion"]))

@@ -23,6 +23,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <unordered_map>
 #include "scenario.h"
 
 using namespace std;
@@ -90,6 +91,14 @@ std::vector<uint32_t> g_apActive, g_apTxFailStep;  // --extraTraces: active STAs
 double g_rewardNormMbps = 0.0; // --rewardNorm: fixed per-STA reward divisor in Mbps; 0 = per-AP offered load (old behaviour)
 bool g_extraTraces = false;    // --extraTraces: append retry,active,txfail to each per-AP info record
 std::vector<uint64_t> g_apDataRx, g_apRetryRx, g_apTxFail; // data frames addressed to AP i / of those with Retry bit / failed data attempts in BSS i, this step
+// v3.8.0 (M2b, drlCW): --delayWindow W > 0 measures per-packet app-to-sink delay (OnOff Tx time to the AP sink's Rx, matched by Packet uid) and, every W
+// simulated seconds, publishes each AP's mean and 95th percentile (ms) and sample count of the window that just ended in the per-AP info record
+// (after txfail: dmean,dp95,dn). The values are held until the next window ends. Off by default; defaults stay byte-identical.
+double g_delayWindow = 0.0;
+std::unordered_map<uint64_t, int64_t> g_sentAtNs;      // packet uid -> app send time (ns)
+std::vector<std::vector<double>> g_apDelayWin;         // delays (ms) of packets received by AP i in the current window
+std::vector<float> g_apDelayMean, g_apDelayP95;        // last completed window, ms
+std::vector<uint32_t> g_apDelayN;
 std::vector<std::set<Mac48Address>> g_apActiveSta;         // STAs whose data frames AP i decoded this step
 std::vector<Mac48Address> g_apMac;                         // MAC address of AP i
 
@@ -222,6 +231,8 @@ std::string MyGetExtraInfo(void)
                       to_string(g_apIdleMean.at(ap));
             if (g_extraTraces)
                 myInfo += "," + to_string(g_apRetryRate.at(ap)) + "," + to_string(g_apActive.at(ap)) + "," + to_string(g_apTxFailStep.at(ap));
+            if (g_delayWindow > 0)
+                myInfo += "," + to_string(g_apDelayMean.at(ap)) + "," + to_string(g_apDelayP95.at(ap)) + "," + to_string(g_apDelayN.at(ap));
         }
     }
 
@@ -568,6 +579,27 @@ void recordHistory()
                 g_apDataRx[ap] = g_apRetryRx[ap] = g_apTxFail[ap] = 0;
                 g_apActiveSta[ap].clear();
             }
+            if (g_delayWindow > 0 && calls % std::max<uint32_t>(1, (uint32_t)std::lround(g_delayWindow / envStepTime)) == 0) // window = whole env steps
+            {
+                std::vector<double> &w = g_apDelayWin[ap];
+                g_apDelayN[ap] = (uint32_t)w.size();
+                if (!w.empty())
+                {
+                    double sum = 0.0;
+                    for (double d : w)
+                        sum += d;
+                    size_t k = (size_t)std::ceil(0.95 * w.size()) - 1; // nearest-rank 95th percentile
+                    std::nth_element(w.begin(), w.begin() + k, w.end());
+                    g_apDelayMean[ap] = (float)(sum / w.size());
+                    g_apDelayP95[ap] = (float)w[k];
+                }
+                w.clear();
+                if (ap + 1 == g_apBss.size())
+                {
+                    for (auto it = g_sentAtNs.begin(); it != g_sentAtNs.end();) // drop packets that never arrived (queue drops)
+                        it = (Simulator::Now().GetNanoSeconds() - it->second > 5000000000LL) ? g_sentAtNs.erase(it) : std::next(it);
+                }
+            }
             g_apReward[ap] = (float)std::min(1.0, std::max(0.0, r));
             if (g_idleSense || g_obsIdle || g_extraTraces)
             {
@@ -660,6 +692,15 @@ void packetSent(Ptr<const Packet> packet)
 void packetReceivedAp(uint32_t apIndex, Ptr<const Packet> packet)
 {
     g_apRxPkt[apIndex]++;
+    if (g_delayWindow > 0)
+    {
+        auto it = g_sentAtNs.find(packet->GetUid());
+        if (it != g_sentAtNs.end())
+        {
+            g_apDelayWin[apIndex].push_back((Simulator::Now().GetNanoSeconds() - it->second) / 1e6);
+            g_sentAtNs.erase(it);
+        }
+    }
 }
 
 void packetSentPhyAp(uint32_t apIndex, Ptr<const Packet> packet)
@@ -669,6 +710,8 @@ void packetSentPhyAp(uint32_t apIndex, Ptr<const Packet> packet)
 
 void packetSentAppAp(uint32_t apIndex, Ptr<const Packet> packet)
 {
+    if (g_delayWindow > 0)
+        g_sentAtNs[packet->GetUid()] = Simulator::Now().GetNanoSeconds();
     g_apAppTxPkt[apIndex]++;
 }
 
@@ -744,6 +787,10 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
     g_apRetryRate.assign(wifiApNode.GetN(), 0.0f);
     g_apActive.assign(wifiApNode.GetN(), 0);
     g_apTxFailStep.assign(wifiApNode.GetN(), 0);
+    g_apDelayWin.assign(wifiApNode.GetN(), std::vector<double>());
+    g_apDelayMean.assign(wifiApNode.GetN(), 0.0f);
+    g_apDelayP95.assign(wifiApNode.GetN(), 0.0f);
+    g_apDelayN.assign(wifiApNode.GetN(), 0);
     g_idleCw.assign(wifiApNode.GetN(), 16.0);
     g_apSumSlots.assign(wifiApNode.GetN(), 0);
     g_apNTrans.assign(wifiApNode.GetN(), 0);
@@ -1409,6 +1456,7 @@ int main(int argc, char *argv[])
     cmd.AddValue("useRts", "v3.5.0: enable RTS/CTS for every frame (RtsCtsThreshold=0). Default: false", useRts);
     cmd.AddValue("rewardNorm", "v3.5.0: fixed per-STA reward divisor in Mbps (multi-AP). Default: 0 = per-AP offered load", g_rewardNormMbps);
     cmd.AddValue("extraTraces", "v3.5.0: append retry rate, active STAs and failed data attempts to each per-AP info record. Default: false", g_extraTraces);
+    cmd.AddValue("delayWindow", "v3.8.0: per-AP delay mean / p95 (ms) over windows of this many simulated seconds, appended to each per-AP info record after txfail (needs --extraTraces). Default: 0 = off", g_delayWindow);
     cmd.AddValue("obsIdle", "v3.3.0: per-AP observation = mean idle slots / 20 (clipped to 1) instead of the loss ratio. Default: false", g_obsIdle);
     cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);
     cmd.AddValue("seed", "Random seed", simSeed);

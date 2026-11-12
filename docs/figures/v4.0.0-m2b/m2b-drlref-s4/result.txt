@@ -1,0 +1,5 @@
+m2b-drlref-s4/beb300: exit 0, 3697 s, pin=False, run dirs ['results/multi-ap-20261112-035336']
+  sha256 trace.csv: b54cd8449f0ff69ac69e1387f1b77dc8d07c9487e228390cb5995480ef49e05e
+  check: PASS
+m2b-drlref-s4/ref: exit 0, 1 s, pin=False, run dirs []
+  check: PASS

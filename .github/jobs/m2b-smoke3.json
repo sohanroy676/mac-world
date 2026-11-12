@@ -1,0 +1,105 @@
+{
+ "lanes": 1,
+ "packs": 1,
+ "jobs": [
+  {
+   "id": "smoke3-drlcw-chain",
+   "on": "actions",
+   "w": 10,
+   "cmds": [
+    {
+     "name": "beb",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--mode",
+      "beb",
+      "--delayWindow",
+      "0.5",
+      "--seed",
+      "0",
+      "--simTime",
+      "6",
+      "--tag",
+      "smoke3-beb"
+     ]
+    },
+    {
+     "name": "ref",
+     "args": [
+      "drlcw_refs.py",
+      "--write",
+      "{ACT}/ref.json",
+      "{LAST}/trace.csv"
+     ]
+    },
+    {
+     "name": "train",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--mode",
+      "drlcw",
+      "--drlRef",
+      "{ACT}/ref.json",
+      "--simTime",
+      "6",
+      "--seed",
+      "2000",
+      "--saveActor",
+      "{ACT}/drl",
+      "--tag",
+      "smoke3-train"
+     ]
+    },
+    {
+     "name": "eval",
+     "args": [
+      "--apStaCounts",
+      "10,10,10",
+      "--apHidden",
+      "1-3",
+      "--offeredLoad",
+      "10",
+      "--rewardNorm",
+      "150",
+      "--stepTime",
+      "0.01",
+      "--check",
+      "--mode",
+      "drlcw",
+      "--drlRef",
+      "{ACT}/ref.json",
+      "--simTime",
+      "4",
+      "--eval",
+      "--loadActor",
+      "{ACT}/drl",
+      "--seed",
+      "100",
+      "--tag",
+      "smoke3-eval"
+     ]
+    }
+   ]
+  }
+ ]
+}

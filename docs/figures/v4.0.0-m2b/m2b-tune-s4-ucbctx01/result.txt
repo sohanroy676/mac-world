@@ -1,0 +1,9 @@
+m2b-tune-s4-ucbctx01/eval-s0: exit 0, 360 s, pin=False, run dirs ['results/multi-ap-20261112-035345']
+  sha256 trace.csv: 32b13782d76ac9077ce6f28cfa1cc4b31190491ed0a78c535cd4f84da3b63a9d
+  check: PASS
+m2b-tune-s4-ucbctx01/eval-s1: exit 0, 358 s, pin=False, run dirs ['results/multi-ap-20261112-035945']
+  sha256 trace.csv: 75c4d1e34194b78c1c44b26e7f66a0d6552604f986978fc4ec48613cbb845af9
+  check: PASS
+m2b-tune-s4-ucbctx01/eval-s2: exit 0, 358 s, pin=False, run dirs ['results/multi-ap-20261112-040544']
+  sha256 trace.csv: 29754a6508e1012991c3755d2d7fa9dc0ff06c02b192d29cb9b1ac32877cce26
+  check: PASS
