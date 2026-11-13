@@ -27,7 +27,14 @@ sfx = "" if sn == 1 else "-shard%dof%d" % (sk, sn)
 os.makedirs(OUT, exist_ok=True)
 lock = threading.Lock()
 push_lock = threading.Lock()  # GitHub rejects concurrent commits to one branch (HTTP 409): push one file at a time
-st = {"shard": shard, "timing": {}, "total": len(mine), "done": [], "failed": [], "running": [], "skipped": [], "boot": open("/proc/sys/kernel/random/boot_id").read().strip() if os.path.exists("/proc/sys/kernel/random/boot_id") else "?"}
+def cpu_model():
+    try:
+        return next(l.split(":", 1)[1].strip() for l in open("/proc/cpuinfo") if l.startswith("model name"))
+    except (OSError, StopIteration):
+        return "?"
+
+
+st = {"cpu": cpu_model(), "shard": shard, "timing": {}, "total": len(mine), "done": [], "failed": [], "running": [], "skipped": [], "boot": open("/proc/sys/kernel/random/boot_id").read().strip() if os.path.exists("/proc/sys/kernel/random/boot_id") else "?"}
 
 
 def api(path, data=None, method="GET"):
