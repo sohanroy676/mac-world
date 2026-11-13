@@ -32,6 +32,22 @@ Selected seed (pre-registered rule, feasible first): S2 t0; S4 t1; S5a none feas
 3. Seed spread is large, as for the M2c learners (S2 alpha 1: 0.273 to 0.776).
 4. Inference, untested: the paper's reward targets delay, our scaled delay reward does not penalise starving a light AP; this fits the S5a floor failures.
 
+## Finals scored on the claim seeds 103-109 (n = 7, facts)
+BEB, IdleSense and oracle statics (batch 4, Actions run 43275312746, 70 runs, all `--check` PASS; data `docs/figures/v4.0.0-m2b/refs-103-109/`) plus the 18 finals. Tables: `gc_finals_s{2,4,5a}.md` (`gc_analysis.py --seeds 103-109 --alphas 0,1,4`; model-static runs kept out of the oracle set by relabelling them, so the oracle is the M1 static only).
+GC at alpha 1 (alpha 0 / 4 in the tables); `INF` = floor-infeasible (5 % slack):
+| Cell | dac (Tc 514) | ucbctx (c 1) | model-static (Tc 257) | IdleSense |
+|---|---|---|---|---|
+| S2 | 0.945 ok | -0.370 INF | 0.436 INF | 0.900 ok |
+| S4 (degenerate at alpha 1, raw U; alpha 0 GC) | U 9.05 ok (alpha 0 GC 1.473 ok) | U 16.15 ok | U 12.85 ok | U 2.60 INF |
+| S5a | 0.684 ok | -0.041 ok | 0.615 ok | -0.112 INF |
+Oracle raw U in S4 alpha 1: 20.1 (static 128,64,128); BEB 3.99.
+
+What it says:
+1. **DAC is the strongest new rival** (fact): feasible in all three cells at all three alphas, GC 0.93 to 0.97 in S2, 1.47 at S4 alpha 0 (above the best static), 0.41 to 1.03 in S5a. It is at the ceiling in S2, so it is a hard rival for RAFA there.
+2. **Contextual UCB is weak** (fact): below BEB in S2 and S5a at alpha 1 and infeasible in S2. Inference: the context is nearly constant in static cells (see specs), so it reduces to plain UCB.
+3. **Model-based static** is feasible in S4 and S5a (S5a alpha 1 GC 0.615), infeasible in S2.
+4. Not yet run: drlCW on seeds 103-109 (its Stage-1 selected actors: S2 t0, S4 t1, S5a none feasible). Needs your go-ahead.
+
 ## Limits
 - Stage 1 uses n = 3 eval seeds and no tuning (paper values), 3 training seeds. Claims use seeds 103-109 only (M4).
 - drlCW trained on the HF Intel CPU, the M2c rivals on mixed Actions CPUs (effect unknown).
