@@ -1,5 +1,5 @@
 """Run the 'hf' jobs of a batch file on the Hugging Face Space, `lanes` at a time, and push every finished job to GitHub.
-Usage: hfjobs.py <batch.json> [lanes=16]     (env: GH_TOKEN for pushing, RUN_LABEL, BENCH_VENV, BENCH_ROOT, ALL=1 runs every job)
+Usage: hfjobs.py <batch.json> [lanes=16] [shard=k/n]     (shard: this Space takes jobs k, k+n, k+2n... of the weight-sorted list, so n Spaces split one batch; env: GH_TOKEN for pushing, RUN_LABEL, BENCH_VENV, BENCH_ROOT, ALL=1 runs every job)
 Each job = one .github/scripts/run_job.py call (same interface as Actions). Results: branch bench/hf-results,
 hf-jobs/<batch>/<job>.tar.gz + <job>.result.txt, status.json every minute. A restarted Space skips jobs whose result.txt
 already says PASS, so the batch resumes where it stopped."""
@@ -19,10 +19,22 @@ batch = json.load(open(os.path.join(ROOT, batch_path) if not os.path.isabs(batch
 jobs = batch if isinstance(batch, list) else batch["jobs"]
 name = os.path.splitext(os.path.basename(batch_path))[0]
 mine = [j for j in jobs if os.environ.get("ALL") or jobsplit.target(j) == "hf"]
+shard = sys.argv[3] if len(sys.argv) > 3 and sys.argv[3] else "0/1"
+sk, sn = (int(x) for x in shard.split("/"))
+assert 0 <= sk < sn, "shard must be k/n with 0 <= k < n"
+mine = sorted(mine, key=lambda j: (-jobsplit.weight(j), j["id"]))[sk::sn]  # same order on every Space, so the shards are disjoint
+sfx = "" if sn == 1 else "-shard%dof%d" % (sk, sn)
 os.makedirs(OUT, exist_ok=True)
 lock = threading.Lock()
 push_lock = threading.Lock()  # GitHub rejects concurrent commits to one branch (HTTP 409): push one file at a time
-st = {"total": len(mine), "done": [], "failed": [], "running": [], "skipped": [], "boot": open("/proc/sys/kernel/random/boot_id").read().strip() if os.path.exists("/proc/sys/kernel/random/boot_id") else "?"}
+def cpu_model():
+    try:
+        return next(l.split(":", 1)[1].strip() for l in open("/proc/cpuinfo") if l.startswith("model name"))
+    except (OSError, StopIteration):
+        return "?"
+
+
+st = {"cpu": cpu_model(), "shard": shard, "timing": {}, "total": len(mine), "done": [], "failed": [], "running": [], "skipped": [], "boot": open("/proc/sys/kernel/random/boot_id").read().strip() if os.path.exists("/proc/sys/kernel/random/boot_id") else "?"}
 
 
 def api(path, data=None, method="GET"):
@@ -70,7 +82,7 @@ def already_passed(jid):
 def status():
     with lock:
         s = dict(st, t=time.time(), batch=name, lanes=lanes)
-    put("hf-jobs/%s/status.json" % name, json.dumps(s, indent=1).encode())
+    put("hf-jobs/%s/status%s.json" % (name, sfx), json.dumps(s, indent=1).encode())
 
 
 queue = sorted(mine, key=jobsplit.weight, reverse=True)
@@ -90,6 +102,7 @@ def worker():
             continue
         cmds = j["cmds"] if "cmds" in j else j["args"]
         env = dict(os.environ, PIN="1" if j.get("pin") else "")
+        t_start = time.time()
         with lock:
             st["running"].append(jid)
         with start_lock:  # run dirs are named to the second
@@ -110,6 +123,7 @@ def worker():
         else:
             put("hf-jobs/%s/%s.result.txt" % (name, jid), ("exit %d, no output dir\nFAIL\n" % rc).encode())
         with lock:
+            st["timing"][jid] = [round(t_start, 1), round(time.time(), 1)]
             st["running"].remove(jid)
             st["done" if ok else "failed"].append(jid)
         print("job %s rc %d ok=%s" % (jid, rc, ok), flush=True)

@@ -1,5 +1,5 @@
 """Fetch job logs of a run with `gh api`, decode BUNDLE blocks into OUT/<id>/..., print each job's result lines.
-Usage: fetch_bundles.py <run_id> <out_dir>"""
+Usage: fetch_bundles.py <run_id> <out_dir> [owner/repo]   (repo defaults to sohanroy676/mac-world; give a fork's name to read its runs, needs `gh` logged in with access)"""
 import base64
 import io
 import json
@@ -10,7 +10,7 @@ import sys
 import tarfile
 
 run, out = sys.argv[1:3]
-repo = "sohanroy676/mac-world"
+repo = sys.argv[3] if len(sys.argv) > 3 else "sohanroy676/mac-world"
 jobs = json.loads(subprocess.check_output(["gh", "api", "repos/%s/actions/runs/%s/jobs?per_page=100" % (repo, run)]))["jobs"]
 for j in jobs:
     if j["name"] == "prep":
