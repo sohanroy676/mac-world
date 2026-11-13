@@ -89,6 +89,8 @@ std::vector<uint32_t> g_apActive, g_apTxFailStep;  // --extraTraces: active STAs
 
 // v3.5.0 (M0): opt-in diagnostics/normaliser. All off by default (defaults stay byte-identical).
 double g_rewardNormMbps = 0.0; // --rewardNorm: fixed per-STA reward divisor in Mbps; 0 = per-AP offered load (old behaviour)
+bool g_bladeCounts = false;    // --bladeCounts: append the AP's idle-slot sum and gap count of the step (BLADE's N_idle and N_tx) to each per-AP info record (needs --extraTraces)
+std::vector<uint64_t> g_apBladeIdle, g_apBladeGaps; // snapshots of g_apIdleSlots / g_apIdleGaps taken at the end of each step
 bool g_extraTraces = false;    // --extraTraces: append retry,active,txfail to each per-AP info record
 std::vector<uint64_t> g_apDataRx, g_apRetryRx, g_apTxFail; // data frames addressed to AP i / of those with Retry bit / failed data attempts in BSS i, this step
 // v3.8.0 (M2b, drlCW): --delayWindow W > 0 measures per-packet app-to-sink delay (OnOff Tx time to the AP sink's Rx, matched by Packet uid) and, every W
@@ -233,6 +235,8 @@ std::string MyGetExtraInfo(void)
                 myInfo += "," + to_string(g_apRetryRate.at(ap)) + "," + to_string(g_apActive.at(ap)) + "," + to_string(g_apTxFailStep.at(ap));
             if (g_delayWindow > 0)
                 myInfo += "," + to_string(g_apDelayMean.at(ap)) + "," + to_string(g_apDelayP95.at(ap)) + "," + to_string(g_apDelayN.at(ap));
+            if (g_bladeCounts)
+                myInfo += "," + to_string(g_apBladeIdle.at(ap)) + "," + to_string(g_apBladeGaps.at(ap));
         }
     }
 
@@ -612,6 +616,8 @@ void recordHistory()
                     if (cw != g_apCwMin.at(ap))
                         setApCw(ap, cw, cw);
                 }
+                g_apBladeIdle[ap] = g_apIdleSlots[ap];
+                g_apBladeGaps[ap] = g_apIdleGaps[ap];
                 g_apIdleSlots[ap] = 0;
                 g_apIdleGaps[ap] = 0;
             }
@@ -778,6 +784,8 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
     g_apLastTx.assign(wifiApNode.GetN(), 0);
     g_apIdleSlots.assign(wifiApNode.GetN(), 0);
     g_apIdleGaps.assign(wifiApNode.GetN(), 0);
+    g_apBladeIdle.assign(wifiApNode.GetN(), 0);
+    g_apBladeGaps.assign(wifiApNode.GetN(), 0);
     g_apIdleMean.assign(wifiApNode.GetN(), 0.0f);
     g_apDataRx.assign(wifiApNode.GetN(), 0);
     g_apRetryRx.assign(wifiApNode.GetN(), 0);
@@ -1456,6 +1464,7 @@ int main(int argc, char *argv[])
     cmd.AddValue("useRts", "v3.5.0: enable RTS/CTS for every frame (RtsCtsThreshold=0). Default: false", useRts);
     cmd.AddValue("rewardNorm", "v3.5.0: fixed per-STA reward divisor in Mbps (multi-AP). Default: 0 = per-AP offered load", g_rewardNormMbps);
     cmd.AddValue("extraTraces", "v3.5.0: append retry rate, active STAs and failed data attempts to each per-AP info record. Default: false", g_extraTraces);
+    cmd.AddValue("bladeCounts", "v3.8.0: append the AP's per-step idle-slot sum and backoff-gap count (BLADE N_idle, N_tx) to each per-AP info record, after all other fields (needs --extraTraces). Default: false", g_bladeCounts);
     cmd.AddValue("delayWindow", "v3.8.0: per-AP delay mean / p95 (ms) over windows of this many simulated seconds, appended to each per-AP info record after txfail (needs --extraTraces). Default: 0 = off", g_delayWindow);
     cmd.AddValue("obsIdle", "v3.3.0: per-AP observation = mean idle slots / 20 (clipped to 1) instead of the loss ratio. Default: false", g_obsIdle);
     cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);

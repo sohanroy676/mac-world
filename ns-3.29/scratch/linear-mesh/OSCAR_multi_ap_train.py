@@ -51,7 +51,7 @@ parser.add_argument("--tag", default="", help="variant label stored in config.js
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "drlcw", "ccod"], default="independent")
+parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "blade", "drlcw", "ccod"], default="independent")
 parser.add_argument("--apCws", default="", help="static mode only: fixed CW per AP, e.g. 64,512 (no agent; cw.cc applies it from t=0)")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 parser.add_argument("--algo", choices=["ddpg", "td3"], default="ddpg", help="learner for independent/global/shared (td3: twin critics, delayed actor, target smoothing)")
@@ -81,6 +81,12 @@ parser.add_argument("--floorLambda", type=float, default=0.0, help="v4.0.0 --rew
 parser.add_argument("--floors", default="", help="per-AP floors in Mbps for --floorLambda (comma-separated, from the BEB references)")
 parser.add_argument("--poolRR", action="store_true", help="v4.0.0 --scenarioPool: round-robin without replacement (a fresh random order every len(pool) episodes); pool entries may carry per-AP \"floors\" for --floorLambda")
 parser.add_argument("--noiseDist", choices=["gaussian", "gumbel", "gumbel-raw"], default="gaussian", help="v4.0.0 exploration noise on the action, scale max_action*expl_noise: gaussian = N(0,s); gumbel = Gumbel centred to mean 0 with SD s; gumbel-raw = Gumbel(0, scale s), not centred")
+parser.add_argument("--bladeNobs", type=int, default=300, help="blade: events (idle slots + transmission events) per MAR sample (paper Algorithm 1: 300)")
+parser.add_argument("--bladeMarTar", type=float, default=0.1, help="blade: target MAR (paper: 0.1)")
+parser.add_argument("--bladeMarMax", type=float, default=0.35, help="blade: MAR_max (paper: 0.35)")
+parser.add_argument("--bladeMinc", type=float, default=500.0, help="blade: M_inc (paper: 500)")
+parser.add_argument("--bladeMdec", type=float, default=0.95, help="blade: M_dec (paper: 0.95)")
+parser.add_argument("--bladeAinc", type=float, default=15.0, help="blade: A_inc (paper: 15)")
 parser.add_argument("--dacBeacon", type=float, default=0.1, help="dac: update period in seconds (paper: one beacon interval, 0.1 s)")
 parser.add_argument("--dacTe", type=float, default=9e-6, help="dac: empty-slot time Te in seconds (HE slot 9 us)")
 parser.add_argument("--dacTc", type=float, default=257e-6, help="dac: collision duration Tc in seconds (inference for HE 20 MHz MCS 11, see docs/results/m2b-specs-v4.0.0.md)")
@@ -94,7 +100,7 @@ parser.add_argument("--drlRef", default="", help="drlcw: JSON from drlcw_refs.py
 parser.add_argument("--drlInterval", type=float, default=0.5, help="drlcw: decision interval in seconds (paper: 0.5)")
 parser.add_argument("--ccodHist", type=int, default=300, help="ccod: loss-history length fed to the CCOD agent (agents/ddpg, RLinWiFi; CCOD_train.py: 300)")
 args = parser.parse_args()
-if args.obs == "rafa" or args.mode in ("ucbctx", "dac", "drlcw") or args.delayWindow > 0:
+if args.obs == "rafa" or args.mode in ("ucbctx", "dac", "blade", "drlcw") or args.delayWindow > 0:
     args.extraTraces = True  # idle, Retry and active-STA fields come from cw.cc --extraTraces
 
 # W&B mode must be decided before wandb is imported.
@@ -113,7 +119,7 @@ from agents.our_ddpg.utils import JointReplayBuffer, ReplayBuffer  # noqa: E402
 from config import wandb_entity  # noqa: E402
 from exceptions import AlreadyRunningException  # noqa: E402
 from drlcw import DrlCW  # noqa: E402
-from ap_controllers import DAC, KW, UCB, UCBCtx, parse_hidden  # noqa: E402
+from ap_controllers import BLADE, DAC, KW, UCB, UCBCtx, parse_hidden  # noqa: E402
 from multi_ap import PAYLOAD_BITS, jain, parse_ap_info, reshape_obs, step_metrics  # noqa: E402
 from wrappers import EnvWrapper  # noqa: E402
 
@@ -153,6 +159,8 @@ if args.rewardNorm > 0:
     sim_args["rewardNorm"] = "%g" % args.rewardNorm
 if args.extraTraces:
     sim_args["extraTraces"] = "true"
+if args.mode == "blade":
+    sim_args["bladeCounts"] = "true"  # idle slots and backoff gaps per step for BLADE's MAR
 if args.mode == "drlcw":
     args.delayWindow = args.drlInterval  # cw.cc publishes per-AP delay mean / p95 once per decision interval
 if args.delayWindow > 0:
@@ -180,7 +188,7 @@ if args.residual:
     sim_args["residual"] = "true"
 if args.obsIdle:
     sim_args["obsIdle"] = "true"
-n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0, "kw": 0, "ucb": 0, "ucbctx": 0, "dac": 0, "drlcw": 0, "ccod": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
+n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0, "kw": 0, "ucb": 0, "ucbctx": 0, "dac": 0, "blade": 0, "drlcw": 0, "ccod": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
 LOCAL_MODES = ("independent", "shared")
 assert args.obs == "loss" or args.mode in LOCAL_MODES, "--obs hist only for independent/shared"
 assert args.alpha == 1.0 or args.mode in LOCAL_MODES, "--alpha only for independent/shared"
@@ -257,7 +265,7 @@ def scalar(x):
 
 def agent_loss(i, name):
     """Loss of the agent that acts for AP i (independent: own; global: the shared one; beb: none -> 0)."""
-    if args.mode in ("beb", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "drlcw", "ccod"):
+    if args.mode in ("beb", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "blade", "drlcw", "ccod"):
         return 0.0
     if args.mode == "central":
         return scalar(central.actor_losses[i] if name == "actor_loss" else central.critic_loss)
@@ -483,6 +491,8 @@ try:
                          delay_ref=ref.get("delay") or ([float(v) for v in open(args.drlDelayRef).read().split(",")] if args.drlDelayRef else None))
             if args.loadActor:
                 ctrl.load(args.loadActor)
+        elif args.mode == "blade":
+            ctrl = BLADE(n, args.bladeNobs, args.bladeMarTar, args.bladeMarMax, args.bladeMinc, args.bladeMdec, args.bladeAinc)
         elif args.mode == "dac":
             ctrl = DAC(n, args.stepTime, args.dacBeacon, args.dacTe, args.dacTc, args.dacCw0, args.dacPcol)
         S = reshape_obs(env.reset()[0], n)
@@ -520,7 +530,7 @@ try:
             elif args.mode == "ccod":
                 ccod_act = ccod_agent.act(np.array(ccod_obs, dtype=np.float32), ccod_noise)
                 acts[:] = 2.0 * float(np.clip(ccod_act.reshape(-1)[0], 0.0, 6.0)) / real_max_action - 1.0
-            elif args.mode in ("kw", "ucb", "ucbctx", "dac", "drlcw"):
+            elif args.mode in ("kw", "ucb", "ucbctx", "dac", "blade", "drlcw"):
                 acts[:] = 2.0 * ctrl.cw_exponents() / real_max_action - 1.0  # real = real_max * (acts + 1) / 2 = the controller exponent
             elif args.mode == "global":
                 if learning and time_step < args.start_timesteps:
@@ -532,8 +542,8 @@ try:
 
             obs, _, done, info = env.step(np.array([real], dtype=np.float32))
             S2 = reshape_obs(obs[0], n)
-            recs = parse_ap_info(info[0], n)
-            if args.mode in ("kw", "ucb", "ucbctx", "dac", "drlcw"):
+            recs = parse_ap_info(info[0], n, blade=args.mode == "blade")
+            if args.mode in ("kw", "ucb", "ucbctx", "dac", "blade", "drlcw"):
                 ctrl.observe(recs)
             if args.mode == "ccod":
                 tx_c, rx_c = sum(q["tx"] for q in recs), sum(q["rx"] for q in recs)
