@@ -1,0 +1,3 @@
+two-beb2040-07/run: exit 0, 591 s, pin=False, run dirs ['results/multi-ap-20261113-045956']
+  sha256 trace.csv: 71dc530597e4188a107b182bd3826ebed9da4d8e9f47f884af0e63aec2df0429
+  check: PASS
