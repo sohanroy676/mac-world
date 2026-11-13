@@ -37,11 +37,11 @@ def setup():
     sh(f"cd {WORK} && rm -rf mac-world && git clone -q -b {REF} {REPO} && cd mac-world && bash tools/bench/run_bench.sh hf --no-apt --smoke")
 
 
-def run_batch(path):
-    sh(f"cd {SRC} && git pull -q origin {REF}; RUN_LABEL=hfjobs python3 tools/hf/hfjobs.py '{path}' {LANES}")  # pull: pick up script fixes without rebuilding ns-3
+def run_batch(path, shard=""):
+    sh(f"cd {SRC} && git pull -q origin {REF}; RUN_LABEL=hfjobs python3 tools/hf/hfjobs.py '{path}' {LANES} '{shard}'")  # pull: pick up script fixes without rebuilding ns-3
 
 
-def start(what, path):
+def start(what, path, shard=""):
     if state["running"]:
         return f"Busy: {state['running']}"
     state["running"] = what
@@ -51,7 +51,7 @@ def start(what, path):
             if what == "setup":
                 setup()
             else:
-                run_batch(path)
+                run_batch(path, shard)
         finally:
             state["running"] = ""
     threading.Thread(target=go, daemon=True).start()
@@ -75,9 +75,10 @@ if a.startswith("batch:"):
 with gr.Blocks() as demo:
     gr.Markdown("1 setup (about 10 min), then 2 run batch. Results go to GitHub branch bench/hf-results (needs GH_TOKEN).")
     path = gr.Textbox(value=".github/jobs/lanes-test.json", label="Batch file in the repo")
+    shard = gr.Textbox(value="", label="Shard k/n (empty = whole batch; two Spaces: 0/2 and 1/2)")
     msg = gr.Textbox(label="Status")
-    gr.Button("setup").click(lambda p: start("setup", p), path, msg)
-    gr.Button("run batch").click(lambda p: start("batch", p), path, msg)
+    gr.Button("setup").click(lambda p, k: start("setup", p, k), [path, shard], msg)
+    gr.Button("run batch").click(lambda p, k: start("batch", p, k), [path, shard], msg)
     out = gr.Textbox(label="Log", lines=30)
     gr.Button("Refresh").click(show, None, out)
 demo.launch()
