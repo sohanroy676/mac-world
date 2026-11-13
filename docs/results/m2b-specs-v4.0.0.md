@@ -6,7 +6,7 @@ Labels: **fact** = read in a source or measured here, **decision** = my choice, 
 ## Sources read (fact)
 - **drlCW:** Yan, Du, Zhang, Dong, "Deep Reinforcement Learning based Contention Window Optimization for IEEE 802.11bn" (the mentor's PDF, read in full 2026-11-11).
 - **Patras DAC and Eq. 18:** Patras, Banchs, Serrano, Azcorra, IEEE TMC 10(6), 2011 (typeset PDF uploaded by xyz, equations read from the page image 2026-11-11).
-- **BLADE (NSDI 2026): not built.** Its Appendices E and I were not available in this session, and the plan allows BLADE only after they are read.
+- **BLADE (NSDI 2026):** the proceedings PDF with Appendices E and I was uploaded on 2026-11-13 and read in full; built, see the BLADE section below.
 
 ## The four rivals
 ### Model-based static (Patras Eq. 18, local n)
@@ -43,6 +43,14 @@ Labels: **fact** = read in a source or measured here, **decision** = my choice, 
 - cw.cc: 802.11ax 5 GHz, ConstantRate HeMcs11 for data and control, 20 MHz, UDP payload 1464 B, IP + UDP + LLC 36 B, no A-MPDU (`BE_MaxAmpduSize 0`).
 - MPDU about 1530 B (MAC header 26 B + FCS 4 B). At MCS 11, 20 MHz: 1950 data bits per 13.6 us symbol (0.8 us GI): 7 symbols = 95 us, plus the HE SU preamble about 40 us = 135 us.
 - After a collision the senders wait for the ACK timeout (SIFS 16 + ACK about 54 + slot 9 = 79 us) and then AIFS (43 us): Tc about 257 us. SIFS, ACK length and the timeout rule were **not** checked in the ns-3 source. Hence the {128, 257, 514} us sweep (CW scales with sqrt(Tc), so 2x error = 1.4x CW).
+
+## BLADE (added 2026-11-13, after the full PDF with Appendices E and I was read)
+- **Source (fact):** Guo et al., "BLADE: Adaptive Wi-Fi Contention Control for Next-Generation Real-Time Communication", NSDI 2026, 22-page proceedings PDF uploaded by xyz. Read: Sec. 4.2-4.3 (Eq. 1-6), Sec. 5, Appendix E / I (Algorithm 1), F (target MAR), J (observation interval).
+- **Algorithm (fact, Algorithm 1):** MAR = N_tx / (N_tx + N_idle) over N_obs = 300 events. If MAR > MAR_tar (0.1): CW = CW + CW max(0, MAR - MAR_max) + M_inc (min(MAR, MAR_max) - MAR_tar) + A_inc. Else CW = min(M_dec - (1 - M_dec)(CW - CWmin)/(CWmax - CWmin), 2 MAR / (MAR_tar + MAR)) CW. Defaults MAR_max 0.35, M_inc 500, M_dec 0.95, A_inc 15, A_fail 5, CWmin 15, CWmax 1023. Fast recovery: after the first failed attempt CW = CW/2 (A_fail added to the stored value), restored on the ACK. Unit test (this repo): CW 100 at MAR 0.5 gives 255 and at MAR 0.02 gives 33.3, as the equations give by hand.
+- **Implementation:** `BLADE` in `ap_controllers.py`, trainer `--mode blade` (`--bladeNobs`, `--bladeMarTar`, `--bladeMarMax`, `--bladeMinc`, `--bladeMdec`, `--bladeAinc`), cw.cc `--bladeCounts` (new, off by default) appends the AP radio's per-step idle-slot sum and backoff-gap count (each gap ends at one transmission event, own or heard).
+- **Deviations (labelled):** (1) this is the paper's **BLADE SC** variant: the per-packet fast recovery is not modelled (the controller acts on 10 ms steps); (2) the paper updates at each ACK once 300 events are counted, here at the end of the step in which the count reaches 300; (3) CW 16..1024 in our units (paper attribute values 15 / 1023); (4) one controller per AP on the AP radio (the paper's downlink deployment on APs); (5) idle slots are cw.cc's per-gap estimate floor((gap - 43 us) / 9 us); (6) start CW 16; (7) our cells are saturated uplink with hidden pairs in S4 and the paper has all devices in one carrier-sense domain (its Sec. 7 and Appendix H say hidden terminals distort MAR unless RTS/CTS is on; ours has no RTS/CTS), so S4 is outside the paper's validated range (**inference**).
+- **Smoke (fact, Actions run 43471908109, 4 s):** both `--check` PASS. S2: both APs take the same path (all APs hear the same medium), CW 1024 at step 50 then 870-920. S4: AP1 and AP3 at 170-220, AP2 pinned at 1024 with a mean idle of 3 slots (AP2 hears both others).
+- **Tuning plan:** MAR_tar in {0.05, 0.1, 0.2} on S2 and S4, seeds 0-2, 30 s (`m2b-batch6-blade-tune.json`, 6 jobs, about 1.9 lab-hours); selection rule as for the other rivals. Not launched yet.
 
 ## Job plan
 Batch generator: `.github/jobs/make_m2b_batch1.py` -> `.github/jobs/m2b-batch1.json` (25 jobs, about 14 lab-hours; format of `run-packs.yml` and `tools/hf`).
