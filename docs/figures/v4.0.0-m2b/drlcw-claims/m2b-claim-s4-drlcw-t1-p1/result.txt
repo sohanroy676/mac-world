@@ -1,0 +1,9 @@
+m2b-claim-s4-drlcw-t1-p1/eval-107: exit 0, 406 s, pin=False, run dirs ['results/multi-ap-20261113-031653']
+  sha256 trace.csv: 7c0573f21b7b2f45aac20a33b4d343e41da9411afb8636d9e07fe8a54753250c
+  check: PASS
+m2b-claim-s4-drlcw-t1-p1/eval-108: exit 0, 385 s, pin=False, run dirs ['results/multi-ap-20261113-032339']
+  sha256 trace.csv: 76e627834d6b72efa22f56be04e885d4bd7e13f3a9ec8956c9612e2d8c4b1537
+  check: PASS
+m2b-claim-s4-drlcw-t1-p1/eval-109: exit 0, 425 s, pin=False, run dirs ['results/multi-ap-20261113-033005']
+  sha256 trace.csv: ddf214c6c361586c5cb0031810edaf094df4b7200f585dded02c371c8613ce39
+  check: PASS

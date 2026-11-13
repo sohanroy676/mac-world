@@ -46,10 +46,20 @@ What it says:
 1. **DAC is the strongest new rival** (fact): feasible in all three cells at all three alphas, GC 0.93 to 0.97 in S2, 1.47 at S4 alpha 0 (above the best static), 0.41 to 1.03 in S5a. It is at the ceiling in S2, so it is a hard rival for RAFA there.
 2. **Contextual UCB is weak** (fact): below BEB in S2 and S5a at alpha 1 and infeasible in S2. Inference: the context is nearly constant in static cells (see specs), so it reduces to plain UCB.
 3. **Model-based static** is feasible in S4 and S5a (S5a alpha 1 GC 0.615), infeasible in S2.
-4. Not yet run: drlCW on seeds 103-109 (its Stage-1 selected actors: S2 t0, S4 t1, S5a none feasible). Needs your go-ahead.
+
+## drlCW on the claim seeds 103-109 (n = 7, facts)
+Frozen selected actors (S2 t0, S4 t1, S5a t1 and t2), HF batch `m2b-batch5-drlcw-claims` (28 evals, all `--check` PASS; data `drlcw-claims/`, tables `gc_claims_s{2,4,5a}.md`). Same-vendor (HF) as the training.
+| Cell | alpha 0 | alpha 1 | alpha 4 | vs DAC (alpha 1) |
+|---|---|---|---|---|
+| S2 t0 | 0.843 ok | 0.652 ok | 0.368 ok | DAC 0.945 |
+| S4 t1 | 1.022 ok | raw U 10.80 ok | raw U -1676 ok | DAC U 9.05 |
+| S5a t1 | 1.016 INF | -0.772 INF | -7.96 INF | DAC 0.684 ok |
+| S5a t2 | 1.026 INF | -2.218 INF | -49.7 INF | |
+1. **S2 and S5a:** drlCW is below DAC; in S5a it is floor-infeasible (min-AP 3.6 and 6.2 Mbps vs the 10 Mbps floor). S4 alpha 1: drlCW U 10.8 is above DAC 9.05, below the best static 20.1 (degenerate cell).
+2. The Stage-1 numbers hold up on the new seeds (S2 alpha 1 0.776 on 100-102, 0.652 on 103-109).
 
 ## Limits
 - Stage 1 uses n = 3 eval seeds and no tuning (paper values), 3 training seeds. Claims use seeds 103-109 only (M4).
 - drlCW trained on the HF Intel CPU, the M2c rivals on mixed Actions CPUs (effect unknown).
 - BLADE not built (appendices unavailable). Tc 257 us is an inference, not measured.
-- Not tagged.
+- Not tagged. M2b is complete except BLADE.
