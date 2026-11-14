@@ -51,3 +51,8 @@ Files are grouped by purpose. Version numbers in file names match the roadmap (`
 - `oscar-baseline-metrics.md`: published OSCAR numbers and how they map to this project.
 - `reproducibility-v2.1.0.md`: how to reproduce runs, dependencies.
 - `pre_v0.1.0_audit/`: forensic audit of the inherited OSCAR code and the next-actions results.
+
+## max-CW plan (2026-11-14)
+- `planning/max-cw-optimization-plan-2026-11-14.md`: summary of the finalized plan (current working plan).
+- `design/measurement-modes-v4.1.0.md`: Track A specification and validation runs; `adr/0008-extended-cw-range-and-static-measurement-modes.md`.
+- `reference/wave-runbook-v4.1.0.md`: how a wave batch runs on the forks, and the one-time setup by people.
