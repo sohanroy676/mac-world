@@ -25,17 +25,17 @@ RUN curl -sSL -o /usr/local/bin/micromamba "https://github.com/mamba-org/microma
  && micromamba clean -a -y
 
 COPY .github/image/requirements-lock.txt /tmp/requirements-lock.txt
-COPY ns-3.29/contrib/opengym/model/ns3gym /tmp/ns3gym
 RUN /opt/venv37/bin/python -m pip install --no-cache-dir --upgrade "pip<24.1" \
  && /opt/venv37/bin/pip install --no-cache-dir -r /tmp/requirements-lock.txt \
- && /opt/venv37/bin/pip install --no-cache-dir --no-deps /tmp/ns3gym \
- && rm -rf /tmp/requirements-lock.txt /tmp/ns3gym
+ && rm -f /tmp/requirements-lock.txt
 
 # Source and build. .dockerignore keeps .git, docs figures and old results out of the context.
 COPY ns-3.29 /opt/mac-world/ns-3.29
 COPY .github/scripts /opt/mac-world/.github/scripts
 WORKDIR /opt/mac-world/ns-3.29
+# ns3gym is installed after configure: waf configure generates its messages_pb2.py.
 RUN ./waf configure > /tmp/configure.log 2>&1 && ./waf build > /tmp/build.log 2>&1 \
+ && /opt/venv37/bin/pip install --no-cache-dir --no-deps ./contrib/opengym/model/ns3gym \
  && ./waf --run "scratch/linear-mesh/linear-mesh --nWifi=5 --dryRun=true --disableGym=true --seed=1 --simTime=2" > /tmp/dry.log 2>&1 \
  && tail -3 /tmp/dry.log
 
