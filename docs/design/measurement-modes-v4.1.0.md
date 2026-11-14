@@ -117,5 +117,11 @@ collision rise in 9 us steps from 103 us (103, 112, 121, 130). The earlier infer
 (`docs/results/m2b-specs-v4.0.0.md`: frame 135 us, ACK about 54 us); the measured frame is 139 us and the ACK 28 us.
 DAC's tuned Tc of 514 us was a tuning result and is not changed by this measurement.
 
-Not validated yet: the run image build and the three workflows (need GitHub), S7/S8 cells in the search driver
+Run image (fact, Actions run 43649676348, 2026-11-14): `build-image` passed for commit 7763b40e; the 2,3 BEB check
+inside the image gave RESULT: PASS (trace sha256 `52f8b816...`). Image:
+`ghcr.io/sohanroy676/mac-world-run@sha256:aaa8e45ea8b23d90512d561ddc03a2730df8e7c79f71c0827bb9b96140d2f6d1`.
+The first attempt (run 43645465115) failed because ns3gym was installed before `waf configure` generated its
+protobuf file; the Dockerfile now installs it after the build.
+
+Not validated yet: `wave-run` and `wave-dispatch` (need the forks and the public package), S7/S8 cells in the search driver
 (the delay objective and the S8 load schedule are Track B), any ceiling number.

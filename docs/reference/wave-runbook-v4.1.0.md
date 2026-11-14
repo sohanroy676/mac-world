@@ -1,7 +1,7 @@
 # Wave runbook (v4.1.0)
 
 How one batch of an approved wave runs. Design: `docs/design/measurement-modes-v4.1.0.md`. Status on 2026-11-14:
-the scripts are tested locally (section 4); the three workflows have not run on GitHub yet.
+the scripts are tested locally (section 4); `build-image` passed on GitHub (image digest in the design doc, section 7); `wave-run` and `wave-dispatch` have not run yet.
 
 ## 1. One-time setup by people
 
@@ -43,6 +43,7 @@ Each fork owner (7 other accounts):
 
 - `make_packs.py`, `run_pack.py`, `run_job.py` summaries, `cw_search_v4_1_0.py` rounds 0 and 1, `top`, and
   `collect_wave.py --local`: one pass on the tiny cells `t222` (f1, f3) and `t23` (f2), 85 runs.
-- Not tested: `build-image.yml`, `wave-run.yml`, `wave-dispatch.yml`, `dispatch_wave.py` against the GitHub API, the
-  release download path of `collect_wave.py`, and the image build itself. These need GitHub and the forks.
+- `build-image.yml`: passed on GitHub Actions (run 43649676348).
+- Not tested: `wave-run.yml`, `wave-dispatch.yml`, `dispatch_wave.py` against the GitHub API, the
+  release download path of `collect_wave.py`. These need the forks.
 - Hugging Face Spaces queue-at-boot: not started.
