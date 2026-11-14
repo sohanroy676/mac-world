@@ -58,6 +58,25 @@ std::vector<uint32_t> g_apCwMin;
 std::vector<uint32_t> g_apCwMax;
 std::vector<uint32_t> g_apCwOverride; // --apCws (empty = every AP uses CW)
 bool g_cwMinOnly = false; // --cwMinOnly: agent action sets MinCw only, MaxCw stays 1023 (BEB doubling kept); multi-AP only
+// v4.1.0 measurement modes (docs/design/measurement-modes-v4.1.0.md). Defaults keep every earlier run unchanged.
+uint32_t g_cwLo = 16;     // --cwLo: lower clamp for --apCws and multi-AP agent actions
+uint32_t g_cwHi = 1024;   // --cwHi: upper clamp for --apCws and multi-AP agent actions (15-bit ECWmax gives 32767)
+bool g_cwHold = false;    // --cwHold: with --apCws, rewrite each AP's CW to its BSS every env step, so STAs keep the exact value between beacons
+std::vector<bool> g_schedA;        // --schedA: APs active in phase A (empty = no schedule)
+std::vector<bool> g_schedB;        // --schedB: APs active in phase B (default: the APs not in --schedA)
+uint32_t g_schedPeriodSteps = 0;   // --schedPeriodSteps: schedule period in env steps
+uint32_t g_schedASteps = 0;        // --schedASteps: length of phase A in env steps
+uint32_t g_schedMuteCw = 32767;    // --schedMuteCw: CW of an AP outside its phase
+uint64_t g_execCalls = 0;          // number of multi-AP MyExecuteActions calls so far
+
+// CW of AP `ap` in a static (--apCws) run during env step `call` (0-based; action call k opens step k): its own CW, or the mute CW outside its phase.
+uint32_t staticCwAt(uint32_t ap, uint64_t call)
+{
+    if (g_schedPeriodSteps == 0)
+        return g_apCwOverride.at(ap);
+    const bool phaseA = (call % g_schedPeriodSteps) < g_schedASteps;
+    return (phaseA ? g_schedA.at(ap) : g_schedB.at(ap)) ? g_apCwOverride.at(ap) : g_schedMuteCw;
+}
 bool g_apCwOk = true;                 // cleared by any failing readback
 
 // v3.4.0 opt-in scenario knobs (defaults = old behaviour, no SetLoss call, one load for every AP).
@@ -397,13 +416,21 @@ bool MyExecuteActions(Ptr<OpenGymDataContainer> action)
             if (g_residual)
                 // v3.3.0: action 3 = the IdleSense CW; +-2 in log2 around it (a in 0..6 -> delta clipped to [-2, 2])
                 cw = (uint32_t)std::lround(g_idleCw.at(ap) * pow(2.0, std::min(2.0f, std::max(-2.0f, a - 3.0f))));
-            cw = min(1024u, max(cw, 16u));
+            cw = min(g_cwHi, max(cw, g_cwLo));
             // v3.1.0: with --apCws the static CW set in set_phy stays; agent actions must not overwrite it.
             if (!dry_run && g_apCwOverride.empty())
                 setApCw(ap, cw, g_cwMinOnly ? max(cw, 1023u) : cw);
+            else if (!dry_run && (g_cwHold || g_schedPeriodSteps > 0))
+            {
+                // v4.1.0: static runs only. The schedule switches CW at step boundaries; --cwHold rewrites it every step.
+                const uint32_t want = staticCwAt(ap, g_execCalls);
+                if (g_cwHold || want != g_apCwMin.at(ap))
+                    setApCw(ap, want, want);
+            }
             outfile << "," << (dry_run ? cw : g_apCwMin.at(ap));
         }
         outfile << endl;
+        ++g_execCalls;
         CW = g_apCwMin.at(0);
         return true;
     }
@@ -717,8 +744,60 @@ void packetSentAppAp(uint32_t apIndex, Ptr<const Packet> packet)
 
 // v3.3.0: the AP radio logs each IDLE interval when the medium turns busy. A gap longer than a SIFS-sized
 // pause is a backoff gap; its idle slots are (gap - AIFS(BE) = SIFS + 3 slots = 43 us) / 9 us, floored.
+// v4.1.0 --phyDurations (diagnostic, measures Ts and Tc): histogram of AP 1's PHY state durations in whole microseconds.
+// Keys: TX, RX_OK, RX_ERR, CCA_BUSY and IDLE_AFTER_<previous state>. ns-3 logs TX and RX when they start and IDLE /
+// CCA_BUSY when they end, and fires RxOk / RxError at the end of a reception, so the previous state is known at each IDLE.
+bool g_phyDur = false;
+std::map<std::pair<std::string, int64_t>, uint64_t> g_phyDurHist;
+std::string g_phyDurPrev = "START";
+int64_t g_phyDurRxUs = -1; // duration of the reception in progress
+
+void phyDurRxEnd(bool ok)
+{
+    if (g_phyDurRxUs < 0)
+        return;
+    g_phyDurPrev = ok ? "RX_OK" : "RX_ERR";
+    g_phyDurHist[std::make_pair(g_phyDurPrev, g_phyDurRxUs)]++;
+    g_phyDurRxUs = -1;
+}
+
+void phyDurRxOk(Ptr<const Packet> packet, double snr, WifiMode mode, WifiPreamble preamble)
+{
+    phyDurRxEnd(true);
+}
+
+void phyDurRxError(Ptr<const Packet> packet, double snr)
+{
+    phyDurRxEnd(false);
+}
+
+void phyDurState(Time duration, WifiPhyState state)
+{
+    const int64_t us = (duration.GetNanoSeconds() + 500) / 1000;
+    if (state == WifiPhyState::RX)
+    {
+        g_phyDurRxUs = us; // classified as RX_OK / RX_ERR when it ends
+        return;
+    }
+    if (state == WifiPhyState::IDLE)
+    {
+        g_phyDurHist[std::make_pair("IDLE_AFTER_" + g_phyDurPrev, us)]++;
+        return;
+    }
+    g_phyDurPrev = state == WifiPhyState::TX ? "TX" : state == WifiPhyState::CCA_BUSY ? "CCA_BUSY" : "OTHER";
+    g_phyDurHist[std::make_pair(g_phyDurPrev, us)]++;
+}
+
+void phyDurPrint()
+{
+    for (const auto &kv : g_phyDurHist)
+        NS_LOG_UNCOND("PHYDUR " << kv.first.first << " " << kv.first.second << " " << kv.second);
+}
+
 void apPhyState(uint32_t ap, Time start, Time duration, WifiPhyState state)
 {
+    if (g_phyDur && ap == 0)
+        phyDurState(duration, state);
     if (state != WifiPhyState::IDLE || duration <= MicroSeconds(20))
         return;
     int64_t extra = duration.GetNanoSeconds() - 43000;
@@ -825,11 +904,16 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
                         }
                         dev->GetRemoteStationManager()->TraceConnectWithoutContext("MacTxDataFailed", MakeBoundCallback(&apTxDataFailed, apIndex));
                     }
-                    if (n == 0 && (g_idleSense || g_obsIdle || g_extraTraces)) // AP radio only: sensing stays local to the AP
+                    if (n == 0 && (g_idleSense || g_obsIdle || g_extraTraces || g_phyDur)) // AP radio only: sensing stays local to the AP
                     {
                         PointerValue st;
                         dev->GetPhy()->GetAttribute("State", st);
                         st.Get<WifiPhyStateHelper>()->TraceConnectWithoutContext("State", MakeBoundCallback(&apPhyState, apIndex));
+                        if (g_phyDur && apIndex == 0)
+                        {
+                            st.Get<WifiPhyStateHelper>()->TraceConnectWithoutContext("RxOk", MakeCallback(&phyDurRxOk));
+                            st.Get<WifiPhyStateHelper>()->TraceConnectWithoutContext("RxError", MakeCallback(&phyDurRxError));
+                        }
                     }
                 }
             }
@@ -992,7 +1076,26 @@ std::vector<uint32_t> parseApStaCounts(std::string apStaCounts, int nWifi)
     return counts;
 }
 
-// --apCws: exactly one CW per AP, clamped to the same 16..1024 range MyExecuteActions uses.
+// --apCws: exactly one CW per AP, clamped to the same --cwLo..--cwHi range (default 16..1024) MyExecuteActions uses.
+// --schedA / --schedB: comma-separated 1-based AP indices -> one flag per AP.
+std::vector<bool> parseApList(std::string name, std::string arg, size_t apCount)
+{
+    std::vector<bool> on(apCount, false);
+    std::stringstream ss(arg);
+    std::string token;
+    while (std::getline(ss, token, ','))
+    {
+        int ap = token.empty() ? 0 : std::stoi(token);
+        if (ap < 1 || (size_t)ap > apCount)
+        {
+            std::cout << "Invalid --" << name << ": AP index must be 1.." << apCount << "." << endl;
+            exit(1);
+        }
+        on[ap - 1] = true;
+    }
+    return on;
+}
+
 std::vector<uint32_t> parseApCws(std::string apCws, size_t apCount)
 {
     std::vector<uint32_t> cws;
@@ -1012,7 +1115,7 @@ std::vector<uint32_t> parseApCws(std::string apCws, size_t apCount)
             std::cout << "Invalid --apCws: CW values must be positive." << endl;
             exit(1);
         }
-        cws.push_back(std::min<uint32_t>(1024, std::max<uint32_t>(16, static_cast<uint32_t>(cw))));
+        cws.push_back(std::min<uint32_t>(g_cwHi, std::max<uint32_t>(g_cwLo, static_cast<uint32_t>(cw))));
     }
 
     if (!cws.empty() && cws.size() != apCount)
@@ -1258,8 +1361,10 @@ void set_nodes(int channelWidth,
     {
         if (dry_run)
             setApCw(apIndex, 16, 1024);
+        else if (!g_apCwOverride.empty() && g_cwMinOnly)
+            setApCw(apIndex, g_apCwOverride.at(apIndex), std::max(g_apCwOverride.at(apIndex), 1023u)); // v4.1.0: static CWmin, BEB doubling kept
         else if (!g_apCwOverride.empty())
-            setApCw(apIndex, g_apCwOverride.at(apIndex), g_apCwOverride.at(apIndex));
+            setApCw(apIndex, staticCwAt(apIndex, 0), staticCwAt(apIndex, 0));
         else if (CW == 0 && g_apBss.size() > 1)
             setApCw(apIndex, 16, 1024); // v2.0.0: CW 0/0 (no backoff) starves most STAs during warm-up; start like BEB until the first action
         else
@@ -1314,6 +1419,8 @@ void set_sim(bool tracing, bool dry_run, bool disableGym, int warmup, uint32_t o
 
     NS_LOG_UNCOND("Simulation started");
     Simulator::Run();
+    if (g_phyDur)
+        phyDurPrint();
 }
 
 // STA node id -> BSSID of the AP it last associated with, and per-STA DeAssoc counts.
@@ -1413,6 +1520,8 @@ int main(int argc, char *argv[])
     string scenario = "basic";
     string apStaCountsArg = "";
     string apCwsArg = "";
+    string schedAArg = "";
+    string schedBArg = "";
     string apHiddenArg = "";
     string apLoadsArg = "";
     dry_run = false;
@@ -1459,6 +1568,15 @@ int main(int argc, char *argv[])
     cmd.AddValue("delayWindow", "v3.8.0: per-AP delay mean / p95 (ms) over windows of this many simulated seconds, appended to each per-AP info record after txfail (needs --extraTraces). Default: 0 = off", g_delayWindow);
     cmd.AddValue("obsIdle", "v3.3.0: per-AP observation = mean idle slots / 20 (clipped to 1) instead of the loss ratio. Default: false", g_obsIdle);
     cmd.AddValue("apCws", "Comma-separated fixed CW per AP, e.g. 32,256 (one per AP, clamped 16..1024). Ignored when dryRun=true. Default: empty = every AP uses CW", apCwsArg);
+    cmd.AddValue("cwLo", "v4.1.0: lower CW clamp for --apCws and multi-AP agent actions. Default: 16", g_cwLo);
+    cmd.AddValue("cwHi", "v4.1.0: upper CW clamp for --apCws and multi-AP agent actions (at most 32767). Default: 1024", g_cwHi);
+    cmd.AddValue("cwHold", "v4.1.0: with --apCws, rewrite each AP's CW to its BSS every env step so STAs keep the exact value (needs Gym stepping). Default: false", g_cwHold);
+    cmd.AddValue("schedA", "v4.1.0: two-phase CW schedule for --apCws runs: 1-based APs that use their CW in phase A; the others use --schedMuteCw. Default: empty = no schedule", schedAArg);
+    cmd.AddValue("schedB", "v4.1.0: 1-based APs that use their CW in phase B. Default: empty = the APs not in --schedA", schedBArg);
+    cmd.AddValue("schedPeriodSteps", "v4.1.0: schedule period in env steps", g_schedPeriodSteps);
+    cmd.AddValue("schedASteps", "v4.1.0: length of phase A in env steps (phase A starts each period)", g_schedASteps);
+    cmd.AddValue("schedMuteCw", "v4.1.0: CW of an AP outside its phase. Default: 32767", g_schedMuteCw);
+    cmd.AddValue("phyDurations", "v4.1.0 diagnostic: print a histogram of AP 1's PHY state durations (PHYDUR lines) at the end. Default: false", g_phyDur);
     cmd.AddValue("seed", "Random seed", simSeed);
     cmd.AddValue("trafficStart", "Diagnostic: time (s) at which the data sources start. Default: 0", g_trafficStartTime);
     cmd.AddValue("staMaxMissedBeacons", "Diagnostic: StaWifiMac MaxMissedBeacons. Default: 10 (ns-3 default)", g_staMaxMissedBeacons);
@@ -1468,7 +1586,39 @@ int main(int argc, char *argv[])
     cmd.Parse(argc, argv);
 
     std::vector<uint32_t> apStaCounts = parseApStaCounts(apStaCountsArg, nWifi);
+    if (g_cwLo < 1 || g_cwLo > g_cwHi || g_cwHi > 32767)
+    {
+        std::cout << "Invalid --cwLo/--cwHi: need 1 <= cwLo <= cwHi <= 32767." << endl;
+        exit(1);
+    }
     g_apCwOverride = parseApCws(apCwsArg, apStaCounts.size());
+    if (!schedAArg.empty())
+    {
+        g_schedA = parseApList("schedA", schedAArg, apStaCounts.size());
+        g_schedB = parseApList("schedB", schedBArg, apStaCounts.size());
+        if (schedBArg.empty())
+            for (size_t i = 0; i < g_schedA.size(); ++i)
+                g_schedB[i] = !g_schedA[i];
+        if (g_schedPeriodSteps < 2 || g_schedASteps < 1 || g_schedASteps >= g_schedPeriodSteps || g_schedMuteCw < 1 || g_schedMuteCw > 32767)
+        {
+            std::cout << "Invalid schedule: need 1 <= schedASteps < schedPeriodSteps and 1 <= schedMuteCw <= 32767." << endl;
+            exit(1);
+        }
+    }
+    else
+        g_schedPeriodSteps = 0;
+    if ((g_cwHold || g_schedPeriodSteps > 0) && (g_apCwOverride.empty() || dry_run || disable_gym || g_cwMinOnly))
+    {
+        std::cout << "--cwHold and the --sched* options need --apCws and Gym stepping, without --dryRun or --cwMinOnly." << endl;
+        exit(1);
+    }
+    if (g_cwMinOnly && !g_apCwOverride.empty())
+        for (uint32_t cw : g_apCwOverride)
+            if (cw > 1023 || edcaRoundedCw(cw) != cw)
+            {
+                std::cout << "--apCws with --cwMinOnly: every CW must be 2^k - 1 and at most 1023 (STAs take CWmin from beacons)." << endl;
+                exit(1);
+            }
     g_hiddenPairs = parseApHidden(apHiddenArg, apStaCounts.size());
     g_apLoadMbps = parseApLoads(apLoadsArg, apStaCounts.size());
     g_staSchedule = parseStaSchedule(staScheduleArg, apStaCounts);
@@ -1483,6 +1633,9 @@ int main(int argc, char *argv[])
     NS_LOG_UNCOND("--apStaCounts: " << (apStaCountsArg.empty() ? "(single AP, nWifi stations)" : apStaCountsArg));
     NS_LOG_UNCOND("--apCws: " << (apCwsArg.empty() ? "(none, every AP uses CW)" : apCwsArg) << (dry_run && !apCwsArg.empty() ? " (ignored: dryRun)" : ""));
     NS_LOG_UNCOND("--cwMinOnly: " << g_cwMinOnly);
+    if (g_cwLo != 16 || g_cwHi != 1024 || g_cwHold || g_schedPeriodSteps > 0)
+        NS_LOG_UNCOND("--cwLo/--cwHi: " << g_cwLo << "/" << g_cwHi << " cwHold=" << g_cwHold << " schedule: A=" << (schedAArg.empty() ? "(none)" : schedAArg) << " B=" << (schedBArg.empty() ? "(rest)" : schedBArg)
+                                        << " period=" << g_schedPeriodSteps << " steps, A=" << g_schedASteps << " steps, mute CW " << g_schedMuteCw);
     if ((g_idleSense || g_residual || g_obsIdle) && apStaCounts.size() < 2)
     {
         std::cout << "--idleSense/--residual/--obsIdle need --apStaCounts with at least 2 APs." << endl;

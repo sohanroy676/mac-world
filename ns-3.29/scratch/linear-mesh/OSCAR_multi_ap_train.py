@@ -53,6 +53,14 @@ parser.add_argument("--online", action="store_true", help="sync W&B online (defa
 parser.add_argument("--wandb_project", default="contention_window")
 parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "drlcw", "ccod"], default="independent")
 parser.add_argument("--apCws", default="", help="static mode only: fixed CW per AP, e.g. 64,512 (no agent; cw.cc applies it from t=0)")
+parser.add_argument("--cwLo", type=int, default=16, help="v4.1.0 cw.cc --cwLo: lower CW clamp (static --apCws and agent actions)")
+parser.add_argument("--cwHi", type=int, default=1024, help="v4.1.0 cw.cc --cwHi: upper CW clamp, at most 32767")
+parser.add_argument("--cwHold", action="store_true", help="v4.1.0 static: rewrite the CW to every BSS each step, so STAs keep the exact value between beacons (cw.cc --cwHold)")
+parser.add_argument("--schedA", default="", help="v4.1.0 static: two-phase schedule, 1-based APs active in phase A, e.g. 1,3; the others use --schedMuteCw (cw.cc --schedA)")
+parser.add_argument("--schedB", default="", help="v4.1.0 static: 1-based APs active in phase B (default: the APs not in --schedA)")
+parser.add_argument("--schedPeriodSteps", type=int, default=0, help="v4.1.0 static: schedule period in steps of --stepTime")
+parser.add_argument("--schedASteps", type=int, default=0, help="v4.1.0 static: length of phase A in steps")
+parser.add_argument("--schedMuteCw", type=int, default=32767, help="v4.1.0 static: CW of an AP outside its phase")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 parser.add_argument("--algo", choices=["ddpg", "td3"], default="ddpg", help="learner for independent/global/shared (td3: twin critics, delayed actor, target smoothing)")
 parser.add_argument("--varySeeds", action="store_true", help="episode e uses ns-3 seed (seed+1)+1000*e instead of the same seed every episode")
@@ -165,9 +173,25 @@ if args.staMaxMissedBeacons > 0:
     sim_args["staMaxMissedBeacons"] = args.staMaxMissedBeacons
 static_cws = [int(c) for c in args.apCws.split(",")] if args.apCws else []
 assert (args.mode == "static") == bool(static_cws), "--mode static needs --apCws (and only static takes it)"
-assert not static_cws or (len(static_cws) == n and all(16 <= c <= 1024 for c in static_cws)), "--apCws: one CW in 16..1024 per AP"
+assert 1 <= args.cwLo <= args.cwHi <= 32767, "--cwLo/--cwHi: need 1 <= cwLo <= cwHi <= 32767"
+assert not static_cws or (len(static_cws) == n and all(args.cwLo <= c <= args.cwHi for c in static_cws)), "--apCws: one CW in --cwLo..--cwHi (default 16..1024) per AP"
+assert (args.cwLo, args.cwHi) == (16, 1024) or args.mode == "static", "--cwLo/--cwHi: static mode only until the controllers take the wider range"
+assert not (args.cwHold or args.schedA) or (args.mode == "static" and not args.cwMinOnly), "--cwHold/--schedA: static mode only, without --cwMinOnly"
+assert bool(args.schedA) == (args.schedPeriodSteps > 0) and (not args.schedA or 1 <= args.schedASteps < args.schedPeriodSteps), "--schedA needs 1 <= --schedASteps < --schedPeriodSteps"
+SCHED = None
 if static_cws:
     sim_args["apCws"] = args.apCws
+    if (args.cwLo, args.cwHi) != (16, 1024):
+        sim_args["cwLo"], sim_args["cwHi"] = args.cwLo, args.cwHi
+    if args.cwHold:
+        sim_args["cwHold"] = "true"
+    if args.schedA:
+        in_a = [str(i + 1) in args.schedA.split(",") for i in range(n)]
+        in_b = [str(i + 1) in args.schedB.split(",") for i in range(n)] if args.schedB else [not a for a in in_a]
+        SCHED = (in_a, in_b)
+        sim_args.update(schedA=args.schedA, schedPeriodSteps=args.schedPeriodSteps, schedASteps=args.schedASteps, schedMuteCw=args.schedMuteCw)
+        if args.schedB:
+            sim_args["schedB"] = args.schedB
 if args.mode in ("beb", "idlesense"):
     sim_args["dryRun"] = "true"  # cw.cc skips setApCw for actions; beb keeps CW 16..1024, idlesense moves it by sensing (cw.cc --idleSense)
 assert not (args.residual or args.obsIdle) or args.mode in ("independent", "shared"), "--residual/--obsIdle only for independent/shared"
@@ -192,7 +216,7 @@ assert args.algo == "ddpg" or args.mode in AGENT_MODES, "--algo td3 only for ind
 assert not (args.saveActor or args.loadActor or args.eval) or args.mode in AGENT_MODES + ("ccod", "drlcw"), "--saveActor/--loadActor/--eval only for independent/global/shared"
 assert args.eval == bool(args.loadActor), "--eval needs --loadActor (and --loadActor needs --eval)"
 assert not (args.eval and args.saveActor), "--eval does not train, so there is nothing to --saveActor"
-assert not args.cwMinOnly or args.mode in AGENT_MODES + ("central",), "--cwMinOnly only for agent modes"
+assert not args.cwMinOnly or args.mode in AGENT_MODES + ("central", "static"), "--cwMinOnly only for agent modes and static (v4.1.0: static CWmin, doubling kept)"
 if args.cwMinOnly:
     sim_args["cwMinOnly"] = "true"
 learning = not args.eval  # eval: frozen actors, no noise, no warm-up, no replay, no training
@@ -577,7 +601,7 @@ try:
                         check(16 <= recs[i]["cw_set"] <= 1024 and recs[i]["cw_set"] == recs[i]["cw_ap"],
                               "AP%d cw %s/%s out of range or readback mismatch at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], time_step))
                     else:
-                        want_cw = static_cws[i] if args.mode == "static" else 16 if args.mode == "beb" else int(min(1024, max(
+                        want_cw = (args.schedMuteCw if SCHED and not SCHED[0 if (step - 1) % args.schedPeriodSteps < args.schedASteps else 1][i] else static_cws[i]) if args.mode == "static" else 16 if args.mode == "beb" else int(min(1024, max(
                             16, 2 ** float(np.float32(4) + np.float32(real[i])))))
                         check(recs[i]["cw_set"] == want_cw and recs[i]["cw_ap"] == want_cw,
                               "AP%d cw %s/%s != %d at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], want_cw, time_step))
