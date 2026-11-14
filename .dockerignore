@@ -1,0 +1,12 @@
+.git
+docs
+memory-bank
+netanim-3.108
+bake
+pybindgen-0.17.0.post58+ngcf00cc0
+ns-3.29/build
+ns-3.29/venv
+ns-3.29/.lock-waf*
+ns-3.29/scratch/linear-mesh/results
+ns-3.29/scratch/linear-mesh/wandb
+**/__pycache__
