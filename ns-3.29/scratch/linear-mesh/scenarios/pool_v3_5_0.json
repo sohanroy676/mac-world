@@ -1,0 +1,120 @@
+[
+ {
+  "name": "one-domain-20,40",
+  "apStaCounts": "20,40"
+ },
+ {
+  "name": "one-domain-10,30",
+  "apStaCounts": "10,30"
+ },
+ {
+  "name": "one-domain-30,30",
+  "apStaCounts": "30,30"
+ },
+ {
+  "name": "one-domain-15,45",
+  "apStaCounts": "15,45"
+ },
+ {
+  "name": "one-domain-5,15",
+  "apStaCounts": "5,15"
+ },
+ {
+  "name": "one-domain-40,20",
+  "apStaCounts": "40,20"
+ },
+ {
+  "name": "one-domain-10,10",
+  "apStaCounts": "10,10"
+ },
+ {
+  "name": "one-domain-25,25",
+  "apStaCounts": "25,25"
+ },
+ {
+  "name": "chain-10,10,10",
+  "apStaCounts": "10,10,10",
+  "apHidden": "1-3"
+ },
+ {
+  "name": "chain-5,10,5",
+  "apStaCounts": "5,10,5",
+  "apHidden": "1-3"
+ },
+ {
+  "name": "chain-10,5,10",
+  "apStaCounts": "10,5,10",
+  "apHidden": "1-3"
+ },
+ {
+  "name": "chain-15,10,15",
+  "apStaCounts": "15,10,15",
+  "apHidden": "1-3"
+ },
+ {
+  "name": "chain-8,8,8",
+  "apStaCounts": "8,8,8",
+  "apHidden": "1-3"
+ },
+ {
+  "name": "chain-12,6,12",
+  "apStaCounts": "12,6,12",
+  "apHidden": "1-3"
+ },
+ {
+  "name": "chain-10,10,10-load150,150,1",
+  "apStaCounts": "10,10,10",
+  "apHidden": "1-3",
+  "apLoads": "150,150,1"
+ },
+ {
+  "name": "chain-10,10,10-load1,150,150",
+  "apStaCounts": "10,10,10",
+  "apHidden": "1-3",
+  "apLoads": "1,150,150"
+ },
+ {
+  "name": "chain-10,10,10-load150,150,20",
+  "apStaCounts": "10,10,10",
+  "apHidden": "1-3",
+  "apLoads": "150,150,20"
+ },
+ {
+  "name": "chain-5,10,5-load150,150,1",
+  "apStaCounts": "5,10,5",
+  "apHidden": "1-3",
+  "apLoads": "150,150,1"
+ },
+ {
+  "name": "chain-15,10,15-load150,150,1",
+  "apStaCounts": "15,10,15",
+  "apHidden": "1-3",
+  "apLoads": "150,150,1"
+ },
+ {
+  "name": "chain-10,10,10-halfedge-off",
+  "apStaCounts": "10,10,10",
+  "apHidden": "1-3",
+  "staSchedule": "0:0-4:0:7.5/2:0-4:0:7.5"
+ },
+ {
+  "name": "chain-15,10,15-halfedge-off",
+  "apStaCounts": "15,10,15",
+  "apHidden": "1-3",
+  "staSchedule": "0:0-7:0:7.5/2:0-7:0:7.5"
+ },
+ {
+  "name": "chain-8,8,8-halfedge-off",
+  "apStaCounts": "8,8,8",
+  "apHidden": "1-3",
+  "staSchedule": "0:0-3:0:7.5/2:0-3:0:7.5"
+ },
+ {
+  "name": "three-domain-10,10,10",
+  "apStaCounts": "10,10,10"
+ },
+ {
+  "name": "three-domain-5,10,15",
+  "apStaCounts": "5,10,15"
+ }
+]

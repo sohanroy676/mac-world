@@ -1,0 +1,9 @@
+topo,mode,seed,run_dir,result,returncode,seconds
+"10,10,10",independent,100,results/multi-ap-20261031-115408,PASS,0,477
+"10,10,10",independent,101,results/multi-ap-20261031-120206,PASS,0,465
+"10,10,10",independent,102,results/multi-ap-20261031-120951,PASS,0,467
+"10,10,10",independent,103,results/multi-ap-20261031-121739,PASS,0,467
+"10,10,10",independent,104,results/multi-ap-20261031-122527,PASS,0,470
+"10,10,10",independent,105,results/multi-ap-20261031-123318,PASS,0,466
+"10,10,10",independent,106,results/multi-ap-20261031-124104,PASS,0,468
+"10,10,10",independent,107,results/multi-ap-20261031-124852,PASS,0,475

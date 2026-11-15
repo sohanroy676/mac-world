@@ -1,0 +1,49 @@
+16:18:35 START lane0 pool19-chain-10,10,10-halfedge-off
+16:18:38 START lane1 pool20-chain-15,10,15-halfedge-off
+16:28:16 pool19-chain-10,10,10-halfedge-off -> PASS (580 s) results/multi-ap-20261101-161837
+16:28:16 START lane0 pool21-chain-8,8,8-halfedge-off
+16:30:55 pool20-chain-15,10,15-halfedge-off -> PASS (736 s) results/multi-ap-20261101-161840
+16:30:55 START lane1 pool00-one-domain-20,40
+16:36:03 pool21-chain-8,8,8-halfedge-off -> PASS (466 s) results/multi-ap-20261101-162819
+16:36:03 START lane0 pool01-one-domain-10,30
+16:48:14 pool01-one-domain-10,30 -> PASS (730 s) results/multi-ap-20261101-163606
+16:48:14 START lane0 pool02-one-domain-30,30
+16:48:56 pool00-one-domain-20,40 -> PASS (1080 s) results/multi-ap-20261101-163058
+16:48:56 START lane1 pool03-one-domain-15,45
+17:06:17 pool02-one-domain-30,30 -> PASS (1083 s) results/multi-ap-20261101-164816
+17:06:17 START lane0 pool04-one-domain-5,15
+17:07:01 pool03-one-domain-15,45 -> PASS (1084 s) results/multi-ap-20261101-164858
+17:07:01 START lane1 pool05-one-domain-40,20
+17:12:37 pool04-one-domain-5,15 -> PASS (379 s) results/multi-ap-20261101-170619
+17:12:37 START lane0 pool06-one-domain-10,10
+17:19:02 pool06-one-domain-10,10 -> PASS (385 s) results/multi-ap-20261101-171239
+17:19:02 START lane0 pool07-one-domain-25,25
+17:24:50 pool05-one-domain-40,20 -> PASS (1069 s) results/multi-ap-20261101-170703
+17:24:50 START lane1 pool08-chain-10,10,10
+17:34:10 pool07-one-domain-25,25 -> PASS (908 s) results/multi-ap-20261101-171906
+17:34:10 START lane0 pool09-chain-5,10,5
+17:35:31 pool08-chain-10,10,10 -> PASS (641 s) results/multi-ap-20261101-172452
+17:35:31 START lane1 pool10-chain-10,5,10
+17:41:38 pool09-chain-5,10,5 -> PASS (447 s) results/multi-ap-20261101-173412
+17:41:38 START lane0 pool11-chain-15,10,15
+17:44:39 pool10-chain-10,5,10 -> PASS (547 s) results/multi-ap-20261101-173533
+17:44:39 START lane1 pool12-chain-8,8,8
+17:53:27 pool12-chain-8,8,8 -> PASS (528 s) results/multi-ap-20261101-174441
+17:53:27 START lane1 pool13-chain-12,6,12
+17:55:46 pool11-chain-15,10,15 -> PASS (848 s) results/multi-ap-20261101-174140
+17:55:46 START lane0 pool14-chain-10,10,10-load150,150,1
+18:03:18 pool14-chain-10,10,10-load150,150,1 -> PASS (451 s) results/multi-ap-20261101-175548
+18:03:18 START lane0 pool15-chain-10,10,10-load1,150,150
+18:04:12 pool13-chain-12,6,12 -> PASS (644 s) results/multi-ap-20261101-175329
+18:04:12 START lane1 pool16-chain-10,10,10-load150,150,20
+18:10:48 pool15-chain-10,10,10-load1,150,150 -> PASS (450 s) results/multi-ap-20261101-180320
+18:10:48 START lane0 pool17-chain-5,10,5-load150,150,1
+18:13:02 pool16-chain-10,10,10-load150,150,20 -> PASS (530 s) results/multi-ap-20261101-180414
+18:13:02 START lane1 pool18-chain-15,10,15-load150,150,1
+18:16:22 pool17-chain-5,10,5-load150,150,1 -> PASS (334 s) results/multi-ap-20261101-181050
+18:16:22 START lane0 pool22-three-domain-10,10,10
+18:22:37 pool18-chain-15,10,15-load150,150,1 -> PASS (574 s) results/multi-ap-20261101-181304
+18:22:37 START lane1 pool23-three-domain-5,10,15
+18:25:41 pool22-three-domain-10,10,10 -> PASS (558 s) results/multi-ap-20261101-181624
+18:30:31 pool23-three-domain-5,10,15 -> PASS (474 s) results/multi-ap-20261101-182239
+18:30:42 DONE

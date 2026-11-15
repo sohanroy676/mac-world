@@ -1,0 +1,5 @@
+id,run_dir,result,returncode,seconds
+s7-s4b-64-64-64-s0,results/multi-ap-20261102-232329,PASS,0,157
+s7-s4b-beb-s0,results/multi-ap-20261102-232326,PASS,0,164
+s7-s4b-256-128-256-s0,results/multi-ap-20261102-232611,PASS,0,189
+s7-s4b-128-64-128-s0,results/multi-ap-20261102-232606,PASS,0,195

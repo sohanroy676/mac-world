@@ -1,0 +1,37 @@
+11:17:41 START lane0 ref-s4-beb-s0
+11:17:44 START lane1 ref-s4-static-64-64-64-s0
+11:29:09 ref-s4-static-64-64-64-s0 -> PASS (685 s) results/multi-ap-20261104-111746
+11:29:09 START lane1 ref-s4-static-128-64-128-s0
+11:29:20 ref-s4-beb-s0 -> PASS (699 s) results/multi-ap-20261104-111742
+11:29:20 START lane0 ref-s4-static-256-128-256-s0
+11:39:02 ref-s4-static-256-128-256-s0 -> PASS (582 s) results/multi-ap-20261104-112924
+11:39:02 START lane0 ref-s4-beb-s1
+11:40:10 ref-s4-static-128-64-128-s0 -> PASS (661 s) results/multi-ap-20261104-112913
+11:40:10 START lane1 ref-s4-static-64-64-64-s1
+11:50:21 ref-s4-beb-s1 -> PASS (678 s) results/multi-ap-20261104-113908
+11:50:21 START lane0 ref-s4-static-128-64-128-s1
+11:50:41 ref-s4-static-64-64-64-s1 -> PASS (631 s) results/multi-ap-20261104-114014
+11:50:41 START lane1 ref-s4-static-256-128-256-s1
+11:58:06 ref-s4-static-256-128-256-s1 -> PASS (444 s) results/multi-ap-20261104-115044
+11:58:06 START lane1 ref-s4-beb-s2
+11:58:32 ref-s4-static-128-64-128-s1 -> PASS (490 s) results/multi-ap-20261104-115023
+11:58:32 START lane0 ref-s4-static-64-64-64-s2
+12:08:02 ref-s4-beb-s2 -> PASS (596 s) results/multi-ap-20261104-115808
+12:08:02 START lane1 ref-s4-static-128-64-128-s2
+12:08:15 ref-s4-static-64-64-64-s2 -> PASS (583 s) results/multi-ap-20261104-115834
+12:08:15 START lane0 ref-s4-static-256-128-256-s2
+12:16:04 ref-s4-static-256-128-256-s2 -> PASS (469 s) results/multi-ap-20261104-120818
+12:16:04 START lane0 ref-s2-beb-s0
+12:16:54 ref-s4-static-128-64-128-s2 -> PASS (531 s) results/multi-ap-20261104-120806
+12:16:54 START lane1 ref-s2-static-512-512-s0
+12:32:37 ref-s2-beb-s0 -> PASS (992 s) results/multi-ap-20261104-121606
+12:32:37 START lane0 ref-s2-beb-s1
+12:33:01 ref-s2-static-512-512-s0 -> PASS (967 s) results/multi-ap-20261104-121658
+12:33:01 START lane1 ref-s2-static-512-512-s1
+12:44:19 ref-s2-static-512-512-s1 -> PASS (677 s) results/multi-ap-20261104-123304
+12:44:19 START lane1 ref-s2-beb-s2
+12:44:21 ref-s2-beb-s1 -> PASS (704 s) results/multi-ap-20261104-123242
+12:44:21 START lane0 ref-s2-static-512-512-s2
+12:55:07 ref-s2-static-512-512-s2 -> PASS (645 s) results/multi-ap-20261104-124423
+12:55:16 ref-s2-beb-s2 -> PASS (657 s) results/multi-ap-20261104-124421
+12:55:17 DONE

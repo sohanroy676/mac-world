@@ -1,0 +1,103 @@
+23:30:11 START lane0 s7-s4b-beb-s0
+23:30:14 START lane1 s7-s4b-beb-s1
+23:33:50 s7-s4b-beb-s0 -> PASS (218 s) results/multi-ap-20261102-233015
+23:33:50 START lane0 s7-s4b-beb-s2
+23:33:51 s7-s4b-beb-s1 -> PASS (216 s) results/multi-ap-20261102-233018
+23:33:51 START lane1 s7-s4b-16-16-16-s0
+23:38:10 s7-s4b-beb-s2 -> PASS (260 s) results/multi-ap-20261102-233351
+23:38:10 START lane0 s7-s4b-16-16-16-s1
+23:38:32 s7-s4b-16-16-16-s0 -> PASS (281 s) results/multi-ap-20261102-233353
+23:38:32 START lane1 s7-s4b-16-16-16-s2
+23:41:56 s7-s4b-16-16-16-s1 -> PASS (226 s) results/multi-ap-20261102-233814
+23:41:56 START lane0 s7-s4b-32-32-32-s0
+23:42:03 s7-s4b-16-16-16-s2 -> PASS (210 s) results/multi-ap-20261102-233835
+23:42:03 START lane1 s7-s4b-32-32-32-s1
+23:44:58 s7-s4b-32-32-32-s0 -> PASS (182 s) results/multi-ap-20261102-234157
+23:44:58 START lane0 s7-s4b-32-32-32-s2
+23:45:04 s7-s4b-32-32-32-s1 -> PASS (181 s) results/multi-ap-20261102-234205
+23:45:04 START lane1 s7-s4b-64-64-64-s0
+23:48:00 s7-s4b-32-32-32-s2 -> PASS (181 s) results/multi-ap-20261102-234500
+23:48:00 START lane0 s7-s4b-64-64-64-s1
+23:48:01 s7-s4b-64-64-64-s0 -> PASS (176 s) results/multi-ap-20261102-234506
+23:48:01 START lane1 s7-s4b-64-64-64-s2
+23:50:55 s7-s4b-64-64-64-s1 -> PASS (175 s) results/multi-ap-20261102-234802
+23:50:55 START lane0 s7-s4b-128-128-128-s0
+23:50:56 s7-s4b-64-64-64-s2 -> PASS (175 s) results/multi-ap-20261102-234803
+23:50:56 START lane1 s7-s4b-128-128-128-s1
+23:53:47 s7-s4b-128-128-128-s1 -> PASS (170 s) results/multi-ap-20261102-235058
+23:53:47 START lane1 s7-s4b-128-128-128-s2
+23:53:47 s7-s4b-128-128-128-s0 -> PASS (172 s) results/multi-ap-20261102-235057
+23:53:47 START lane0 s7-s4b-256-256-256-s0
+23:56:29 s7-s4b-256-256-256-s0 -> PASS (161 s) results/multi-ap-20261102-235349-p15970
+23:56:29 START lane0 s7-s4b-256-256-256-s1
+23:56:36 s7-s4b-128-128-128-s2 -> PASS (169 s) results/multi-ap-20261102-235349
+23:56:36 START lane1 s7-s4b-256-256-256-s2
+23:59:11 s7-s4b-256-256-256-s1 -> PASS (162 s) results/multi-ap-20261102-235631
+23:59:11 START lane0 s7-s4b-256-128-256-s0
+23:59:18 s7-s4b-256-256-256-s2 -> PASS (162 s) results/multi-ap-20261102-235639
+23:59:18 START lane1 s7-s4b-256-128-256-s1
+00:01:53 s7-s4b-256-128-256-s0 -> PASS (161 s) results/multi-ap-20261102-235913
+00:01:53 START lane0 s7-s4b-256-128-256-s2
+00:02:01 s7-s4b-256-128-256-s1 -> PASS (162 s) results/multi-ap-20261102-235921
+00:02:01 START lane1 s7-s4b-256-64-256-s0
+00:04:36 s7-s4b-256-128-256-s2 -> PASS (162 s) results/multi-ap-20261103-000155
+00:04:36 START lane0 s7-s4b-256-64-256-s1
+00:04:44 s7-s4b-256-64-256-s0 -> PASS (163 s) results/multi-ap-20261103-000203
+00:04:44 START lane1 s7-s4b-256-64-256-s2
+00:07:21 s7-s4b-256-64-256-s1 -> PASS (165 s) results/multi-ap-20261103-000437
+00:07:21 START lane0 s7-s4b-128-64-128-s0
+00:07:27 s7-s4b-256-64-256-s2 -> PASS (163 s) results/multi-ap-20261103-000446
+00:07:27 START lane1 s7-s4b-128-64-128-s1
+00:10:10 s7-s4b-128-64-128-s0 -> PASS (169 s) results/multi-ap-20261103-000722
+00:10:10 START lane0 s7-s4b-128-64-128-s2
+00:10:17 s7-s4b-128-64-128-s1 -> PASS (169 s) results/multi-ap-20261103-000729
+00:10:17 START lane1 s8p3-16-16-16-s0
+00:13:00 s7-s4b-128-64-128-s2 -> PASS (169 s) results/multi-ap-20261103-001012
+00:13:00 START lane0 s8p3-16-16-16-s1
+00:14:33 s8p3-16-16-16-s0 -> PASS (256 s) results/multi-ap-20261103-001019
+00:14:33 START lane1 s8p3-16-16-16-s2
+00:17:17 s8p3-16-16-16-s1 -> PASS (257 s) results/multi-ap-20261103-001302
+00:17:17 START lane0 s8p3-16-32-16-s0
+00:18:51 s8p3-16-16-16-s2 -> PASS (257 s) results/multi-ap-20261103-001436
+00:18:51 START lane1 s8p3-16-32-16-s1
+00:21:44 s8p3-16-32-16-s0 -> PASS (267 s) results/multi-ap-20261103-001719
+00:21:44 START lane0 s8p3-16-32-16-s2
+00:23:20 s8p3-16-32-16-s1 -> PASS (268 s) results/multi-ap-20261103-001854
+00:23:20 START lane1 s8p3-16-64-16-s0
+00:26:07 s8p3-16-32-16-s2 -> PASS (262 s) results/multi-ap-20261103-002147
+00:26:07 START lane0 s8p3-16-64-16-s1
+00:27:42 s8p3-16-64-16-s0 -> PASS (262 s) results/multi-ap-20261103-002322
+00:27:42 START lane1 s8p3-16-64-16-s2
+00:30:29 s8p3-16-64-16-s1 -> PASS (262 s) results/multi-ap-20261103-002609
+00:30:29 START lane0 s8p3-16-128-16-s0
+00:32:05 s8p3-16-64-16-s2 -> PASS (262 s) results/multi-ap-20261103-002744
+00:32:05 START lane1 s8p3-16-128-16-s1
+00:34:47 s8p3-16-128-16-s0 -> PASS (257 s) results/multi-ap-20261103-003032
+00:34:47 START lane0 s8p3-16-128-16-s2
+00:36:27 s8p3-16-128-16-s1 -> PASS (262 s) results/multi-ap-20261103-003207
+00:36:27 START lane1 s8p3-32-16-32-s0
+00:39:07 s8p3-16-128-16-s2 -> PASS (259 s) results/multi-ap-20261103-003449
+00:39:07 START lane0 s8p3-32-16-32-s1
+00:40:30 s8p3-32-16-32-s0 -> PASS (242 s) results/multi-ap-20261103-003629
+00:40:30 START lane1 s8p3-32-16-32-s2
+00:43:08 s8p3-32-16-32-s1 -> PASS (240 s) results/multi-ap-20261103-003909
+00:43:08 START lane0 s8p3-32-32-32-s0
+00:44:34 s8p3-32-16-32-s2 -> PASS (244 s) results/multi-ap-20261103-004032
+00:44:34 START lane1 s8p3-32-32-32-s1
+00:47:19 s8p3-32-32-32-s0 -> PASS (251 s) results/multi-ap-20261103-004310
+00:47:19 START lane0 s8p3-32-32-32-s2
+00:48:42 s8p3-32-32-32-s1 -> PASS (248 s) results/multi-ap-20261103-004436
+00:48:42 START lane1 s8p3-32-64-32-s0
+00:51:28 s8p3-32-32-32-s2 -> PASS (249 s) results/multi-ap-20261103-004721
+00:51:28 START lane0 s8p3-32-64-32-s1
+00:52:51 s8p3-32-64-32-s0 -> PASS (248 s) results/multi-ap-20261103-004845
+00:52:51 START lane1 s8p3-32-64-32-s2
+00:55:39 s8p3-32-64-32-s1 -> PASS (251 s) results/multi-ap-20261103-005130
+00:55:39 START lane0 s8p3-32-128-32-s0
+00:57:01 s8p3-32-64-32-s2 -> PASS (250 s) results/multi-ap-20261103-005253
+00:57:01 START lane1 s8p3-32-128-32-s1
+00:59:50 s8p3-32-128-32-s0 -> PASS (251 s) results/multi-ap-20261103-005542
+00:59:50 START lane0 s8p3-32-128-32-s2
+01:01:14 s8p3-32-128-32-s1 -> PASS (252 s) results/multi-ap-20261103-005704
+01:03:27 s8p3-32-128-32-s2 -> PASS (217 s) results/multi-ap-20261103-005953
+01:03:34 DONE
