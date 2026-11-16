@@ -31,7 +31,10 @@ jobs = {j["id"]: j for s in packs["shards"] for p in s for j in p["jobs"]}
 
 
 def get(url):
-    req = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "collect-wave"})
+    h = {"Accept": "application/vnd.github+json", "User-Agent": "collect-wave"}
+    if os.environ.get("GH_TOKEN") and url.startswith("https://api.github.com/"):  # only against the API: a higher rate limit for public reads
+        h["Authorization"] = "Bearer " + os.environ["GH_TOKEN"]
+    req = urllib.request.Request(url, headers=h)
     return urllib.request.urlopen(req, timeout=60).read()
 
 
@@ -51,6 +54,12 @@ else:
             if a["name"].startswith("summaries-") and a["name"].endswith(".jsonl"):
                 lines += get(a["browser_download_url"]).decode().splitlines()
         print("shard %d %s: release %s read" % (k, s["repo"], tag))
+    for k, s in enumerate(cfg["shards"]):  # state of the fork runs, for diagnosis
+        try:
+            runs = json.loads(get("https://api.github.com/repos/%s/actions/workflows/wave-run.yml/runs?per_page=3" % s["repo"]))["workflow_runs"]
+            print("shard %d %s runs: %s" % (k, s["repo"], ", ".join("%s %s/%s %s" % (r["id"], r["status"], r["conclusion"], r["created_at"]) for r in runs) or "none"))
+        except Exception as e:
+            print("shard %d %s runs: not readable (%s)" % (k, s["repo"], getattr(e, "code", type(e).__name__)))
 
 if not args.local:
     for h in cfg.get("hf", []):  # Spaces push <wave>/s<shard>/<pack>.summaries.jsonl to branch wave-results of their owner's repository
