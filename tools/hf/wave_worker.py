@@ -7,7 +7,7 @@ What it does, in a loop (docs/reference/wave-runbook-v4.1.0.md, section 5):
      (the Space's own name comes from the SPACE_ID variable that Hugging Face sets). No entry = nothing to do.
   3. Check the lab-hour cap of the batch (same rule as dispatch_wave.py), check out the code, build it when the commit
      changed (tools/bench/run_bench.sh hf --no-apt --smoke), and run the packs of shard k.
-  4. After every pack, push its summaries to the OWNER's GitHub repository (the "repo" entry), branch wave-results-s<k>,
+  4. After every pack, push its summaries to the GitHub repository named in its "repo" entry (the main repository), branch wave-results-s<k>,
      path <wave>/s<k>/<pack>.summaries.jsonl, with the token in the Space secret GH_TOKEN (fine-grained, that repo only,
      Contents read and write). Traces stay on the Space's disk, which is ephemeral; only the SHA-256 of each trace is kept.
   5. A restarted Space skips packs whose summaries file already lists every job as PASS.

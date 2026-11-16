@@ -4,7 +4,7 @@ Secret GH_TOKEN (fine-grained, repo sohanroy676/mac-world only, Contents read+wr
 Variable AUTOSTART = "batch:.github/jobs/lanes-test.json" re-runs setup and the batch on every boot (resumes after a restart).
 Variable REF (default bench/lanes) = branch to clone; LANES (default 16).
 v4.1.0 wave mode: variable WAVE_WORKER=1 (with REF = the branch that holds .github/waves/dispatch.json, UPSTREAM = owner/repo,
-secret GH_TOKEN = token of the Space owner's own GitHub repo) starts tools/hf/wave_worker.py, which polls dispatch.json and runs
+secret GH_TOKEN = fine-grained token, Contents read+write on the repo named in dispatch.json) starts tools/hf/wave_worker.py, which polls dispatch.json and runs
 this Space's shard. The worker is fetched from the branch at every boot, so fixes need no re-upload of this file."""
 import os, subprocess, threading, time
 import gradio as gr
