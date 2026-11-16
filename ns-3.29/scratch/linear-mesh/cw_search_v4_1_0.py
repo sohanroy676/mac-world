@@ -251,11 +251,11 @@ def jobs_for(points, cell, cell_name, family, wave, label, seeds, sim_time, with
     w, jobs = int(round(1.1 * sim_time)), []
     for s in seeds if with_beb else []:
         jid = "%s-%s-beb-t%g-s%d" % (wave, cell_name, sim_time, s)
-        jobs.append({"id": jid, "w": w, "cmds": [{"name": "run", "args": base + ["--mode", "beb", "--seed", str(s), "--tag", "%s-%s-beb" % (wave, cell_name)]}]})
+        jobs.append({"id": jid, "w": w, "timeout": int(70 * w + 300), "cmds": [{"name": "run", "args": base + ["--mode", "beb", "--seed", str(s), "--tag", "%s-%s-beb" % (wave, cell_name)]}]})
     for i, p in enumerate(points):
         for s in seeds:
             jid = "%s-%s-%s-%s-p%03d-s%d" % (wave, cell_name, family, label, i, s)
-            jobs.append({"id": jid, "w": w, "point": p, "cmds": [{"name": "run", "args": base + point_args(p, family) + sched + ["--seed", str(s), "--tag", "%s-%s-%s-%s" % (wave, cell_name, family, label)]}]})
+            jobs.append({"id": jid, "w": w, "timeout": int(70 * w + 300), "point": p, "cmds": [{"name": "run", "args": base + point_args(p, family) + sched + ["--seed", str(s), "--tag", "%s-%s-%s-%s" % (wave, cell_name, family, label)]}]})
     return jobs
 
 

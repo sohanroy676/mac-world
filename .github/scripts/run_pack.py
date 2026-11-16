@@ -1,6 +1,7 @@
 """Run a pack of jobs on one runner, `lanes` jobs at a time (each job is a full run_job.py call, so its commands stay
 in order and share {ACT}). Output of each finished job (its BUNDLE block) is printed in one piece so fetch_bundles.py
 works unchanged. Usage: run_pack.py <python> <pack-id> <out-dir> <lanes>   (env PACK = JSON list of jobs; cwd = ns-3.29/scratch/linear-mesh)"""
+import fcntl
 import json
 import os
 import subprocess
@@ -13,6 +14,10 @@ jobs = json.loads(os.environ["PACK"])
 here = os.path.dirname(os.path.abspath(__file__))
 queue = list(jobs)
 qlock, plock, start_lock = threading.Lock(), threading.Lock(), threading.Lock()
+# v4.1.0: several packs can run on one machine (a Hugging Face Space runs 4 packs of 4 lanes). Two `waf --run` calls that
+# overlap rewrite build/compile_commands.json at the same time and one of them dies (seen 2026-11-16: the trainer then waits
+# forever for a simulator that no longer exists), so the 2.5 s stagger below is taken across processes with a file lock.
+proc_lock = open("/tmp/run_pack_start.lock", "w")
 failed = []
 t00 = time.time()
 
@@ -25,10 +30,14 @@ def worker():
             j = queue.pop(0)
         cmds = j["cmds"] if "cmds" in j else j["args"]
         env = dict(os.environ, PIN="1" if j.get("pin") else "")
+        if j.get("timeout"):  # seconds per command; run_job.py kills a command that runs longer (a lost simulator hangs the trainer)
+            env["JOB_TIMEOUT"] = str(j["timeout"])
         with start_lock:  # run dirs are named to the second: stagger starts
+            fcntl.flock(proc_lock, fcntl.LOCK_EX)
             p = subprocess.Popen([py, os.path.join(here, "run_job.py"), py, j["id"], json.dumps(cmds), j.get("ref", ""), out],
                                  stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env)
             time.sleep(2.5)
+            fcntl.flock(proc_lock, fcntl.LOCK_UN)
         text = p.communicate()[0].decode("utf-8", "replace")
         with plock:
             print(text, flush=True)

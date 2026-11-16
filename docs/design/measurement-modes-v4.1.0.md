@@ -117,6 +117,10 @@ collision rise in 9 us steps from 103 us (103, 112, 121, 130). The earlier infer
 (`docs/results/m2b-specs-v4.0.0.md`: frame 135 us, ACK about 54 us); the measured frame is 139 us and the ACK 28 us.
 DAC's tuned Tc of 514 us was a tuning result and is not changed by this measurement.
 
+Space worker (2026-11-16, local, `tools/hf/wave_worker.py`): 12 jobs in 3 packs, 2 packs at once, all PASS, resume skipped
+finished packs, collector read the results; GitHub push path tested against a mock API only. Found and fixed a race between
+packs (`waf --run` calls overlapping, trainer hung): cross-process start lock in `run_pack.py`, `JOB_TIMEOUT` in `run_job.py`.
+
 Run image (fact, Actions run 43649676348, 2026-11-14): `build-image` passed for commit 7763b40e; the 2,3 BEB check
 inside the image gave RESULT: PASS (trace sha256 `52f8b816...`). Image:
 `ghcr.io/sohanroy676/mac-world-run@sha256:aaa8e45ea8b23d90512d561ddc03a2730df8e7c79f71c0827bb9b96140d2f6d1`.

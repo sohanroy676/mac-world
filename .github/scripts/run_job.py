@@ -57,7 +57,14 @@ for c in cmds:
     before = set(glob.glob("results/multi-ap-*"))
     log = os.path.join(dst_root, name + ".log")
     with open(log, "w") as lf:
-        rc = subprocess.call([py, script] + args, stdout=lf, stderr=subprocess.STDOUT, env=env)
+        proc = subprocess.Popen([py, script] + args, stdout=lf, stderr=subprocess.STDOUT, env=env, start_new_session=True)
+        try:
+            rc = proc.wait(timeout=float(os.environ.get("JOB_TIMEOUT") or 0) or None)
+        except subprocess.TimeoutExpired:  # v4.1.0: kill the whole process group (trainer, waf, simulator) and fail the command
+            os.killpg(proc.pid, 9)
+            proc.wait()
+            rc = 124
+            lf.write("\nJOB TIMEOUT after %s s\n" % os.environ.get("JOB_TIMEOUT"))
     named = re.findall(r"^APs:.* out: (results/multi-ap-\S+)\s*$", open(log).read(), re.M)  # the trainer names its run dir: safe with parallel lanes
     runs = [named[-1]] if named else sorted(set(glob.glob("results/multi-ap-*")) - before, key=os.path.getmtime)
     last_run = os.path.abspath(runs[-1]) if runs else ""

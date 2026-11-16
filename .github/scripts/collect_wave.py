@@ -2,7 +2,8 @@
 
   collect_wave.py <dispatch.json> --out docs/figures/<wave>/summaries.jsonl [--retry retry.json] [--local DIR]
 
-Reads the packs file named in dispatch.json, downloads every summaries-*.jsonl asset of release
+Reads the packs file named in dispatch.json, reads the Spaces' <wave>/s<k>/*.summaries.jsonl from branch wave-results-s<k> of
+their repositories ("hf" entries), downloads every summaries-*.jsonl asset of release
 "wave-<wave>-s<k>" from shard k's repository (public, no token), or reads *.jsonl from --local DIR, and then:
   * keeps one PASS record per (job, command); two PASS records of the same job with different trace hashes are
     reported as HASH-MISMATCH and the job is dropped (non-learned runs must hash identically on every machine);
@@ -50,6 +51,18 @@ else:
             if a["name"].startswith("summaries-") and a["name"].endswith(".jsonl"):
                 lines += get(a["browser_download_url"]).decode().splitlines()
         print("shard %d %s: release %s read" % (k, s["repo"], tag))
+
+if not args.local:
+    for h in cfg.get("hf", []):  # Spaces push <wave>/s<shard>/<pack>.summaries.jsonl to branch wave-results of their owner's repository
+        try:
+            items = json.loads(get("https://api.github.com/repos/%s/contents/%s/s%d?ref=wave-results-s%d" % (h["repo"], cfg["wave"], h["shard"], h["shard"])))
+        except Exception as e:
+            print("space %s: nothing under %s/s%d in %s (%s)" % (h["space"], cfg["wave"], h["shard"], h["repo"], getattr(e, "code", type(e).__name__)))
+            continue
+        for it in items:
+            if it["name"].endswith(".summaries.jsonl"):
+                lines += get(it["download_url"]).decode().splitlines()
+        print("space %s (%s): read" % (h["space"], h["repo"]))
 
 have, mismatch = {}, set()
 if os.path.exists(args.out):

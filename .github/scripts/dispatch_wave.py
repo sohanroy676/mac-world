@@ -3,7 +3,8 @@
 dispatch.json = {"wave": "w0", "packs": ".github/waves/w0-r0-packs.json", "image": "ghcr.io/..@sha256:..",
                  "max_parallel": 5, "cap_lab_h": 30, "spent_lab_h": 0,
                  "shards": [{"repo": "owner/mac-world", "token": 0, "ref": "branch with wave-run.yml"}, ...]}
-Shard k of the packs file goes to shards[k]. "token": n reads env FORK_TOKEN_n; a shard on this repository uses
+Shard k of the packs file goes to shards[k]; the Spaces listed under "hf": [{"space", "repo", "shard"}] take the shards after the
+forks and start themselves (tools/hf/wave_worker.py reads this same file), so only the cap is checked for them here. "token": n reads env FORK_TOKEN_n; a shard on this repository uses
 SELF_TOKEN. Refuses to start when the batch would take the wave over its approved lab-hour cap (a run of w = 33
 counts 0.2 lab-h, the plan's unit), when the image has no digest, or when a token is missing. Tokens are never printed.
 """
@@ -15,7 +16,9 @@ import urllib.request
 cfg = json.load(open(sys.argv[1]))
 repo, sha = sys.argv[2], sys.argv[3]
 packs = json.load(open(cfg["packs"]))
-assert len(packs["shards"]) == len(cfg["shards"]), "packs file has %d shards, dispatch.json %d" % (len(packs["shards"]), len(cfg["shards"]))
+n_gh = len(cfg["shards"])
+assert sorted(h["shard"] for h in cfg.get("hf", [])) == list(range(n_gh, n_gh + len(cfg.get("hf", [])))), "hf shards must be numbered n_forks, n_forks+1, ..."
+assert len(packs["shards"]) == n_gh + len(cfg.get("hf", [])), "packs file has %d shards, dispatch.json %d forks + %d Spaces" % (len(packs["shards"]), n_gh, len(cfg.get("hf", [])))
 assert "@sha256:" in cfg["image"], "image must be pinned by digest"
 lab_h = sum(j["w"] for s in packs["shards"] for p in s for j in p["jobs"]) / 33.0 * 0.2
 total = cfg.get("spent_lab_h", 0) + lab_h

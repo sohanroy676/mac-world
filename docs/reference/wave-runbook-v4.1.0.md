@@ -47,3 +47,34 @@ Each fork owner (7 other accounts):
 - Not tested: `wave-run.yml`, `wave-dispatch.yml`, `dispatch_wave.py` against the GitHub API, the
   release download path of `collect_wave.py`. These need the forks.
 - Hugging Face Spaces queue-at-boot: not started.
+
+## 5. Hugging Face Spaces (10 Spaces: 5 accounts, 2 Spaces each)
+
+Decision (xyz, 2026-11-16): every Space pushes its results to the main repository. xyz holds all the HF accounts.
+Status (2026-11-16): tested locally, two ways. (1) 12 tiny jobs in 3 packs, two packs at once, results to a stand-in folder:
+all 12 PASS, a second pass skipped all 3 packs, the collector read them, and a batch over the cap was refused. (2) The GitHub
+push path (create branch, create file, update file by sha, read back) against a mock GitHub API. **No real Space has run it
+yet and the real GitHub API was not called** (Wave 0 does both). The first local test found a real bug: two packs started
+within the same seconds made two `waf --run` calls rewrite `build/compile_commands.json` at once, one died, and its trainer waited
+forever. Fixed with a start lock shared across packs (`run_pack.py`) and a per-job timeout (`run_job.py`, `JOB_TIMEOUT`).
+
+One-time, per HF account (xyz or the owner):
+1. Account at least 30 days old and in good standing (HF's documented rule for the free ZeroGPU Spaces; Wave 0 confirms).
+2. Create 2 Spaces at huggingface.co/new-space under that account: SDK Gradio, hardware the same as xyz's existing two Spaces
+   (Settings, Hardware). Names are free; send them to Claude as `owner/name`.
+3. Upload to each Space root the four files: `tools/hf/space-README.md` as `README.md`, `tools/hf/app.py`,
+   `tools/hf/packages.txt`, `tools/hf/requirements.txt` (Files tab, Add file, Upload files).
+4. Settings, Variables and secrets:
+   - Variables: `WAVE_WORKER` = `1`, `REF` = `claude/project-thread-o7nshg` (the branch that holds `.github/waves/dispatch.json`;
+     `feature/v4` after the merge), `LANES` = `16`.
+   - Secret: `GH_TOKEN` = a fine-grained GitHub token for `sohanroy676/mac-world` only, permission "Contents: Read and write",
+     expiry 30 days. One token can be used in all 10 Spaces. It can write to every branch of the main repository, so keep expiry short.
+5. Leave the Space running. It builds the code on first boot (about 10 to 15 minutes), then looks at `dispatch.json` every 5 minutes
+   and does nothing until a batch lists it. A Space that sleeps or restarts resumes: packs whose summaries are already on GitHub are skipped.
+
+What the worker does is in the docstring of `tools/hf/wave_worker.py`. Each Space writes to its own branch `wave-results-s<shard>`
+(so ten Spaces never commit to one branch at once), under `<wave>/s<shard>/`: one `.summaries.jsonl` and one `.pack.txt` per pack.
+Traces stay on the Space disk; only their SHA-256 goes to GitHub.
+
+`dispatch.json` lists the Spaces: `"hf": [{"space": "owner/name", "repo": "sohanroy676/mac-world", "shard": k}, ...]`, with shard
+numbers after the forks' (7 forks = shards 0-6, Spaces 7-16). A Space's own name comes from the `SPACE_ID` variable HF sets.
