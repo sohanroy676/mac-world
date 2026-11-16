@@ -5,10 +5,10 @@ shard 3 PunnaSaicharan/mac-world: release wave-w0-s3 read
 shard 4 rohithkumar-13/mac-world: no release wave-w0-s4 (404)
 shard 5 Mudupraveen/mac-world: release wave-w0-s5 read
 shard 0 Pr2101/mac-world runs: 43886593352 completed/success 2026-11-16T14:31:18Z
-shard 1 pranav9487/mac-world runs: 43886599825 queued/None 2026-11-16T14:31:20Z
+shard 1 pranav9487/mac-world runs: 43886599825 in_progress/None 2026-11-16T14:31:20Z
 shard 2 shivaji116/mac-world runs: 43886604906 completed/success 2026-11-16T14:31:22Z
 shard 3 PunnaSaicharan/mac-world runs: 43886609302 completed/success 2026-11-16T14:31:24Z
-shard 4 rohithkumar-13/mac-world runs: 43886615404 queued/None 2026-11-16T14:31:26Z
+shard 4 rohithkumar-13/mac-world runs: 43886615404 in_progress/None 2026-11-16T14:31:26Z
 shard 5 Mudupraveen/mac-world runs: 43886625318 completed/success 2026-11-16T14:31:29Z
 space pranay2101/pranay_macworld_1: nothing under w0/s6 in sohanroy676/mac-world (404)
 space pranay2101/pranay_macworld_2: nothing under w0/s7 in sohanroy676/mac-world (404)
@@ -20,5 +20,5 @@ space manne1086/rithivkesh_macworld_1: nothing under w0/s12 in sohanroy676/mac-w
 space manne1086/rithivkesh_macworld_2: nothing under w0/s13 in sohanroy676/mac-world (404)
 space Deekshith30/deekshith_macworld_1: nothing under w0/s14 in sohanroy676/mac-world (404)
 space Deekshith30/deekshith_macworld_2: nothing under w0/s15 in sohanroy676/mac-world (404)
-176 jobs in the batch, 44 complete, 44 new records, 132 missing, 0 hash mismatches []
-collector exit 2, 2026-11-16T14:56:25Z, commit 4af1623eb1d60598e82bf28dd165f18e060815e0
+176 jobs in the batch, 44 complete, 0 new records, 132 missing, 0 hash mismatches []
+collector exit 2, 2026-11-16T15:27:02Z, commit 17863bb28bd088a987db9f1b61d72cb841291325
