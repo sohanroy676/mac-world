@@ -7,8 +7,8 @@ shard 5 Mudupraveen/mac-world: no release wave-w1-s5 (404)
 shard 0 Pr2101/mac-world runs: 43901481403 queued/None 2026-11-16T15:54:12Z, 43886593352 completed/success 2026-11-16T14:31:18Z
 shard 1 pranav9487/mac-world runs: 43901487375 queued/None 2026-11-16T15:54:14Z, 43886599825 completed/success 2026-11-16T14:31:20Z
 shard 2 shivaji116/mac-world runs: 43901493832 queued/None 2026-11-16T15:54:15Z, 43886604906 completed/success 2026-11-16T14:31:22Z
-shard 3 PunnaSaicharan/mac-world runs: 43901499072 queued/None 2026-11-16T15:54:17Z, 43886609302 completed/success 2026-11-16T14:31:24Z
+shard 3 PunnaSaicharan/mac-world runs: 43901499072 in_progress/None 2026-11-16T15:54:17Z, 43886609302 completed/success 2026-11-16T14:31:24Z
 shard 4 rohithkumar-13/mac-world runs: 43901504422 queued/None 2026-11-16T15:54:19Z, 43886615404 completed/success 2026-11-16T14:31:26Z
-shard 5 Mudupraveen/mac-world runs: 43901508865 queued/None 2026-11-16T15:54:20Z, 43886625318 completed/success 2026-11-16T14:31:29Z
+shard 5 Mudupraveen/mac-world runs: 43901508865 in_progress/None 2026-11-16T15:54:20Z, 43886625318 completed/success 2026-11-16T14:31:29Z
 2660 jobs in the batch, 0 complete, 0 new records, 2660 missing, 0 hash mismatches []
-collector exit 2, 2026-11-16T17:55:22Z, commit 1024b065dfe540401b5d58bbcc2bf9d2b8ad0caf
+collector exit 2, 2026-11-16T18:57:27Z, commit 93e502720855c6251c1b92f34c36bd49cc1f31c7
