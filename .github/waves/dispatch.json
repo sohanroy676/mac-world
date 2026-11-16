@@ -1,10 +1,10 @@
 {
- "wave": "w0",
- "packs": ".github/waves/w0-packs.json",
+ "wave": "w1",
+ "packs": ".github/waves/w1/r0-packs.json",
  "image": "ghcr.io/sohanroy676/mac-world-run@sha256:63c00ce6fb7ce484b4bde4e8b4f1b5c41d6a0fdc6d2a3f652b545898d96a8c28",
  "code_commit": "3049dc37580835a412f07323a7f8f1384c29a1f9",
  "max_parallel": 5,
- "cap_lab_h": 60,
+ "cap_lab_h": 2500,
  "spent_lab_h": 0,
  "shards": [
   {
@@ -36,58 +36,6 @@
    "repo": "Mudupraveen/mac-world",
    "token": 5,
    "ref": "claude/project-thread-o7nshg"
-  }
- ],
- "hf": [
-  {
-   "space": "pranay2101/pranay_macworld_1",
-   "repo": "sohanroy676/mac-world",
-   "shard": 6
-  },
-  {
-   "space": "pranay2101/pranay_macworld_2",
-   "repo": "sohanroy676/mac-world",
-   "shard": 7
-  },
-  {
-   "space": "pranav49664/pranav_macworld_1",
-   "repo": "sohanroy676/mac-world",
-   "shard": 8
-  },
-  {
-   "space": "pranav49664/pranav_macworld_2",
-   "repo": "sohanroy676/mac-world",
-   "shard": 9
-  },
-  {
-   "space": "shivaji116/shivaji_macworld_1",
-   "repo": "sohanroy676/mac-world",
-   "shard": 10
-  },
-  {
-   "space": "shivaji116/shivaji_macworld_2",
-   "repo": "sohanroy676/mac-world",
-   "shard": 11
-  },
-  {
-   "space": "manne1086/rithivkesh_macworld_1",
-   "repo": "sohanroy676/mac-world",
-   "shard": 12
-  },
-  {
-   "space": "manne1086/rithivkesh_macworld_2",
-   "repo": "sohanroy676/mac-world",
-   "shard": 13
-  },
-  {
-   "space": "Deekshith30/deekshith_macworld_1",
-   "repo": "sohanroy676/mac-world",
-   "shard": 14
-  },
-  {
-   "space": "Deekshith30/deekshith_macworld_2",
-   "repo": "sohanroy676/mac-world",
-   "shard": 15
   }
  ]
 }
