@@ -127,5 +127,21 @@ inside the image gave RESULT: PASS (trace sha256 `52f8b816...`). Image:
 The first attempt (run 43645465115) failed because ns3gym was installed before `waf configure` generated its
 protobuf file; the Dockerfile now installs it after the build.
 
-Not validated yet: `wave-run` and `wave-dispatch` (need the forks and the public package), S7/S8 cells in the search driver
+Wave 0 rehearsal (fact, 2026-11-16, dispatch commit 65253917, image
+`ghcr.io/sohanroy676/mac-world-run@sha256:63c00ce6fb7ce484b4bde4e8b4f1b5c41d6a0fdc6d2a3f652b545898d96a8c28` of commit 3049dc37,
+batch `.github/waves/w0-packs.json` from `.github/scripts/w0_batch.py`, results on branch `wave-collected`, `w0/`):
+
+- `wave-dispatch` started all 6 forks; `wave-run` finished on forks 0, 2, 3, 5 in about 25 min (11 of 11 runs PASS each).
+  Forks 1 and 4 waited about 50 min in GitHub's queue before they started.
+- The 10 non-learned run types (BEB, F1, F2, F3, DAC, KW, S8 schedule, 60 s) have one trace SHA-256 each across the 4 forks
+  and across 4 CPU models (Xeon 6975P-C, Xeon 8573C, EPYC 9V74, EPYC 7763). Gate 0 (identical results from at least
+  4 accounts) is met for non-learned runs.
+- The learner run (`t23`, `pin`) has two hashes: one on both Intel models, one on both AMD models. Learned runs are
+  therefore not hash-comparable across CPU vendors with the current pin settings.
+- Wall time per 30 s run with 4 lanes: 395 to 731 s; the 60 s run 584 to 1062 s.
+- Hugging Face: all 5 accounts were locked by Hugging Face for a terms-of-service violation about one hour after the 10
+  Spaces started the batch; no Space delivered a result. Spaces are not used any more (decision, 2026-11-16);
+  `tools/hf/wave_worker.py` stays in the repository unused and has never been validated on a Space.
+
+Not validated yet: S7/S8 cells in the search driver
 (the delay objective and the S8 load schedule are Track B), any ceiling number.

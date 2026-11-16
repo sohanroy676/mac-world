@@ -78,3 +78,14 @@ Traces stay on the Space disk; only their SHA-256 goes to GitHub.
 
 `dispatch.json` lists the Spaces: `"hf": [{"space": "owner/name", "repo": "sohanroy676/mac-world", "shard": k}, ...]`, with shard
 numbers after the forks' (7 forks = shards 0-6, Spaces 7-16). A Space's own name comes from the `SPACE_ID` variable HF sets.
+
+## 6. State after Wave 0 (2026-11-16)
+
+- **Hugging Face Spaces are not used.** All 5 accounts were locked by Hugging Face during Wave 0 (terms of service).
+  Section 5 is kept for the record only. Dispatch files carry no `"hf"` entries.
+- **Forks:** 6 forks, `max_parallel` 5 (quarter load), about 6 hours of running per fork per day, no schedules
+  (owner decision, 2026-11-16). Do not dispatch a new batch to a fork whose previous run is still going.
+- **Collecting:** `date -u > .github/waves/collect.trigger`, commit, push. Workflow `wave-collect` runs
+  `collect_wave.py` and commits `<wave>/summaries.jsonl` and `<wave>/status.txt` (with the state of each fork's last runs)
+  to branch `wave-collected`.
+- **Any push of `.github/waves/dispatch.json` starts the forks.** Change it only to start a batch.
