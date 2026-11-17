@@ -44,5 +44,10 @@ for k, s, tok in todo:
         print("shard %d -> %s: started (%d packs)" % (k, s["repo"], len(packs["shards"][k])))
     except Exception as e:  # report and go on: the collector re-queues what is missing
         failed += 1
-        print("shard %d -> %s: FAILED %s" % (k, s["repo"], getattr(e, "code", type(e).__name__)))
+        body = ""
+        try:
+            body = e.read().decode("utf-8", "replace")[:300].replace("\n", " ")  # GitHub's message (never contains the token)
+        except Exception:
+            pass
+        print("shard %d -> %s: FAILED %s %s" % (k, s["repo"], getattr(e, "code", type(e).__name__), body))
 sys.exit(1 if failed else 0)

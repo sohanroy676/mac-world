@@ -29,4 +29,6 @@ jobs:
           FORK_TOKEN_5: ${{ secrets.FORK_TOKEN_5 }}
           FORK_TOKEN_6: ${{ secrets.FORK_TOKEN_6 }}
           FORK_TOKEN_7: ${{ secrets.FORK_TOKEN_7 }}
-        run: python3 .github/scripts/dispatch_wave.py .github/waves/dispatch.json "${{ github.repository }}" "${{ github.sha }}" | tee -a "$GITHUB_STEP_SUMMARY"
+        run: |
+          set -o pipefail
+          python3 .github/scripts/dispatch_wave.py .github/waves/dispatch.json "${{ github.repository }}" "${{ github.sha }}" | tee -a "$GITHUB_STEP_SUMMARY"
