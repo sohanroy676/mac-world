@@ -1,8 +1,8 @@
 shard 0 sohanroy676/mac-world: release wave-w1-s0 read
-shard 1 sohanroy676/mac-world: no release wave-w1-s1 (404)
+shard 1 sohanroy676/mac-world: release wave-w1-s1 read
 shard 2 sohanroy676/mac-world: no release wave-w1-s2 (404)
 shard 0 sohanroy676/mac-world runs: not readable (404)
 shard 1 sohanroy676/mac-world runs: not readable (404)
 shard 2 sohanroy676/mac-world runs: not readable (404)
-1508 jobs in the batch, 516 complete, 516 new records, 992 missing, 0 hash mismatches []
-collector exit 2, 2026-11-17T11:06:31Z, commit 324b39044730ab519b9711ebdbbc8b98262d23eb
+1508 jobs in the batch, 1011 complete, 495 new records, 497 missing, 0 hash mismatches []
+collector exit 2, 2026-11-17T16:53:35Z, commit 48aa837f63e46fffe3c8ed65daa770d0cd09a925
