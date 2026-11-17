@@ -1,0 +1,103 @@
+# Same job as wave-run.yml, but for THIS repository: started by a push that touches .github/waves/self.json
+# (main is frozen and has no wave-run.yml, so workflow_dispatch is not available here). self.json has the format of
+# dispatch.json; shard ${{ needs.prep.outputs.shard }} of its packs file runs on this repository's own runners. No schedule.
+name: wave-self
+
+on:
+  push:
+    branches: ['feature/v4*', 'claude/project-thread-o7nshg', 'wave/**']
+    paths: ['.github/waves/self.json']
+
+permissions:
+  contents: write
+
+jobs:
+  prep:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+      packs: ${{ steps.m.outputs.packs }}
+      image: ${{ steps.m.outputs.image }}
+      wave: ${{ steps.m.outputs.wave }}
+      max_parallel: ${{ steps.m.outputs.max_parallel }}
+      shard: ${{ steps.m.outputs.shard }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github
+      - id: m
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, subprocess
+          c = json.load(open(".github/waves/self.json"))
+          for k in ("packs", "image", "wave"):
+              print("%s=%s" % (k, c[k]))
+          print("max_parallel=%s" % c.get("max_parallel", 5))
+          print("shard=%s" % c.get("shard", 0))
+          print("matrix=" + subprocess.check_output(["python3", ".github/scripts/make_packs.py", c["packs"], "--matrix", str(c.get("shard", 0))]).decode().strip())
+          PY
+
+  run:
+    needs: prep
+    name: pack ${{ matrix.pack }}
+    runs-on: ubuntu-24.04
+    container:
+      image: ${{ needs.prep.outputs.image }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: ${{ fromJSON(needs.prep.outputs.max_parallel) }}
+      matrix: ${{ fromJSON(needs.prep.outputs.matrix) }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github
+      - name: Run pack
+        env:
+          MACWORLD_IMAGE: ${{ needs.prep.outputs.image }}
+          NO_BUNDLE: '1'
+        run: |
+          test "$MACWORLD_COMMIT" != unknown
+          PACKS="$GITHUB_WORKSPACE/${{ needs.prep.outputs.packs }}"
+          cd /opt/mac-world/ns-3.29/scratch/linear-mesh
+          export PACK="$(python3 /opt/mac-world/.github/scripts/make_packs.py "$PACKS" --pack ${{ needs.prep.outputs.shard }} "${{ matrix.pack }}")"
+          LANES="$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['lanes'])" "$PACKS")"
+          ID="${{ needs.prep.outputs.wave }}-s${{ needs.prep.outputs.shard }}-p${{ matrix.pack }}"
+          lscpu | grep -E "Model name" || true
+          $MACWORLD_PY /opt/mac-world/.github/scripts/run_pack.py $MACWORLD_PY "$ID" /tmp/out "$LANES" || echo "PACK_FAILED=1" >> "$GITHUB_ENV"
+          mkdir -p /tmp/up
+          for f in /tmp/out/*/*/summary.json; do [ -f "$f" ] && { cat "$f"; echo; }; done > "/tmp/up/$ID.summaries.jsonl" || true
+          tar -czf "/tmp/up/$ID.tar.gz" -C /tmp/out .
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pack-${{ matrix.pack }}
+          path: /tmp/up/
+          retention-days: 7
+      - name: Fail the pack if a job failed
+        run: test -z "$PACK_FAILED"
+
+  publish:
+    needs: [prep, run]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: /tmp/dl
+          merge-multiple: true
+      - name: Publish as release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="wave-${{ needs.prep.outputs.wave }}-s${{ needs.prep.outputs.shard }}"
+          cat /tmp/dl/*.summaries.jsonl > "/tmp/dl/summaries-${{ github.run_id }}.jsonl" || true
+          rm -f /tmp/dl/*.summaries.jsonl
+          gh release view "$TAG" -R "${{ github.repository }}" > /dev/null 2>&1 || \
+            gh release create "$TAG" -R "${{ github.repository }}" --target "${{ github.sha }}" --title "$TAG" \
+              --notes "Results of wave ${{ needs.prep.outputs.wave }}, shard ${{ needs.prep.outputs.shard }}. Upstream ${{ github.repository }}@${{ github.sha }}, image ${{ needs.prep.outputs.image }}."
+          gh release upload "$TAG" -R "${{ github.repository }}" --clobber /tmp/dl/*
+          echo "### $TAG: $(wc -l < /tmp/dl/summaries-${{ github.run_id }}.jsonl) runs" >> "$GITHUB_STEP_SUMMARY"
