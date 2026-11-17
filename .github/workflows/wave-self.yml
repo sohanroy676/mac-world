@@ -1,6 +1,6 @@
 # Same job as wave-run.yml, but for THIS repository: started by a push that touches .github/waves/self.json
 # (main is frozen and has no wave-run.yml, so workflow_dispatch is not available here). self.json has the format of
-# dispatch.json; shard ${{ needs.prep.outputs.shard }} of its packs file runs on this repository's own runners. No schedule.
+# dispatch.json; one shard of its packs file (field "shard") runs on this repository's own runners. No schedule.
 name: wave-self
 
 on:
