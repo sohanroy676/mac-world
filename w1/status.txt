@@ -1,12 +1,8 @@
-shard 0 Pr2101/mac-world: release wave-w1-s0 read
-shard 1 shivaji116/mac-world: no release wave-w1-s1 (404)
-shard 2 PunnaSaicharan/mac-world: no release wave-w1-s2 (404)
-shard 3 rohithkumar-13/mac-world: no release wave-w1-s3 (404)
-shard 4 Mudupraveen/mac-world: no release wave-w1-s4 (404)
-shard 0 Pr2101/mac-world runs: 43956352543 completed/success 2026-11-16T21:04:47Z, 43901481403 completed/success 2026-11-16T15:54:12Z, 43886593352 completed/success 2026-11-16T14:31:18Z
-shard 1 shivaji116/mac-world runs: 43956362722 completed/failure 2026-11-16T21:04:50Z, 43901493832 completed/success 2026-11-16T15:54:15Z, 43886604906 completed/success 2026-11-16T14:31:22Z
-shard 2 PunnaSaicharan/mac-world runs: 43956367423 completed/success 2026-11-16T21:04:52Z, 43901499072 completed/success 2026-11-16T15:54:17Z, 43886609302 completed/success 2026-11-16T14:31:24Z
-shard 3 rohithkumar-13/mac-world runs: 43956372137 completed/success 2026-11-16T21:04:54Z, 43901504422 completed/success 2026-11-16T15:54:19Z, 43886615404 completed/success 2026-11-16T14:31:26Z
-shard 4 Mudupraveen/mac-world runs: 43956376808 completed/success 2026-11-16T21:04:55Z, 43901508865 completed/failure 2026-11-16T15:54:20Z, 43886625318 completed/success 2026-11-16T14:31:29Z
-1508 jobs in the batch, 0 complete, 0 new records, 1508 missing, 0 hash mismatches []
-collector exit 2, 2026-11-17T02:47:46Z, commit fdc1d5f8a1f6ed9aa72127ae5c6c3f62277b89f6
+shard 0 sohanroy676/mac-world: release wave-w1-s0 read
+shard 1 sohanroy676/mac-world: no release wave-w1-s1 (404)
+shard 2 sohanroy676/mac-world: no release wave-w1-s2 (404)
+shard 0 sohanroy676/mac-world runs: not readable (404)
+shard 1 sohanroy676/mac-world runs: not readable (404)
+shard 2 sohanroy676/mac-world runs: not readable (404)
+1508 jobs in the batch, 516 complete, 516 new records, 992 missing, 0 hash mismatches []
+collector exit 2, 2026-11-17T11:06:31Z, commit 324b39044730ab519b9711ebdbbc8b98262d23eb
