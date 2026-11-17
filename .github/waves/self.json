@@ -3,9 +3,9 @@
  "packs": ".github/waves/w1/r2s-packs.json",
  "image": "ghcr.io/sohanroy676/mac-world-run@sha256:63c00ce6fb7ce484b4bde4e8b4f1b5c41d6a0fdc6d2a3f652b545898d96a8c28",
  "max_parallel": 5,
- "shard": 0,
+ "shard": 1,
  "cap_lab_h": 2500,
- "spent_lab_h": 788,
+ "spent_lab_h": 891,
  "shards": [
   {
    "repo": "sohanroy676/mac-world",
@@ -23,5 +23,5 @@
    "ref": "claude/project-thread-o7nshg"
   }
  ],
- "attempt": 2
+ "attempt": 3
 }
