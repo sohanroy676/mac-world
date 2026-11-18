@@ -6,7 +6,7 @@ import os
 import sys
 
 cells = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "waves", "cells.json")))
-WIDE = ["--cwHold", "--cwLo", "4", "--cwHi", "32767", "--cwExpLo", "-2", "--cwExpHi", "11", "--dacTc", "242e-6", "--dacCw0", "64"]
+WIDE = ["--cwLo", "4", "--cwHi", "32767", "--cwExpLo", "-2", "--cwExpHi", "11", "--dacTc", "242e-6", "--dacCw0", "64"]
 jobs = []
 for mode, cell in (("cascade", "s2"), ("cascade", "s4"), ("coord", "s4")):
     for eta, delta in itertools.product((0.1, 0.25, 0.5), (0.2, 0.35, 0.7)):
