@@ -145,3 +145,11 @@ batch `.github/waves/w0-packs.json` from `.github/scripts/w0_batch.py`, results 
 
 Not validated yet: S7/S8 cells in the search driver
 (the delay objective and the S8 load schedule are Track B), any ceiling number.
+
+## Layered controllers (Track B, 2026-11-18)
+
+- `ap_layered_v4_1_0.py`: L1 DACw (per-AP PI loop to a target collision signal), L2 KWPlus (SPSA on the target with shrinkage and an accept/revert guard), L3 max-weight muting (`Coordinated`, only after Gate S).
+- Trainer modes `--mode cascade` (L1+L2) and `--mode coord` (L1+L2+L3); tunables `--ly*`, `--dacTc 242e-6`, `--dacCw0 64`.
+- `--cwExpLo/--cwExpHi` (default 0 and 6) set the controller exponent range; wide runs use `--cwLo 4 --cwHi 32767 --cwExpLo -2 --cwExpHi 11`. Defaults keep old runs unchanged (DAC 5 s run: same per-AP rewards before and after).
+- Smoke (S4, 20 s, `--check`): both modes PASS, 2000 steps. Not tuned yet.
+- Information level: L2 sees every BSS goodput, L3 the hearing graph (class A online, breaks ADR-0002 isolation by design).
