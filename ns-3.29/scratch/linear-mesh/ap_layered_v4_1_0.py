@@ -282,11 +282,17 @@ class Coordinated(Cascade):
         if self.decisions <= self.hold_all or len(self.sets) < 2:
             self.active = set(range(self.n))
             return
-        w = self.counts / np.maximum(self.x, EPS_MBPS)     # PF weight of one unit of service
-        if self.floors is not None:
-            w = w + self.beta * self.q * float(np.mean(w))  # queue term in units of the mean PF weight
+        w = self._weights()
         best = max(self.sets, key=lambda s: (sum(w[i] for i in s), -len(s)))
         self.active = set(best)
+
+    def _weights(self):
+        """Marginal utility of one unit of service of BSS i: d/dx_i [n_i u(x_i / n_i)] = (x_i / n_i)^(-alpha); alpha 1 is the PF weight
+        n_i / x_i. With floors, the virtual queues add beta * q_i in units of the mean weight."""
+        w = (np.maximum(self.x, EPS_MBPS) / self.counts) ** (-self.l2.alpha)
+        if self.floors is not None:
+            w = w + self.beta * self.q * float(np.mean(w))
+        return w
 
     def cw(self):
         cw = super().cw().copy()
@@ -314,9 +320,7 @@ class QCsma:
         b.observe(recs)
         if b.t % b.period or b.decisions <= b.hold_all or b.decisions == was:
             return
-        w = b.counts / np.maximum(b.x, EPS_MBPS)
-        if b.floors is not None:
-            w = w + b.beta * b.q * float(np.mean(w))
+        w = b._weights()
         undecided, active = set(range(self.n)), set()
         while undecided:                                   # rounds of local maxima among the undecided (a maximal independent set)
             win = {i for i in undecided if all((w[i], -i) > (w[j], -j) for j in self.aud[i] if j != i and j in undecided)}
