@@ -153,3 +153,12 @@ Not validated yet: S7/S8 cells in the search driver
 - `--cwExpLo/--cwExpHi` (default 0 and 6) set the controller exponent range; wide runs use `--cwLo 4 --cwHi 32767 --cwExpLo -2 --cwExpHi 11`. Defaults keep old runs unchanged (DAC 5 s run: same per-AP rewards before and after).
 - Smoke (S4, 20 s, `--check`): both modes PASS, 2000 steps. Not tuned yet.
 - Information level: L2 sees every BSS goodput, L3 the hearing graph (class A online, breaks ADR-0002 isolation by design).
+
+### Phase 1 additions (2026-11-19)
+
+- Floor guard: `--floors a,b,c` with `--lyFloorMu` (L2 subtracts mu x sum of relative shortfalls below the floors from its utility and uses it in the accept/revert guard); L3 keeps per-AP virtual queues (`--lyBeta`) that raise the weight of an AP that was under its floor, so the set choice duty-cycles towards it. This replaces the separate fixed-phase duty cycle of the plan: the F3 schedule is a fixed duty cycle, the queues find one online.
+- `--mode qcsma`: local L3, each AP joins the active set in rounds when it has the largest weight among the undecided APs it hears (maximal independent set). Same set as `coord` on S4; they can differ on larger graphs.
+- `--mode kwdirect`: KW+ without L1, CW = 64 x 2^theta, theta limit 8.
+- `--lyDetect`: Page-Hinkley detector on per-AP goodput and active STAs; on a change L2 restarts (offsets 0, step size restored) and L3 clears queues and warms up again.
+- Local checks: all four layered modes PASS `--check` on S4 (20 s), coord/kwdirect on S2, coord with floors on S5a, qcsma on S8 phase 3 (6 s); old DAC trace rewards unchanged. Behaviour is untuned.
+- BLADE is not on this branch (it is on feature/v3.8.0-m2b, commit 4f6572b); it comes in with the rivals in Phase 2.
