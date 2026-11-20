@@ -1,11 +1,11 @@
 {
- "wave": "w2e",
- "packs": ".github/waves/w2/e-packs.json",
- "image": "ghcr.io/sohanroy676/mac-world-run@sha256:171d4f1a689495364148d2799da5b660d3b4c7814f1399aa79ca6b89f9288407",
- "max_parallel": 10,
+ "wave": "w2f",
+ "packs": ".github/waves/w2/f-packs.json",
+ "image": "ghcr.io/sohanroy676/mac-world-run@sha256:b936aba42c8128d0244dcbdc72f8f1ca341fac7a16e3466b4f249e8e0a862f90",
+ "max_parallel": 3,
  "shard": 0,
  "cap_lab_h": 2500,
- "spent_lab_h": 1334,
+ "spent_lab_h": 1347,
  "shards": [
   {
    "repo": "sohanroy676/mac-world",
@@ -13,5 +13,5 @@
    "ref": "claude/project-thread-o7nshg"
   }
  ],
- "attempt": 11
+ "attempt": 12
 }
