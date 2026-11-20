@@ -162,3 +162,19 @@ Not validated yet: S7/S8 cells in the search driver
 - `--lyDetect`: Page-Hinkley detector on per-AP goodput and active STAs; on a change L2 restarts (offsets 0, step size restored) and L3 clears queues and warms up again.
 - Local checks: all four layered modes PASS `--check` on S4 (20 s), coord/kwdirect on S2, coord with floors on S5a, qcsma on S8 phase 3 (6 s); old DAC trace rewards unchanged. Behaviour is untuned.
 - BLADE is not on this branch (it is on feature/v3.8.0-m2b, commit 4f6572b); it comes in with the rivals in Phase 2.
+
+## S7 delay objective and class B learner plan (draft, 2026-11-20)
+
+Status: design only, nothing built or run.
+
+### S7 (delay cells s7a: S2 at 0.37 Mbps per STA; s7b: S4 with `--apLoads 1.93,1.0,1.93`)
+- Facts: the trainer already records per-AP delay (`dmean`, `dp95`, `dn` per window, `--delayWindow`, needs `--extraTraces`; `multi_ap.py` parses it). The S7 scoring rule from M1 is the lowest worst-AP p99 delay among settings that deliver at least 99 % of the offered load; BEB is 10.7 ms and the best static is 9.3 ms on s7b, and the cell separates methods weakly (M1 note).
+- Proposal: reuse `KWDirect` with a delay objective: L2 utility u = -ln(max over APs of dp95) minus the existing floor penalty, where the floor is the 99 % delivery rate of each AP's offered load (floors = 0.99 x load). Probe window 0.6 s, so `--delayWindow 0.3` gives about two delay samples per probe. Needs one new option `--lyObjective delay` and the delay fields passed to `KWPlus.observe`.
+- Risk (inference): dp95 over 0.3 s windows is noisy at 0.37 Mbps per STA (few packets per window); a longer window (1 s) may be needed, which slows the SPSA loop. A small tuning wave on seeds 0-3 decides it (about 24 runs, 10 lab-h).
+- Ceiling: static grid per cell already exists for s7b (M1); s7a needs the same grid at 60 s (about 20 settings x 10 seeds, 80 lab-h).
+
+### Class B learners (RAFA, PF learner, Global-CW)
+- Plan D4: 12 seeds each, best seed and top-3 mean, tournament seeds 300-309.
+- Cost estimate (inference from M2c and M3 numbers, uncertain by about 2x): M2c took 58 lab-h for 3 seeds of Global, PF learner and CCOD on S2/S4/S5a at 30 s. At 12 seeds and 60 s that scales about 8x to roughly 460 lab-h; RAFA per-scenario training (6 episodes per cell and alpha, 12 seeds) about 300-500 lab-h; together 800-1,000 lab-h.
+- Compute caveat: learner hashes split by CPU vendor (Intel vs AMD), and Hugging Face Spaces are not available (accounts locked), so learner runs go on GitHub Actions on one account; run all learner training of one family in one wave to keep a single CPU mix per family where possible.
+- Order: (1) cheap pilot, 1 seed x 3 cells x 3 learners (about 40 lab-h) to confirm the trainer runs at 60 s and to measure real time per episode; (2) decide the full class B scope from the pilot and re-cost before launch (Gate L is a separate question for the anchor).
