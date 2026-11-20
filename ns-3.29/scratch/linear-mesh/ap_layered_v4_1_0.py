@@ -209,12 +209,12 @@ class Cascade:
     """L1 + L2."""
 
     def __init__(self, counts, step_time=0.01, beacon=0.1, te=9e-6, tc=242e-6, cw0=64.0, cw_lo=4.0, cw_hi=32767.0,
-                 tau=0.3, alpha=1.0, delta=0.35, eta=0.25, shrink=0.05, tol=0.02, seed=0, floors=None, floor_mu=20.0, detect=False):
+                 tau=0.3, alpha=1.0, delta=0.35, eta=0.25, shrink=0.05, tol=0.02, seed=0, floors=None, floor_mu=20.0, detect=False, det_delta=0.05, det_lam=3.0):
         self.n = len(counts)
         self.l1 = DACw(self.n, step_time, beacon, te, tc, cw0, cw_lo, cw_hi)
         self.l2 = KWPlus(counts, step_time, tau, alpha, delta, eta, shrink, tol, seed=seed, floors=floors, floor_mu=floor_mu)
         self.eta0 = eta
-        self.det = PageHinkley(2 * self.n) if detect else None
+        self.det = PageHinkley(2 * self.n, det_delta, det_lam) if detect else None
         self.changes = 0
         self.cw_lo, self.cw_hi = cw_lo, cw_hi
         self.p_min, self.p_max = 0.005, 0.6
@@ -340,11 +340,11 @@ class KWDirect:
     no L1. theta limit 8 covers CW 4..32767 from cw0 64 (log2 range -4..+9)."""
 
     def __init__(self, counts, step_time=0.01, tau=0.3, alpha=1.0, delta=0.35, eta=0.25, shrink=0.05, tol=0.02, cw0=64.0,
-                 cw_lo=4.0, cw_hi=32767.0, seed=0, floors=None, floor_mu=20.0, detect=False):
+                 cw_lo=4.0, cw_hi=32767.0, seed=0, floors=None, floor_mu=20.0, detect=False, det_delta=0.05, det_lam=3.0):
         self.l2 = KWPlus(counts, step_time, tau, alpha, delta, eta, shrink, tol, theta_lim=8.0, seed=seed, floors=floors, floor_mu=floor_mu)
         self.cw0, self.cw_lo, self.cw_hi = cw0, cw_lo, cw_hi
         self.eta0 = eta
-        self.det = PageHinkley(2 * len(counts)) if detect else None
+        self.det = PageHinkley(2 * len(counts), det_delta, det_lam) if detect else None
         self.changes = 0
 
     def observe(self, recs):

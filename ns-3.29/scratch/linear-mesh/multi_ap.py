@@ -11,7 +11,7 @@ def reshape_obs(obs, n_aps):
     return np.asarray(obs, dtype=np.float32).reshape(n_aps, -1)
 
 
-def parse_ap_info(info, n_aps):
+def parse_ap_info(info, n_aps, blade=False):
     fields = str(info).split("|")
     if len(fields) < 5:
         raise ValueError("no per-AP field in info: %r" % (info,))
@@ -22,7 +22,11 @@ def parse_ap_info(info, n_aps):
     out = []
     for rec in records:
         vals = [float(v) for v in rec.split(",")]
-        out.append(dict(zip(keys, vals)))
+        tail = {}
+        if blade:  # cw.cc --bladeCounts appends bidle,bgaps after every other field
+            tail = {"bidle": vals[-2], "bgaps": vals[-1]}
+            vals = vals[:-2]
+        out.append(dict(zip(keys, vals), **tail))
     return out
 
 

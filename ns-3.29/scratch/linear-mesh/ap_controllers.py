@@ -292,6 +292,52 @@ class DAC:
         return np.clip(np.log2(self.cw) - 4.0, 0.0, 6.0).astype(np.float32)
 
 
+class BLADE:
+    """v3.8.0 (M2b) BLADE stable-state control (Guo et al., NSDI 2026, Sec. 4.3, Eq. 1-5, Algorithm 1 in Appendix E), one controller per AP.
+    MAR = N_tx / (N_tx + N_idle) over N_obs events (paper default 300). When the sample is complete:
+      MAR > MAR_tar: CW = CW + CW max(0, MAR - MAR_max) + M_inc (min(MAR, MAR_max) - MAR_tar) + A_inc
+      else:          CW = min(M_dec - (1 - M_dec)(CW - CWmin)/(CWmax - CWmin), 2 MAR / (MAR_tar + MAR)) CW
+    clipped to [CWmin, CWmax]. Defaults (Algorithm 1): N_obs 300, MAR_tar 0.1, MAR_max 0.35, M_inc 500, M_dec 0.95, A_inc 15.
+    N_idle and N_tx come from cw.cc --bladeCounts: idle backoff slots and backoff gaps (each gap ends at one transmission event) seen on the
+    AP's own radio in the step. Deviations (labelled): (1) this is the paper's "BLADE SC" variant: the fast recovery for collisions (CW/2 after the
+    first failed attempt, A_fail) is not modelled, because it acts per packet and the controller sees 10 ms steps; (2) the paper updates at each ACK
+    once 300 events are counted; here the update runs at the end of the step in which the count reaches N_obs, and the count restarts at 0 (the
+    overshoot within a step is kept in the sample); (3) CW in our units is 16..1024 slots (paper: CWmin 15, CWmax 1023 as attribute values);
+    (4) one controller per AP on its AP radio, the paper's downlink deployment on APs; (5) idle slots are the per-gap floor((gap - 43 us) / 9 us)
+    of cw.cc, not a hardware counter; (6) start CW = CWmin as in Algorithm 1."""
+
+    def __init__(self, n_aps, n_obs=300, mar_tar=0.1, mar_max=0.35, m_inc=500.0, m_dec=0.95, a_inc=15.0, cw0=16.0):
+        self.n = n_aps
+        self.n_obs, self.mar_tar, self.mar_max = n_obs, mar_tar, mar_max
+        self.m_inc, self.m_dec, self.a_inc = m_inc, m_dec, a_inc
+        self.cw = np.full(n_aps, float(cw0))
+        self.n_idle = np.zeros(n_aps)
+        self.n_tx = np.zeros(n_aps)
+        self.updates = 0
+        self.last_mar = np.zeros(n_aps)
+
+    def observe(self, recs):
+        for i, r in enumerate(recs):
+            self.n_idle[i] += r["bidle"]
+            self.n_tx[i] += r["bgaps"]
+            if self.n_idle[i] + self.n_tx[i] < self.n_obs:
+                continue
+            mar = self.n_tx[i] / (self.n_tx[i] + self.n_idle[i])
+            cw = self.cw[i]
+            if mar > self.mar_tar:
+                cw = cw + cw * max(0.0, mar - self.mar_max) + self.m_inc * (min(mar, self.mar_max) - self.mar_tar) + self.a_inc
+            else:
+                beta2 = self.m_dec - (1.0 - self.m_dec) * (cw - CW_MIN) / (CW_MAX - CW_MIN)
+                cw = min(beta2, 2.0 * mar / (self.mar_tar + mar)) * cw
+            self.cw[i] = min(CW_MAX, max(CW_MIN, cw))
+            self.last_mar[i] = mar
+            self.n_idle[i] = self.n_tx[i] = 0.0
+            self.updates += 1
+
+    def cw_exponents(self):
+        return np.clip(np.log2(self.cw) - 4.0, 0.0, 6.0).astype(np.float32)
+
+
 def model_static_cw(n_stas, te=9e-6, tc=257e-6):
     """Patras Eq. 18 with tau ~ 2 / (CW + 1): tau_opt = (1/n) sqrt(2 Te / Tc), CW = 2 / tau_opt - 1, clipped to [16, 1024].
     n = the AP's own number of STAs (local n, plan decision), Te / Tc as in DAC."""
