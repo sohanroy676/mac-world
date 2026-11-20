@@ -64,6 +64,7 @@ parser.add_argument("--lyShrink", type=float, default=0.05, help="cascade/coord:
 parser.add_argument("--lyTol", type=float, default=0.02, help="cascade/coord: L2 guard tolerance (relative)")
 parser.add_argument("--lyFloorMu", type=float, default=20.0, help="cascade/coord/qcsma/kwdirect with --floors: L2 penalty weight on the relative shortfall below each floor")
 parser.add_argument("--lyBeta", type=float, default=0.5, help="coord/qcsma with --floors: weight of the virtual queues in the L3 weights")
+parser.add_argument("--lyObjective", choices=["util", "delay"], default="util", help="kwdirect: L2 objective; delay = -ln(worst-AP mean p95 delay), needs --delayWindow and --extraTraces; floors act as throughput floors")
 parser.add_argument("--lyDetectDelta", type=float, default=0.05, help="Page-Hinkley tolerance (relative)")
 parser.add_argument("--lyDetectLam", type=float, default=3.0, help="Page-Hinkley alarm threshold (relative)")
 parser.add_argument("--lyDetect", action="store_true", help="cascade/coord/qcsma/kwdirect: Page-Hinkley change detector resets L2 and L3")
@@ -546,6 +547,7 @@ try:
                     ly_kw.pop(k)
                 ly_kw["detect"] = args.lyDetect
                 ly_kw["det_delta"], ly_kw["det_lam"] = args.lyDetectDelta, args.lyDetectLam
+                ly_kw["objective"] = args.lyObjective
                 ctrl = KWDirect(counts, **ly_kw)
             else:
                 ly_kw["detect"] = args.lyDetect

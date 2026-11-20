@@ -127,7 +127,11 @@ class KWPlus:
     """L2: SPSA on theta = c + o with shrinkage and an accept/revert guard. See the module docstring."""
 
     def __init__(self, counts, step_time=0.01, tau=0.3, alpha=1.0, delta=0.35, eta=0.25, shrink=0.05, tol=0.02,
-                 theta_lim=4.0, step_cap=0.5, seed=0, floors=None, floor_mu=20.0):
+                 theta_lim=4.0, step_cap=0.5, seed=0, floors=None, floor_mu=20.0, objective="util"):
+        self.objective = objective                         # "util" = station-weighted alpha-fair utility; "delay" = -ln(worst-AP mean p95 delay)
+        self.dsum, self.dw = np.zeros(len(counts)), np.zeros(len(counts))
+        self.dlast = [None] * len(counts)
+        self.d_prev = 1.0
         self.floors = None if floors is None else np.asarray(floors, dtype=np.float64)
         self.mu = floor_mu
         self.n, self.counts = len(counts), np.asarray(counts, dtype=np.float64)
@@ -168,13 +172,28 @@ class KWPlus:
 
     def observe(self, recs):
         self.rx += np.array([r["rx"] for r in recs], dtype=np.float64)
+        if self.objective == "delay":                        # a new delay window shows as a changed (dmean, dp95, dn) tuple with dn > 0
+            for i, r in enumerate(recs):
+                key = (r["dmean"], r["dp95"], r["dn"])
+                if r["dn"] > 0 and key != self.dlast[i]:
+                    self.dsum[i] += r["dp95"] * r["dn"]
+                    self.dw[i] += r["dn"]
+                self.dlast[i] = key
         self.k += 1
         if self.k < self.tau_steps:
             return
         mbps = self.rx * PAYLOAD_BITS / (self.k * self.step_time * 1e6)
         self.rx[:] = 0.0
         self.k = 0
-        u = utility(mbps, self.counts, self.alpha)
+        if self.objective == "delay":
+            have = self.dw > 0
+            if have.any():
+                self.d_prev = float(np.max(self.dsum[have] / self.dw[have]))
+            self.dsum[:] = 0.0
+            self.dw[:] = 0.0
+            u = -float(np.log(max(self.d_prev, 1e-3)))       # ms, kept from the last window when this probe had no sample
+        else:
+            u = utility(mbps, self.counts, self.alpha)
         if self.floors is not None:                          # floor guard: relative shortfall below the floor, summed over the APs
             u -= self.mu * float(np.maximum(0.0, 1.0 - mbps / self.floors).sum())
         if self.stage == "base":
@@ -340,8 +359,8 @@ class KWDirect:
     no L1. theta limit 8 covers CW 4..32767 from cw0 64 (log2 range -4..+9)."""
 
     def __init__(self, counts, step_time=0.01, tau=0.3, alpha=1.0, delta=0.35, eta=0.25, shrink=0.05, tol=0.02, cw0=64.0,
-                 cw_lo=4.0, cw_hi=32767.0, seed=0, floors=None, floor_mu=20.0, detect=False, det_delta=0.05, det_lam=3.0):
-        self.l2 = KWPlus(counts, step_time, tau, alpha, delta, eta, shrink, tol, theta_lim=8.0, seed=seed, floors=floors, floor_mu=floor_mu)
+                 cw_lo=4.0, cw_hi=32767.0, seed=0, floors=None, floor_mu=20.0, detect=False, det_delta=0.05, det_lam=3.0, objective="util"):
+        self.l2 = KWPlus(counts, step_time, tau, alpha, delta, eta, shrink, tol, theta_lim=8.0, seed=seed, floors=floors, floor_mu=floor_mu, objective=objective)
         self.cw0, self.cw_lo, self.cw_hi = cw0, cw_lo, cw_hi
         self.eta0 = eta
         self.det = PageHinkley(2 * len(counts), det_delta, det_lam) if detect else None

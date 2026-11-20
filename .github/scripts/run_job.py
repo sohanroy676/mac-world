@@ -21,7 +21,7 @@ import time
 sys.path.insert(0, os.getcwd())  # summarize_run.py lives in scratch/linear-mesh
 
 
-def write_summary(dst, jid, name, sha, res, secs):
+def write_summary(dst, jid, name, sha, res, secs, log=""):
     """Small per-run record: everything the search driver and the collector need without the trace."""
     import numpy as np
     from summarize_run import summarize
@@ -33,6 +33,7 @@ def write_summary(dst, jid, name, sha, res, secs):
     rec = {"job": jid, "name": name, "check": res, "sha256": sha, "secs": secs, "cfg": cfg,
            "thr_all": mean(0, steps), "thr_policy": mean(300, steps), "thr_half2": mean(steps // 2, steps),
            "cw_mean": [float(np.mean(s["cw"][ap][300:])) for ap in s["aps"]], "loss_policy": float(s["loss_policy"]),
+           "delay": [[int(a), int(n), float(m), float(p50), float(p99)] for a, n, m, p50, p99 in re.findall(r"DELAY AP(\d+) n=(\d+) mean_ms=([\d.]+) p50_ms=([\d.]+) p99_ms=([\d.]+)", open(log).read())] if log else [],
            "cpu": cpu[0] if cpu else "", "commit": os.environ.get("MACWORLD_COMMIT", ""), "image": os.environ.get("MACWORLD_IMAGE", "")}
     json.dump(rec, open(os.path.join(dst, "summary.json"), "w"))
 
@@ -81,7 +82,7 @@ for c in cmds:
         res = "PASS" if "RESULT: PASS" in open(log).read() else "CHECK-NOT-PASS"
         sha = hashlib.sha256(open(os.path.join(d, "trace.csv"), "rb").read()).hexdigest()
         msg += "\n  sha256 trace.csv: " + sha
-        write_summary(dst, jid, name, sha, res, int(time.time() - t0))
+        write_summary(dst, jid, name, sha, res, int(time.time() - t0), log)
         if ref and len(cmds) == 1:
             same = subprocess.call(["cmp", os.path.join(d, "trace.csv"), os.path.join("../../..", ref, "trace.csv")]) == 0
             msg += "\n  cmp with %s: %s" % (ref, "IDENTICAL" if same else "DIFFERENT")
