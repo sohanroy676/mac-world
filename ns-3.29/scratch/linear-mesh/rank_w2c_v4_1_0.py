@@ -18,7 +18,7 @@ for f in sys.argv[1:]:
     for l in open(f):
         r = json.loads(l); c = r["cfg"]
         if r["check"] != "PASS" or c["mode"] == "beb": continue
-        rows[(cell_of(c), c["lyAlpha"], c["mode"], c["lyEta"], c["lyDelta"], c["lyBeta"] if c["mode"] == "coord" else 0)][c["seed"]] = r["thr_half2"]
+        rows[(cell_of(c), c["lyAlpha"], c["mode"], c["lyEta"], c["lyDelta"], c["lyBeta"] if c["mode"] == "coord" else 0, c["lyTau"])][c["seed"]] = r["thr_half2"]
 best = {}
 for key, d in sorted(rows.items(), key=lambda kv: str(kv[0])):
     cell, alpha = key[0], key[1]
@@ -28,7 +28,7 @@ for key, d in sorted(rows.items(), key=lambda kv: str(kv[0])):
     mt = [float(np.mean([v[i] for v in d.values()])) for i in range(len(counts))]
     ok = feasible(mt, FLOORS[cell], 0.05)
     sh = (np.mean(us) - BEB[(cell, int(alpha))]) / (CEIL[(cell, int(alpha))] - BEB[(cell, int(alpha))])
-    print("%s a%g %-8s e%.2f d%.2f b%.1f U %9.3f share %5.2f feasible %s" % (cell, alpha, key[2], key[3], key[4], key[5], np.mean(us), sh, ok))
+    print("%s a%g %-8s e%.2f d%.2f b%.1f tau%.1f U %9.3f share %5.2f feasible %s" % (cell, alpha, key[2], key[3], key[4], key[5], key[6], np.mean(us), sh, ok))
     if ok and sh > best.get((cell, alpha, key[2]), (-9,))[0]:
         best[(cell, alpha, key[2])] = (sh, key[3:])
 print("\nBest feasible share per cell, alpha, mode:")
