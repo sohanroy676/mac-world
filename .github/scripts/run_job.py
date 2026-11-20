@@ -88,6 +88,8 @@ for c in cmds:
             if not same:
                 res = "DIFFERENT"
     msg += "\n  check: " + res
+    if res != "PASS":  # v4.1.0: a failed command prints the end of its trainer log so the cause is readable in the job log
+        msg += "\n  log tail:\n" + "".join("    " + l for l in open(log).readlines()[-40:])
     print(msg, flush=True)
     lines.append(msg)
     ok = ok and res == "PASS"
