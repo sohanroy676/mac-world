@@ -1,4 +1,4 @@
-shard 0 sohanroy676/mac-world: no release wave-w2j-s0 (404)
+shard 0 sohanroy676/mac-world: release wave-w2j-s0 read
 shard 0 sohanroy676/mac-world runs: not readable (404)
-9 jobs in the batch, 0 complete, 0 new records, 9 missing, 0 hash mismatches []
-collector exit 2, 2026-11-20T16:31:16Z, commit 3037da0a90fabb8349bf78cbec091216ff77b397
+9 jobs in the batch, 9 complete, 15 new records, 0 missing, 0 hash mismatches []
+collector exit 0, 2026-11-20T17:04:42Z, commit 5788fc71b538ec77b0459b7d851f6a81092ba415
