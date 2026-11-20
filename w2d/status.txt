@@ -1,0 +1,4 @@
+shard 0 sohanroy676/mac-world: release wave-w2d-s0 read
+shard 0 sohanroy676/mac-world runs: not readable (404)
+56 jobs in the batch, 56 complete, 56 new records, 0 missing, 0 hash mismatches []
+collector exit 0, 2026-11-20T00:04:21Z, commit 494956b393f3718ae5962f39fc33bd50814b9f17
