@@ -64,7 +64,7 @@ parser.add_argument("--lyShrink", type=float, default=0.05, help="cascade/coord:
 parser.add_argument("--lyTol", type=float, default=0.02, help="cascade/coord: L2 guard tolerance (relative)")
 parser.add_argument("--lyFloorMu", type=float, default=20.0, help="cascade/coord/qcsma/kwdirect with --floors: L2 penalty weight on the relative shortfall below each floor")
 parser.add_argument("--lyBeta", type=float, default=0.5, help="coord/qcsma with --floors: weight of the virtual queues in the L3 weights")
-parser.add_argument("--lyDetect", action="store_true", help="cascade/coord/qcsma: Page-Hinkley change detector resets L2 and L3")
+parser.add_argument("--lyDetect", action="store_true", help="cascade/coord/qcsma/kwdirect: Page-Hinkley change detector resets L2 and L3")
 parser.add_argument("--lyPeriod", type=int, default=20, help="coord: env steps per L3 decision")
 parser.add_argument("--lyMute", type=float, default=8192.0, help="coord: CW of a muted BSS")
 parser.add_argument("--cwHi", type=int, default=1024, help="v4.1.0 cw.cc --cwHi: upper CW clamp, at most 32767")
@@ -532,6 +532,7 @@ try:
             if args.mode == "kwdirect":
                 for k in ("beacon", "te", "tc"):
                     ly_kw.pop(k)
+                ly_kw["detect"] = args.lyDetect
                 ctrl = KWDirect(counts, **ly_kw)
             else:
                 ly_kw["detect"] = args.lyDetect

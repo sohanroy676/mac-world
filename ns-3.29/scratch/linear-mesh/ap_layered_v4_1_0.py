@@ -340,11 +340,18 @@ class KWDirect:
     no L1. theta limit 8 covers CW 4..32767 from cw0 64 (log2 range -4..+9)."""
 
     def __init__(self, counts, step_time=0.01, tau=0.3, alpha=1.0, delta=0.35, eta=0.25, shrink=0.05, tol=0.02, cw0=64.0,
-                 cw_lo=4.0, cw_hi=32767.0, seed=0, floors=None, floor_mu=20.0):
+                 cw_lo=4.0, cw_hi=32767.0, seed=0, floors=None, floor_mu=20.0, detect=False):
         self.l2 = KWPlus(counts, step_time, tau, alpha, delta, eta, shrink, tol, theta_lim=8.0, seed=seed, floors=floors, floor_mu=floor_mu)
         self.cw0, self.cw_lo, self.cw_hi = cw0, cw_lo, cw_hi
+        self.eta0 = eta
+        self.det = PageHinkley(2 * len(counts)) if detect else None
+        self.changes = 0
 
     def observe(self, recs):
+        if self.det is not None:
+            if self.det.update([r["rx"] for r in recs] + [r.get("active", 0) for r in recs]):
+                self.changes += 1
+                self.l2.restart(self.eta0)
         self.l2.observe(recs)
 
     def cw(self):
