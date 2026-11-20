@@ -178,3 +178,9 @@ Status: design only, nothing built or run.
 - Cost estimate (inference from M2c and M3 numbers, uncertain by about 2x): M2c took 58 lab-h for 3 seeds of Global, PF learner and CCOD on S2/S4/S5a at 30 s. At 12 seeds and 60 s that scales about 8x to roughly 460 lab-h; RAFA per-scenario training (6 episodes per cell and alpha, 12 seeds) about 300-500 lab-h; together 800-1,000 lab-h.
 - Compute caveat: learner hashes split by CPU vendor (Intel vs AMD), and Hugging Face Spaces are not available (accounts locked), so learner runs go on GitHub Actions on one account; run all learner training of one family in one wave to keep a single CPU mix per family where possible.
 - Order: (1) cheap pilot, 1 seed x 3 cells x 3 learners (about 40 lab-h) to confirm the trainer runs at 60 s and to measure real time per episode; (2) decide the full class B scope from the pilot and re-cost before launch (Gate L is a separate question for the anchor).
+
+### Learner pilot cost check (Wave 2j, 2026-11-20)
+- Batch: `.github/scripts/w2j_batch.py`, 9 jobs = cells s2/s4/s5a x RAFA (per-scenario, 6 episodes x 15 s, lambda 1, floors from validation BEB), Global and PF learner (12 episodes x 15 s); training seed 2000 only; one 60 s eval (seed 0, alpha 1).
+- Cost (fact from the batch generator, w = 1.1 x simulated s): RAFA 165 w, Global/PF 264 w each, total 12.6 lab-h on one account (below the 40 lab-h in the plan). Max about 3 packs of 40 min at 3 parallel.
+- Purpose: confirm the trainers run at 60 s eval, measure wall time per episode and per eval, and check that the actor files load. No ranking claim comes from 1 seed.
+- Full class B re-cost happens after the pilot using the measured wall times (estimate stays 800-1,000 lab-h until then).
