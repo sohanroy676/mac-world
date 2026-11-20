@@ -184,3 +184,8 @@ Status: design only, nothing built or run.
 - Cost (fact from the batch generator, w = 1.1 x simulated s): RAFA 165 w, Global/PF 264 w each, total 12.6 lab-h on one account (below the 40 lab-h in the plan). Max about 3 packs of 40 min at 3 parallel.
 - Purpose: confirm the trainers run at 60 s eval, measure wall time per episode and per eval, and check that the actor files load. No ranking claim comes from 1 seed.
 - Full class B re-cost happens after the pilot using the measured wall times (estimate stays 800-1,000 lab-h until then).
+
+### Analysis script (2026-11-20)
+- `ns-3.29/scratch/linear-mesh/maxcw_analysis_v4_1_0.py`: per-cell ceiling share (paired BEB per seed), feasibility with tol 0.05, one-sided non-inferiority (margin 0.05 of the BEB-to-ceiling gap) and two-sided paired t of a target vs each rival, Holm over rivals. Reuses `gc_analysis` (utility, paired_t, noninferior_p, holm).
+- Rule (decision): an infeasible seed counts as share 0. Smoke on Wave 2h (S4 alpha 0, 9 seeds): kwdirect share 1.014 (sd 0.17), DAC 1.006 (sd 0.36), difference 0.022 +- 0.41, non-inferiority p 0.35 (not shown at n=9, margin 0.05).
+- Not yet done: worst-cell aggregation over cells, Claim-1 intersection-union across cells (use `gc_analysis.intersection_union_p`), sample-size calculation from tournament variance.
