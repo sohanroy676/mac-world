@@ -41,6 +41,10 @@ jobs:
             done < /tmp/art/list.txt
             echo "read $(wc -l < /tmp/art/list.txt) artifacts of run $RUN, $(cat /tmp/art/sum/*.jsonl | wc -l) summary lines, tarballs: $(du -sh /tmp/art | cut -f1)" | tee /tmp/c/$WAVE/status.txt
             LOCAL="--local /tmp/art/sum"
+            # keep the trained actors (artifacts expire after 7 days): branch wave-actors, <wave>/<job>/actors/
+            mkdir -p /tmp/actors
+            for t in /tmp/art/*/*.tar.gz; do tar -xzf "$t" -C /tmp/actors --wildcards '*/actors/*' 2>/dev/null; done
+            echo "actors: $(find /tmp/actors -type f | wc -l) files, $(du -sh /tmp/actors | cut -f1)" | tee -a /tmp/c/$WAVE/status.txt
           fi
           python3 .github/scripts/collect_wave.py $CFG --out /tmp/c/$WAVE/summaries.jsonl $LOCAL 2>&1 | tee -a /tmp/c/$WAVE/status.txt
           echo "collector exit ${PIPESTATUS[0]}, $(date -u +%FT%TZ), commit ${{ github.sha }}" >> /tmp/c/$WAVE/status.txt
@@ -53,5 +57,16 @@ jobs:
             git checkout -q --orphan wave-collected && git rm -rfq .
           fi
           mkdir -p $WAVE && cp /tmp/c/$WAVE/* $WAVE/ && git add $WAVE
-          git commit -q -m "wave: collect $WAVE" || exit 0
+          git commit -q -m "wave: collect $WAVE" || true
           git push -q origin wave-collected
+          if [ -d /tmp/actors ] && [ -n "$(ls -A /tmp/actors)" ]; then
+            git fetch -q origin wave-actors || true
+            if git rev-parse -q --verify FETCH_HEAD > /dev/null && git ls-remote --exit-code origin refs/heads/wave-actors > /dev/null; then
+              git checkout -q -B wave-actors FETCH_HEAD
+            else
+              git checkout -q --orphan wave-actors && git rm -rfq .
+            fi
+            mkdir -p $WAVE && cp -r /tmp/actors/. $WAVE/ && git add $WAVE
+            git commit -q -m "wave: actors $WAVE" || true
+            git push -q origin wave-actors
+          fi
