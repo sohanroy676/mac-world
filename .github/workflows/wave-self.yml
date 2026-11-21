@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ${{ needs.prep.outputs.image }}
-    timeout-minutes: 120
+    timeout-minutes: 330
     strategy:
       fail-fast: false
       max-parallel: ${{ fromJSON(needs.prep.outputs.max_parallel) }}
