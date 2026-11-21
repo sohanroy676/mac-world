@@ -49,7 +49,26 @@ act_dir = os.path.abspath(os.path.join("results", "actors-" + jid))
 dst_root = os.path.join(out, jid)
 os.makedirs(dst_root, exist_ok=True)
 lines, ok, last_run = [], True, ""
+fetched = False
 for c in cmds:
+    if "fetch" in c:  # v4.1.0 stage 2: download trained actors from branch wave-actors into {ACT} (public repo)
+        import urllib.request
+        os.makedirs(act_dir, exist_ok=True)
+        for f in c["fetch"]["files"]:
+            url = "https://raw.githubusercontent.com/%s/wave-actors/%s/%s" % (os.environ.get("GITHUB_REPOSITORY", "sohanroy676/mac-world"), c["fetch"]["src"], f)
+            for k in range(4):
+                try:
+                    data = urllib.request.urlopen(url, timeout=60).read()
+                    break
+                except Exception as e:
+                    if k == 3:
+                        raise
+                    time.sleep(5 * (k + 1))
+            open(os.path.join(act_dir, f), "wb").write(data)
+        fetched = True
+        lines.append("%s/fetch: %d files from %s" % (jid, len(c["fetch"]["files"]), c["fetch"]["src"]))
+        print(lines[-1], flush=True)
+        continue
     name, args = c["name"], [a.replace("{ACT}", act_dir).replace("{LAST}", last_run) for a in c["args"]]
     script = "OSCAR_multi_ap_train.py"
     if args and args[0].endswith(".py"):  # probe jobs: first arg is a script in scratch/linear-mesh
@@ -96,7 +115,7 @@ for c in cmds:
     ok = ok and res == "PASS"
     if not ok:
         break
-if os.path.isdir(act_dir):
+if os.path.isdir(act_dir) and not fetched:
     shutil.copytree(act_dir, os.path.join(dst_root, "actors"))
 text = "\n".join(lines)
 open(os.path.join(dst_root, "result.txt"), "w").write(text + "\n")
