@@ -1,4 +1,3 @@
-shard 0 sohanroy676/mac-world: no release wave-w2k-s0 (404)
-shard 0 sohanroy676/mac-world runs: not readable (404)
-108 jobs in the batch, 0 complete, 0 new records, 108 missing, 0 hash mismatches []
-collector exit 2, 2026-11-21T07:22:34Z, commit ef0949082c6f67315ec516288741630b523238d9
+read 29 artifacts of run 44799613858, 328 summary lines, tarballs: 823M
+108 jobs in the batch, 82 complete, 328 new records, 26 missing, 0 hash mismatches []
+collector exit 2, 2026-11-21T07:25:03Z, commit 15e391ebbed207845708283d4f6cbbb04146e6d3
