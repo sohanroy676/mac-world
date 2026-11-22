@@ -1,7 +1,7 @@
 {
- "wave": "w4s2",
+ "wave": "w4s3",
  "packs": ".github/waves/w4/s-packs.json",
- "image": "ghcr.io/sohanroy676/mac-world-run@sha256:88daf8d2670f650f36e0e00c8edc0ba6d2da1ba6a2e65483228616c88c181fc0",
+ "image": "ghcr.io/sohanroy676/mac-world-run@sha256:14b997f54883e061d6d780397b554ece918ed6492add8272248f2380f0fbc73f",
  "max_parallel": 18,
  "shard": 0,
  "cap_lab_h": 2500,
@@ -13,5 +13,5 @@
    "ref": "claude/project-thread-o7nshg"
   }
  ],
- "attempt": 26
+ "attempt": 27
 }
