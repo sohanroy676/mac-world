@@ -71,6 +71,8 @@ parser.add_argument("--lyDetect", action="store_true", help="cascade/coord/qcsma
 parser.add_argument("--lyPeriod", type=int, default=20, help="coord: env steps per L3 decision")
 parser.add_argument("--lyMute", type=float, default=8192.0, help="coord: CW of a muted BSS")
 parser.add_argument("--cwHi", type=int, default=1024, help="v4.1.0 cw.cc --cwHi: upper CW clamp, at most 32767")
+parser.add_argument("--cwGateC", action="store_true", help="v4.1.0 Gate C: apply agent/controller CW only every --gateCEvery steps, rounded to 2^k-1 (cw.cc --cwGateC)")
+parser.add_argument("--gateCEvery", type=int, default=10)
 parser.add_argument("--cwHold", action="store_true", help="v4.1.0 static: rewrite the CW to every BSS each step, so STAs keep the exact value between beacons (cw.cc --cwHold)")
 parser.add_argument("--schedA", default="", help="v4.1.0 static: two-phase schedule, 1-based APs active in phase A, e.g. 1,3; the others use --schedMuteCw (cw.cc --schedA)")
 parser.add_argument("--schedB", default="", help="v4.1.0 static: 1-based APs active in phase B (default: the APs not in --schedA)")
@@ -205,6 +207,10 @@ assert (args.cwLo, args.cwHi) == (16, 1024) or args.mode in ("static", "cascade"
 assert not (args.cwHold or args.schedA) or (args.mode == "static" and not args.cwMinOnly), "--cwHold/--schedA: static mode only, without --cwMinOnly"
 assert bool(args.schedA) == (args.schedPeriodSteps > 0) and (not args.schedA or 1 <= args.schedASteps < args.schedPeriodSteps), "--schedA needs 1 <= --schedASteps < --schedPeriodSteps"
 SCHED = None
+if args.cwGateC:
+    assert not static_cws and args.mode not in ("beb", "idlesense"), "--cwGateC: agent/controller modes only"
+    sim_args["cwGateC"] = "true"
+    sim_args["gateCEvery"] = args.gateCEvery
 if static_cws:
     sim_args["apCws"] = args.apCws
     if (args.cwLo, args.cwHi) != (16, 1024):

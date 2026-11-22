@@ -67,6 +67,8 @@ std::vector<bool> g_schedB;        // --schedB: APs active in phase B (default: 
 uint32_t g_schedPeriodSteps = 0;   // --schedPeriodSteps: schedule period in env steps
 uint32_t g_schedASteps = 0;        // --schedASteps: length of phase A in env steps
 uint32_t g_schedMuteCw = 32767;    // --schedMuteCw: CW of an AP outside its phase
+bool g_cwGateC = false;            // --cwGateC: agent CW actions applied every g_gateCEvery steps, rounded to 2^k-1 (beacon-like update)
+uint32_t g_gateCEvery = 10;        // 10 steps x 10 ms = 100 ms, the nearest step multiple to the 102.4 ms beacon interval
 uint64_t g_execCalls = 0;          // number of multi-AP MyExecuteActions calls so far
 
 // CW of AP `ap` in a static (--apCws) run during env step `call` (0-based; action call k opens step k): its own CW, or the mute CW outside its phase.
@@ -423,7 +425,20 @@ bool MyExecuteActions(Ptr<OpenGymDataContainer> action)
             cw = min(g_cwHi, max(cw, g_cwLo));
             // v3.1.0: with --apCws the static CW set in set_phy stays; agent actions must not overwrite it.
             if (!dry_run && g_apCwOverride.empty())
-                setApCw(ap, cw, g_cwMinOnly ? max(cw, 1023u) : cw);
+            {
+                if (g_cwGateC)
+                {
+                    // v4.1.0 Gate C: the AP advertises CW = 2^ECW-1 once per update period; STAs follow at the next beacon.
+                    // Simplification (fact): the rounded value is written to AP and STAs at the same step, no beacon delay.
+                    if (g_execCalls % g_gateCEvery == 0)
+                    {
+                        const uint32_t r = edcaRoundedCw(cw);
+                        setApCw(ap, r, r);
+                    }
+                }
+                else
+                    setApCw(ap, cw, g_cwMinOnly ? max(cw, 1023u) : cw);
+            }
             else if (!dry_run && (g_cwHold || g_schedPeriodSteps > 0))
             {
                 // v4.1.0: static runs only. The schedule switches CW at step boundaries; --cwHold rewrites it every step.
@@ -1580,6 +1595,8 @@ int main(int argc, char *argv[])
     cmd.AddValue("cwLo", "v4.1.0: lower CW clamp for --apCws and multi-AP agent actions. Default: 16", g_cwLo);
     cmd.AddValue("cwHi", "v4.1.0: upper CW clamp for --apCws and multi-AP agent actions (at most 32767). Default: 1024", g_cwHi);
     cmd.AddValue("cwHold", "v4.1.0: with --apCws, rewrite each AP's CW to its BSS every env step so STAs keep the exact value (needs Gym stepping). Default: false", g_cwHold);
+    cmd.AddValue("cwGateC", "v4.1.0 Gate C: apply multi-AP agent CW actions only every --gateCEvery steps and rounded down to 2^k-1. Default: false", g_cwGateC);
+    cmd.AddValue("gateCEvery", "v4.1.0: update period in env steps for --cwGateC. Default: 10", g_gateCEvery);
     cmd.AddValue("schedA", "v4.1.0: two-phase CW schedule for --apCws runs: 1-based APs that use their CW in phase A; the others use --schedMuteCw. Default: empty = no schedule", schedAArg);
     cmd.AddValue("schedB", "v4.1.0: 1-based APs that use their CW in phase B. Default: empty = the APs not in --schedA", schedBArg);
     cmd.AddValue("schedPeriodSteps", "v4.1.0: schedule period in env steps", g_schedPeriodSteps);

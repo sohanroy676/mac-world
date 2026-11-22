@@ -189,3 +189,9 @@ Status: design only, nothing built or run.
 - `ns-3.29/scratch/linear-mesh/maxcw_analysis_v4_1_0.py`: per-cell ceiling share (paired BEB per seed), feasibility with tol 0.05, one-sided non-inferiority (margin 0.05 of the BEB-to-ceiling gap) and two-sided paired t of a target vs each rival, Holm over rivals. Reuses `gc_analysis` (utility, paired_t, noninferior_p, holm).
 - Rule (decision): an infeasible seed counts as share 0. Smoke on Wave 2h (S4 alpha 0, 9 seeds): kwdirect share 1.014 (sd 0.17), DAC 1.006 (sd 0.36), difference 0.022 +- 0.41, non-inferiority p 0.35 (not shown at n=9, margin 0.05).
 - Not yet done: worst-cell aggregation over cells, Claim-1 intersection-union across cells (use `gc_analysis.intersection_union_p`), sample-size calculation from tournament variance.
+
+## Gate C mode (`--cwGateC`, v4.1.0, added after Wave 3a)
+- Fact: until now agent and controller runs wrote an exact CW to the AP and its STAs every 10 ms step. A real AP changes its advertised CW at most once per beacon (102.4 ms) and as 2^ECW-1.
+- `--cwGateC` (trainer and `cw.cc`): the multi-AP agent/controller CW is applied only every `--gateCEvery` steps (default 10 = 100 ms, the nearest step multiple to 102.4 ms), rounded down to 2^k-1 with the same `edcaRoundedCw` as the readback check; the value is written to AP and STAs at that step.
+- Simplification (decision): no beacon delay is modelled (STAs get the value at the same step as the AP). Not for static, BEB or IdleSense runs (asserted).
+- Status: code only, not yet validated (needs an image build and a short run with `--check`).
