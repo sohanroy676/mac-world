@@ -1,0 +1,4 @@
+read 1 artifacts of run 44955841313, 25 summary lines, tarballs: 41M
+actors: 0 files, 4.0K
+5 jobs in the batch, 5 complete, 25 new records, 0 missing, 0 hash mismatches []
+collector exit 0, 2026-11-22T01:38:57Z, commit 251cc95f3da43e19dc60549edc6979c89d9f5943
