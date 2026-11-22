@@ -207,6 +207,7 @@ assert (args.cwLo, args.cwHi) == (16, 1024) or args.mode in ("static", "cascade"
 assert not (args.cwHold or args.schedA) or (args.mode == "static" and not args.cwMinOnly), "--cwHold/--schedA: static mode only, without --cwMinOnly"
 assert bool(args.schedA) == (args.schedPeriodSteps > 0) and (not args.schedA or 1 <= args.schedASteps < args.schedPeriodSteps), "--schedA needs 1 <= --schedASteps < --schedPeriodSteps"
 SCHED = None
+gatec_held = {}
 if args.cwGateC:
     assert not static_cws and args.mode not in ("beb", "idlesense"), "--cwGateC: agent/controller modes only"
     sim_args["cwGateC"] = "true"
@@ -657,6 +658,10 @@ try:
                     else:
                         want_cw = (args.schedMuteCw if SCHED and not SCHED[0 if (step - 1) % args.schedPeriodSteps < args.schedASteps else 1][i] else static_cws[i]) if args.mode == "static" else 16 if args.mode == "beb" else int(min(1024, max(
                             16, 2 ** float(np.float32(4) + np.float32(real[i])))))
+                        if args.cwGateC:  # applied every gateCEvery steps as 2^k-1 (cw.cc edcaRoundedCw), held in between
+                            if (step - 1) % args.gateCEvery == 0:
+                                gatec_held[i] = (1 << (want_cw + 1).bit_length() - 1) - 1 if want_cw > 0 else 0
+                            want_cw = gatec_held[i]
                         check(recs[i]["cw_set"] == want_cw and recs[i]["cw_ap"] == want_cw,
                               "AP%d cw %s/%s != %d at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], want_cw, time_step))
                     check(0.0 <= r <= 1.0, "AP%d reward %s out of [0,1]" % (i + 1, r))
