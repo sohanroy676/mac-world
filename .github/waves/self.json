@@ -1,6 +1,6 @@
 {
- "wave": "w4a2",
- "packs": ".github/waves/w4/a2-packs.json",
+ "wave": "w4a3",
+ "packs": ".github/waves/w4/a3-packs.json",
  "image": "ghcr.io/sohanroy676/mac-world-run@sha256:14b997f54883e061d6d780397b554ece918ed6492add8272248f2380f0fbc73f",
  "max_parallel": 20,
  "shard": 0,
@@ -13,5 +13,5 @@
    "ref": "claude/project-thread-o7nshg"
   }
  ],
- "attempt": 29
+ "attempt": 30
 }
