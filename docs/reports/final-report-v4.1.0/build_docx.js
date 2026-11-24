@@ -104,7 +104,10 @@ function render(md) {
     const t = line.trim();
     if (t === "") { i++; continue; }
     let m;
-    if ((m = t.match(/^\{\{include:(.+)\}\}$/))) { render(readMd(m[1])); i++; continue; }
+    if ((m = t.match(/^\{\{include:(.+)\}\}$/))) {
+      if (fs.existsSync(path.join(ROOT, m[1]))) render(readMd(m[1])); else console.warn("missing include (skipped): " + m[1]);
+      i++; continue;
+    }
     if ((m = t.match(/^\{\{results:(\w+)\}\}$/))) {
       const f = `generated/results_${m[1]}.md`;
       render(fs.existsSync(path.join(ROOT, f)) ? readMd(f) : "> Results for this scenario are not available in this build.");

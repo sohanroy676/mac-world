@@ -1,1 +1,14 @@
 sections/10_mentor.md
+sections/30_part2_head.md
+sections/31_background.md
+sections/32_system.md
+sections/33_methods.md
+sections/34_history.md
+sections/35_hidden.md
+sections/36_maxcw.md
+sections/37_compare.md
+sections/38_other.md
+sections/39_limits.md
+sections/40_repro.md
+sections/41_future.md
+sections/42_appendix.md
