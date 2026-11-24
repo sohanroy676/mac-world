@@ -194,4 +194,4 @@ Status: design only, nothing built or run.
 - Fact: until now agent and controller runs wrote an exact CW to the AP and its STAs every 10 ms step. A real AP changes its advertised CW at most once per beacon (102.4 ms) and as 2^ECW-1.
 - `--cwGateC` (trainer and `cw.cc`): the multi-AP agent/controller CW is applied only every `--gateCEvery` steps (default 10 = 100 ms, the nearest step multiple to 102.4 ms), rounded down to 2^k-1 with the same `edcaRoundedCw` as the readback check; the value is written to AP and STAs at that step.
 - Simplification (decision): no beacon delay is modelled (STAs get the value at the same step as the AP). Not for static, BEB or IdleSense runs (asserted).
-- Status: code only, not yet validated (needs an image build and a short run with `--check`).
+- Status: validated by the Gate C smoke run (image built, `--check` passes with `gatec_held`, trace probe confirms 2^k-1 values that change only on the period). Result of the full confirmation: see `docs/results/wave4a-v4.1.0.md` (Gate C costs 0.5-0.56 share on S2).
