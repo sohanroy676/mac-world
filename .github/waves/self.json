@@ -1,10 +1,10 @@
 {
- "wave": "rv",
- "packs": ".github/waves/rep/val-packs.json",
+ "wave": "rs1",
+ "packs": ".github/waves/rep/s1-packs.json",
  "image": "ghcr.io/sohanroy676/mac-world-run@sha256:14b997f54883e061d6d780397b554ece918ed6492add8272248f2380f0fbc73f",
  "max_parallel": 20,
  "shard": 0,
- "cap_lab_h": 40,
+ "cap_lab_h": 700,
  "spent_lab_h": 0,
  "shards": [
   {

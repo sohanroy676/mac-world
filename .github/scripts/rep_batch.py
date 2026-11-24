@@ -38,15 +38,18 @@ def add(jid, cell, cmds, w):
     jobs.append({"id": jid, "w": w, "timeout": int(70 * w + 300), "cmds": cmds})
 
 
+TRACES = []  # stage 2 and rv2 add --extraTraces (retry, active, txfail, idle columns and the per-AP DELAY lines); see main
+
+
 def run_cmd(cell, name, mode, extra, seed, sim, tag, rts=False):
-    args = CELLS[cell]["args"] + ["--stepTime", "0.01", "--check", "--simTime", str(sim), "--mode", mode] + (["--useRts"] if rts else []) + extra + ["--seed", str(seed), "--tag", tag]
+    args = CELLS[cell]["args"] + ["--stepTime", "0.01", "--check", "--simTime", str(sim), "--mode", mode] + (["--useRts"] if rts else []) + TRACES + extra + ["--seed", str(seed), "--tag", tag]
     return {"name": name, "args": args}
 
 
 def single(prefix, cell, name, mode, extra, seed, sim=None, rts=False):
     sim = sim or sim_of(cell)
     tag = "%s-%s-%s-s%d" % (prefix, cell, name, seed)
-    add(tag, cell, [run_cmd(cell, "run", mode, extra, seed, sim, tag, rts)], weight(cell, sim))
+    add(tag, cell, [run_cmd(cell, "run", mode, extra, seed, sim, tag, rts)], weight(cell, sim) * (2.5 if rts and CELLS[cell]["counts"] != [10, 10] else 1))  # RTS/CTS runs cost 1-2.6x (rv: 2C 2.6x, e5 2.6x)
 
 
 def actor_files(cell, learner):
@@ -96,7 +99,7 @@ def stage1():
                 single("rs1", cell, "cw%d" % cw, "static", ["--apCws", ",".join([str(cw)] * len(CELLS[cell]["counts"]))] + STATIC_W, seed)
         for learner in LEARNERS:
             for t in TRAIN_SEEDS:
-                train_job("rs1", cell, learner, t, 3 if cell == "e5" else 12, 120 if cell == "e5" else 15)
+                train_job("rs1", cell, learner, t, 2 if cell == "e5" else 12, 120 if cell == "e5" else 15)
 
 
 def stage2(sel):
@@ -120,13 +123,14 @@ def stage2(sel):
         for learner in LEARNERS:
             for t in TRAIN_SEEDS:
                 src = "rs1/rs1-%s-L-%s-t%d/actors" % (cell, learner, t)
-                for half in (0, 1):
+                per = 1 if cell == "e5" else 5  # e5 evals take about 1 h each (independent agents 30 s per simulated second)
+                for half in range(10 // per):
                     cmds = [{"name": "fetch", "fetch": {"src": src, "files": actor_files(cell, learner)}}]
-                    for seed in list(EVAL_SEEDS)[5 * half:5 * half + 5]:
+                    for seed in list(EVAL_SEEDS)[per * half:per * half + per]:
                         tag = "rs2-%s-L-%s-t%d-s%d" % (cell, learner, t, seed)
-                        args = CELLS[cell]["args"] + ["--stepTime", "0.01", "--check"] + LEARNERS[learner] + ["--simTime", str(sim), "--eval", "--loadActor", "{ACT}", "--fairAlpha", "1", "--seed", str(seed), "--tag", tag]
+                        args = CELLS[cell]["args"] + ["--stepTime", "0.01", "--check"] + TRACES + LEARNERS[learner] + ["--simTime", str(sim), "--eval", "--loadActor", "{ACT}", "--fairAlpha", "1", "--seed", str(seed), "--tag", tag]
                         cmds.append({"name": "eval%d" % seed, "args": args})
-                    add("rs2-%s-L-%s-t%d-h%d" % (cell, learner, t, half), cell, cmds, 5 * weight(cell, sim))
+                    add("rs2-%s-L-%s-t%d-h%d" % (cell, learner, t, half), cell, cmds, per * weight(cell, sim) * (2 if cell == "e5" else 1))
 
 
 def stage2g():
@@ -136,8 +140,25 @@ def stage2g():
         single("rs2", cell, "bebrts", "beb", [], seed, rts=True)
 
 
+def rv2():
+    """extraTraces check (appended to the stage 1 batch): BEB, static, kwdirect and a frozen learner with --extraTraces."""
+    TRACES.append("--extraTraces")
+    single("rv2", "a1a", "beb", "beb", [], 1, 6)
+    single("rv2", "b2c", "bebrts", "beb", [], 1, 6, rts=True)
+    single("rv2", "f6u", "static", "static", ["--apCws", "64,64,64,64"] + STATIC_W, 1, 6)
+    tag = "rv2-a1a-L-pf"
+    targs = CELLS["a1a"]["args"] + ["--stepTime", "0.01", "--check"] + LEARNERS["pf"] + ["--simTime", "4", "--episodes", "1", "--seed", "2000", "--saveActor", "{ACT}", "--tag", tag + "-train"]
+    eargs = CELLS["a1a"]["args"] + ["--stepTime", "0.01", "--check", "--extraTraces"] + LEARNERS["pf"] + ["--simTime", "4", "--eval", "--loadActor", "{ACT}", "--fairAlpha", "1", "--seed", "400", "--tag", tag]
+    add(tag, "a1a", [{"name": "train", "args": targs}, {"name": "eval400", "args": eargs}], 20)
+    TRACES.clear()
+
+
 if __name__ == "__main__":
     cmd, out = sys.argv[1], sys.argv[2]
+    if cmd in ("s2", "s2g"):
+        TRACES.append("--extraTraces")
+    if cmd == "s1":
+        rv2()
     {"val": val, "s1": stage1, "s2g": stage2g}.get(cmd, lambda: stage2(json.load(open(sys.argv[3]))))()
     json.dump({"jobs": jobs}, open(out, "w"))
     print(len(jobs), "jobs, %.0f lab-h (0.2 lab-h per 33 w)" % (sum(j["w"] for j in jobs) / 33.0 * 0.2))
