@@ -1,0 +1,40 @@
+# Builds the run image for one commit (.github/image/Dockerfile) and pushes it to GHCR as
+#   ghcr.io/<owner>/mac-world-run:<commit sha>
+# The digest printed in the job summary goes into .github/waves/dispatch.json ("image"), so every pack of a wave
+# runs the same bytes. The package must be public for the forks to pull it (one-time setting by the repo owner).
+# Trigger: push that touches .github/waves/image.trigger on a work branch, or workflow_dispatch. No schedule.
+name: build-image
+
+on:
+  push:
+    branches: ['feature/v4*', 'claude/project-thread-o7nshg', 'wave/**']
+    paths: ['.github/waves/image.trigger']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+      - name: Build
+        run: |
+          IMAGE="ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/mac-world-run"
+          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+          docker build -f .github/image/Dockerfile --build-arg GIT_SHA="${{ github.sha }}" -t "$IMAGE:${{ github.sha }}" .
+      - name: Check the image (2,3 BEB, 2 s, with --check)
+        run: |
+          docker run --rm "$IMAGE:${{ github.sha }}" bash -c \
+            '$MACWORLD_PY OSCAR_multi_ap_train.py --apStaCounts 2,3 --mode beb --simTime 2 --seed 0 --check 2>&1 | tail -3 && sha256sum results/multi-ap-*/trace.csv' | tee /tmp/check.txt
+          grep -q "RESULT: PASS" /tmp/check.txt
+      - name: Push
+        run: |
+          docker push "$IMAGE:${{ github.sha }}"
+          DIGEST=$(docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE:${{ github.sha }}")
+          { echo "### Run image"; echo '```'; echo "$DIGEST"; cat /tmp/check.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"

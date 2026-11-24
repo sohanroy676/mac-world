@@ -1,0 +1,34 @@
+# Starts one batch of an approved wave on the forks: one workflow_dispatch of wave-run.yml per shard.
+# Trigger: push that touches .github/waves/dispatch.json on a work branch. No schedule.
+# Secrets FORK_TOKEN_0 .. FORK_TOKEN_7: one fine-grained token per fork, permission "Actions: read and write" on that
+# fork only (docs/reference/wave-runbook-v4.1.0.md). A shard whose "repo" is this repository uses the built-in token.
+name: wave-dispatch
+
+on:
+  push:
+    branches: ['feature/v4*', 'claude/project-thread-o7nshg', 'wave/**']
+    paths: ['.github/waves/dispatch.json']
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dispatch shards
+        env:
+          SELF_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FORK_TOKEN_0: ${{ secrets.FORK_TOKEN_0 }}
+          FORK_TOKEN_1: ${{ secrets.FORK_TOKEN_1 }}
+          FORK_TOKEN_2: ${{ secrets.FORK_TOKEN_2 }}
+          FORK_TOKEN_3: ${{ secrets.FORK_TOKEN_3 }}
+          FORK_TOKEN_4: ${{ secrets.FORK_TOKEN_4 }}
+          FORK_TOKEN_5: ${{ secrets.FORK_TOKEN_5 }}
+          FORK_TOKEN_6: ${{ secrets.FORK_TOKEN_6 }}
+          FORK_TOKEN_7: ${{ secrets.FORK_TOKEN_7 }}
+        run: |
+          set -o pipefail
+          python3 .github/scripts/dispatch_wave.py .github/waves/dispatch.json "${{ github.repository }}" "${{ github.sha }}" | tee -a "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,17 @@
+{
+ "wave": "w4a4",
+ "packs": ".github/waves/w4/a4-packs.json",
+ "image": "ghcr.io/sohanroy676/mac-world-run@sha256:14b997f54883e061d6d780397b554ece918ed6492add8272248f2380f0fbc73f",
+ "max_parallel": 20,
+ "shard": 0,
+ "cap_lab_h": 5500,
+ "spent_lab_h": 4041,
+ "shards": [
+  {
+   "repo": "sohanroy676/mac-world",
+   "token": 0,
+   "ref": "claude/project-thread-o7nshg"
+  }
+ ],
+ "attempt": 31
+}

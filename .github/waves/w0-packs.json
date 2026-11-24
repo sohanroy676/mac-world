@@ -1,0 +1,6437 @@
+{
+ "lanes": 4,
+ "shards": [
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s0",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s0",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s0",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s0",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s0",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s0",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s0",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s0",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s0",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s0",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s0",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s1",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s1",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s1",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s1",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s1",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s1",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s1",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s1",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s1",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s1",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s1",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s2",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s2",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s2",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s2",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s2",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s2",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s2",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s2",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s2",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s2",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s2",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s3",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s3",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s3",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s3",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s3",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s3",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s3",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s3",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s3",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s3",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s3",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s4",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s4",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s4",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s4",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s4",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s4",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s4",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s4",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s4",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s4",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s4",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s5",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s5",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s5",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s5",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s5",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s5",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s5",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s5",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s5",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s5",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s5",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s6",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s6",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s6",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s6",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s6",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s6",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s6",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s6",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s6",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s6",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s6",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s7",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s7",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s7",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s7",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s7",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s7",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s7",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s7",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s7",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s7",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s7",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s8",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s8",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s8",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s8",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s8",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s8",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s8",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s8",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s8",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s8",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s8",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s9",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s9",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s9",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s9",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s9",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s9",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s9",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s9",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s9",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s9",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s9",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s10",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s10",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s10",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s10",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s10",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s10",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s10",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s10",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s10",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s10",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s10",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s11",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s11",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s11",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s11",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s11",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s11",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s11",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s11",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s11",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s11",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s11",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s12",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s12",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s12",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s12",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s12",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s12",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s12",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s12",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s12",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s12",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s12",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s13",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s13",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s13",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s13",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s13",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s13",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s13",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s13",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s13",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s13",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s13",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s14",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s14",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s14",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s14",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s14",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s14",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s14",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s14",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s14",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s14",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s14",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  [
+   {
+    "id": "p0",
+    "jobs": [
+     {
+      "id": "w0-s2-beb-s15",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-beb-s15",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-f1-512-s15",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "512,512",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-f1-512"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f1-75-s15",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "75,75,75",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-75"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p1",
+    "jobs": [
+     {
+      "id": "w0-s4-f2-31-63-31-s15",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "31,63,31",
+         "--cwMinOnly",
+         "--cwLo",
+         "3",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f2-31-63-31"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-f3-16-s15",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "static",
+         "--apCws",
+         "16,16,16",
+         "--schedA",
+         "1,3",
+         "--schedPeriodSteps",
+         "20",
+         "--schedASteps",
+         "10",
+         "--schedMuteCw",
+         "1023",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f3-16"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s4-dac-s15",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "dac",
+         "--dacTc",
+         "514e-6",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-dac"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-s2-kw-s15",
+      "w": 33.0,
+      "timeout": 2610,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "20,40",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "30",
+         "--mode",
+         "kw",
+         "--kwDelta",
+         "0.7",
+         "--kwEta",
+         "0.03",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s2-kw"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "p2",
+    "jobs": [
+     {
+      "id": "w0-s8p3-beb-s15",
+      "w": 16.5,
+      "timeout": 1455,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--staSchedule",
+         "0:0-4:100:101/2:0-4:100:101",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "15",
+         "--mode",
+         "beb",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s8p3-beb"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "w0-t23-learn-s15",
+      "w": 5.5,
+      "timeout": 685,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "2,3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "5",
+         "--mode",
+         "independent",
+         "--start_timesteps",
+         "50",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-t23-learn"
+        ]
+       }
+      ],
+      "pin": true
+     },
+     {
+      "id": "w0-s4-f1-64-60s-s15",
+      "w": 66.0,
+      "timeout": 4920,
+      "cmds": [
+       {
+        "name": "run",
+        "args": [
+         "--apStaCounts",
+         "10,10,10",
+         "--apHidden",
+         "1-3",
+         "--offeredLoad",
+         "10",
+         "--rewardNorm",
+         "150",
+         "--stepTime",
+         "0.01",
+         "--check",
+         "--simTime",
+         "60",
+         "--mode",
+         "static",
+         "--apCws",
+         "64,64,64",
+         "--cwHold",
+         "--cwLo",
+         "4",
+         "--cwHi",
+         "32767",
+         "--seed",
+         "0",
+         "--tag",
+         "w0-s4-f1-64-60s"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ ]
+}

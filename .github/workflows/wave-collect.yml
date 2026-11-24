@@ -1,0 +1,72 @@
+# Collects the results of the batch in .github/waves/dispatch.json (fork releases and Space branches) and commits
+# them to branch wave-collected of this repository: <wave>/summaries.jsonl and <wave>/status.txt.
+# Trigger: push that touches .github/waves/collect.trigger on a work branch. No schedule.
+name: wave-collect
+
+on:
+  push:
+    branches: ['feature/v4*', 'claude/project-thread-o7nshg', 'wave/**']
+    paths: ['.github/waves/collect.trigger']
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency: wave-collect
+
+jobs:
+  collect:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CFG=.github/waves/dispatch.json; [ -f .github/waves/self.json ] && CFG=.github/waves/self.json
+          WAVE=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['wave'])" $CFG)
+          git fetch -q origin wave-collected || true
+          mkdir -p /tmp/c/$WAVE
+          git show FETCH_HEAD:$WAVE/summaries.jsonl > /tmp/c/$WAVE/summaries.jsonl 2>/dev/null || rm -f /tmp/c/$WAVE/summaries.jsonl
+          set +e
+          LOCAL=""
+          if [ -f .github/waves/collect.run ]; then
+            # release publishing failed (HTTP 403 on 2026-11-21): read the pack artifacts of the run named in collect.run
+            RUN=$(head -1 .github/waves/collect.run | tr -d '[:space:]')
+            mkdir -p /tmp/art/zips /tmp/art/sum
+            gh api --paginate "repos/${{ github.repository }}/actions/runs/$RUN/artifacts?per_page=100" --jq '.artifacts[] | "\(.id) \(.name)"' > /tmp/art/list.txt
+            while read -r id name; do
+              gh api "repos/${{ github.repository }}/actions/artifacts/$id/zip" > /tmp/art/zips/$name.zip && unzip -qo /tmp/art/zips/$name.zip -d /tmp/art/$name || echo "artifact $name: download failed"
+              cp /tmp/art/$name/*.summaries.jsonl /tmp/art/sum/ 2>/dev/null
+            done < /tmp/art/list.txt
+            echo "read $(wc -l < /tmp/art/list.txt) artifacts of run $RUN, $(cat /tmp/art/sum/*.jsonl | wc -l) summary lines, tarballs: $(du -sh /tmp/art | cut -f1)" | tee /tmp/c/$WAVE/status.txt
+            LOCAL="--local /tmp/art/sum"
+            # keep the trained actors (artifacts expire after 7 days): branch wave-actors, <wave>/<job>/actors/
+            mkdir -p /tmp/actors
+            for t in /tmp/art/*/*.tar.gz; do tar -xzf "$t" -C /tmp/actors --wildcards '*/actors/*' 2>/dev/null; done
+            echo "actors: $(find /tmp/actors -type f | wc -l) files, $(du -sh /tmp/actors | cut -f1)" | tee -a /tmp/c/$WAVE/status.txt
+          fi
+          python3 .github/scripts/collect_wave.py $CFG --out /tmp/c/$WAVE/summaries.jsonl $LOCAL 2>&1 | tee -a /tmp/c/$WAVE/status.txt
+          echo "collector exit ${PIPESTATUS[0]}, $(date -u +%FT%TZ), commit ${{ github.sha }}" >> /tmp/c/$WAVE/status.txt
+          set -e
+          cat /tmp/c/$WAVE/status.txt >> "$GITHUB_STEP_SUMMARY"
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git rev-parse -q --verify FETCH_HEAD > /dev/null && git ls-remote --exit-code origin refs/heads/wave-collected > /dev/null; then
+            git checkout -q -B wave-collected FETCH_HEAD
+          else
+            git checkout -q --orphan wave-collected && git rm -rfq .
+          fi
+          mkdir -p $WAVE && cp /tmp/c/$WAVE/* $WAVE/ && git add $WAVE
+          git commit -q -m "wave: collect $WAVE" || true
+          git push -q origin wave-collected
+          if [ -d /tmp/actors ] && [ -n "$(ls -A /tmp/actors)" ]; then
+            git fetch -q origin wave-actors || true
+            if git rev-parse -q --verify FETCH_HEAD > /dev/null && git ls-remote --exit-code origin refs/heads/wave-actors > /dev/null; then
+              git checkout -q -B wave-actors FETCH_HEAD
+            else
+              git checkout -q --orphan wave-actors && git rm -rfq .
+            fi
+            mkdir -p $WAVE && cp -r /tmp/actors/. $WAVE/ && git add $WAVE
+            git commit -q -m "wave: actors $WAVE" || true
+            git push -q origin wave-actors
+          fi

@@ -1,0 +1,114 @@
+# Runs one shard of a wave batch inside the pinned run image and publishes the results as release assets of THIS
+# repository (a fork or the main repository). Nothing is installed at run time; the code is the image's.
+# Started by .github/workflows/wave-dispatch.yml in the main repository through workflow_dispatch, which needs this
+# file on the repository's default branch (fork owners: see docs/reference/wave-runbook-v4.1.0.md). No schedule.
+name: wave-run
+
+on:
+  workflow_dispatch:
+    inputs:
+      upstream:
+        description: 'Repository that holds the batch (owner/name)'
+        required: true
+      commit:
+        description: 'Commit of the upstream repository that holds the packs file'
+        required: true
+      packs:
+        description: 'Path of the packs file (make_packs.py output) in the upstream repository'
+        required: true
+      shard:
+        description: 'Shard number of this repository (0-based)'
+        required: true
+      image:
+        description: 'Run image with digest, ghcr.io/<owner>/mac-world-run@sha256:...'
+        required: true
+      wave:
+        description: 'Wave name, used in the release tag'
+        required: true
+      max_parallel:
+        description: 'Concurrent packs (5 = quarter load, 20 = full)'
+        default: '5'
+
+permissions:
+  contents: write
+
+jobs:
+  prep:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.upstream }}
+          ref: ${{ inputs.commit }}
+          sparse-checkout: .github
+      - id: m
+        run: echo "matrix=$(python3 .github/scripts/make_packs.py "${{ inputs.packs }}" --matrix "${{ inputs.shard }}")" >> "$GITHUB_OUTPUT"
+
+  run:
+    needs: prep
+    name: pack ${{ matrix.pack }}
+    runs-on: ubuntu-24.04
+    container:
+      image: ${{ inputs.image }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: ${{ fromJSON(inputs.max_parallel) }}
+      matrix: ${{ fromJSON(needs.prep.outputs.matrix) }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.upstream }}
+          ref: ${{ inputs.commit }}
+          sparse-checkout: .github
+      - name: Run pack
+        env:
+          MACWORLD_IMAGE: ${{ inputs.image }}
+          NO_BUNDLE: '1'
+        run: |
+          test "$MACWORLD_COMMIT" != unknown
+          PACKS="$GITHUB_WORKSPACE/${{ inputs.packs }}"
+          cd /opt/mac-world/ns-3.29/scratch/linear-mesh
+          export PACK="$(python3 /opt/mac-world/.github/scripts/make_packs.py "$PACKS" --pack "${{ inputs.shard }}" "${{ matrix.pack }}")"
+          LANES="$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['lanes'])" "$PACKS")"
+          ID="${{ inputs.wave }}-s${{ inputs.shard }}-p${{ matrix.pack }}"
+          lscpu | grep -E "Model name" || true
+          $MACWORLD_PY /opt/mac-world/.github/scripts/run_pack.py $MACWORLD_PY "$ID" /tmp/out "$LANES" || echo "PACK_FAILED=1" >> "$GITHUB_ENV"
+          mkdir -p /tmp/up
+          for f in /tmp/out/*/*/summary.json; do [ -f "$f" ] && { cat "$f"; echo; }; done > "/tmp/up/$ID.summaries.jsonl" || true
+          tar -czf "/tmp/up/$ID.tar.gz" -C /tmp/out .
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pack-${{ matrix.pack }}
+          path: /tmp/up/
+          retention-days: 7
+      - name: Fail the pack if a job failed
+        run: test -z "$PACK_FAILED"
+
+  publish:
+    needs: run
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: /tmp/dl
+          merge-multiple: true
+      - name: Publish as release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="wave-${{ inputs.wave }}-s${{ inputs.shard }}"
+          cat /tmp/dl/*.summaries.jsonl > "/tmp/dl/summaries-${{ github.run_id }}.jsonl" || true
+          rm -f /tmp/dl/*.summaries.jsonl
+          gh release view "$TAG" -R "${{ github.repository }}" > /dev/null 2>&1 || \
+            gh release create "$TAG" -R "${{ github.repository }}" --target "${{ github.sha }}" --title "$TAG" \
+              --notes "Results of wave ${{ inputs.wave }}, shard ${{ inputs.shard }}. Upstream ${{ inputs.upstream }}@${{ inputs.commit }}, image ${{ inputs.image }}."
+          gh release upload "$TAG" -R "${{ github.repository }}" --clobber /tmp/dl/*
+          echo "### $TAG: $(wc -l < /tmp/dl/summaries-${{ github.run_id }}.jsonl) runs" >> "$GITHUB_STEP_SUMMARY"

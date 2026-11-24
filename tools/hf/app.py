@@ -2,7 +2,10 @@
 requirements.txt (this folder) and a README with sdk: gradio, app_file: app.py, python_version: 3.7.
 Secret GH_TOKEN (fine-grained, repo sohanroy676/mac-world only, Contents read+write, short expiry) lets the Space push results.
 Variable AUTOSTART = "batch:.github/jobs/lanes-test.json" re-runs setup and the batch on every boot (resumes after a restart).
-Variable REF (default bench/lanes) = branch to clone; LANES (default 16)."""
+Variable REF (default bench/lanes) = branch to clone; LANES (default 16).
+v4.1.0 wave mode: variable WAVE_WORKER=1 (with REF = the branch that holds .github/waves/dispatch.json, UPSTREAM = owner/repo,
+secret GH_TOKEN = fine-grained token, Contents read+write on the repo named in dispatch.json) starts tools/hf/wave_worker.py, which polls dispatch.json and runs
+this Space's shard. The worker is fetched from the branch at every boot, so fixes need no re-upload of this file."""
 import os, subprocess, threading, time
 import gradio as gr
 
@@ -62,6 +65,14 @@ def show():
     tail = open(LOG).read()[-6000:] if os.path.exists(LOG) else "(no log yet)"
     return f"RUNNING: {state['running'] or 'idle'}\n{tail}"
 
+
+UPSTREAM = os.environ.get("UPSTREAM", "sohanroy676/mac-world")
+if os.environ.get("WAVE_WORKER") == "1":
+    def wave():
+        state["running"] = "wave worker"
+        sh(f"mkdir -p {WORK} && curl -sfL https://raw.githubusercontent.com/{UPSTREAM}/{REF}/tools/hf/wave_worker.py -o {WORK}/wave_worker.py && python3 {WORK}/wave_worker.py")
+        state["running"] = ""
+    threading.Thread(target=wave, daemon=True).start()
 
 a = os.environ.get("AUTOSTART", "")
 if a.startswith("batch:"):

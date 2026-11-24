@@ -51,8 +51,34 @@ parser.add_argument("--tag", default="", help="variant label stored in config.js
 parser.add_argument("--print_every", type=int, default=10)
 parser.add_argument("--online", action="store_true", help="sync W&B online (default: offline)")
 parser.add_argument("--wandb_project", default="contention_window")
-parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "drlcw", "ccod"], default="independent")
+parser.add_argument("--mode", choices=["independent", "global", "beb", "central", "shared", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "blade", "drlcw", "ccod", "cascade", "coord", "qcsma", "kwdirect"], default="independent")
 parser.add_argument("--apCws", default="", help="static mode only: fixed CW per AP, e.g. 64,512 (no agent; cw.cc applies it from t=0)")
+parser.add_argument("--cwLo", type=int, default=16, help="v4.1.0 cw.cc --cwLo: lower CW clamp (static --apCws and agent actions)")
+parser.add_argument("--cwExpLo", type=float, default=0.0, help="v4.1.0: lowest CW exponent a of the controller modes (CW = 2^(4+a)); 0 = CW 16")
+parser.add_argument("--cwExpHi", type=float, default=6.0, help="v4.1.0: highest CW exponent a (6 = CW 1024; 11 = CW 32768, with --cwHi 32767)")
+parser.add_argument("--lyTau", type=float, default=0.3, help="cascade/coord: L2 probe window in seconds")
+parser.add_argument("--lyAlpha", type=float, default=1.0, help="cascade/coord: alpha of the utility L2 ascends")
+parser.add_argument("--lyDelta", type=float, default=0.35, help="cascade/coord: L2 probe size (log2 units of the target collision probability)")
+parser.add_argument("--lyEta", type=float, default=0.25, help="cascade/coord: L2 step size")
+parser.add_argument("--lyShrink", type=float, default=0.05, help="cascade/coord: L2 offset shrinkage per update")
+parser.add_argument("--lyTol", type=float, default=0.02, help="cascade/coord: L2 guard tolerance (relative)")
+parser.add_argument("--lyFloorMu", type=float, default=20.0, help="cascade/coord/qcsma/kwdirect with --floors: L2 penalty weight on the relative shortfall below each floor")
+parser.add_argument("--lyBeta", type=float, default=0.5, help="coord/qcsma with --floors: weight of the virtual queues in the L3 weights")
+parser.add_argument("--lyObjective", choices=["util", "delay"], default="util", help="kwdirect: L2 objective; delay = -ln(worst-AP mean p95 delay), needs --delayWindow and --extraTraces; floors act as throughput floors")
+parser.add_argument("--lyDetectDelta", type=float, default=0.05, help="Page-Hinkley tolerance (relative)")
+parser.add_argument("--lyDetectLam", type=float, default=3.0, help="Page-Hinkley alarm threshold (relative)")
+parser.add_argument("--lyDetect", action="store_true", help="cascade/coord/qcsma/kwdirect: Page-Hinkley change detector resets L2 and L3")
+parser.add_argument("--lyPeriod", type=int, default=20, help="coord: env steps per L3 decision")
+parser.add_argument("--lyMute", type=float, default=8192.0, help="coord: CW of a muted BSS")
+parser.add_argument("--cwHi", type=int, default=1024, help="v4.1.0 cw.cc --cwHi: upper CW clamp, at most 32767")
+parser.add_argument("--cwGateC", action="store_true", help="v4.1.0 Gate C: apply agent/controller CW only every --gateCEvery steps, rounded to 2^k-1 (cw.cc --cwGateC)")
+parser.add_argument("--gateCEvery", type=int, default=10)
+parser.add_argument("--cwHold", action="store_true", help="v4.1.0 static: rewrite the CW to every BSS each step, so STAs keep the exact value between beacons (cw.cc --cwHold)")
+parser.add_argument("--schedA", default="", help="v4.1.0 static: two-phase schedule, 1-based APs active in phase A, e.g. 1,3; the others use --schedMuteCw (cw.cc --schedA)")
+parser.add_argument("--schedB", default="", help="v4.1.0 static: 1-based APs active in phase B (default: the APs not in --schedA)")
+parser.add_argument("--schedPeriodSteps", type=int, default=0, help="v4.1.0 static: schedule period in steps of --stepTime")
+parser.add_argument("--schedASteps", type=int, default=0, help="v4.1.0 static: length of phase A in steps")
+parser.add_argument("--schedMuteCw", type=int, default=32767, help="v4.1.0 static: CW of an AP outside its phase")
 parser.add_argument("--check", action="store_true", help="assert per-AP isolation every step")
 parser.add_argument("--algo", choices=["ddpg", "td3"], default="ddpg", help="learner for independent/global/shared (td3: twin critics, delayed actor, target smoothing)")
 parser.add_argument("--varySeeds", action="store_true", help="episode e uses ns-3 seed (seed+1)+1000*e instead of the same seed every episode")
@@ -81,6 +107,12 @@ parser.add_argument("--floorLambda", type=float, default=0.0, help="v4.0.0 --rew
 parser.add_argument("--floors", default="", help="per-AP floors in Mbps for --floorLambda (comma-separated, from the BEB references)")
 parser.add_argument("--poolRR", action="store_true", help="v4.0.0 --scenarioPool: round-robin without replacement (a fresh random order every len(pool) episodes); pool entries may carry per-AP \"floors\" for --floorLambda")
 parser.add_argument("--noiseDist", choices=["gaussian", "gumbel", "gumbel-raw"], default="gaussian", help="v4.0.0 exploration noise on the action, scale max_action*expl_noise: gaussian = N(0,s); gumbel = Gumbel centred to mean 0 with SD s; gumbel-raw = Gumbel(0, scale s), not centred")
+parser.add_argument("--bladeNobs", type=int, default=300, help="blade: events (idle slots + transmission events) per MAR sample (paper Algorithm 1: 300)")
+parser.add_argument("--bladeMarTar", type=float, default=0.1, help="blade: target MAR (paper: 0.1)")
+parser.add_argument("--bladeMarMax", type=float, default=0.35, help="blade: MAR_max (paper: 0.35)")
+parser.add_argument("--bladeMinc", type=float, default=500.0, help="blade: M_inc (paper: 500)")
+parser.add_argument("--bladeMdec", type=float, default=0.95, help="blade: M_dec (paper: 0.95)")
+parser.add_argument("--bladeAinc", type=float, default=15.0, help="blade: A_inc (paper: 15)")
 parser.add_argument("--dacBeacon", type=float, default=0.1, help="dac: update period in seconds (paper: one beacon interval, 0.1 s)")
 parser.add_argument("--dacTe", type=float, default=9e-6, help="dac: empty-slot time Te in seconds (HE slot 9 us)")
 parser.add_argument("--dacTc", type=float, default=257e-6, help="dac: collision duration Tc in seconds (inference for HE 20 MHz MCS 11, see docs/results/m2b-specs-v4.0.0.md)")
@@ -94,7 +126,7 @@ parser.add_argument("--drlRef", default="", help="drlcw: JSON from drlcw_refs.py
 parser.add_argument("--drlInterval", type=float, default=0.5, help="drlcw: decision interval in seconds (paper: 0.5)")
 parser.add_argument("--ccodHist", type=int, default=300, help="ccod: loss-history length fed to the CCOD agent (agents/ddpg, RLinWiFi; CCOD_train.py: 300)")
 args = parser.parse_args()
-if args.obs == "rafa" or args.mode in ("ucbctx", "dac", "drlcw") or args.delayWindow > 0:
+if args.obs == "rafa" or args.mode in ("ucbctx", "dac", "blade", "drlcw", "cascade", "coord", "qcsma", "kwdirect") or args.delayWindow > 0:
     args.extraTraces = True  # idle, Retry and active-STA fields come from cw.cc --extraTraces
 
 # W&B mode must be decided before wandb is imported.
@@ -113,7 +145,8 @@ from agents.our_ddpg.utils import JointReplayBuffer, ReplayBuffer  # noqa: E402
 from config import wandb_entity  # noqa: E402
 from exceptions import AlreadyRunningException  # noqa: E402
 from drlcw import DrlCW  # noqa: E402
-from ap_controllers import DAC, KW, UCB, UCBCtx, parse_hidden  # noqa: E402
+from ap_layered_v4_1_0 import Cascade, Coordinated, KWDirect, QCsma  # noqa: E402
+from ap_controllers import BLADE, DAC, KW, UCB, UCBCtx, parse_hidden  # noqa: E402
 from multi_ap import PAYLOAD_BITS, jain, parse_ap_info, reshape_obs, step_metrics  # noqa: E402
 from wrappers import EnvWrapper  # noqa: E402
 
@@ -124,6 +157,7 @@ steps_per_ep = int(args.simTime / args.stepTime)
 state_dim = action_dim = 1
 max_action = 1
 real_max_action = 6
+EXP_LO, EXP_SPAN = args.cwExpLo, args.cwExpHi - args.cwExpLo  # default 0, 6: the original mapping
 OFFERED_MBPS = args.offeredLoad  # per-STA offered load, cw.cc offeredLoad
 LOADS = [float(x) for x in args.apLoads.split(",")] if args.apLoads else [OFFERED_MBPS] * len(args.apStaCounts.split(","))  # per-AP, per-STA load
 assert len(LOADS) == n and min(LOADS) > 0, "--apLoads: one positive load per AP"
@@ -153,6 +187,8 @@ if args.rewardNorm > 0:
     sim_args["rewardNorm"] = "%g" % args.rewardNorm
 if args.extraTraces:
     sim_args["extraTraces"] = "true"
+if args.mode == "blade":
+    sim_args["bladeCounts"] = "true"  # idle slots and backoff gaps per step for BLADE's MAR
 if args.mode == "drlcw":
     args.delayWindow = args.drlInterval  # cw.cc publishes per-AP delay mean / p95 once per decision interval
 if args.delayWindow > 0:
@@ -165,9 +201,30 @@ if args.staMaxMissedBeacons > 0:
     sim_args["staMaxMissedBeacons"] = args.staMaxMissedBeacons
 static_cws = [int(c) for c in args.apCws.split(",")] if args.apCws else []
 assert (args.mode == "static") == bool(static_cws), "--mode static needs --apCws (and only static takes it)"
-assert not static_cws or (len(static_cws) == n and all(16 <= c <= 1024 for c in static_cws)), "--apCws: one CW in 16..1024 per AP"
+assert 1 <= args.cwLo <= args.cwHi <= 32767, "--cwLo/--cwHi: need 1 <= cwLo <= cwHi <= 32767"
+assert not static_cws or (len(static_cws) == n and all(args.cwLo <= c <= args.cwHi for c in static_cws)), "--apCws: one CW in --cwLo..--cwHi (default 16..1024) per AP"
+assert (args.cwLo, args.cwHi) == (16, 1024) or args.mode in ("static", "cascade", "coord", "qcsma", "kwdirect"), "--cwLo/--cwHi: static and layered controller modes only"
+assert not (args.cwHold or args.schedA) or (args.mode == "static" and not args.cwMinOnly), "--cwHold/--schedA: static mode only, without --cwMinOnly"
+assert bool(args.schedA) == (args.schedPeriodSteps > 0) and (not args.schedA or 1 <= args.schedASteps < args.schedPeriodSteps), "--schedA needs 1 <= --schedASteps < --schedPeriodSteps"
+SCHED = None
+gatec_held = {}
+if args.cwGateC:
+    assert not static_cws and args.mode not in ("beb", "idlesense"), "--cwGateC: agent/controller modes only"
+    sim_args["cwGateC"] = "true"
+    sim_args["gateCEvery"] = args.gateCEvery
 if static_cws:
     sim_args["apCws"] = args.apCws
+    if (args.cwLo, args.cwHi) != (16, 1024):
+        sim_args["cwLo"], sim_args["cwHi"] = args.cwLo, args.cwHi
+    if args.cwHold:
+        sim_args["cwHold"] = "true"
+    if args.schedA:
+        in_a = [str(i + 1) in args.schedA.split(",") for i in range(n)]
+        in_b = [str(i + 1) in args.schedB.split(",") for i in range(n)] if args.schedB else [not a for a in in_a]
+        SCHED = (in_a, in_b)
+        sim_args.update(schedA=args.schedA, schedPeriodSteps=args.schedPeriodSteps, schedASteps=args.schedASteps, schedMuteCw=args.schedMuteCw)
+        if args.schedB:
+            sim_args["schedB"] = args.schedB
 if args.mode in ("beb", "idlesense"):
     sim_args["dryRun"] = "true"  # cw.cc skips setApCw for actions; beb keeps CW 16..1024, idlesense moves it by sensing (cw.cc --idleSense)
 assert not (args.residual or args.obsIdle) or args.mode in ("independent", "shared"), "--residual/--obsIdle only for independent/shared"
@@ -180,7 +237,7 @@ if args.residual:
     sim_args["residual"] = "true"
 if args.obsIdle:
     sim_args["obsIdle"] = "true"
-n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0, "kw": 0, "ucb": 0, "ucbctx": 0, "dac": 0, "drlcw": 0, "ccod": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
+n_agents = {"independent": n, "global": 1, "beb": 0, "central": 0, "shared": 1, "static": 0, "idlesense": 0, "kw": 0, "ucb": 0, "ucbctx": 0, "dac": 0, "blade": 0, "drlcw": 0, "ccod": 0, "cascade": 0, "coord": 0, "qcsma": 0, "kwdirect": 0}[args.mode]  # central: one CentralDDPG object; shared: one DDPG for all APs
 LOCAL_MODES = ("independent", "shared")
 assert args.obs == "loss" or args.mode in LOCAL_MODES, "--obs hist only for independent/shared"
 assert args.alpha == 1.0 or args.mode in LOCAL_MODES, "--alpha only for independent/shared"
@@ -192,7 +249,7 @@ assert args.algo == "ddpg" or args.mode in AGENT_MODES, "--algo td3 only for ind
 assert not (args.saveActor or args.loadActor or args.eval) or args.mode in AGENT_MODES + ("ccod", "drlcw"), "--saveActor/--loadActor/--eval only for independent/global/shared"
 assert args.eval == bool(args.loadActor), "--eval needs --loadActor (and --loadActor needs --eval)"
 assert not (args.eval and args.saveActor), "--eval does not train, so there is nothing to --saveActor"
-assert not args.cwMinOnly or args.mode in AGENT_MODES + ("central",), "--cwMinOnly only for agent modes"
+assert not args.cwMinOnly or args.mode in AGENT_MODES + ("central", "static"), "--cwMinOnly only for agent modes and static (v4.1.0: static CWmin, doubling kept)"
 if args.cwMinOnly:
     sim_args["cwMinOnly"] = "true"
 learning = not args.eval  # eval: frozen actors, no noise, no warm-up, no replay, no training
@@ -257,7 +314,7 @@ def scalar(x):
 
 def agent_loss(i, name):
     """Loss of the agent that acts for AP i (independent: own; global: the shared one; beb: none -> 0)."""
-    if args.mode in ("beb", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "drlcw", "ccod"):
+    if args.mode in ("beb", "static", "idlesense", "kw", "ucb", "ucbctx", "dac", "blade", "drlcw", "ccod", "cascade", "coord", "qcsma", "kwdirect"):
         return 0.0
     if args.mode == "central":
         return scalar(central.actor_losses[i] if name == "actor_loss" else central.critic_loss)
@@ -483,8 +540,30 @@ try:
                          delay_ref=ref.get("delay") or ([float(v) for v in open(args.drlDelayRef).read().split(",")] if args.drlDelayRef else None))
             if args.loadActor:
                 ctrl.load(args.loadActor)
+        elif args.mode == "blade":
+            ctrl = BLADE(n, args.bladeNobs, args.bladeMarTar, args.bladeMarMax, args.bladeMinc, args.bladeMdec, args.bladeAinc)
         elif args.mode == "dac":
             ctrl = DAC(n, args.stepTime, args.dacBeacon, args.dacTe, args.dacTc, args.dacCw0, args.dacPcol)
+        elif args.mode in ("cascade", "coord", "qcsma", "kwdirect"):
+            ly_floors = [float(f) for f in args.floors.split(",")] if args.floors else None
+            ly_kw = dict(step_time=args.stepTime, beacon=args.dacBeacon, te=args.dacTe, tc=args.dacTc, cw0=args.dacCw0, cw_lo=args.cwLo,
+                         cw_hi=args.cwHi, tau=args.lyTau, alpha=args.lyAlpha, delta=args.lyDelta, eta=args.lyEta, shrink=args.lyShrink,
+                         tol=args.lyTol, seed=args.seed + episode, floors=ly_floors, floor_mu=args.lyFloorMu)
+            if args.mode == "kwdirect":
+                for k in ("beacon", "te", "tc"):
+                    ly_kw.pop(k)
+                ly_kw["detect"] = args.lyDetect
+                ly_kw["det_delta"], ly_kw["det_lam"] = args.lyDetectDelta, args.lyDetectLam
+                ly_kw["objective"] = args.lyObjective
+                ctrl = KWDirect(counts, **ly_kw)
+            else:
+                ly_kw["detect"] = args.lyDetect
+                ly_kw["det_delta"], ly_kw["det_lam"] = args.lyDetectDelta, args.lyDetectLam
+                if args.mode == "cascade":
+                    ctrl = Cascade(counts, **ly_kw)
+                else:
+                    cls = Coordinated if args.mode == "coord" else QCsma
+                    ctrl = cls(counts, parse_hidden(args.apHidden), period=args.lyPeriod, mute=args.lyMute, beta=args.lyBeta, **ly_kw)
         S = reshape_obs(env.reset()[0], n)
         if args.mode == "ccod":
             ccod_hist = np.zeros(args.ccodHist, dtype=np.float32)  # network loss history, newest first, 0 before the first step
@@ -520,20 +599,20 @@ try:
             elif args.mode == "ccod":
                 ccod_act = ccod_agent.act(np.array(ccod_obs, dtype=np.float32), ccod_noise)
                 acts[:] = 2.0 * float(np.clip(ccod_act.reshape(-1)[0], 0.0, 6.0)) / real_max_action - 1.0
-            elif args.mode in ("kw", "ucb", "ucbctx", "dac", "drlcw"):
-                acts[:] = 2.0 * ctrl.cw_exponents() / real_max_action - 1.0  # real = real_max * (acts + 1) / 2 = the controller exponent
+            elif args.mode in ("kw", "ucb", "ucbctx", "dac", "blade", "drlcw", "cascade", "coord", "qcsma", "kwdirect"):
+                acts[:] = 2.0 * (ctrl.cw_exponents() - EXP_LO) / EXP_SPAN - 1.0  # real = real_max * (acts + 1) / 2 = the controller exponent
             elif args.mode == "global":
                 if learning and time_step < args.start_timesteps:
                     acts[:] = np.random.uniform(-max_action, max_action)
                 else:
                     a = agents[0].select_action(S_g) + explore_noise(max_action * expl_noise)
                     acts[:] = np.clip(a, -max_action, max_action)[0]
-            real = (real_max_action * (acts + 1) / 2).astype(np.float32)  # beb: ignored by cw.cc (dryRun)
+            real = (EXP_SPAN * (acts + 1) / 2 + EXP_LO).astype(np.float32)  # beb: ignored by cw.cc (dryRun)
 
             obs, _, done, info = env.step(np.array([real], dtype=np.float32))
             S2 = reshape_obs(obs[0], n)
-            recs = parse_ap_info(info[0], n)
-            if args.mode in ("kw", "ucb", "ucbctx", "dac", "drlcw"):
+            recs = parse_ap_info(info[0], n, blade=args.mode == "blade")
+            if args.mode in ("kw", "ucb", "ucbctx", "dac", "blade", "drlcw", "cascade", "coord", "qcsma", "kwdirect"):
                 ctrl.observe(recs)
             if args.mode == "ccod":
                 tx_c, rx_c = sum(q["tx"] for q in recs), sum(q["rx"] for q in recs)
@@ -577,8 +656,12 @@ try:
                         check(16 <= recs[i]["cw_set"] <= 1024 and recs[i]["cw_set"] == recs[i]["cw_ap"],
                               "AP%d cw %s/%s out of range or readback mismatch at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], time_step))
                     else:
-                        want_cw = static_cws[i] if args.mode == "static" else 16 if args.mode == "beb" else int(min(1024, max(
+                        want_cw = (args.schedMuteCw if SCHED and not SCHED[0 if (step - 1) % args.schedPeriodSteps < args.schedASteps else 1][i] else static_cws[i]) if args.mode == "static" else 16 if args.mode == "beb" else int(min(1024, max(
                             16, 2 ** float(np.float32(4) + np.float32(real[i])))))
+                        if args.cwGateC:  # applied every gateCEvery steps as 2^k-1 (cw.cc edcaRoundedCw), held in between
+                            if (step - 1) % args.gateCEvery == 0:
+                                gatec_held[i] = (1 << (want_cw + 1).bit_length() - 1) - 1 if want_cw > 0 else 0
+                            want_cw = gatec_held[i]
                         check(recs[i]["cw_set"] == want_cw and recs[i]["cw_ap"] == want_cw,
                               "AP%d cw %s/%s != %d at t=%d" % (i + 1, recs[i]["cw_set"], recs[i]["cw_ap"], want_cw, time_step))
                     check(0.0 <= r <= 1.0, "AP%d reward %s out of [0,1]" % (i + 1, r))
