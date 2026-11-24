@@ -5,7 +5,7 @@ name: wave-self
 
 on:
   push:
-    branches: ['feature/v4*', 'claude/project-thread-o7nshg', 'wave/**']
+    branches: ['feature/v4*', 'claude/project-thread-o7nshg', 'claude/project-thread-enj71t', 'wave/**']
     paths: ['.github/waves/self.json']
 
 permissions:
