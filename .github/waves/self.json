@@ -1,6 +1,6 @@
 {
- "wave": "rs2a",
- "packs": ".github/waves/rep/s2a-packs.json",
+ "wave": "rs2b",
+ "packs": ".github/waves/rep/s2b-packs.json",
  "image": "ghcr.io/sohanroy676/mac-world-run@sha256:fd70bf0f764cf70345af14eac853db024c304b21f0442238588afbbd993e160a",
  "max_parallel": 20,
  "shard": 0,
