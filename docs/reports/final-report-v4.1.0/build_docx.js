@@ -109,7 +109,7 @@ function render(md) {
       i++; continue;
     }
     if ((m = t.match(/^\{\{results:(\w+)\}\}$/))) {
-      const f = `generated/results_${m[1]}.md`;
+      const f = fs.existsSync(path.join(ROOT, `sections/results/${m[1]}.md`)) ? `sections/results/${m[1]}.md` : `generated/results_${m[1]}.md`;
       render(fs.existsSync(path.join(ROOT, f)) ? readMd(f) : "> Results for this scenario are not available in this build.");
       i++; continue;
     }
