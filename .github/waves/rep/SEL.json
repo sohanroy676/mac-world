@@ -1,0 +1,258 @@
+{
+ "a1a": {
+  "floors": "17.39,17.31",
+  "beb_mean": [
+   17.47,
+   17.31
+  ],
+  "common_a0": 128,
+  "common_a0_feasible": true,
+  "common_a1": 128,
+  "common_a1_feasible": true,
+  "model": "72,72",
+  "prop": "128,128"
+ },
+ "a1b": {
+  "floors": "15.86,16.00",
+  "beb_mean": [
+   15.86,
+   16.13
+  ],
+  "common_a0": 256,
+  "common_a0_feasible": true,
+  "common_a1": 256,
+  "common_a1_feasible": true,
+  "model": "109,109",
+  "prop": "256,256"
+ },
+ "a1c": {
+  "floors": "14.77,15.10",
+  "beb_mean": [
+   14.77,
+   15.42
+  ],
+  "common_a0": 256,
+  "common_a0_feasible": true,
+  "common_a1": 256,
+  "common_a1_feasible": true,
+  "model": "146,146",
+  "prop": "256,256"
+ },
+ "a1d": {
+  "floors": "14.38,14.48",
+  "beb_mean": [
+   14.38,
+   14.58
+  ],
+  "common_a0": 512,
+  "common_a0_feasible": true,
+  "common_a1": 512,
+  "common_a1_feasible": true,
+  "model": "182,182",
+  "prop": "512,512"
+ },
+ "b2a": {
+  "floors": "17.47,17.31,24.26",
+  "beb_mean": [
+   17.47,
+   17.31,
+   38.01
+  ],
+  "common_a0": 128,
+  "common_a0_feasible": true,
+  "common_a1": 128,
+  "common_a1_feasible": true,
+  "model": "72,72,72",
+  "prop": "128,128,128"
+ },
+ "b2b": {
+  "floors": "24.12,17.34,17.20",
+  "beb_mean": [
+   37.83,
+   17.34,
+   17.2
+  ],
+  "common_a0": 128,
+  "common_a0_feasible": true,
+  "common_a1": 128,
+  "common_a1_feasible": true,
+  "model": "72,72,72",
+  "prop": "128,128,128"
+ },
+ "b2c": {
+  "floors": "22.86,1.40,22.86",
+  "beb_mean": [
+   33.64,
+   1.4,
+   33.54
+  ],
+  "common_a0": 128,
+  "common_a0_feasible": true,
+  "common_a1": 256,
+  "common_a1_feasible": true,
+  "model": "109,109,109",
+  "prop": "256,256,256"
+ },
+ "c3a": {
+  "floors": "10.08,10.83,10.71",
+  "beb_mean": [
+   10.08,
+   11.7,
+   10.71
+  ],
+  "common_a0": 256,
+  "common_a0_feasible": true,
+  "common_a1": 256,
+  "common_a1_feasible": true,
+  "model": "72,72,72",
+  "prop": "256,256,256"
+ },
+ "c3b": {
+  "floors": "9.21,9.21,9.03",
+  "beb_mean": [
+   9.3,
+   9.3,
+   9.03
+  ],
+  "common_a0": 512,
+  "common_a0_feasible": true,
+  "common_a1": 512,
+  "common_a1_feasible": true,
+  "model": "146,146,146",
+  "prop": "512,512,512"
+ },
+ "c3c": {
+  "floors": "6.97,7.64,7.64,7.25",
+  "beb_mean": [
+   6.97,
+   7.9,
+   8.45,
+   7.25
+  ],
+  "common_a0": 256,
+  "common_a0_feasible": true,
+  "common_a1": 256,
+  "common_a1_feasible": true,
+  "model": "72,72,72,72",
+  "prop": "256,256,256,256"
+ },
+ "c3d": {
+  "floors": "6.25,6.11,6.45,6.45",
+  "beb_mean": [
+   6.25,
+   6.11,
+   6.74,
+   6.71
+  ],
+  "common_a0": 512,
+  "common_a0_feasible": true,
+  "common_a1": 512,
+  "common_a1_feasible": true,
+  "model": "146,146,146,146",
+  "prop": "512,512,512,512"
+ },
+ "d4a": {
+  "floors": "6.97,7.64,7.64,7.25",
+  "beb_mean": [
+   6.97,
+   7.9,
+   8.45,
+   7.25
+  ],
+  "common_a0": 256,
+  "common_a0_feasible": true,
+  "common_a1": 256,
+  "common_a1_feasible": true,
+  "model": "72,72,72,72",
+  "prop": "256,256,256,256"
+ },
+ "d4b": {
+  "floors": "2.39,4.78,7.17,8.05",
+  "beb_mean": [
+   2.95,
+   5.64,
+   7.28,
+   8.05
+  ],
+  "common_a0": 512,
+  "common_a0_feasible": true,
+  "common_a1": 512,
+  "common_a1_feasible": true,
+  "model": "72,146,219,292",
+  "prop": "205,410,614,819"
+ },
+ "d4c": {
+  "floors": "1.65,4.95,7.76,10.03",
+  "beb_mean": [
+   2.25,
+   6.38,
+   7.76,
+   10.03
+  ],
+  "common_a0": 512,
+  "common_a0_feasible": true,
+  "common_a1": 512,
+  "common_a1_feasible": true,
+  "model": "36,109,182,256",
+  "prop": "128,384,640,896"
+ },
+ "d4d": {
+  "floors": "10.89,7.25,3.62,1.81",
+  "beb_mean": [
+   10.89,
+   9.06,
+   4.92,
+   2.3
+  ],
+  "common_a0": 512,
+  "common_a0_feasible": true,
+  "common_a1": 512,
+  "common_a1_feasible": true,
+  "model": "292,146,72,36",
+  "prop": "1092,546,273,137"
+ },
+ "e5": {
+  "floors": "8.83,9.18,8.97",
+  "beb_mean": [
+   8.83,
+   9.74,
+   8.97
+  ],
+  "common_a0": 512,
+  "common_a0_feasible": true,
+  "common_a1": 512,
+  "common_a1_feasible": true,
+  "model": "182,182,182",
+  "prop": "512,512,512"
+ },
+ "f6s": {
+  "floors": "7.21,7.65,7.65,6.73",
+  "beb_mean": [
+   7.21,
+   8.34,
+   8.3,
+   6.73
+  ],
+  "common_a0": 256,
+  "common_a0_feasible": true,
+  "common_a1": 256,
+  "common_a1_feasible": true,
+  "model": "72,72,72,72",
+  "prop": "256,256,256,256"
+ },
+ "f6u": {
+  "floors": "2.50,5.00,6.25,6.25",
+  "beb_mean": [
+   2.5,
+   5.0,
+   7.5,
+   10.0
+  ],
+  "common_a0": 1024,
+  "common_a0_feasible": true,
+  "common_a1": 1024,
+  "common_a1_feasible": true,
+  "model": "72,72,72,72",
+  "prop": "1024,1024,1024,1024"
+ }
+}
