@@ -1,10 +1,11 @@
 # Post-report TODO (after the MAC-WORLD final report)
 
-Status: not started. Decided with the project owner on 2026-11-24: these are deferred until the final report is merged.
+Status: item 1 simulator support built 2026-11-26 (`--apDir`, ADR-0009, `docs/results/uplink-downlink-v4.2.0.md`); run waves not started (need the owner's lab-hour cap). Items 2-5 not started. Decided with the project owner on 2026-11-24: these are deferred until the final report is merged.
 Labels: **fact** = read in the code, **estimate** = not measured. Mentor scenario numbers refer to the mentor's scenario list.
 
 ## 1. Mixed uplink and downlink traffic (mentor scenario 8)
 - Fact: today every BSS carries constant-rate UDP uplink only; each AP has a UDP receiver and per-AP goodput is counted there (`cw.cc`).
+- Done 2026-11-26: items below except oracle grids and the run wave. Correction: `setApCw` already wrote the AP's own CW (BSS node 0 is the AP), so no controller change was needed.
 - Work: a downlink sender on each AP and receivers on the stations; goodput counted at the stations; the CW controller must also set the AP's own CW (today it writes STA CWs); per-AP direction flag (uplink, downlink, both); new ADR; oracle grids for the new cells.
 - Estimate: 1-2 days to implement and validate; about 150 runs (about 60 lab-hours) for 3-4 APs, uplink / downlink / both, 5 methods, 10 seeds.
 

@@ -41,6 +41,7 @@ parser.add_argument("--staMaxMissedBeacons", type=int, default=0, help="diagnost
 parser.add_argument("--offeredLoad", type=float, default=150.0, help="per-STA offered load in Mbps (cw.cc offeredLoad)")
 parser.add_argument("--apHidden", default="", help="v3.4.0 scenario: 1-based AP pairs whose BSSs cannot hear each other, e.g. 1-3 (cw.cc --apHidden)")
 parser.add_argument("--hiddenLoss", type=float, default=0.0, help="path loss in dB between hidden pairs (0 = cw.cc default 200)")
+parser.add_argument("--apDir", default="", help="v4.2.0 scenario: per-AP traffic direction u (uplink, default), d (downlink) or b (both; the per-STA load in each direction), e.g. u,d,b (cw.cc --apDir)")
 parser.add_argument("--apLoads", default="", help="v3.4.0 scenario: per-STA offered load in Mbps per AP, e.g. 150,150,5 (cw.cc --apLoads; default every AP uses --offeredLoad)")
 parser.add_argument("--reward", choices=["local", "pf", "spf", "fair"], default="local", help="independent/shared replay reward: local = own goodput (alpha mixes in network goodput); pf = proportional fair, 1 + mean_i log(eps + r_i) / -log(eps), same value for every agent; spf (v4.0.0, RAFA) = station-weighted PF: mean over STAs of ln(max(0.01, Mbps per STA)), mapped affinely so 0.01 Mbps -> 0 and 10 Mbps -> 1 (ADR-0007)")
 parser.add_argument("--rewardScale", type=float, default=1.0, help="multiplies the reward stored in replay (central/global/independent/shared; 1 = unchanged)")
@@ -162,7 +163,14 @@ OFFERED_MBPS = args.offeredLoad  # per-STA offered load, cw.cc offeredLoad
 LOADS = [float(x) for x in args.apLoads.split(",")] if args.apLoads else [OFFERED_MBPS] * len(args.apStaCounts.split(","))  # per-AP, per-STA load
 assert len(LOADS) == n and min(LOADS) > 0, "--apLoads: one positive load per AP"
 OFFERED_TOTAL = sum(c * l for c, l in zip(counts, LOADS))  # network offered load in Mbps (all STAs)
-NORM_LOADS = [args.rewardNorm] * n if args.rewardNorm > 0 else LOADS  # per-STA reward divisor, mirrors cw.cc --rewardNorm
+def dir_scaled(loads, apdir):
+    """Mirror cw.cc: direction b offers the per-STA load twice, so the reward divisor doubles (--apDir)."""
+    dirs = apdir.split(",") if apdir else ["u"] * len(loads)
+    assert len(dirs) == len(loads) and set(dirs) <= {"u", "d", "b"}, "--apDir: one of u, d, b per AP"
+    return [l * (2 if d == "b" else 1) for l, d in zip(loads, dirs)]
+
+
+NORM_LOADS = dir_scaled([args.rewardNorm] * n if args.rewardNorm > 0 else LOADS, args.apDir)  # per-STA reward divisor, mirrors cw.cc --rewardNorm and --apDir
 NORM_TOTAL = sum(c * l for c, l in zip(counts, NORM_LOADS))
 
 torch.manual_seed(args.seed)
@@ -177,6 +185,8 @@ if args.hiddenLoss > 0:
     sim_args["hiddenLoss"] = args.hiddenLoss
 if args.apLoads:
     sim_args["apLoads"] = args.apLoads
+if args.apDir:
+    sim_args["apDir"] = args.apDir
 if args.staSchedule:
     sim_args["staSchedule"] = args.staSchedule
 pool = json.load(open(args.scenarioPool)) if args.scenarioPool else []
@@ -489,8 +499,10 @@ if pool:
 def apply_cfg(cfg, episode):
     """Switch the per-AP globals to scenario cfg for this episode and return the cw.cc args for it."""
     global counts, n, LOADS, NORM_LOADS, NORM_TOTAL, FLOORS
-    ep_args = {k: v for k, v in sim_args.items() if k not in ("apStaCounts", "apLoads", "apHidden", "hiddenLoss", "staSchedule", "rewardNorm")}
+    ep_args = {k: v for k, v in sim_args.items() if k not in ("apStaCounts", "apLoads", "apHidden", "hiddenLoss", "staSchedule", "rewardNorm", "apDir")}
     ep_args.update({k: v for k, v in cfg.items() if k not in ("name", "floors")})
+    if args.apDir and "apDir" not in cfg:
+        ep_args["apDir"] = args.apDir
     if float(cfg.get("rewardNorm", args.rewardNorm)) > 0:
         ep_args["rewardNorm"] = "%g" % float(cfg.get("rewardNorm", args.rewardNorm))
     else:
@@ -502,7 +514,7 @@ def apply_cfg(cfg, episode):
     n = len(counts)
     LOADS = [float(x) for x in str(cfg["apLoads"]).split(",")] if "apLoads" in cfg else [OFFERED_MBPS] * n
     norm = float(cfg.get("rewardNorm", args.rewardNorm))
-    NORM_LOADS = [norm] * n if norm > 0 else LOADS
+    NORM_LOADS = dir_scaled([norm] * n if norm > 0 else LOADS, str(cfg.get("apDir", args.apDir)))
     NORM_TOTAL = sum(c * l for c, l in zip(counts, NORM_LOADS))
     return ep_args
 
