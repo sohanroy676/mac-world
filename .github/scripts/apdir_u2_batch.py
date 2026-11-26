@@ -26,16 +26,21 @@ def add(cell, name, sim, extra, seed):
     jobs.append({"id": "%s-s%d" % (tag, seed), "on": "actions", "w": 1.1 * sim, "timeout": int(70 * 1.1 * sim * 2 + 600), "cmds": [{"name": "run", "args": args}]})
 
 
-for cell in CELLS:
-    n = CELLS[cell][0].count(",") + 1
-    for seed in SEEDS:
-        for e in EDGES:
-            for m in MIDS:
-                cws = [e] + [m] * (n - 2) + [e]
-                add(cell, "f1-" + "-".join(map(str, cws)), 30, ["--mode", "static", "--apCws", ",".join(map(str, cws))] + STATIC_W, seed)
-        for al in (0, 1, 4):
-            add(cell, "kwdirect-a%d" % al, 60, ["--mode", "kwdirect"] + WIDE + ["--floors", FLOORS[cell], "--lyEta", "0.25", "--lyDelta", "0.2",
-                                                                               "--lyAlpha", str(al), "--lyTau", "0.6"], seed)
-assert len({j["id"] for j in jobs}) == len(jobs)
-json.dump({"lanes": 4, "packs": 20, "jobs": jobs}, open(sys.argv[1], "w"))
-print(len(jobs), "runs,", "%.1f lab-h" % (sum(j["w"] for j in jobs) / 33.0 * 0.2))
+def main():
+    for cell in CELLS:
+        n = CELLS[cell][0].count(",") + 1
+        for seed in SEEDS:
+            for e in EDGES:
+                for m in MIDS:
+                    cws = [e] + [m] * (n - 2) + [e]
+                    add(cell, "f1-" + "-".join(map(str, cws)), 30, ["--mode", "static", "--apCws", ",".join(map(str, cws))] + STATIC_W, seed)
+            for al in (0, 1, 4):
+                add(cell, "kwdirect-a%d" % al, 60, ["--mode", "kwdirect"] + WIDE + ["--floors", FLOORS[cell], "--lyEta", "0.25", "--lyDelta", "0.2",
+                                                                                   "--lyAlpha", str(al), "--lyTau", "0.6"], seed)
+    assert len({j["id"] for j in jobs}) == len(jobs)
+    json.dump({"lanes": 4, "packs": 20, "jobs": jobs}, open(sys.argv[1], "w"))
+    print(len(jobs), "runs,", "%.1f lab-h" % (sum(j["w"] for j in jobs) / 33.0 * 0.2))
+
+
+if __name__ == "__main__":
+    main()
