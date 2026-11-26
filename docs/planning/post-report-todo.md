@@ -1,6 +1,6 @@
 # Post-report TODO (after the MAC-WORLD final report)
 
-Status: not started. Decided with the project owner on 2026-11-24: these are deferred until the final report is merged.
+Status: item 2 implemented in v4.2.0 (code and 3 s validation only, no run wave; see `docs/results/graded-interference-v4.2.0.md`); others not started. Decided with the project owner on 2026-11-24: these are deferred until the final report is merged.
 Labels: **fact** = read in the code, **estimate** = not measured. Mentor scenario numbers refer to the mentor's scenario list.
 
 ## 1. Mixed uplink and downlink traffic (mentor scenario 8)
@@ -9,7 +9,7 @@ Labels: **fact** = read in the code, **estimate** = not measured. Mentor scenari
 - Estimate: 1-2 days to implement and validate; about 150 runs (about 60 lab-hours) for 3-4 APs, uplink / downlink / both, 5 methods, 10 seeds.
 
 ## 2. Graded asymmetric interference and distances (mentor 2D, scenario 7)
-- Fact: `--apHidden` is a yes/no switch (pairs of BSSs that cannot hear each other); no graded strengths.
+- Done 2026-11-26 (ADR-0009): `--apHidden a-b:dB` and `a>b:dB`. Original fact: `--apHidden` was a yes/no switch (pairs of BSSs that cannot hear each other); no graded strengths.
 - Work: per-pair path loss or AP/STA positions with a distance-based loss model; read how `--apHidden` and `--hiddenLoss` are built first (ADR-0005); keep the BSS-level loss matrix in the state.
 - Estimate: about 1 day; about 100 runs (about 40 lab-hours).
 

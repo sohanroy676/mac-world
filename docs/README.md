@@ -6,7 +6,7 @@ Files are grouped by purpose. Version numbers in file names match the roadmap (`
 |---|---|
 | `planning/` | Project spec and the per-version roadmap with completion criteria. Read first. |
 | `design/` | Multi-AP design contract and the optional central-critic design and prototype. |
-| `adr/` | Architecture decision records (ADR-0001 to ADR-0004, plus the template). |
+| `adr/` | Architecture decision records (ADR-0001 to ADR-0009, plus the template). |
 | `results/` | One write-up per experiment version: baseline, validation, benchmarks, scaling, robustness, final results, v3.0.0. |
 | `reports/` | Final deliverables: technical report, presentation notes, final audit. |
 | `reference/` | Supporting material: OSCAR paper metrics, reproducibility guide, pre-v0.1.0 audits. |

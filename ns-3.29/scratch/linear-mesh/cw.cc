@@ -83,7 +83,14 @@ bool g_apCwOk = true;                 // cleared by any failing readback
 
 // v3.4.0 opt-in scenario knobs (defaults = old behaviour, no SetLoss call, one load for every AP).
 Ptr<MatrixPropagationLossModel> g_lossModel;                  // set by set_phy
-std::vector<std::pair<uint32_t, uint32_t>> g_hiddenPairs;     // --apHidden: BSS pairs (0-based) that cannot hear each other
+// --apHidden entry (0-based BSS indices). v4.2.0: optional per-pair loss and one-way (directed) links.
+struct HiddenPair
+{
+    uint32_t a, b;
+    double lossDb;      // loss a->b (and b->a when symmetric)
+    bool symmetric;     // false: only transmissions of BSS a towards BSS b see lossDb, b->a keeps the 50 dB default
+};
+std::vector<HiddenPair> g_hiddenPairs;                        // --apHidden: BSS pairs with a non-default loss (default 200 dB = cannot hear each other)
 double g_hiddenLossDb = 200.0;                                // --hiddenLoss (far below the -96 dBm ED threshold)
 std::vector<double> g_apLoadMbps;                             // --apLoads: per-STA offered load per AP (empty = offeredLoad)
 std::map<Mac48Address, uint32_t> g_macBss;                    // device address -> BSS index (hidden-pair diagnostic)
@@ -985,7 +992,23 @@ void connectHeardMatrix(NodeContainer wifiApNode, std::vector<NodeContainer> apS
     }
 }
 
-// PASS when no hidden pair decoded a frame from the other (either direction) and every other pair did.
+// Loss (dB) seen by BSS rx for frames sent by BSS tx: 50 dB default unless an --apHidden entry covers that direction.
+double linkLossDb(uint32_t rx, uint32_t tx)
+{
+    double loss = 50.0;
+    for (const HiddenPair &hp : g_hiddenPairs)
+        if ((hp.a == tx && hp.b == rx) || (hp.symmetric && hp.a == rx && hp.b == tx))
+            loss = hp.lossDb;
+    return loss;
+}
+
+// Loss thresholds of the pass/fail verdict at the default 16.02 dBm TX power: above 112 dB the frame is below the
+// -96 dBm energy-detection threshold (must decode 0); at or below 80 dB it is strong (must decode some). Between
+// them (graded links) the count is reported only, because decoding depends on the MCS.
+const double kDeafLossDb = 112.0;
+const double kStrongLossDb = 80.0;
+
+// PASS when every direction with loss > kDeafLossDb decoded 0 frames and every direction with loss <= kStrongLossDb decoded some.
 bool reportHeardMatrix()
 {
     bool ok = true;
@@ -995,11 +1018,13 @@ bool reportHeardMatrix()
         {
             if (rx == tx)
                 continue;
-            bool hidden = false;
-            for (const std::pair<uint32_t, uint32_t> &hp : g_hiddenPairs)
-                hidden = hidden || (hp.first == rx && hp.second == tx) || (hp.first == tx && hp.second == rx);
-            NS_LOG_UNCOND("Heard: BSS" << rx + 1 << " decoded " << g_heard[rx][tx] << " frames from BSS" << tx + 1 << (hidden ? " (hidden pair)" : ""));
-            ok = ok && (hidden ? g_heard[rx][tx] == 0 : g_heard[rx][tx] > 0);
+            double loss = linkLossDb(rx, tx);
+            const char *kind = loss > kDeafLossDb ? " (hidden)" : (loss > kStrongLossDb ? " (graded)" : "");
+            NS_LOG_UNCOND("Heard: BSS" << rx + 1 << " decoded " << g_heard[rx][tx] << " frames from BSS" << tx + 1 << " loss=" << loss << " dB" << kind);
+            if (loss > kDeafLossDb)
+                ok = ok && g_heard[rx][tx] == 0;
+            else if (loss <= kStrongLossDb)
+                ok = ok && g_heard[rx][tx] > 0;
         }
     return ok;
 }
@@ -1150,28 +1175,72 @@ std::vector<uint32_t> parseApCws(std::string apCws, size_t apCount)
 }
 
 // --apHidden "1-3,2-4": 1-based BSS pairs that cannot hear each other (v3.4.0).
-std::vector<std::pair<uint32_t, uint32_t>> parseApHidden(std::string apHidden, size_t apCount)
+// v4.2.0 (ADR-0009): "a-b:dB" sets that symmetric pair's loss; "a>b:dB" sets only the a->b direction (one-way link).
+// Without ":dB" the entry uses --hiddenLoss, so every v3.4.0 command line behaves as before.
+std::vector<HiddenPair> parseApHidden(std::string apHidden, size_t apCount, double defaultLossDb)
 {
-    std::vector<std::pair<uint32_t, uint32_t>> pairs;
+    std::vector<HiddenPair> pairs;
     std::stringstream ss(apHidden);
     std::string token;
 
     while (std::getline(ss, token, ','))
     {
-        size_t dash = token.find('-');
-        if (dash == std::string::npos || dash == 0 || dash + 1 >= token.size())
+        std::string ends = token;
+        double loss = defaultLossDb;
+        size_t colon = token.find(':');
+        if (colon != std::string::npos)
         {
-            std::cout << "Invalid --apHidden: expected a-b pairs, e.g. 1-3." << endl;
+            ends = token.substr(0, colon);
+            std::string lossStr = token.substr(colon + 1);
+            size_t used = 0;
+            try
+            {
+                loss = std::stod(lossStr, &used);
+            }
+            catch (...)
+            {
+                used = 0;
+            }
+            if (lossStr.empty() || used != lossStr.size() || loss < 0.0 || loss > 400.0)
+            {
+                std::cout << "Invalid --apHidden: " << token << " has a bad loss; expected a-b:dB with 0 <= dB <= 400." << endl;
+                exit(1);
+            }
+        }
+        size_t dash = ends.find('-');
+        bool symmetric = true;
+        if (dash == std::string::npos)
+        {
+            dash = ends.find('>');
+            symmetric = false;
+        }
+        if (dash == std::string::npos || dash == 0 || dash + 1 >= ends.size())
+        {
+            std::cout << "Invalid --apHidden: expected a-b, a-b:dB or a>b:dB entries, e.g. 1-3." << endl;
             exit(1);
         }
-        int a = std::stoi(token.substr(0, dash));
-        int b = std::stoi(token.substr(dash + 1));
+        int a = 0, b = 0;
+        try
+        {
+            a = std::stoi(ends.substr(0, dash));
+            b = std::stoi(ends.substr(dash + 1));
+        }
+        catch (...)
+        {
+            std::cout << "Invalid --apHidden: " << token << " is not two AP numbers." << endl;
+            exit(1);
+        }
         if (a < 1 || b < 1 || a == b || a > static_cast<int>(apCount) || b > static_cast<int>(apCount))
         {
             std::cout << "Invalid --apHidden: " << token << " is not two different APs in 1.." << apCount << "." << endl;
             exit(1);
         }
-        pairs.push_back(std::make_pair(static_cast<uint32_t>(a - 1), static_cast<uint32_t>(b - 1)));
+        HiddenPair hp;
+        hp.a = static_cast<uint32_t>(a - 1);
+        hp.b = static_cast<uint32_t>(b - 1);
+        hp.lossDb = loss;
+        hp.symmetric = symmetric;
+        pairs.push_back(hp);
     }
     return pairs;
 }
@@ -1342,15 +1411,15 @@ void set_nodes(int channelWidth,
 
     // v3.4.0: hidden BSS pairs. SetLoss needs the mobility models, so it runs here, after Install.
     // Default (no --apHidden): no SetLoss call, every pair keeps the 50 dB default.
-    for (const std::pair<uint32_t, uint32_t> &hp : g_hiddenPairs)
+    for (const HiddenPair &hp : g_hiddenPairs)
     {
-        NodeContainer bssA(wifiApNode.Get(hp.first));
-        bssA.Add(apStaNodes.at(hp.first));
-        NodeContainer bssB(wifiApNode.Get(hp.second));
-        bssB.Add(apStaNodes.at(hp.second));
+        NodeContainer bssA(wifiApNode.Get(hp.a));
+        bssA.Add(apStaNodes.at(hp.a));
+        NodeContainer bssB(wifiApNode.Get(hp.b));
+        bssB.Add(apStaNodes.at(hp.b));
         for (uint32_t i = 0; i < bssA.GetN(); ++i)
             for (uint32_t j = 0; j < bssB.GetN(); ++j)
-                g_lossModel->SetLoss(bssA.Get(i)->GetObject<MobilityModel>(), bssB.Get(j)->GetObject<MobilityModel>(), g_hiddenLossDb, true);
+                g_lossModel->SetLoss(bssA.Get(i)->GetObject<MobilityModel>(), bssB.Get(j)->GetObject<MobilityModel>(), hp.lossDb, hp.symmetric);
     }
     /* Internet stack*/
     InternetStackHelper stack;
@@ -1575,7 +1644,7 @@ int main(int argc, char *argv[])
     cmd.AddValue("disableGym", "Run ns-3 without OpenGym/ZMQ interaction", disable_gym);
     cmd.AddValue("apStaCounts", "Comma-separated station counts per AP, e.g. 20,40. Default: empty = single AP with nWifi stations", apStaCountsArg);
     cmd.AddValue("cwMinOnly", "Multi-AP agent actions set MinCw only; MaxCw stays 1023 so BEB doubling is kept. Default: false (MinCw = MaxCw = action)", g_cwMinOnly);
-    cmd.AddValue("apHidden", "Comma-separated 1-based AP pairs whose BSSs cannot hear each other, e.g. 1-3 (3-AP chain). Default: empty = one collision domain", apHiddenArg);
+    cmd.AddValue("apHidden", "Comma-separated 1-based AP pairs whose BSSs cannot hear each other, e.g. 1-3 (3-AP chain). v4.2.0: a-b:dB sets that pair's loss (graded), a>b:dB sets only the a->b direction (one-way). Default: empty = one collision domain", apHiddenArg);
     cmd.AddValue("hiddenLoss", "Path loss in dB between hidden BSS pairs. Default: 200", g_hiddenLossDb);
     cmd.AddValue("apLoads", "Comma-separated per-STA offered load in Mbps per AP, e.g. 150,150,5 (one per AP). Default: empty = offeredLoad for every AP", apLoadsArg);
     cmd.AddValue("idleSense", "v3.3.0: per-AP IdleSense AIMD on CW from the AP's own idle-slot count (multi-AP; use with dryRun=true for the non-RL baseline). Default: false", g_idleSense);
@@ -1645,7 +1714,7 @@ int main(int argc, char *argv[])
                 std::cout << "--apCws with --cwMinOnly: every CW must be 2^k - 1 and at most 1023 (STAs take CWmin from beacons)." << endl;
                 exit(1);
             }
-    g_hiddenPairs = parseApHidden(apHiddenArg, apStaCounts.size());
+    g_hiddenPairs = parseApHidden(apHiddenArg, apStaCounts.size(), g_hiddenLossDb);
     g_apLoadMbps = parseApLoads(apLoadsArg, apStaCounts.size());
     g_staSchedule = parseStaSchedule(staScheduleArg, apStaCounts);
     nWifi = 0;
