@@ -1,7 +1,7 @@
 """v4.2.0 uplink/downlink wave U1 (selection seeds 0-2, 30 s): BEB, IdleSense and DAC (Tc 514 us) in six direction cells, plus a
 static (edge, middle) oracle grid per cell for the later floors and ceilings. Cells: S4-type 3-AP hidden chain with directions uuu (control),
 ddd, bbb and u,d,b; 4-AP hidden line (pairs 1-3, 2-4, 1-4) with ddd and bbb. 10 Mbps per STA per direction, --rewardNorm 150.
-Non-learned modes only, so every job is byte-identical on any runner CPU. Usage: apdir_w1_batch.py OUT.json"""
+Non-learned modes only, so every job is byte-identical on any runner CPU. Usage: apdir_w1_batch.py OUT.json [ext]. With `ext` only the grid extension below CW 32 (edge in 16,24,48 x middle in 16..128, and edge in 32..512 x middle in 16,24,48) is generated."""
 import json
 import sys
 
@@ -23,16 +23,19 @@ def add(cell, name, mode_args, seed):
     jobs.append({"id": "%s-s%d" % (tag, seed), "on": "actions", "w": 1.1 * SIM, "timeout": int(70 * 1.1 * SIM * 2 + 600), "cmds": [{"name": "run", "args": args}]})
 
 
+EXT = sorted({(e, m) for e in (16, 24, 48) for m in (16, 24, 32, 48, 64, 128)} | {(e, m) for e in (32, 64, 128, 256, 512) for m in (16, 24, 48)})
+ext = len(sys.argv) > 2 and sys.argv[2] == "ext"
 for cell in CELLS:
     n = CELLS[cell][0].count(",") + 1
+    pairs = EXT if ext else [(e, m) for e in GRID for m in GRID]
     for seed in SEEDS:
-        add(cell, "beb", ["--mode", "beb"], seed)
-        add(cell, "idlesense", ["--mode", "idlesense"], seed)
-        add(cell, "dac514", ["--mode", "dac", "--dacTc", "514e-6"], seed)
-        for e in GRID:
-            for m in GRID:
-                cws = [e] + [m] * (n - 2) + [e]
-                add(cell, "static-" + "-".join(map(str, cws)), ["--mode", "static", "--apCws", ",".join(map(str, cws))], seed)
+        if not ext:
+            add(cell, "beb", ["--mode", "beb"], seed)
+            add(cell, "idlesense", ["--mode", "idlesense"], seed)
+            add(cell, "dac514", ["--mode", "dac", "--dacTc", "514e-6"], seed)
+        for e, m in pairs:
+            cws = [e] + [m] * (n - 2) + [e]
+            add(cell, "static-" + "-".join(map(str, cws)), ["--mode", "static", "--apCws", ",".join(map(str, cws))], seed)
 assert len({j["id"] for j in jobs}) == len(jobs)
 json.dump({"lanes": 4, "packs": 20, "jobs": jobs}, open(sys.argv[1], "w"))
 print(len(jobs), "runs,", "%.1f lab-h" % (sum(j["w"] for j in jobs) / 33.0 * 0.2))

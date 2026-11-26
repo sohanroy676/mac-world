@@ -1,6 +1,6 @@
 # Wave U1 summary (seeds 0-2, 30 s, throughput over the second half, Mbps)
 
-Run: Actions `run-packs` 45832945993 (branch claude/project-thread-qtjqjo, commit 21d54d0), 486 of 504 runs, all `--check PASS`, no failures. The 18 DAC (Tc 514 us) runs were NOT run: `jobsplit.py` sends non-listed modes to the HF queue, so they were skipped by design; they are rerun in `apdir-w1b-dac.json` (job `on: actions`). Analysis: `.github/scripts/apdir_w1_analyse.py`. Seeds 0-2, n=3, selection seeds only, so no claim.
+Run: Actions `run-packs` 45832945993 (branch claude/project-thread-qtjqjo, commit 21d54d0), 486 of 504 runs, all `--check PASS`, no failures. The 18 DAC (Tc 514 us) runs were NOT run: `jobsplit.py` sends non-listed modes to the HF queue, so they were skipped by design; they are rerun together with the grid extension in `apdir-w1c-ext.json` (jobs now `on: actions`). Analysis: `.github/scripts/apdir_w1_analyse.py`. Seeds 0-2, n=3, selection seeds only, so no claim.
 
 **Caveat (fact):** in several cells the best static point sits on the lower edge of the grid (middle AP CW 32, d3 and d4 at 32 for every AP). The grid needs extending down to CW 16 before any oracle or ceiling is quoted. The grid is also symmetric (edge, middle, ..., edge), which hides asymmetric optima in the mixed cell m3.
 
