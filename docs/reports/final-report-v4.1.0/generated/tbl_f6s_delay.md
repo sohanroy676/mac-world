@@ -1,5 +1,5 @@
 Table: offered 50 / 100 / 150 / 200 Mbit/s for AP1 / AP2 / AP3 / AP4 (saturated): goodput and MAC delay per AP. Delay is the time from enqueue to acknowledged delivery, mean and 99th percentile, in ms; mean over seeds.
-| Controller | Goodput (Mbit/s) | Mean delay (ms) | p99 delay (ms) | Seeds |
+| Controller | Goodput (Mbit/s) | Mean delay (ms) | p99 delay (ms) | Runs |
 |---|---|---|---|---|
 | BEB (802.11) | 7.27 / 8.31 / 8.15 / 6.94 | 5227.2 / 5433.4 / 5512.5 / 5549.7 | 5942.6 / 6102.4 / 6357.4 / 5909.8 | 10 |
 | BEB + RTS/CTS | 4.82 / 6.01 / 6.00 / 4.82 | 5474.9 / 5590.9 / 5684.8 / 5821.1 | 6363.4 / 6251.6 / 6269.2 / 6456.5 | 10 |

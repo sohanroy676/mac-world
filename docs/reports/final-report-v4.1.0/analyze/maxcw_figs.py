@@ -66,8 +66,8 @@ def confirmation():
     ax.set_xticks(range(9)); ax.set_xticklabels([NICE[c] for c in CELLS], rotation=35, ha="right")
     ax.set_ylim(-0.3, 1.25); ax.set_xlim(-0.5, 8.5); ax.set_ylabel("share of validated ceiling")
     ax.set_title("Wave 4a confirmation (seeds 103-122, 300 s): mean share, 95% CI")
-    ax.legend(ncol=3, fontsize=7, loc="lower left", bbox_to_anchor=(0, -0.42))
-    ax.text(0.0, -0.36, "bars cut at -0.3: PF and RAFA reach about -1.9 on S4 α0", transform=ax.transAxes, fontsize=7, color=INK2)
+    ax.legend(ncol=3, fontsize=7, loc="lower left", bbox_to_anchor=(0, -0.66))
+    ax.text(0.0, -0.74, "bars cut at -0.3: PF and RAFA reach about -1.9 on S4 α0", transform=ax.transAxes, fontsize=7, color=INK2)
     return save(fig, "maxcw_confirmation_share.png"), data
 
 

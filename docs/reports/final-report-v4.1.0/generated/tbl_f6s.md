@@ -1,5 +1,5 @@
 Table: cell f6s (mentor 6 saturated), stations per AP 10,10,10,10. Goodput in the second half of each 60 s run, mean ± 95% CI over evaluation seeds 400-409. Learners are averaged over three training seeds per evaluation seed. a = the alpha of the alpha-fair utility used to pick or tune the controller (0: total goodput, 1: proportional fairness).
-| Controller | Total goodput (Mbit/s) | Δ vs BEB (%) | Per AP (Mbit/s) | Jain (per station) | Worst station (Mbit/s) | Floor met | PHY loss | Seeds |
+| Controller | Total goodput (Mbit/s) | Δ vs BEB (%) | Per AP (Mbit/s) | Jain (per station) | Worst station (Mbit/s) | Floor met | PHY loss | Runs |
 |---|---|---|---|---|---|---|---|---|
 | BEB (802.11) | 30.7 ± 0.1 | – | 7.3 / 8.3 / 8.2 / 6.9 | 0.993 | 0.69 | 100% | 0.70 | 10 |
 | BEB + RTS/CTS | 21.6 ± 0.0 | -29.4 ± 0.3 | 4.8 / 6.0 / 6.0 / 4.8 | 0.988 | 0.48 | 0% | 0.83 | 10 |

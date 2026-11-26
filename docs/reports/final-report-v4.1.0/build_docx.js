@@ -7,7 +7,7 @@ const path = require("path");
 const D = require("docx");
 const {
   Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, ShadingType, AlignmentType, HeadingLevel,
-  BorderStyle, LevelFormat, ImageRun, PageBreak, Footer, Header, PageNumber, TableOfContents, VerticalAlign,
+  BorderStyle, LevelFormat, ImageRun, PageBreak, Footer, Header, PageNumber, TableOfContents, VerticalAlign, Bookmark, InternalHyperlink, TabStopType, LeaderType, Tab,
 } = D;
 
 const ROOT = __dirname;
@@ -15,6 +15,7 @@ const ACCENT = "1F4E79", GREY = "F2F2F2", HEAD = "DCE6F1";
 const CONTENT_W = 9026; // A4 with 1" margins, DXA
 let figN = 0, tabN = 0;
 const children = [];
+const tocItems = [];
 let pendingCaption = null;
 
 function readMd(rel) { return fs.readFileSync(path.join(ROOT, rel), "utf8"); }
@@ -118,7 +119,9 @@ function render(md) {
     if ((m = t.match(/^(#{1,4})\s+(.*)$/))) {
       const lvl = m[1].length;
       const H = [HeadingLevel.HEADING_1, HeadingLevel.HEADING_2, HeadingLevel.HEADING_3, HeadingLevel.HEADING_4][lvl - 1];
-      children.push(new Paragraph({ heading: H, children: [new TextRun(m[2])], pageBreakBefore: lvl === 1 && children.length > 8 }));
+      let kids = [new TextRun(m[2])];
+      if (lvl <= 2) { const bm = "toc" + tocItems.length; tocItems.push({ lvl, text: m[2], bm }); kids = [new Bookmark({ id: bm, children: kids })]; }
+      children.push(new Paragraph({ heading: H, children: kids, pageBreakBefore: lvl === 1 && children.length > 8 }));
       i++; continue;
     }
     if ((m = t.match(/^!\[(.*)\]\((.+?)\)(\{w=(\d+)\})?$/))) { image(m[1], m[2], m[4] ? +m[4] : 560); i++; continue; }
@@ -176,9 +179,20 @@ children.push(new Paragraph({ children: [new TextRun({ text: front.authors, bold
 children.push(new Paragraph({ children: [new TextRun({ text: front.college, size: 22 })], spacing: { after: 40 } }));
 children.push(new Paragraph({ children: [new TextRun({ text: front.version_line.replace("PLACEHOLDER_DATE", process.env.REPORT_DATE || new Date().toISOString().slice(0, 10)).replace("PLACEHOLDER_COMMIT", process.env.REPORT_COMMIT || "unknown"), size: 20, color: "595959" })], spacing: { after: 240 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: ACCENT, space: 6 } } }));
 children.push(new Paragraph({ children: [new TextRun({ text: "Contents", bold: true, size: 28, color: ACCENT })], spacing: { before: 120, after: 80 } }));
-children.push(new TableOfContents("Contents", { hyperlink: true, headingStyleRange: "1-2" }));
+const tocAt = children.length;
 
 for (const f of order) render(readMd(f));
+
+// table of contents: static entries with PAGEREF fields; cached page numbers come from out/toc_pages.json (two-pass build)
+let pages = {};
+try { pages = JSON.parse(fs.readFileSync(path.join(ROOT, "out/toc_pages.json"), "utf8")); } catch (e) { /* first pass */ }
+const tocParas = tocItems.map((it) => new Paragraph({
+  tabStops: [{ type: TabStopType.RIGHT, position: CONTENT_W, leader: LeaderType.DOT }],
+  indent: { left: it.lvl === 1 ? 0 : 360 },
+  spacing: { before: it.lvl === 1 ? 70 : 0, after: 0 },
+  children: [new InternalHyperlink({ anchor: it.bm, children: [new TextRun({ text: it.text, bold: it.lvl === 1, size: it.lvl === 1 ? 21 : 19 }), new TextRun({ children: [new Tab(), String(pages[it.bm] || "")], size: it.lvl === 1 ? 21 : 19 })] })],
+}));
+children.splice(tocAt, 0, ...tocParas, new Paragraph({ children: [new PageBreak()] }));
 
 // numbering configs for numbered lists (one per list)
 const numbering = [{ reference: "bul", levels: [
@@ -188,7 +202,6 @@ for (let k = 1; k <= numRef; k++) numbering.push({ reference: "num" + k, levels:
 
 const doc = new Document({
   creator: front.authors, title: front.title, description: front.subtitle,
-  features: { updateFields: true },
   styles: {
     default: { document: { run: { font: "Calibri", size: 22 } } },
     paragraphStyles: [
@@ -206,4 +219,5 @@ const doc = new Document({
     children,
   }],
 });
+fs.writeFileSync(path.join(ROOT, "out/toc_items.json"), JSON.stringify(tocItems));
 Packer.toBuffer(doc).then((b) => { fs.mkdirSync(path.dirname(path.join(ROOT, process.argv[3])), { recursive: true }); fs.writeFileSync(path.join(ROOT, process.argv[3]), b); console.log("wrote", process.argv[3], b.length, "bytes;", figN, "figures,", tabN, "captioned tables"); });

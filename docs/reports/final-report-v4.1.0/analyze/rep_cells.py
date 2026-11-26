@@ -46,7 +46,7 @@ def cell_table(cell, name=None):
                      " / ".join(f(v, 1) for v in o["per_ap"]), f(o["jain"][0], 3), f(o["min_sta"][0], 2),
                      "%d%%" % round(100 * o["feas"]), f(o["loss"][0], 2), str(o["n"])])
     hdr = ["Controller", "Total goodput (Mbit/s)", "Δ vs BEB (%)", "Per AP (Mbit/s)", "Jain (per station)", "Worst station (Mbit/s)",
-           "Floor met", "PHY loss", "Seeds"]
+           "Floor met", "PHY loss", "Runs"]
     txt = "Table: %s, stations per AP %s. Goodput in the second half of each 60 s run, mean ± 95%% CI over evaluation seeds 400-409. Learners are averaged over three training seeds per evaluation seed. a = the alpha of the alpha-fair utility used to pick or tune the controller (0: total goodput, 1: proportional fairness).\n" % (
         name or cell, ",".join(map(str, counts)))
     txt += md_table(hdr, rows)
@@ -261,7 +261,7 @@ for cell in ("f6s", "f6u", "b2c", "g7s4"):
             "g7s4": "project scenario S4, 10 stations per AP, AP1 and AP3 cannot hear each other (AP1 / AP2 / AP3)"}[cell]
     open(os.path.join(GEN, "tbl_%s_delay.md" % cell), "w").write(
         "Table: %s: goodput and MAC delay per AP. Delay is the time from enqueue to acknowledged delivery, mean and 99th percentile, in ms; mean over seeds.\n" % note
-        + md_table(["Controller", "Goodput (Mbit/s)", "Mean delay (ms)", "p99 delay (ms)", "Seeds"], rows))
+        + md_table(["Controller", "Goodput (Mbit/s)", "Mean delay (ms)", "p99 delay (ms)", "Runs"], rows))
 
 # ---------------- scenario 7: hidden nodes, RTS/CTS (g7s4, b2*) ----------------
 if "g7s4" in runs and runs["g7s4"]:

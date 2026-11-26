@@ -1,5 +1,5 @@
 Table: cell 2C, 15 stations per AP, AP1 and AP3 cannot hear each other (AP1 / AP2 / AP3): goodput and MAC delay per AP. Delay is the time from enqueue to acknowledged delivery, mean and 99th percentile, in ms; mean over seeds.
-| Controller | Goodput (Mbit/s) | Mean delay (ms) | p99 delay (ms) | Seeds |
+| Controller | Goodput (Mbit/s) | Mean delay (ms) | p99 delay (ms) | Runs |
 |---|---|---|---|---|
 | BEB (802.11) | 34.06 / 1.10 / 34.12 | 4686.6 / 6360.6 / 4717.5 | 6921.1 / 8796.5 / 7414.5 | 10 |
 | BEB + RTS/CTS | 24.20 / 0.45 / 24.19 | 4767.3 / 8709.1 / 4760.5 | 5368.5 / 10787.4 / 5359.9 | 10 |

@@ -9,5 +9,5 @@
 - **Determinism.** Learner runs hash differently on Intel and AMD CPUs; learned results are compared by their statistics, not bit-identity. Non-learned runs were identical across machines.
 - **Early studies.** v1.1 to v1.9 agent results used a start with CW 0 and are not used for conclusions; the v2 studies have only three seeds and wide intervals.
 - **New mentor-scenario cells.** They have no validated static optimum (a ceiling search needs thousands of runs per cell), so they are reported with BEB as the reference and absolute goodput, fairness, collisions and delay, not as a share of a ceiling. Learner training in the new cells uses three training seeds and no selection; the results of all three seeds are averaged.
-- **Infrastructure.** Three Actions runs were cancelled by GitHub for an unknown reason in the confirmation wave and were rerun; the data is complete.
+- **Infrastructure.** GitHub cancelled three Actions runs in the confirmation wave and, in the report evaluation, run rs2b after 1,272 of its 1,289 jobs (no reason was given). The lost jobs were rerun (rs2c) and every result is complete.
 - **Novelty.** The comparison with the related work (Gawłowicz et al. and others) was not checked line by line.

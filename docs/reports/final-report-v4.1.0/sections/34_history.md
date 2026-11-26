@@ -27,7 +27,7 @@ Table: BEB, Global-CW OSCAR and independent per-AP OSCAR at 20 and 40 stations, 
 
 ![Aggregate goodput of BEB, Global-CW OSCAR and independent per-AP OSCAR at 20 and 40 stations (3 seeds).](figures/legacy/main_20_40_aggregate.png){w=470}
 
-![Goodput of each AP (20 and 40 stations): the Global-CW agent raises both BSSs.](figures/legacy/main_20_40_per_ap.png){w=420}
+![Goodput of each AP (20 and 40 stations): the Global-CW agent raises both BSSs.](figures/legacy/main_20_40_per_ap.png){w=300}
 
 With n = 3 the intervals are wide, and the independent agents show a large seed spread. A static CW sweep (v3.1.0) puts the ceiling for this topology at the best common static CW of 512 for both APs: 39.62 ± 0.21 Mbps, +12.32 ± 0.84 Mbps over BEB and +3.45 ± 6.77 Mbps over Global-CW (the interval spans zero). So the Global-CW agent reaches most of what any fixed CW can give.
 
@@ -47,7 +47,7 @@ Table: aggregate goodput at a fixed 60 stations (v2.0.0 fixed-binary runs, 3 see
 ![Jain fairness index against the number of APs at a fixed 60 stations.](figures/legacy/fixed60_jain_vs_n.png){w=400}
 
 - BEB is flat in the number of APs at fixed total load (27.4 to 28.1 Mbps).
-- Global-CW OSCAR gains +29.5 % to +33.2 % in every topology and is above BEB in all three seeds.
+- Global-CW OSCAR gains +29.5 % to +32.3 % in every topology and is above BEB in all three seeds.
 - Independent per-AP OSCAR drops from equal to BEB at 2 APs to -46 % at 10 APs. The confidence interval excludes zero at 4 and 10 APs. The likely explanation, which is an inference and was not isolated experimentally, is a selfish game: every agent maximizes its own goodput without BEB's safety net, and its reward changes whenever another agent moves.
 
 ### 4.4 Imbalance and load
