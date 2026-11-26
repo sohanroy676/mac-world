@@ -1,0 +1,4 @@
+out/*
+!out/MAC-WORLD-Final-Report-v4.1.0.docx
+node_modules/
+__pycache__/

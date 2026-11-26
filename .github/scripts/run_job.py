@@ -35,6 +35,20 @@ def write_summary(dst, jid, name, sha, res, secs, log=""):
            "cw_mean": [float(np.mean(s["cw"][ap][300:])) for ap in s["aps"]], "loss_policy": float(s["loss_policy"]),
            "delay": [[int(a), int(n), float(m), float(p50), float(p99)] for a, n, m, p50, p99 in re.findall(r"DELAY AP(\d+) n=(\d+) mean_ms=([\d.]+) p50_ms=([\d.]+) p99_ms=([\d.]+)", open(log).read())] if log else [],
            "cpu": cpu[0] if cpu else "", "commit": os.environ.get("MACWORLD_COMMIT", ""), "image": os.environ.get("MACWORLD_IMAGE", "")}
+    # report extras (2026-11-24): per-AP mean retry/txfail of the policy window when the trace has them (--extraTraces), and for runs of 100 s or more
+    # 1 s bins of per-AP goodput, CW and retry (the dynamic cell e5 needs phase and recovery metrics); older summaries do not have these keys
+    import csv
+    rows = list(csv.DictReader(open(os.path.join(dst, "trace.csv"))))
+    k = int(round(1.0 / cfg["stepTime"]))
+    for col in ("retry", "txfail"):
+        if rows and col in rows[0]:
+            rec["%s_policy" % col] = [float(np.mean([float(r[col]) for r in rows if int(r["ap"]) == ap][300:])) for ap in s["aps"]]
+    if steps * cfg["stepTime"] >= 100:
+        binned = lambda v: [round(float(np.mean(v[i:i + k])), 3) for i in range(0, len(v) - k + 1, k)]
+        rec["series_thr"] = [binned(s["thr"][ap]) for ap in s["aps"]]
+        rec["series_cw"] = [binned(s["cw"][ap]) for ap in s["aps"]]
+        if rows and "retry" in rows[0]:
+            rec["series_retry"] = [binned(np.array([float(r["retry"]) for r in rows if int(r["ap"]) == ap])) for ap in s["aps"]]
     json.dump(rec, open(os.path.join(dst, "summary.json"), "w"))
 
 

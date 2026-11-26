@@ -153,6 +153,11 @@
 - Status 2026-11-24: max-CW plan (S2/S4/S5a) DONE and TAGGED `v4.1.0`: Wave 4a confirmation 760/760, best online controller kwdirect worst-cell share 0.85 (target 0.95 not met), Gate C worst 0.41. `docs/results/maxcw-final-report-v4.1.0.md`.
 - Next (revision 10): M3 step 0 checks, then step 1 with gates G1/G2 and the Gumbel test; M2b/M2c (v3.8.0) after the step-1 gates; then M4.
 
+### Final report and post-report work (started 2026-11-24)
+- Report: "MAC-WORLD" Word report on v4.1.0, `docs/reports/final-report-v4.1.0/` (script-built, branch `claude/project-thread-enj71t`). Part I answers the mentor's eight scenarios (1A-1D, 2A-2C, 3A-3D, 4A-4D, 5, 6, 7) with new runs on seeds 400-409 on the owner's own GitHub Actions; Part II is the full project report. Scenario 2D, scenario 7 asymmetry, scenario 8 and the OBSS-PD extension are not supported by the simulator today and are listed in the TODO below.
+- Status 2026-11-26: report built and pushed (`build.sh`); PR open, awaiting owner review.
+- Post-report TODO (after the report is merged): `docs/planning/post-report-todo.md` - (1) mixed uplink/downlink traffic (mentor scenario 8), (2) graded/asymmetric interference and distances (mentor 2D, 7), (3) OBSS-PD approximation (mentor extension; needs approval, PHY change), plus TCP and bursty traffic.
+
 ## Not Planned for v1
 
 - Mobility
