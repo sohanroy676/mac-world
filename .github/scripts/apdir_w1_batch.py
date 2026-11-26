@@ -20,7 +20,7 @@ def add(cell, name, mode_args, seed):
     tag = "u1-%s-%s" % (cell, name)
     args = ["--apStaCounts", counts, "--apHidden", hidden, "--apDir", dirs, "--offeredLoad", "10", "--rewardNorm", "150", "--stepTime", "0.01",
             "--check", "--extraTraces", "--simTime", str(SIM)] + mode_args + ["--seed", str(seed), "--tag", tag]
-    jobs.append({"id": "%s-s%d" % (tag, seed), "w": 1.1 * SIM, "timeout": int(70 * 1.1 * SIM * 2 + 600), "cmds": [{"name": "run", "args": args}]})
+    jobs.append({"id": "%s-s%d" % (tag, seed), "on": "actions", "w": 1.1 * SIM, "timeout": int(70 * 1.1 * SIM * 2 + 600), "cmds": [{"name": "run", "args": args}]})
 
 
 for cell in CELLS:
