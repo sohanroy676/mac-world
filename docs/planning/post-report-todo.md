@@ -1,6 +1,6 @@
 # Post-report TODO (after the MAC-WORLD final report)
 
-Status: item 1 simulator support built 2026-11-26 (`--apDir`, ADR-0009, `docs/results/uplink-downlink-v4.2.0.md`); run waves not started (need the owner's lab-hour cap). Items 2-5 not started. Decided with the project owner on 2026-11-24: these are deferred until the final report is merged.
+Status: item 1 simulator support built 2026-11-26 (`--apDir`, ADR-0009, `docs/results/uplink-downlink-v4.2.0.md`); waves U1, U1c and U2 run on the owner's Actions (2286 runs, selection seeds 0-2, `docs/results/uplink-downlink-u1-v4.2.0.md`, `-u2-`); owner set no lab-hour cap on 2026-11-26. Not done: kwdirect retune for downlink, learned method, confirmation seeds. Items 2-5 not started. Decided with the project owner on 2026-11-24: these are deferred until the final report is merged.
 Labels: **fact** = read in the code, **estimate** = not measured. Mentor scenario numbers refer to the mentor's scenario list.
 
 ## 1. Mixed uplink and downlink traffic (mentor scenario 8)

@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**UPDATE 2026-11-27 (wave U2 done, branch `claude/project-thread-qtjqjo`):** 1188/1188 runs PASS (exact static grid to CW 4 + kwdirect a0/a1/a4, six direction cells, seeds 0-2); `docs/results/uplink-downlink-u2-v4.2.0.md`. Exact low-CW static is the real oracle; kwdirect is near it on uplink/both/mixed but weak on downlink cells (needs retuning). Not done: learned per-scenario method, confirmation seeds 103-122, kwdirect retune for `d`. Lesson: pack batches over about 600 jobs overflow the Actions matrix output; split the file.
+
 **UPDATE 2026-11-26 (wave U1/U1c done, branch `claude/project-thread-qtjqjo`):** 1098 non-learned runs (BEB, IdleSense, DAC514, static grids) in 6 direction cells all PASS; `docs/results/uplink-downlink-u1-v4.2.0.md`. Oracle not final: some optima sit on the CW 16 clamp. Next: U2 (kwdirect with floors, learned per-scenario method, `--cwLo` below 16, confirmation seeds). Lesson: pack batches need `run-packs.yml` (run-jobs ran empty), and DAC needs `on: actions`.
 
 **UPDATE 2026-11-26 (uplink/downlink traffic, branch `claude/project-thread-qtjqjo` from `feature/v4`):** `--apDir=u,d,b` per AP in `cw.cc`/`scenario.h` and the trainer (ADR-0009). Default output identical to the pre-change binary (only one new log line). 4+4 STA dry runs for d,d / u,d / b,b pass all checks; u,d shows the AP-as-one-contender starvation. Not validated: Gym-stepped run, `--extraTraces` retry fields (uplink-only by construction). Results `docs/results/uplink-downlink-v4.2.0.md`. Next: owner approves a lab-hour cap, then oracle grids and the run wave on the owner's Actions (about 60 lab-h estimate, not measured).
