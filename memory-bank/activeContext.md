@@ -4,7 +4,7 @@
 
 ## Current focus
 
-**UPDATE 2026-11-26 (graded interference, branch `claude/project-thread-n2u3lh` from `feature/v4`):** `--apHidden` now takes `a-b:dB` (graded) and `a>b:dB` (one-way), ADR-0009, `docs/results/graded-interference-v4.2.0.md` (3 s dry-run validation only). No oracle grids/BEB refs/run wave yet: needs the user's lab-hour cap. OBSS-PD (todo item 3) untouched, needs approval + ADR.
+**UPDATE 2026-11-26 (graded interference, branch `claude/project-thread-n2u3lh` from `feature/v4`):** `--apHidden` now takes `a-b:dB` (graded) and `a>b:dB` (one-way), ADR-0009, `docs/results/graded-interference-v4.2.0.md` (3 s dry-run validation only). Wave 1 done 2026-11-26 (run 45819183697, 150 runs all PASS, user approved no lab-hour limit): BEB/IdleSense/4 statics on `1-3:85/100/108`, `1>3:100/200`; results in `docs/results/graded-interference-v4.2.0.md`. `1>3:200` starves AP1 under every method. No learner runs yet. OBSS-PD (todo item 3) untouched, needs approval + ADR.
 
 **UPDATE 2026-11-24 (Wave 4a confirmation complete, branch `claude/project-thread-o7nshg`):** 760/760 runs on seeds 103-122 (300 s) after three GitHub-cancelled runs and reruns 4a2-4a4. kwdirect (exact CW updates) worst-cell share 0.85 (S4 alpha 1), target 0.95 NOT met; Gate C (100 ms, 2^k-1) worst 0.41, S2 cost -0.5 to -0.56; kwdirect beats DAC514 (infeasible on S4/S5a) but is not shown non-inferior to static F1 (p 0.83). Results `docs/results/wave4a-v4.1.0.md`. Remaining: final write-up and merge into `feature/v4`, tag v4.1.0 only with the user's OK.
 
