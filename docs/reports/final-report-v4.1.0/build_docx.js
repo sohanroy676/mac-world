@@ -174,7 +174,7 @@ children.push(new Paragraph({ children: [new TextRun({ text: front.title, bold: 
 children.push(new Paragraph({ children: [new TextRun({ text: front.subtitle, size: 26, color: "404040" })], spacing: { after: 240 } }));
 children.push(new Paragraph({ children: [new TextRun({ text: front.authors, bold: true, size: 24 })], spacing: { after: 40 } }));
 children.push(new Paragraph({ children: [new TextRun({ text: front.college, size: 22 })], spacing: { after: 40 } }));
-children.push(new Paragraph({ children: [new TextRun({ text: front.version_line, size: 20, color: "595959" })], spacing: { after: 240 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: ACCENT, space: 6 } } }));
+children.push(new Paragraph({ children: [new TextRun({ text: front.version_line.replace("PLACEHOLDER_DATE", process.env.REPORT_DATE || new Date().toISOString().slice(0, 10)).replace("PLACEHOLDER_COMMIT", process.env.REPORT_COMMIT || "unknown"), size: 20, color: "595959" })], spacing: { after: 240 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: ACCENT, space: 6 } } }));
 children.push(new Paragraph({ children: [new TextRun({ text: "Contents", bold: true, size: 28, color: ACCENT })], spacing: { before: 120, after: 80 } }));
 children.push(new TableOfContents("Contents", { hyperlink: true, headingStyleRange: "1-2" }));
 

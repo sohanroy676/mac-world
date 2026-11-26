@@ -155,6 +155,7 @@
 
 ### Final report and post-report work (started 2026-11-24)
 - Report: "MAC-WORLD" Word report on v4.1.0, `docs/reports/final-report-v4.1.0/` (script-built, branch `claude/project-thread-enj71t`). Part I answers the mentor's eight scenarios (1A-1D, 2A-2C, 3A-3D, 4A-4D, 5, 6, 7) with new runs on seeds 400-409 on the owner's own GitHub Actions; Part II is the full project report. Scenario 2D, scenario 7 asymmetry, scenario 8 and the OBSS-PD extension are not supported by the simulator today and are listed in the TODO below.
+- Status 2026-11-26: report built and pushed (`build.sh`); PR open, awaiting owner review.
 - Post-report TODO (after the report is merged): `docs/planning/post-report-todo.md` - (1) mixed uplink/downlink traffic (mentor scenario 8), (2) graded/asymmetric interference and distances (mentor 2D, 7), (3) OBSS-PD approximation (mentor extension; needs approval, PHY change), plus TCP and bursty traffic.
 
 ## Not Planned for v1

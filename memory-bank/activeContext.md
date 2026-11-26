@@ -218,3 +218,8 @@ Validation notes for later milestones:
   handler (e.g. 0 vs ~9000 pkts) — use UdpServer counts / handler, not FlowMonitor rx.
 - Single /24 subnet fits ~253 nodes; widen before scaling to 10 APs.
 - CW is still a wildcard `Config::Set` over all nodes (v0.5 replaces it).
+
+## Final report v4.1.0 (2026-11-26)
+- Word report `docs/reports/final-report-v4.1.0/out/MAC-WORLD-Final-Report-v4.1.0.docx` (47 pages, built by `build.sh`). Part I = mentor scenarios verbatim (word check vs the source passes) filled from waves rs1, rs2a, rs2b, rs2c (seeds 400-409, 17 cells, xyz's own Actions only). Part II = full report.
+- Open: xyz review; PR into `feature/v4` (not merged). Deferred to post-report: UL/DL, graded interference, OBSS-PD (`docs/planning/post-report-todo.md`).
+- The table of contents is a field; Word fills it on open (accept the update prompt).
