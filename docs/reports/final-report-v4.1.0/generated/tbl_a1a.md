@@ -1,18 +1,18 @@
-Table: cell a1a (mentor 1A), stations per AP 10,10. Goodput in the second half of each 60 s run, mean ± 95% CI over evaluation seeds 400-409. Learners are averaged over three training seeds per evaluation seed.
+Table: cell a1a (mentor 1A), stations per AP 10,10. Goodput in the second half of each 60 s run, mean ± 95% CI over evaluation seeds 400-409. Learners are averaged over three training seeds per evaluation seed. a = the alpha of the alpha-fair utility used to pick or tune the controller (0: total goodput, 1: proportional fairness).
 | Controller | Total goodput (Mbit/s) | Δ vs BEB (%) | Per AP (Mbit/s) | Jain (per station) | Worst station (Mbit/s) | Floor met | PHY loss | Seeds |
 |---|---|---|---|---|---|---|---|---|
-| BEB (802.11 default) | 34.6 ± 0.3 | – | 17.5 / 17.1 | 0.999 | 1.69 | 80% | 0.66 | 5 |
-| BEB + RTS/CTS | 24.2 ± 0.1 | -30.2 ± 0.7 | 12.0 / 12.1 | 1.000 | 1.20 | 0% | 0.81 | 5 |
-| DAC | 40.0 ± 0.1 | +15.4 ± 1.1 | 20.9 / 19.1 | 0.995 | 1.87 | 100% | 0.55 | 5 |
-| BLADE | 36.6 ± 0.0 | +5.7 ± 1.0 | 18.5 / 18.1 | 0.999 | 1.81 | 100% | 0.53 | 5 |
-| IdleSense | 37.9 ± 0.0 | +9.4 ± 1.1 | 19.2 / 18.7 | 0.999 | 1.87 | 100% | 0.53 | 5 |
-| KW (online) | 40.0 ± 0.0 | +15.6 ± 1.1 | 19.9 / 20.2 | 1.000 | 1.97 | 100% | 0.56 | 5 |
-| Static, model (Patras) | 37.3 ± 0.4 | +7.7 ± 1.4 | 18.4 / 18.8 | 1.000 | 1.83 | 100% | 0.62 | 5 |
-| Static, proportional | 40.1 ± 0.1 | +15.9 ± 0.9 | 20.1 / 20.1 | 1.000 | 2.01 | 100% | 0.57 | 5 |
-| Static, common best (alpha 0) | 40.1 ± 0.1 | +15.9 ± 0.9 | 20.1 / 20.1 | 1.000 | 2.01 | 100% | 0.57 | 5 |
-| Static, common best (alpha 1) | 40.1 ± 0.1 | +15.9 ± 0.9 | 20.1 / 20.1 | 1.000 | 2.01 | 100% | 0.57 | 5 |
-| Central online search (alpha 0) | 39.1 ± 1.6 | +13.0 ± 5.0 | 19.6 / 19.6 | 0.997 | 1.89 | 100% | 0.59 | 5 |
-| Central online search (alpha 1) | 38.4 ± 1.7 | +10.9 ± 5.6 | 19.2 / 19.2 | 0.998 | 1.85 | 100% | 0.60 | 5 |
-| Global-CW OSCAR (central actor) | 40.1 ± 0.0 | +16.0 ± 2.4 | 20.3 / 19.8 | 0.999 | 1.98 | 100% | 0.56 | 5 |
-| Independent per-AP OSCAR | 23.1 ± 0.4 | -32.9 ± 2.6 | 10.2 / 13.0 | 0.985 | 1.02 | 0% | 0.80 | 5 |
-| Independent PF learner | 40.1 ± 0.0 | +16.1 ± 2.5 | 20.4 / 19.8 | 0.999 | 1.98 | 100% | 0.56 | 5 |
+| BEB (802.11) | 34.8 ± 0.2 | – | 17.4 / 17.4 | 0.999 | 1.70 | 80% | 0.66 | 10 |
+| BEB + RTS/CTS | 24.2 ± 0.0 | -30.5 ± 0.4 | 12.1 / 12.0 | 1.000 | 1.19 | 0% | 0.81 | 10 |
+| DAC | 39.9 ± 0.0 | +14.8 ± 0.7 | 20.5 / 19.4 | 0.997 | 1.90 | 100% | 0.55 | 10 |
+| BLADE | 36.6 ± 0.0 | +5.3 ± 0.6 | 18.3 / 18.3 | 0.999 | 1.81 | 100% | 0.53 | 10 |
+| IdleSense | 37.9 ± 0.0 | +8.9 ± 0.6 | 19.0 / 18.9 | 0.999 | 1.87 | 100% | 0.53 | 10 |
+| KW (online) | 40.0 ± 0.0 | +15.1 ± 0.6 | 20.0 / 20.0 | 1.000 | 1.97 | 100% | 0.56 | 10 |
+| Static, Patras model | 37.6 ± 0.4 | +8.0 ± 0.8 | 18.7 / 18.9 | 1.000 | 1.86 | 100% | 0.62 | 10 |
+| Static, proportional | 40.1 ± 0.0 | +15.4 ± 0.6 | 20.0 / 20.1 | 1.000 | 2.00 | 100% | 0.57 | 10 |
+| Static, common (a=0) | 40.1 ± 0.0 | +15.4 ± 0.6 | 20.0 / 20.1 | 1.000 | 2.00 | 100% | 0.57 | 10 |
+| Static, common (a=1) | 40.1 ± 0.0 | +15.4 ± 0.6 | 20.0 / 20.1 | 1.000 | 2.00 | 100% | 0.57 | 10 |
+| Central search (a=0) | 39.0 ± 0.9 | +12.2 ± 3.0 | 19.2 / 19.9 | 0.996 | 1.87 | 90% | 0.60 | 10 |
+| Central search (a=1) | 38.9 ± 0.9 | +11.9 ± 2.7 | 19.4 / 19.5 | 0.999 | 1.88 | 100% | 0.60 | 9 |
+| Global-CW OSCAR | 40.1 ± 0.0 | +15.3 ± 0.6 | 20.1 / 20.0 | 0.999 | 1.98 | 100% | 0.56 | 10 |
+| Independent OSCAR | 23.1 ± 0.2 | -33.6 ± 0.6 | 10.0 / 13.1 | 0.983 | 1.00 | 0% | 0.80 | 10 |
+| PF learner | 40.1 ± 0.0 | +15.3 ± 0.7 | 20.1 / 20.0 | 0.999 | 1.98 | 100% | 0.56 | 10 |

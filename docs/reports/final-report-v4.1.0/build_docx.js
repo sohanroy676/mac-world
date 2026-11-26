@@ -64,7 +64,8 @@ function table(lines) {
   let w = [];
   for (let c = 0; c < ncol; c++) {
     const L = Math.max(...rows.map((r) => plain(r[c] || "").length), 3);
-    w.push(Math.min(Math.max(L, 4), 38));
+    const hdrW = Math.max(...(rows[0][c] || "").split(/\s+/).map((x) => plain(x).length), 3);
+    w.push(Math.max(Math.min(Math.max(L, 4), c === 0 ? 24 : 38), hdrW) + (c > 0 ? 2 : 0));
   }
   const tot = w.reduce((a, b) => a + b, 0);
   let cols = w.map((x) => Math.max(520, Math.floor((x / tot) * CONTENT_W)));
@@ -78,7 +79,7 @@ function table(lines) {
     children: Array.from({ length: ncol }, (_, c) => new TableCell({
       width: { size: cols[c], type: WidthType.DXA }, borders, verticalAlign: VerticalAlign.CENTER,
       shading: ri === 0 ? { fill: HEAD, type: ShadingType.CLEAR, color: "auto" } : undefined,
-      margins: { top: 40, bottom: 40, left: 70, right: 70 },
+      margins: { top: 25, bottom: 25, left: 50, right: 50 },
       children: [new Paragraph({ children: runs(r[c] || "", { size: fs_, bold: ri === 0 }), spacing: { after: 0 }, alignment: c > 0 && /^[-+\d.\s%()/±x–−]+$/.test(plain(r[c] || "")) ? AlignmentType.CENTER : AlignmentType.LEFT })],
     })),
   }));

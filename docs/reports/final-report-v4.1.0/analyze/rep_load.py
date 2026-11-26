@@ -22,11 +22,11 @@ CELLS = json.load(open(os.path.join(REPO, ".github", "waves", "rep", "cells.json
 SEL = json.load(open(os.path.join(REPO, ".github", "waves", "rep", "SEL.json")))
 
 LABEL = {
-    "beb": "BEB (802.11 default)", "bebrts": "BEB + RTS/CTS", "dac514": "DAC", "blade": "BLADE", "idlesense": "IdleSense",
-    "kw": "KW (online)", "static-model": "Static, model (Patras)", "static-prop": "Static, proportional",
-    "static-a0": "Static, common best (alpha 0)", "static-a1": "Static, common best (alpha 1)",
-    "kwdirect-a0": "Central online search (alpha 0)", "kwdirect-a1": "Central online search (alpha 1)",
-    "L-global": "Global-CW OSCAR (central actor)", "L-indep": "Independent per-AP OSCAR", "L-pf": "Independent PF learner",
+    "beb": "BEB (802.11)", "bebrts": "BEB + RTS/CTS", "dac514": "DAC", "blade": "BLADE", "idlesense": "IdleSense",
+    "kw": "KW (online)", "static-model": "Static, Patras model", "static-prop": "Static, proportional",
+    "static-a0": "Static, common (a=0)", "static-a1": "Static, common (a=1)",
+    "kwdirect-a0": "Central search (a=0)", "kwdirect-a1": "Central search (a=1)",
+    "L-global": "Global-CW OSCAR", "L-indep": "Independent OSCAR", "L-pf": "PF learner",
 }
 ORDER = list(LABEL)
 

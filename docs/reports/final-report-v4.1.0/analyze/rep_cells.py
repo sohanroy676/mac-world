@@ -47,7 +47,7 @@ def cell_table(cell, name=None):
                      "%d%%" % round(100 * o["feas"]), f(o["loss"][0], 2), str(o["n"])])
     hdr = ["Controller", "Total goodput (Mbit/s)", "Δ vs BEB (%)", "Per AP (Mbit/s)", "Jain (per station)", "Worst station (Mbit/s)",
            "Floor met", "PHY loss", "Seeds"]
-    txt = "Table: %s, stations per AP %s. Goodput in the second half of each 60 s run, mean ± 95%% CI over evaluation seeds 400-409. Learners are averaged over three training seeds per evaluation seed.\n" % (
+    txt = "Table: %s, stations per AP %s. Goodput in the second half of each 60 s run, mean ± 95%% CI over evaluation seeds 400-409. Learners are averaged over three training seeds per evaluation seed. a = the alpha of the alpha-fair utility used to pick or tune the controller (0: total goodput, 1: proportional fairness).\n" % (
         name or cell, ",".join(map(str, counts)))
     txt += md_table(hdr, rows)
     open(os.path.join(GEN, "tbl_%s.md" % cell), "w").write(txt)
@@ -63,13 +63,14 @@ def cell_table(cell, name=None):
                 per_t.setdefault(t, []).append(sum(r["thr_half2"]))
         means = [np.mean(v) for v in per_t.values()]
         sp.append([L.LABEL[m]] + ["%.1f" % x for x in sorted(means)] + ["%.2f" % (max(means) - min(means))])
+        KEY.setdefault("spread", {}).setdefault(cell, {})[m] = float(max(means) - min(means))
     if sp:
         open(os.path.join(GEN, "spread_%s.md" % cell), "w").write(
             "Table: %s: mean total goodput (Mbit/s) of each of the three independently trained learners (training seeds 2000, 2001, 2002), and the largest gap.\n" % (name or cell)
             + md_table(["Learner", "Trained 2000", "Trained 2001", "Trained 2002", "Gap"], sp))
     KEY[cell] = {m: {"total": S[m]["total"][0], "d": (S[m]["d_total_pct"][0] if S[m]["d_total_pct"] else 0.0),
                      "dci": (S[m]["d_total_pct"][1] if S[m]["d_total_pct"] else 0.0), "jain": S[m]["jain"][0],
-                     "feas": S[m]["feas"], "loss": S[m]["loss"][0], "cw": S[m]["cw"], "per_ap": S[m]["per_ap"], "n": S[m]["n"],
+                     "feas": S[m]["feas"], "loss": S[m]["loss"][0], "retry": S[m]["retry"][0], "cw": S[m]["cw"], "per_ap": S[m]["per_ap"], "n": S[m]["n"],
                      "min_sta": S[m]["min_sta"][0]} for m in S}
     return S
 
@@ -128,7 +129,7 @@ if all(c in SUMS for c in ("d4b", "d4c", "d4d")):
         ax.set_xticks(n)
     axs[0].set_ylabel("mean CW (slots)")
     h, lb = axs[0].get_legend_handles_labels()
-    fig.legend(h, lb, ncol=6, fontsize=7, loc="lower center", bbox_to_anchor=(0.5, -0.08))
+    fig.legend(h, lb, ncol=6, fontsize=7, loc="lower center", bbox_to_anchor=(0.5, -0.2))
     figs["f4cw"] = save(fig, "rep_s4_cw.png")
 
 # per-AP goodput per station (fairness) for 4B
@@ -237,7 +238,7 @@ if "e5" in runs and runs["e5"]:
         figs["f5"] = save(fig, "rep_s5_time.png")
 
 # ---------------- scenario 6: delay ----------------
-for cell in ("f6s", "f6u"):
+for cell in ("f6s", "f6u", "b2c", "g7s4"):
     if cell not in runs or not runs[cell]:
         continue
     counts = L.cell_counts(cell)
@@ -252,12 +253,14 @@ for cell in ("f6s", "f6u"):
         mean_ms = np.mean(arr[:, :, 2], axis=0)
         p99_ms = np.mean(arr[:, :, 4], axis=0)
         loads = np.mean([r["thr_half2"] for r in rec.values()], axis=0)
-        rows.append([L.LABEL[m], " / ".join("%.2f" % v for v in loads), " / ".join("%.2f" % v for v in mean_ms), " / ".join("%.2f" % v for v in p99_ms), str(len(rec))])
+        rows.append([L.LABEL[m], " / ".join("%.2f" % v for v in loads), " / ".join("%.1f" % v for v in mean_ms), " / ".join("%.1f" % v for v in p99_ms), str(len(rec))])
         KEY.setdefault(cell + "_delay", {})[m] = {"mean_ms": mean_ms.tolist(), "p99_ms": p99_ms.tolist(), "thr": loads.tolist()}
     note = {"f6s": "offered 50 / 100 / 150 / 200 Mbit/s for AP1 / AP2 / AP3 / AP4 (saturated)",
-            "f6u": "offered 2.5 / 5 / 7.5 / 10 Mbit/s for AP1 / AP2 / AP3 / AP4 (unsaturated, total 25 Mbit/s)"}[cell]
+            "f6u": "offered 2.5 / 5 / 7.5 / 10 Mbit/s for AP1 / AP2 / AP3 / AP4 (unsaturated, total 25 Mbit/s)",
+            "b2c": "cell 2C, 15 stations per AP, AP1 and AP3 cannot hear each other (AP1 / AP2 / AP3)",
+            "g7s4": "project scenario S4, 10 stations per AP, AP1 and AP3 cannot hear each other (AP1 / AP2 / AP3)"}[cell]
     open(os.path.join(GEN, "tbl_%s_delay.md" % cell), "w").write(
-        "Table: Scenario 6, %s: goodput and MAC delay per AP (AP1 / AP2 / AP3 / AP4). Delay is the time from enqueue to acknowledged delivery, mean and 99th percentile, in ms; mean over seeds.\n" % note
+        "Table: %s: goodput and MAC delay per AP. Delay is the time from enqueue to acknowledged delivery, mean and 99th percentile, in ms; mean over seeds.\n" % note
         + md_table(["Controller", "Goodput (Mbit/s)", "Mean delay (ms)", "p99 delay (ms)", "Seeds"], rows))
 
 # ---------------- scenario 7: hidden nodes, RTS/CTS (g7s4, b2*) ----------------
@@ -265,7 +268,24 @@ if "g7s4" in runs and runs["g7s4"]:
     cell_table("g7s4", "cell g7s4 (project S4, hidden chain)")
     S = L.summarize(runs, "g7s4", L.cell_counts("g7s4"))
     KEY["g7s4"] = {m: {"total": S[m]["total"][0], "d": (S[m]["d_total_pct"][0] if S[m]["d_total_pct"] else 0.0), "jain": S[m]["jain"][0],
-                       "loss": S[m]["loss"][0], "retry": S[m]["retry"][0], "min_sta": S[m]["min_sta"][0]} for m in S}
+                       "loss": S[m]["loss"][0], "retry": S[m]["retry"][0], "min_sta": S[m]["min_sta"][0], "per_ap": S[m]["per_ap"]} for m in S}
+
+# RTS/CTS impact across cells
+rt = []
+for cell, lab in (("a1a", "1A, 2 APs, one domain"), ("c3a", "3A, 3 APs, one domain"), ("b2a", "2A, hidden AP3"), ("b2b", "2B, hidden AP1"),
+                  ("b2c", "2C, hidden chain"), ("g7s4", "S4, hidden chain")):
+    if cell not in runs:
+        continue
+    S_ = L.summarize(runs, cell, L.cell_counts(cell))
+    if "beb" not in S_ or "bebrts" not in S_:
+        continue
+    a, b = S_["beb"], S_["bebrts"]
+    rt.append([lab, f(a["total"][0], 1), f(b["total"][0], 1), "%+.1f" % b["d_total_pct"][0], f(a["jain"][0], 2), f(b["jain"][0], 2),
+               f(a["min_sta"][0], 2), f(b["min_sta"][0], 2), f(a["loss"][0], 2), f(b["loss"][0], 2), f(a["retry"][0], 2), f(b["retry"][0], 2)])
+    KEY.setdefault("rts", {})[cell] = {"beb": a["total"][0], "rts": b["total"][0], "d": b["d_total_pct"][0]}
+open(os.path.join(GEN, "tbl_rts_impact.md"), "w").write(
+    "Table: Effect of RTS/CTS (BEB without and with the RTS/CTS handshake), goodput in Mbit/s, mean over evaluation seeds 400-409.\n"
+    + md_table(["Cell", "Total, no RTS", "Total, RTS", "Change (%)", "Jain no RTS", "Jain RTS", "Worst STA no RTS", "Worst STA RTS", "PHY loss no RTS", "PHY loss RTS", "Retry no RTS", "Retry RTS"], rt))
 
 json.dump(KEY, open(os.path.join(GEN, "keynums.json"), "w"), indent=1, default=float)
 print("figures:", figs)
