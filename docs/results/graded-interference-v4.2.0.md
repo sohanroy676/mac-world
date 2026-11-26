@@ -40,3 +40,15 @@ Facts (read from the table):
 - `1>3:100` is a mild asymmetric cell: BEB serves AP3 14.5 and AP1 9.9, and IdleSense evens it out (13.6 / 14.0 / 11.0).
 
 Not done (**unknown**): learned methods (RAFA, Global, independent), oracle grid beyond 4 static settings and a middle-AP-only axis, any claim on seeds 103-109 style protocol, byte-identity of the pre-change `1-3` traces (ADR-0005 cell vs the old binary). Wave 2 proposal: per-scenario RAFA/Global on `1-3:85` and `1>3:100`, plus a finer static grid there.
+
+## Wave 2 (Actions run 45840561063, commit 463f762), exploratory
+160 of 160 runs `--check` PASS. Cells `1-3:85` and `1>3:100`, 10,10,10, 10 Mbps, 30 s. Learners: per-scenario RAFA (shared actor, `--obs rafa --reward fair --alphaInput`, lambda 1, 6 episodes x 15 s, floors = wave-1 BEB per-AP means) and Global (12 episodes), train seeds 2000-2002, frozen eval at alpha 1 on seeds 105-109 (held out from the floors); refs on the same 105-109; extra static grid on seeds 100-102. Table `docs/figures/v4.2.0-graded-wave2/table.md` (script `.github/scripts/graded_wave2_table.py`, summaries `summaries.jsonl`). Sum of ln AP goodput (higher is better):
+
+| cell | BEB | IdleSense | best static on 105-109 | RAFA (3 train seeds) | Global (3 train seeds) | best static in grid (seeds 100-102) |
+|---|---|---|---|---|---|---|
+| `1-3:85` | 7.37 | 7.68 | 7.73 (256,128,256) | 7.91 / 7.86 / 7.91 | 7.90 / 7.91 / 7.71 | 7.89 (128,128,128), 7.88 (256,256,256) |
+| `1>3:100` | 7.37 | 7.64 | 7.61 (256,128,256) | 7.78 / 7.77 / 7.81 | 7.82 / 7.83 / 7.83 | 7.81 (128,128,128), 7.80 (256,256,256) |
+
+Facts: all three training seeds of both learners beat BEB (by 0.4-0.5), IdleSense (0.1-0.25) and the wave-1 statics on 105-109 in both cells; AP1/AP2/AP3 Jain 0.98-0.99. A uniform static (128,128,128 or 256,256,256) found by the finer grid reaches the same sum ln as the learners (7.89 vs 7.91 at 85 dB; 7.81 vs 7.78-7.83 at `1>3:100`), but it was run on seeds 100-102, not 105-109, so that comparison is only indicative (**unknown**: its value on 105-109). Global and RAFA are indistinguishable here (differences 0.01-0.05, one Global training seed 7.71 at 85 dB).
+
+Inference (not tested): in these cells the best fixed CW is uniform and larger than BEB's, so the learners may be recovering that single static CW rather than exploiting per-AP asymmetry; the previously chosen "edge high, middle low" statics (256,64,256 and 512,x,512) are clearly worse (7.0-7.5). No claim is made; a claim run would need seeds 103-109 with the grid winner evaluated on the same seeds, and a check of the per-AP CWs the learners chose (`cw_mean` in `summaries.jsonl`).
