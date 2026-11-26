@@ -4,6 +4,8 @@
 
 ## Current focus
 
+**UPDATE 2026-11-26 (wave U1/U1c done, branch `claude/project-thread-qtjqjo`):** 1098 non-learned runs (BEB, IdleSense, DAC514, static grids) in 6 direction cells all PASS; `docs/results/uplink-downlink-u1-v4.2.0.md`. Oracle not final: some optima sit on the CW 16 clamp. Next: U2 (kwdirect with floors, learned per-scenario method, `--cwLo` below 16, confirmation seeds). Lesson: pack batches need `run-packs.yml` (run-jobs ran empty), and DAC needs `on: actions`.
+
 **UPDATE 2026-11-26 (uplink/downlink traffic, branch `claude/project-thread-qtjqjo` from `feature/v4`):** `--apDir=u,d,b` per AP in `cw.cc`/`scenario.h` and the trainer (ADR-0009). Default output identical to the pre-change binary (only one new log line). 4+4 STA dry runs for d,d / u,d / b,b pass all checks; u,d shows the AP-as-one-contender starvation. Not validated: Gym-stepped run, `--extraTraces` retry fields (uplink-only by construction). Results `docs/results/uplink-downlink-v4.2.0.md`. Next: owner approves a lab-hour cap, then oracle grids and the run wave on the owner's Actions (about 60 lab-h estimate, not measured).
 
 **UPDATE 2026-11-24 (Wave 4a confirmation complete, branch `claude/project-thread-o7nshg`):** 760/760 runs on seeds 103-122 (300 s) after three GitHub-cancelled runs and reruns 4a2-4a4. kwdirect (exact CW updates) worst-cell share 0.85 (S4 alpha 1), target 0.95 NOT met; Gate C (100 ms, 2^k-1) worst 0.41, S2 cost -0.5 to -0.56; kwdirect beats DAC514 (infeasible on S4/S5a) but is not shown non-inferior to static F1 (p 0.83). Results `docs/results/wave4a-v4.1.0.md`. Remaining: final write-up and merge into `feature/v4`, tag v4.1.0 only with the user's OK.
