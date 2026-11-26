@@ -1,6 +1,6 @@
 """v4.2.0 uplink/downlink wave U2 (selection seeds 0-2): (a) exact static grid below CW 16 (--cwHold, --cwLo 4) per direction cell, so the oracle is not
 clamped at 16; (b) kwdirect (the v4.1.0 online controller, settings of Wave 2/4a) at alpha 0, 1, 4 with fair floors = min(BEB_i, fair share of the BEB total),
-BEB means from wave U1 (seeds 0-2, 30 s, second half). Cells as in apdir_w1_batch.py. Usage: apdir_u2_batch.py OUT.json"""
+BEB means from wave U1 (seeds 0-2, 30 s, second half). Cells as in apdir_w1_batch.py. Usage: apdir_u2_batch.py OUT.json. A single 1188-job file overflows the Actions matrix output, so the batch is run as two files split by cell: apdir-u2a.json (u3,d3,b3) and apdir-u2b.json (m3,d4,b4)."""
 import json
 import sys
 
