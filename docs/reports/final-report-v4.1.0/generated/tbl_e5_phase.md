@@ -9,7 +9,7 @@ Table: Scenario 5, adaptation metrics over the six phases (active stations per A
 | KW (online) | 27.4 | -13.7 | -29.4 | 13.0 | 3.6 | 0.378 | 10 |
 | Static, Patras model | 35.5 | -5.8 | -33.8 | 4.8 | 0.0 | 0.383 | 10 |
 | Static, proportional | 37.3 | 2.0 | -34.4 | 2.0 | 0.0 | 0.161 | 10 |
-| Static, common (a=0) | 37.3 | 1.9 | -34.4 | 2.0 | 0.0 | 0.161 | 9 |
+| Static, common (a=0) | 37.3 | 2.0 | -34.4 | 2.0 | 0.0 | 0.161 | 10 |
 | Static, common (a=1) | 37.3 | 2.0 | -34.4 | 2.0 | 0.0 | 0.161 | 10 |
 | Central search (a=0) | 34.3 | -8.0 | -36.2 | 2.4 | 0.2 | 0.408 | 10 |
 | Central search (a=1) | 35.5 | -4.6 | -34.5 | 2.6 | 0.6 | 0.353 | 10 |
