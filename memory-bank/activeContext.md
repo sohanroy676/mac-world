@@ -4,6 +4,7 @@
 
 ## Current focus
 
+**UPDATE 2026-11-28 (U4 done, branch `claude/project-thread-qtjqjo`):** kwdirect guard fixed (`--lyEtaMin/--lyBestDecay`), no downlink gain (d4 share 0.15, d3 0.45 alpha 1); learned per-scenario RAFA with `--rafaDlObs` and CW 4-1024 trained on 6 cells x 4 seeds: no better than kwdirect anywhere (u3 0.76, b3 0.56, m3 0.67, b4 0.52, d3 0.20, d4 0.16 mean share); `docs/results/uplink-downlink-u4-v4.2.0.md`. Open: a model-based downlink method. b4 t2000 hit the 6 h job limit.
 **UPDATE 2026-11-27 (U3 + C1 done, branch `claude/project-thread-qtjqjo`):** U3 retune (27 settings x 3 seeds) does not fix kwdirect on downlink; C1 confirmation (1080 runs, seeds 103-122, held-out oracle) all PASS and repeats the finding: kwdirect strong on u/b/m (alpha 1 p < 1e-9), weak on d3 (share 0.41) and d4 (0.01). Docs `uplink-downlink-{u3,c1}-v4.2.0.md`. Not done: learned per-scenario method (skipped unless owner wants it), a different kwdirect signal for downlink.
 **UPDATE 2026-11-27 (wave U2 done, branch `claude/project-thread-qtjqjo`):** 1188/1188 runs PASS (exact static grid to CW 4 + kwdirect a0/a1/a4, six direction cells, seeds 0-2); `docs/results/uplink-downlink-u2-v4.2.0.md`. Exact low-CW static is the real oracle; kwdirect is near it on uplink/both/mixed but weak on downlink cells (needs retuning). Not done: learned per-scenario method, confirmation seeds 103-122, kwdirect retune for `d`. Lesson: pack batches over about 600 jobs overflow the Actions matrix output; split the file.
 
