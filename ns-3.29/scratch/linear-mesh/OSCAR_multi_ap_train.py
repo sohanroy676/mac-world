@@ -365,16 +365,17 @@ def spf_reward(recs):
     return float(min(1.0, max(0.0, (u - ln_eps) / (math.log(SPF_TOP_MBPS) - ln_eps))))
 
 
-def rafa_states(recs, acts_prev, loads=None):
+def rafa_states(recs, acts_prev, loads=None, aps=None):
     """Per-AP RAFA input from that AP's own record only (idle slots, Retry rate, goodput per active STA / offered load,
     active STAs, own CW exponent). acts in [-1, 1]; CW exponent = 3 (acts + 1) = real action / 6 after scaling."""
     loads = LOADS if loads is None else loads
+    aps = range(len(recs)) if aps is None else aps  # AP index of each record (for per-AP direction and STA count)
     out = np.zeros((len(recs), local_dim), dtype=np.float32)
-    for i, r in enumerate(recs):
+    for i, (r, ap) in enumerate(zip(recs, aps)):
         retry, active = r["retry"], r["active"]
-        if args.rafaDlObs and DIRS[i] == "d":
+        if args.rafaDlObs and DIRS[ap] == "d":
             att = r["txfail"] + r["rx"]
-            retry, active = (r["txfail"] / att if att > 0 else 0.0), float(counts[i])
+            retry, active = (r["txfail"] / att if att > 0 else 0.0), float(counts[ap])
         act = max(1.0, active)
         gp = r["rx"] * PAYLOAD_BITS / 1e6 / args.stepTime / act
         out[i] = [min(1.0, r["idle"] / RAFA_IDLE_SCALE), min(1.0, max(0.0, retry)), min(1.0, gp / min(loads[i], SPF_TOP_MBPS)),
@@ -694,7 +695,7 @@ try:
                         w = S2[i, :args.obsWindow]
                         check(np.allclose(s2_i, [S2[i, 0], w.mean(), w.std(), acts[i]], atol=1e-5), "AP%d hist state mismatch at t=%d" % (i + 1, time_step))
                     if args.obs == "rafa":  # state recomputed from this AP's own record and own action only
-                        check(np.allclose(s2_i, rafa_states([recs[i]], [acts[i]], [LOADS[i]])[0], atol=1e-6) and s2_i.shape == (local_dim,),
+                        check(np.allclose(s2_i, rafa_states([recs[i]], [acts[i]], [LOADS[i]], [i])[0], atol=1e-6) and s2_i.shape == (local_dim,),
                               "AP%d rafa state mismatch at t=%d" % (i + 1, time_step))
                     elif args.obsIdle:  # state is the AP's own sensed idle slots, scaled like cw.cc does
                         check(np.isclose(s2_i[0], min(1.0, recs[i]["idle"] / 20.0), atol=1e-5) and np.isclose(recs[i]["loss"], own_loss, atol=1e-5),
