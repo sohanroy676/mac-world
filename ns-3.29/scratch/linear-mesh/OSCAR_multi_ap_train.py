@@ -61,6 +61,9 @@ parser.add_argument("--lyTau", type=float, default=0.3, help="cascade/coord: L2 
 parser.add_argument("--lyAlpha", type=float, default=1.0, help="cascade/coord: alpha of the utility L2 ascends")
 parser.add_argument("--lyDelta", type=float, default=0.35, help="cascade/coord: L2 probe size (log2 units of the target collision probability)")
 parser.add_argument("--lyEta", type=float, default=0.25, help="cascade/coord: L2 step size")
+parser.add_argument("--lyEtaMin", type=float, default=0.0, help="kwdirect: floor for the step size after reverts (0 = old behaviour, step size can halve to zero)")
+parser.add_argument("--lyBestDecay", type=float, default=0.0, help="kwdirect: on a revert the best-seen utility moves this fraction toward the current one (0 = old behaviour)")
+parser.add_argument("--rafaDlObs", action="store_true", help="v4.2.0: rafa obs for APs with --apDir d: Retry = failed attempts / (failed + delivered), active = STA count (cw.cc retry and active are uplink-only)")
 parser.add_argument("--lyShrink", type=float, default=0.05, help="cascade/coord: L2 offset shrinkage per update")
 parser.add_argument("--lyTol", type=float, default=0.02, help="cascade/coord: L2 guard tolerance (relative)")
 parser.add_argument("--lyFloorMu", type=float, default=20.0, help="cascade/coord/qcsma/kwdirect with --floors: L2 penalty weight on the relative shortfall below each floor")
@@ -170,6 +173,7 @@ def dir_scaled(loads, apdir):
     return [l * (2 if d == "b" else 1) for l, d in zip(loads, dirs)]
 
 
+DIRS = args.apDir.split(",") if args.apDir else ["u"] * n
 NORM_LOADS = dir_scaled([args.rewardNorm] * n if args.rewardNorm > 0 else LOADS, args.apDir)  # per-STA reward divisor, mirrors cw.cc --rewardNorm and --apDir
 NORM_TOTAL = sum(c * l for c, l in zip(counts, NORM_LOADS))
 
@@ -213,7 +217,7 @@ static_cws = [int(c) for c in args.apCws.split(",")] if args.apCws else []
 assert (args.mode == "static") == bool(static_cws), "--mode static needs --apCws (and only static takes it)"
 assert 1 <= args.cwLo <= args.cwHi <= 32767, "--cwLo/--cwHi: need 1 <= cwLo <= cwHi <= 32767"
 assert not static_cws or (len(static_cws) == n and all(args.cwLo <= c <= args.cwHi for c in static_cws)), "--apCws: one CW in --cwLo..--cwHi (default 16..1024) per AP"
-assert (args.cwLo, args.cwHi) == (16, 1024) or args.mode in ("static", "cascade", "coord", "qcsma", "kwdirect"), "--cwLo/--cwHi: static and layered controller modes only"
+assert (args.cwLo, args.cwHi) == (16, 1024) or args.mode in ("static", "cascade", "coord", "qcsma", "kwdirect", "shared"), "--cwLo/--cwHi: static, layered controller and shared (v4.2.0 wide RAFA) modes only"
 assert not (args.cwHold or args.schedA) or (args.mode == "static" and not args.cwMinOnly), "--cwHold/--schedA: static mode only, without --cwMinOnly"
 assert bool(args.schedA) == (args.schedPeriodSteps > 0) and (not args.schedA or 1 <= args.schedASteps < args.schedPeriodSteps), "--schedA needs 1 <= --schedASteps < --schedPeriodSteps"
 SCHED = None
@@ -367,10 +371,14 @@ def rafa_states(recs, acts_prev, loads=None):
     loads = LOADS if loads is None else loads
     out = np.zeros((len(recs), local_dim), dtype=np.float32)
     for i, r in enumerate(recs):
-        act = max(1.0, r["active"])
+        retry, active = r["retry"], r["active"]
+        if args.rafaDlObs and DIRS[i] == "d":
+            att = r["txfail"] + r["rx"]
+            retry, active = (r["txfail"] / att if att > 0 else 0.0), float(counts[i])
+        act = max(1.0, active)
         gp = r["rx"] * PAYLOAD_BITS / 1e6 / args.stepTime / act
-        out[i] = [min(1.0, r["idle"] / RAFA_IDLE_SCALE), min(1.0, max(0.0, r["retry"])), min(1.0, gp / min(loads[i], SPF_TOP_MBPS)),
-                  min(1.0, r["active"] / RAFA_ACTIVE_SCALE), (acts_prev[i] + 1.0) / 2.0] + ([CUR_ALPHA / 4.0] if args.alphaInput else [])
+        out[i] = [min(1.0, r["idle"] / RAFA_IDLE_SCALE), min(1.0, max(0.0, retry)), min(1.0, gp / min(loads[i], SPF_TOP_MBPS)),
+                  min(1.0, active / RAFA_ACTIVE_SCALE), (acts_prev[i] + 1.0) / 2.0] + ([CUR_ALPHA / 4.0] if args.alphaInput else [])
     return out
 
 
@@ -567,6 +575,7 @@ try:
                 ly_kw["detect"] = args.lyDetect
                 ly_kw["det_delta"], ly_kw["det_lam"] = args.lyDetectDelta, args.lyDetectLam
                 ly_kw["objective"] = args.lyObjective
+                ly_kw["eta_min"], ly_kw["best_decay"] = args.lyEtaMin, args.lyBestDecay
                 ctrl = KWDirect(counts, **ly_kw)
             else:
                 ly_kw["detect"] = args.lyDetect
@@ -582,13 +591,15 @@ try:
             ccod_obs = ccod_pre(ccod_hist.reshape(-1, 1, 1))
             ccod_last = None
             ccod_noise = learning and episode < args.episodes * 4 / 5  # CCOD turns noise off for the last fifth of the episodes
-        prev_acts = np.full(n, -1.0, dtype=np.float32)  # CW starts at BEB 16 = real action 0 = act -1
+        prev_acts = np.full(n, 2.0 * (0.0 - EXP_LO) / EXP_SPAN - 1.0, dtype=np.float32)  # CW starts at BEB 16 = real action 0 = act -1 (more with --cwExpLo < 0)
         ep_ns.append(n)
         if args.alphaInput and learning:  # one alpha per training episode, own stream so other draws are unchanged
             CUR_ALPHA = ALPHA_SET[alpha_rng.randint(len(ALPHA_SET))]
             print("episode %d acting alpha %g" % (episode, CUR_ALPHA), flush=True)
         xbar = np.array(FLOORS if FLOORS else [0.0] * n, dtype=np.float64)  # EMA of AP Mbps for the floor penalty, starts at the floor
         L = np.zeros((n, local_dim), dtype=np.float32) if args.obs == "rafa" else local_states(S, prev_acts)
+        if args.obs == "rafa" and EXP_LO < 0:
+            L[:, 4] = (prev_acts + 1.0) / 2.0  # rafa input 4 = own CW exponent; zeros only equals CW 16 with the default range
         if args.alphaInput:
             L[:, -1] = CUR_ALPHA / 4.0  # rafa: zeros, CW exponent 0 = BEB 16
         S_g = np.zeros(state_dim, dtype=np.float32)  # global mode: network loss; 0 before the first step
@@ -768,6 +779,8 @@ try:
             if done[0]:
                 break
         print("episode %d cumulative reward per AP: %s" % (episode, np.round(ep_reward, 3).tolist()))
+        if args.mode == "kwdirect":
+            print("kwdirect L2: updates %d reverts %d eta %.4g best_u %.4g" % (ctrl.l2.updates, ctrl.l2.reverts, ctrl.l2.eta, ctrl.l2.best_u), flush=True)
         if args.mode == "ccod":
             ccod_agent.reset()
         env.close()
