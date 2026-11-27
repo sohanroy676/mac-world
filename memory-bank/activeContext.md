@@ -4,6 +4,7 @@
 
 ## Current focus
 
+**UPDATE 2026-11-27 (U3 + C1 done, branch `claude/project-thread-qtjqjo`):** U3 retune (27 settings x 3 seeds) does not fix kwdirect on downlink; C1 confirmation (1080 runs, seeds 103-122, held-out oracle) all PASS and repeats the finding: kwdirect strong on u/b/m (alpha 1 p < 1e-9), weak on d3 (share 0.41) and d4 (0.01). Docs `uplink-downlink-{u3,c1}-v4.2.0.md`. Not done: learned per-scenario method (skipped unless owner wants it), a different kwdirect signal for downlink.
 **UPDATE 2026-11-27 (wave U2 done, branch `claude/project-thread-qtjqjo`):** 1188/1188 runs PASS (exact static grid to CW 4 + kwdirect a0/a1/a4, six direction cells, seeds 0-2); `docs/results/uplink-downlink-u2-v4.2.0.md`. Exact low-CW static is the real oracle; kwdirect is near it on uplink/both/mixed but weak on downlink cells (needs retuning). Not done: learned per-scenario method, confirmation seeds 103-122, kwdirect retune for `d`. Lesson: pack batches over about 600 jobs overflow the Actions matrix output; split the file.
 
 **UPDATE 2026-11-26 (wave U1/U1c done, branch `claude/project-thread-qtjqjo`):** 1098 non-learned runs (BEB, IdleSense, DAC514, static grids) in 6 direction cells all PASS; `docs/results/uplink-downlink-u1-v4.2.0.md`. Oracle not final: some optima sit on the CW 16 clamp. Next: U2 (kwdirect with floors, learned per-scenario method, `--cwLo` below 16, confirmation seeds). Lesson: pack batches need `run-packs.yml` (run-jobs ran empty), and DAC needs `on: actions`.

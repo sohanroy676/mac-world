@@ -66,3 +66,7 @@ Settings with fewer than 3 seeds (missing or failed jobs): 1
 | 0.1 | 0.2 | 0.6 | 3 | 26.8 / 13.9 / 14.0 / 26.7 | 26.33 | 0.12 | yes |
 
 Settings with fewer than 3 seeds (missing or failed jobs): 0
+
+## Rerun note
+
+Job `u3-d4-kw-e0.1-d0.1-t0.3-a0-s0` failed once with a wandb offline-datastore error after training (not a simulator fault). Rerun on its own (run 45927603427): exit 0, check PASS, so all 27 settings have 3 seeds.
