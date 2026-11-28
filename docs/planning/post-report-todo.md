@@ -18,7 +18,7 @@ Labels: **fact** = read in the code, **estimate** = not measured. Mentor scenari
 - Fact: ns-3.29 has no OBSS-PD or BSS colour. A per-AP carrier-sense (CCA) threshold is the closest stand-in and would be a PHY change, which `CLAUDE.md` puts out of scope: needs the owner's approval and an ADR. Label as an approximation, never as OBSS-PD.
 - Estimate: 2-3 days; about 100 runs (about 40 lab-hours).
 
-**Status 2026-11-27:** item 1 built and run (ADR-0009, waves U1-U3, C1; docs/results/uplink-downlink-*). Wave U4 done (kwdirect guard variants, learned RAFA): neither reaches the downlink oracle; open: model-based downlink method.
+**Status 2026-11-27:** item 1 built and run (ADR-0009, waves U1-U3, C1; docs/results/uplink-downlink-*). Wave U4 done (kwdirect guard variants, learned RAFA): neither reaches the downlink oracle; closed 2026-11-28 by the owner: downlink reported as a limit (ADR-0009 Outcome); a model-based downlink method was not built (about 2-3 days, research risk).
 
 ## 4. Other traffic types
 - TCP and bursty traffic (mentor scenario 6 lists them): UDP constant-rate and on/off windows (ADR-0006) only today.

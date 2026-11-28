@@ -26,3 +26,12 @@ Every BSS carried constant-rate UDP uplink only (STA to AP). Mentor scenario 8 a
 - `--extraTraces` retry rate and active-STA count are measured from frames the AP decodes, so they describe uplink only. In `d` they read zero or near zero. Not fixed here.
 - Delay measurement works for both directions (packet uid match); flow-monitor per-AP sums accept AP-to-STA flows of the same BSS.
 - Not changed: association, PHY, MAC, mobility.
+
+## Outcome (2026-11-28, decided by the owner)
+Waves U1-U4 and C1 (about 4,500 runs, `docs/results/uplink-downlink-*-v4.2.0.md`). Findings with their reasons:
+- BEB starves the middle AP of the 3-AP chain in every direction; IdleSense is no better; DAC is about level with BEB.
+- Exact low-CW static (middle AP CW 4-12) is the oracle. On uplink, both and mixed cells kwdirect reaches 0.75-0.97 of the static gain on held-out seeds 103-122 (C1).
+- **Downlink is a documented limit.** kwdirect gets about 0.15-0.45 of the static gain on d3/d4 (alpha 1) and about 0 at alpha 0. Reasons found: (1) the L2 guard halves the step size on every revert, down to 1e-4 or less (fixed by `--lyEtaMin`/`--lyBestDecay`, no gain); (2) retune of eta/delta/tau (27 settings), 180 s runs, no shrinkage, larger steps (about 130 variants) change nothing. Inference: the downlink throughput signal is flat or too noisy for a few dozen SPSA steps.
+- Learned per-scenario RAFA (`--rafaDlObs`, CW 4-1024, 4 training seeds per cell, none selected) is never better than kwdirect and varies between training seeds (alpha 1 mean share: u3 0.76, b3 0.56, m3 0.67, b4 0.52, d3 0.20, d4 0.16). It also ends near BEB on downlink.
+- Not done, by decision: a model-based downlink method (uses the hidden-node structure to set the middle AP CW; about 2-3 days, research risk, needs topology knowledge the online methods do not use). Downlink is reported as a limit.
+- `--rafaDlObs` exists because the cw.cc retry rate and active-STA count are uplink-only; with it, retry = failed attempts / (failed + delivered) and active = STA count for `d` APs. Off by default.
