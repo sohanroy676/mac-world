@@ -52,3 +52,11 @@ Not done (**unknown**): learned methods (RAFA, Global, independent), oracle grid
 Facts: all three training seeds of both learners beat BEB (by 0.4-0.5), IdleSense (0.1-0.25) and the wave-1 statics on 105-109 in both cells; AP1/AP2/AP3 Jain 0.98-0.99. A uniform static (128,128,128 or 256,256,256) found by the finer grid reaches the same sum ln as the learners (7.89 vs 7.91 at 85 dB; 7.81 vs 7.78-7.83 at `1>3:100`), but it was run on seeds 100-102, not 105-109, so that comparison is only indicative (**unknown**: its value on 105-109). Global and RAFA are indistinguishable here (differences 0.01-0.05, one Global training seed 7.71 at 85 dB).
 
 Inference (not tested): in these cells the best fixed CW is uniform and larger than BEB's, so the learners may be recovering that single static CW rather than exploiting per-AP asymmetry; the previously chosen "edge high, middle low" statics (256,64,256 and 512,x,512) are clearly worse (7.0-7.5). No claim is made; a claim run would need seeds 103-109 with the grid winner evaluated on the same seeds, and a check of the per-AP CWs the learners chose (`cw_mean` in `summaries.jsonl`).
+
+## What the wave-2 learners chose (fact, `cw_mean` of the eval runs, mean CW per AP, edge/middle/edge)
+- Global (one CW for all APs by construction): `1-3:85` 212 / 193 / 76 for the three training seeds; `1>3:100` 224 / 173 / 166.
+- RAFA (per-AP actions): `1-3:85` 143,143,143 / 112,111,112 / 199,194,199; `1>3:100` 269,269,276 / 108,108,103 / 129,129,119.
+- So even the per-AP learner chose nearly uniform CWs (edge and middle within 5 % in every run) between about 100 and 270, and the value differs by training seed. Inference: it found "one larger CW for everyone", not an edge/middle split; the exact static oracle (wave 3) shows whether a split below CW 16 would have been better.
+
+## Merge note (2026-11-28)
+`feature/v4` merged into this branch (it already had ADR-0009 for `--apDir`), so the graded-loss ADR is `0010-graded-and-one-way-bss-loss.md`. Both flags build and run together (`--apHidden 1>3:100,1-2:85 --apDir u,d,b`, 3 s dry run: association, per-AP stats, per-AP CW and heard-matrix checks PASS).
