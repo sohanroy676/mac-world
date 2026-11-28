@@ -13,6 +13,7 @@
 using namespace std;
 using namespace ns3;
 
+extern std::vector<char> g_apDir; // v4.2.0 cw.cc --apDir: 'u' uplink, 'd' downlink, 'b' both per AP (empty = all uplink)
 extern std::vector<double> g_apLoadMbps; // per-STA load per AP (cw.cc --apLoads, empty = offeredLoad for every AP)
 struct StaWindow // v3.5.0 --staSchedule: STAs first..last of AP ap send only in [start, stop) simulated seconds
 {
@@ -262,13 +263,24 @@ void BasicScenario::installScenario(double simulationTime, double envStepTime, n
                     startT = w.start;
                     stopT = std::min(stopT, w.stop);
                 }
-            installTrafficGenerator(this->apStaNodes.at(apIndex).Get(staIndex),
-                                    this->wifiApNode.Get(apIndex),
-                                    this->port++,
-                                    g_apLoadMbps.empty() ? this->offeredLoad : std::to_string(g_apLoadMbps.at(apIndex)),
-                                    startT,
-                                    stopT,
-                                    callback);
+            const char dir = g_apDir.empty() ? 'u' : g_apDir.at(apIndex);
+            const std::string load = g_apLoadMbps.empty() ? this->offeredLoad : std::to_string(g_apLoadMbps.at(apIndex));
+            if (dir != 'd') // uplink: the STA sends to the AP
+                installTrafficGenerator(this->apStaNodes.at(apIndex).Get(staIndex),
+                                        this->wifiApNode.Get(apIndex),
+                                        this->port++,
+                                        load,
+                                        startT,
+                                        stopT,
+                                        callback);
+            if (dir != 'u') // v4.2.0 downlink: the AP sends this STA its own flow; the sink is on the STA
+                installTrafficGenerator(this->wifiApNode.Get(apIndex),
+                                        this->apStaNodes.at(apIndex).Get(staIndex),
+                                        this->port++,
+                                        load,
+                                        startT,
+                                        stopT,
+                                        callback);
         }
     }
 }

@@ -85,6 +85,7 @@ bool g_apCwOk = true;                 // cleared by any failing readback
 Ptr<MatrixPropagationLossModel> g_lossModel;                  // set by set_phy
 std::vector<std::pair<uint32_t, uint32_t>> g_hiddenPairs;     // --apHidden: BSS pairs (0-based) that cannot hear each other
 double g_hiddenLossDb = 200.0;                                // --hiddenLoss (far below the -96 dBm ED threshold)
+std::vector<char> g_apDir;                                     // v4.2.0 --apDir: per-AP traffic direction 'u' (STA->AP, default), 'd' (AP->STA), 'b' (both); empty = all uplink
 std::vector<double> g_apLoadMbps;                             // --apLoads: per-STA offered load per AP (empty = offeredLoad)
 std::map<Mac48Address, uint32_t> g_macBss;                    // device address -> BSS index (hidden-pair diagnostic)
 std::vector<std::vector<uint64_t>> g_heard;                   // g_heard[rxBss][txBss]: frames decoded by rxBss devices sent by txBss devices
@@ -284,6 +285,12 @@ void setApCw(uint32_t ap, uint32_t cwMin, uint32_t cwMax)
     }
     g_apCwMin.at(ap) = cwMin;
     g_apCwMax.at(ap) = cwMax;
+}
+
+// v4.2.0: number of directions AP `ap` offers its per-STA load in (1 for uplink or downlink, 2 for both).
+uint32_t apDirFlows(uint32_t ap)
+{
+    return (ap < g_apDir.size() && g_apDir[ap] == 'b') ? 2 : 1;
 }
 
 // STAs overwrite their BE CW from their AP's EDCA parameter set, which carries CW as 2^ECW-1
@@ -616,7 +623,7 @@ void recordHistory()
             g_apLoss[ap] = g_apTxDelta[ap] ? (float)((double)g_apTxDelta[ap] - (double)g_apRxDelta[ap]) / g_apTxDelta[ap] : 0.0f;
             double goodputMbit = g_apRxDelta[ap] * (1500 - 20 - 8 - 8) * 8.0 / 1e6;
             double perStaMbps = g_rewardNormMbps > 0 ? g_rewardNormMbps : (g_apLoadMbps.empty() ? g_offeredLoadMbps : g_apLoadMbps[ap]);
-            double r = goodputMbit / (perStaMbps * g_apStaCounts[ap] * envStepTime);
+            double r = goodputMbit / (perStaMbps * g_apStaCounts[ap] * apDirFlows(ap) * envStepTime); // v4.2.0: 'both' offers the load in two directions
             if (g_extraTraces)
             {
                 g_apRetryRate[ap] = g_apDataRx[ap] ? (float)g_apRetryRx[ap] / g_apDataRx[ap] : 0.0f;
@@ -940,10 +947,15 @@ void connectPerApStats(NodeContainer wifiApNode, std::vector<NodeContainer> apSt
                     }
                 }
             }
-            if (n == 0)
-                continue; // AP node: no OnOff sources
             for (uint32_t appIndex = 0; appIndex < node->GetNApplications(); ++appIndex)
             {
+                if (n > 0)
+                {
+                    // v4.2.0 downlink: the sinks live on the STAs and count towards the STA's own AP
+                    Ptr<UdpServer> staServer = DynamicCast<UdpServer>(node->GetApplication(appIndex));
+                    if (staServer)
+                        staServer->TraceConnectWithoutContext("Rx", MakeBoundCallback(&packetReceivedAp, apIndex));
+                }
                 Ptr<OnOffApplication> source = DynamicCast<OnOffApplication>(node->GetApplication(appIndex));
                 if (source)
                     source->TraceConnectWithoutContext("Tx", MakeBoundCallback(&packetSentAppAp, apIndex));
@@ -1034,15 +1046,16 @@ bool reportPerApStats(NodeContainer wifiApNode, std::vector<uint32_t> apStaCount
 
         uint64_t sinkRx = 0;
         std::vector<double> flowRx;
-        for (uint32_t appIndex = 0; appIndex < wifiApNode.Get(apIndex)->GetNApplications(); ++appIndex)
-        {
-            Ptr<UdpServer> server = DynamicCast<UdpServer>(wifiApNode.Get(apIndex)->GetApplication(appIndex));
-            if (server)
+        for (uint32_t n = 0; n < g_apBss.at(apIndex).GetN(); ++n) // AP node = uplink sinks, STA nodes = downlink sinks (v4.2.0)
+            for (uint32_t appIndex = 0; appIndex < g_apBss.at(apIndex).Get(n)->GetNApplications(); ++appIndex)
             {
-                sinkRx += server->GetReceived();
-                flowRx.push_back(server->GetReceived());
+                Ptr<UdpServer> server = DynamicCast<UdpServer>(g_apBss.at(apIndex).Get(n)->GetApplication(appIndex));
+                if (server)
+                {
+                    sinkRx += server->GetReceived();
+                    flowRx.push_back(server->GetReceived());
+                }
             }
-        }
         bool sinkOk = g_apCountersReset || sinkRx == rx;
         bool apOk = sinkOk && rx <= appTx;
         ok = ok && apOk;
@@ -1222,6 +1235,29 @@ std::vector<double> parseApLoads(std::string apLoads, size_t apCount)
         exit(1);
     }
     return loads;
+}
+
+// --apDir: one of u (uplink), d (downlink), b (both) per AP.
+std::vector<char> parseApDir(std::string arg, size_t apCount)
+{
+    std::vector<char> dirs;
+    std::stringstream ss(arg);
+    std::string token;
+    while (std::getline(ss, token, ','))
+    {
+        if (token != "u" && token != "d" && token != "b")
+        {
+            std::cout << "Invalid --apDir entry '" << token << "' (want u, d or b)." << endl;
+            exit(1);
+        }
+        dirs.push_back(token[0]);
+    }
+    if (!dirs.empty() && dirs.size() != apCount)
+    {
+        std::cout << "Invalid --apDir: got " << dirs.size() << " values for " << apCount << " APs." << endl;
+        exit(1);
+    }
+    return dirs;
 }
 
 void logTopology(NodeContainer wifiStaNode, NodeContainer wifiApNode, std::vector<NodeContainer> apStaNodes)
@@ -1547,6 +1583,7 @@ int main(int argc, char *argv[])
     string schedBArg = "";
     string apHiddenArg = "";
     string apLoadsArg = "";
+    string apDirArg = "";
     dry_run = false;
 
     int rng = 1;
@@ -1578,6 +1615,7 @@ int main(int argc, char *argv[])
     cmd.AddValue("apHidden", "Comma-separated 1-based AP pairs whose BSSs cannot hear each other, e.g. 1-3 (3-AP chain). Default: empty = one collision domain", apHiddenArg);
     cmd.AddValue("hiddenLoss", "Path loss in dB between hidden BSS pairs. Default: 200", g_hiddenLossDb);
     cmd.AddValue("apLoads", "Comma-separated per-STA offered load in Mbps per AP, e.g. 150,150,5 (one per AP). Default: empty = offeredLoad for every AP", apLoadsArg);
+    cmd.AddValue("apDir", "v4.2.0: comma-separated traffic direction per AP: u = uplink STA->AP (default), d = downlink AP->STA, b = both (the per-STA load in each direction), e.g. u,d,b. Default: empty = every AP uplink", apDirArg);
     cmd.AddValue("idleSense", "v3.3.0: per-AP IdleSense AIMD on CW from the AP's own idle-slot count (multi-AP; use with dryRun=true for the non-RL baseline). Default: false", g_idleSense);
     cmd.AddValue("idleTarget", "IdleSense target mean idle slots per backoff gap. Default: 5.68", g_idleTarget);
     cmd.AddValue("idleEps", "IdleSense eps in CW = 2 CW / (2 + eps CW) (applied when idle >= target). Default: 0.001", g_idleEps);
@@ -1647,6 +1685,7 @@ int main(int argc, char *argv[])
             }
     g_hiddenPairs = parseApHidden(apHiddenArg, apStaCounts.size());
     g_apLoadMbps = parseApLoads(apLoadsArg, apStaCounts.size());
+    g_apDir = parseApDir(apDirArg, apStaCounts.size());
     g_staSchedule = parseStaSchedule(staScheduleArg, apStaCounts);
     nWifi = 0;
     for (uint32_t count : apStaCounts)
@@ -1675,6 +1714,7 @@ int main(int argc, char *argv[])
     if (g_idleSense)
         NS_LOG_UNCOND("--idleSense: target " << g_idleTarget << ", eps " << g_idleEps << ", up " << g_idleUp << ", maxtrans " << g_idleMaxTrans << ", residual " << g_residual);
     NS_LOG_UNCOND("--apHidden: " << (apHiddenArg.empty() ? "(none, one collision domain)" : apHiddenArg) << " hiddenLoss=" << g_hiddenLossDb);
+    NS_LOG_UNCOND("--apDir: " << (apDirArg.empty() ? "(none, every AP uplink)" : apDirArg));
     NS_LOG_UNCOND("--apLoads: " << (apLoadsArg.empty() ? "(none, every AP uses offeredLoad)" : apLoadsArg));
     NS_LOG_UNCOND("--simulationTime: " << simulationTime);
     NS_LOG_UNCOND("--openGymPort: " << openGymPort);
@@ -1800,7 +1840,17 @@ int main(int argc, char *argv[])
 
         std::map<Ipv4Address, uint32_t>::const_iterator dstAp = apIpToIndex.find(t.destinationAddress);
         std::map<Ipv4Address, uint32_t>::const_iterator srcAp = staIpToAp.find(t.sourceAddress);
-        if (dstAp == apIpToIndex.end() || srcAp == staIpToAp.end() || dstAp->second != srcAp->second)
+        if (dstAp == apIpToIndex.end() || srcAp == staIpToAp.end()) // v4.2.0: a downlink flow runs AP -> STA of the same BSS
+        {
+            dstAp = staIpToAp.find(t.destinationAddress);
+            srcAp = apIpToIndex.find(t.sourceAddress);
+            if (dstAp == staIpToAp.end() || srcAp == apIpToIndex.end())
+            {
+                ++crossApFlows;
+                continue;
+            }
+        }
+        if (dstAp->second != srcAp->second)
         {
             ++crossApFlows;
             continue;
@@ -1844,12 +1894,13 @@ int main(int argc, char *argv[])
     {
         // UdpServer counts every packet its sink received over the whole run (FlowMonitor only counts after warmup).
         uint64_t sinkReceived = 0;
-        for (uint32_t appIndex = 0; appIndex < wifiApNode.Get(apIndex)->GetNApplications(); ++appIndex)
-        {
-            Ptr<UdpServer> server = DynamicCast<UdpServer>(wifiApNode.Get(apIndex)->GetApplication(appIndex));
-            if (server)
-                sinkReceived += server->GetReceived();
-        }
+        for (uint32_t n = 0; n < g_apBss.at(apIndex).GetN(); ++n)
+            for (uint32_t appIndex = 0; appIndex < g_apBss.at(apIndex).Get(n)->GetNApplications(); ++appIndex)
+            {
+                Ptr<UdpServer> server = DynamicCast<UdpServer>(g_apBss.at(apIndex).Get(n)->GetApplication(appIndex));
+                if (server)
+                    sinkReceived += server->GetReceived();
+            }
         NS_LOG_UNCOND("AP" << apIndex + 1 << " sinks=" << apStaCounts.at(apIndex) << " sinkReceivedPackets=" << sinkReceived
                            << " | flowmon flows=" << apFlowCount[apIndex] << " rxPackets=" << apRxPackets[apIndex]
                            << " throughput=" << apThroughput[apIndex] << " Mbps");
