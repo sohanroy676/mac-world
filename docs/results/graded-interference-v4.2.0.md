@@ -1,6 +1,6 @@
 # Graded and one-way BSS loss, validation (v4.2.0)
 
-Spec: `docs/adr/0009-graded-and-one-way-bss-loss.md`. Code: `--apHidden` entries `a-b`, `a-b:dB`, `a>b:dB` in `cw.cc`.
+Spec: `docs/adr/0010-graded-and-one-way-bss-loss.md`. Code: `--apHidden` entries `a-b`, `a-b:dB`, `a>b:dB` in `cw.cc`.
 No run wave was done; no oracle grids or BEB references exist for graded cells yet (**unknown**, needs approval with a lab-hour cap).
 
 ## Validation (fact: dry runs, `--apStaCounts=5,5,5 --simTime=3 --disableGym=true`, one seed, so only a sanity check)

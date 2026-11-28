@@ -1,4 +1,4 @@
-# ADR-0009: Graded and one-way BSS-to-BSS loss (v4.2.0)
+# ADR-0010: Graded and one-way BSS-to-BSS loss (v4.2.0)
 
 ## Status
 Accepted as an opt-in extension of `--apHidden` (ADR-0005). Defaults and every earlier command line behave byte for byte as before.

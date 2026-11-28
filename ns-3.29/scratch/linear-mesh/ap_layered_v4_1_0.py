@@ -127,7 +127,8 @@ class KWPlus:
     """L2: SPSA on theta = c + o with shrinkage and an accept/revert guard. See the module docstring."""
 
     def __init__(self, counts, step_time=0.01, tau=0.3, alpha=1.0, delta=0.35, eta=0.25, shrink=0.05, tol=0.02,
-                 theta_lim=4.0, step_cap=0.5, seed=0, floors=None, floor_mu=20.0, objective="util"):
+                 theta_lim=4.0, step_cap=0.5, seed=0, floors=None, floor_mu=20.0, objective="util", eta_min=0.0, best_decay=0.0):
+        self.eta_min, self.best_decay = eta_min, best_decay  # v4.2.0: eta floor and best-utility forgetting (0 = off = old behaviour)
         self.objective = objective                         # "util" = station-weighted alpha-fair utility; "delay" = -ln(worst-AP mean p95 delay)
         self.dsum, self.dw = np.zeros(len(counts)), np.zeros(len(counts))
         self.dlast = [None] * len(counts)
@@ -216,8 +217,9 @@ class KWPlus:
             scale = max(1.0, abs(self.best_u))
             if u < self.best_u - self.tol * scale:
                 self.c, self.o = self.best[0], self.best[1].copy()
-                self.eta *= 0.5
+                self.eta = max(self.eta * 0.5, self.eta_min)
                 self.reverts += 1
+                self.best_u += self.best_decay * (u - self.best_u)
             else:
                 if u > self.best_u:
                     self.best_u, self.best = u, (self.c, self.o.copy())
@@ -359,8 +361,9 @@ class KWDirect:
     no L1. theta limit 8 covers CW 4..32767 from cw0 64 (log2 range -4..+9)."""
 
     def __init__(self, counts, step_time=0.01, tau=0.3, alpha=1.0, delta=0.35, eta=0.25, shrink=0.05, tol=0.02, cw0=64.0,
-                 cw_lo=4.0, cw_hi=32767.0, seed=0, floors=None, floor_mu=20.0, detect=False, det_delta=0.05, det_lam=3.0, objective="util"):
-        self.l2 = KWPlus(counts, step_time, tau, alpha, delta, eta, shrink, tol, theta_lim=8.0, seed=seed, floors=floors, floor_mu=floor_mu, objective=objective)
+                 cw_lo=4.0, cw_hi=32767.0, seed=0, floors=None, floor_mu=20.0, detect=False, det_delta=0.05, det_lam=3.0, objective="util", eta_min=0.0, best_decay=0.0):
+        self.l2 = KWPlus(counts, step_time, tau, alpha, delta, eta, shrink, tol, theta_lim=8.0, seed=seed, floors=floors, floor_mu=floor_mu, objective=objective,
+                         eta_min=eta_min, best_decay=best_decay)
         self.cw0, self.cw_lo, self.cw_hi = cw0, cw_lo, cw_hi
         self.eta0 = eta
         self.det = PageHinkley(2 * len(counts), det_delta, det_lam) if detect else None
